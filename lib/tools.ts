@@ -27,9 +27,9 @@ export type ToolConfig = {
   config?: Record<string, unknown>;
 };
 
-export const SITE_NAME = "툴박스";
-export const SITE_URL = "https://example.com"; // 배포 후 본인 도메인으로 변경
-export const SITE_TAGLINE = "무료 온라인 도구 모음";
+export const SITE_NAME = "바로킷";
+export const SITE_URL = "https://barokit.com";
+export const SITE_TAGLINE = "무료 온라인 도구 모음 — QR · 이미지 · 동영상";
 
 export const tools: ToolConfig[] = [
   // ===== QR =====
