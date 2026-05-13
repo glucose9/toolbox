@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
   },
   robots: { index: true, follow: true },
+  verification: {
+    google: "Pw2pA4IIXPiUyS1QAyG6TZ80fiX_AK4o7-QwcwwORXk",
+  },
 };
 
 export default function RootLayout({
