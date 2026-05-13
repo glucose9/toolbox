@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import JSZip from "jszip";
 
 const MIME: Record<string, string> = {
   jpeg: "image/jpeg",
@@ -14,151 +15,212 @@ const EXT: Record<string, string> = {
   webp: "webp",
 };
 
-export default function ImageConvertTool({
-  config,
-}: {
-  config: Record<string, unknown>;
-}) {
-  const to = (config.to as string) || "jpeg";
-  const defaultQuality = (config.defaultQuality as number) || 0.92;
+type FileItem = {
+  id: string;
+  name: string;
+  size: number;
+  src: string;
+  status: "pending" | "processing" | "done" | "error";
+  outBlob?: Blob;
+  outUrl?: string;
+  error?: string;
+};
 
-  const [quality, setQuality] = useState(defaultQuality);
-  const [input, setInput] = useState<{ name: string; size: number; url: string } | null>(null);
-  const [output, setOutput] = useState<{ url: string; size: number } | null>(null);
-  const [busy, setBusy] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+function fmt(n: number) {
+  return n < 1024 ? `${n} B` : n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
+}
 
-  const handleFile = (file: File) => {
-    setBusy(true);
-    setOutput(null);
-    const url = URL.createObjectURL(file);
-    setInput({ name: file.name, size: file.size, url });
-
+async function convertOne(file: { src: string }, to: string, quality: number): Promise<Blob> {
+  return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement("canvas");
       canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
       const ctx = canvas.getContext("2d")!;
-      // For JPEG, fill white background since JPEG has no transparency
       if (to === "jpeg") {
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
       ctx.drawImage(img, 0, 0);
       canvas.toBlob(
-        (blob) => {
-          if (!blob) {
-            setBusy(false);
-            return;
-          }
-          setOutput({ url: URL.createObjectURL(blob), size: blob.size });
-          setBusy(false);
-        },
+        (blob) => (blob ? resolve(blob) : reject(new Error("conversion failed"))),
         MIME[to],
         to === "png" ? undefined : quality
       );
     };
-    img.onerror = () => setBusy(false);
-    img.src = url;
+    img.onerror = () => reject(new Error("image load failed"));
+    img.src = file.src;
+  });
+}
+
+export default function ImageConvertTool({ config }: { config: Record<string, unknown> }) {
+  const to = (config.to as string) || "jpeg";
+  const defaultQuality = (config.defaultQuality as number) || 0.92;
+
+  const [quality, setQuality] = useState(defaultQuality);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const [busy, setBusy] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const addFiles = (list: FileList) => {
+    const items: FileItem[] = Array.from(list).map((f) => ({
+      id: `${f.name}-${f.size}-${Math.random().toString(36).slice(2, 8)}`,
+      name: f.name,
+      size: f.size,
+      src: URL.createObjectURL(f),
+      status: "pending",
+    }));
+    setFiles((prev) => [...prev, ...items]);
   };
 
-  const onDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files?.[0];
-    if (file) handleFile(file);
+  const removeFile = (id: string) => {
+    setFiles((prev) => prev.filter((f) => f.id !== id));
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) handleFile(file);
+  const clearAll = () => {
+    files.forEach((f) => {
+      URL.revokeObjectURL(f.src);
+      if (f.outUrl) URL.revokeObjectURL(f.outUrl);
+    });
+    setFiles([]);
   };
 
-  const reconvert = () => {
-    if (input) {
-      fetch(input.url)
-        .then((r) => r.blob())
-        .then((b) => handleFile(new File([b], input.name)));
+  const processAll = async () => {
+    setBusy(true);
+    for (const file of files) {
+      if (file.status === "done") continue;
+      setFiles((prev) =>
+        prev.map((f) => (f.id === file.id ? { ...f, status: "processing" } : f))
+      );
+      try {
+        const blob = await convertOne(file, to, quality);
+        const outUrl = URL.createObjectURL(blob);
+        setFiles((prev) =>
+          prev.map((f) =>
+            f.id === file.id ? { ...f, status: "done", outBlob: blob, outUrl } : f
+          )
+        );
+      } catch (e) {
+        setFiles((prev) =>
+          prev.map((f) =>
+            f.id === file.id ? { ...f, status: "error", error: (e as Error).message } : f
+          )
+        );
+      }
     }
+    setBusy(false);
   };
 
-  const download = () => {
-    if (!output || !input) return;
-    const baseName = input.name.replace(/\.[^.]+$/, "");
+  const downloadOne = (f: FileItem) => {
+    if (!f.outUrl) return;
+    const baseName = f.name.replace(/\.[^.]+$/, "");
     const a = document.createElement("a");
-    a.href = output.url;
+    a.href = f.outUrl;
     a.download = `${baseName}.${EXT[to]}`;
     a.click();
   };
 
-  const fmt = (n: number) =>
-    n < 1024 ? `${n} B` : n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
+  const downloadAllZip = async () => {
+    const done = files.filter((f) => f.status === "done" && f.outBlob);
+    if (done.length === 0) return;
+    const zip = new JSZip();
+    done.forEach((f) => {
+      const baseName = f.name.replace(/\.[^.]+$/, "");
+      zip.file(`${baseName}.${EXT[to]}`, f.outBlob!);
+    });
+    const blob = await zip.generateAsync({ type: "blob" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `converted-${EXT[to]}-${Date.now()}.zip`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const doneCount = files.filter((f) => f.status === "done").length;
+  const totalIn = files.reduce((s, f) => s + f.size, 0);
+  const totalOut = files.reduce((s, f) => s + (f.outBlob?.size || 0), 0);
 
   return (
     <div className="card">
-      {!input ? (
+      {files.length === 0 ? (
         <div
-          onDrop={onDrop}
+          onDrop={(e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
+          }}
           onDragOver={(e) => e.preventDefault()}
           onClick={() => inputRef.current?.click()}
-          className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 transition-colors"
+          className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">📁</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭해서 선택</div>
-          <div className="mt-1 text-sm text-gray-500">JPG · PNG · WebP · GIF · BMP</div>
+          <div className="font-medium">이미지를 드래그하거나 클릭 (여러 파일 가능)</div>
+          <div className="mt-1 text-sm text-muted">JPG · PNG · WebP · GIF · BMP</div>
           <input
             ref={inputRef}
             type="file"
             accept="image/*"
-            onChange={onChange}
+            multiple
+            onChange={(e) => e.target.files && addFiles(e.target.files)}
             className="hidden"
           />
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <div className="text-sm font-medium mb-2">원본 ({fmt(input.size)})</div>
-            <img src={input.url} className="max-w-full max-h-64 rounded border border-gray-200" alt="원본" />
-            <div className="mt-3 text-sm text-gray-600 truncate">{input.name}</div>
-            <button
-              onClick={() => {
-                setInput(null);
-                setOutput(null);
-              }}
-              className="mt-3 text-sm text-brand-600 hover:underline"
-            >
-              다른 파일 선택
+        <div className="space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="text-sm text-muted">
+              {files.length}개 파일 ({fmt(totalIn)})
+              {doneCount > 0 && ` → ${doneCount}개 변환됨 (${fmt(totalOut)})`}
+            </div>
+            <button onClick={() => inputRef.current?.click()} className="text-sm text-brand-600 hover:underline">
+              + 파일 추가
             </button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => e.target.files && addFiles(e.target.files)}
+              className="hidden"
+            />
           </div>
 
-          <div>
-            <div className="text-sm font-medium mb-2">
-              변환 결과 {output && `(${fmt(output.size)})`}
-            </div>
-            {busy ? (
-              <div className="h-64 flex items-center justify-center text-gray-400">변환 중...</div>
-            ) : output ? (
-              <>
-                <img src={output.url} className="max-w-full max-h-64 rounded border border-gray-200" alt="변환됨" />
-                {output.size && input.size && (
-                  <div className="mt-2 text-sm text-gray-600">
-                    {output.size < input.size
-                      ? `${Math.round((1 - output.size / input.size) * 100)}% 절감`
-                      : `${Math.round((output.size / input.size - 1) * 100)}% 증가`}
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg divide-y divide-gray-200 dark:divide-gray-700 max-h-80 overflow-y-auto">
+            {files.map((f) => (
+              <div key={f.id} className="flex items-center gap-3 p-2.5">
+                <img src={f.src} alt="" className="w-12 h-12 object-cover rounded border border-gray-200 dark:border-gray-700" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm truncate">{f.name}</div>
+                  <div className="text-xs text-muted">
+                    {fmt(f.size)}
+                    {f.outBlob && ` → ${fmt(f.outBlob.size)} (${Math.round((1 - f.outBlob.size / f.size) * 100)}% 절감)`}
                   </div>
-                )}
-                <button onClick={download} className="btn btn-primary mt-3">
-                  다운로드 ({EXT[to].toUpperCase()})
+                </div>
+                <div className="text-xs whitespace-nowrap">
+                  {f.status === "pending" && <span className="text-muted">대기</span>}
+                  {f.status === "processing" && <span className="text-brand-600">변환 중...</span>}
+                  {f.status === "done" && (
+                    <button onClick={() => downloadOne(f)} className="text-green-600 hover:underline">
+                      ✓ 다운로드
+                    </button>
+                  )}
+                  {f.status === "error" && <span className="text-red-600">실패</span>}
+                </div>
+                <button
+                  onClick={() => removeFile(f.id)}
+                  className="text-gray-400 hover:text-red-600 text-lg leading-none px-1"
+                  aria-label="삭제"
+                >
+                  ×
                 </button>
-              </>
-            ) : null}
+              </div>
+            ))}
           </div>
 
           {to !== "png" && (
-            <div className="md:col-span-2">
-              <label className="label">
-                화질 ({Math.round(quality * 100)}%)
-              </label>
+            <div>
+              <label className="label">화질 ({Math.round(quality * 100)}%)</label>
               <input
                 type="range"
                 min="0.1"
@@ -166,12 +228,24 @@ export default function ImageConvertTool({
                 step="0.05"
                 value={quality}
                 onChange={(e) => setQuality(parseFloat(e.target.value))}
-                onMouseUp={reconvert}
-                onTouchEnd={reconvert}
                 className="w-full"
               />
             </div>
           )}
+
+          <div className="flex flex-wrap gap-2">
+            <button onClick={processAll} disabled={busy} className="btn btn-primary disabled:opacity-50">
+              {busy ? "변환 중..." : doneCount === files.length ? "다시 변환" : `${EXT[to].toUpperCase()}로 변환 (${files.length}개)`}
+            </button>
+            {doneCount > 1 && (
+              <button onClick={downloadAllZip} className="btn btn-secondary">
+                📦 ZIP 다운로드 ({doneCount}개)
+              </button>
+            )}
+            <button onClick={clearAll} className="btn btn-secondary">
+              전체 삭제
+            </button>
+          </div>
         </div>
       )}
     </div>

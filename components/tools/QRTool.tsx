@@ -38,6 +38,8 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
   });
   const [dataUrl, setDataUrl] = useState("");
   const [svg, setSvg] = useState("");
+  const [fgColor, setFgColor] = useState("#000000");
+  const [bgColor, setBgColor] = useState("#ffffff");
 
   const qrText = useMemo(() => {
     switch (tab) {
@@ -74,10 +76,15 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
       setSvg("");
       return;
     }
-    const opts = { width: 480, margin: 2, errorCorrectionLevel: "M" as const };
+    const opts = {
+      width: 480,
+      margin: 2,
+      errorCorrectionLevel: "M" as const,
+      color: { dark: fgColor, light: bgColor },
+    };
     QRCode.toDataURL(qrText, opts).then(setDataUrl).catch(() => setDataUrl(""));
     QRCode.toString(qrText, { ...opts, type: "svg" }).then(setSvg).catch(() => setSvg(""));
-  }, [qrText]);
+  }, [qrText, fgColor, bgColor]);
 
   const update = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setValues((v) => ({ ...v, [k]: e.target.value }));
@@ -200,10 +207,39 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
         <div className="flex flex-col items-center justify-center bg-gray-50 rounded-lg p-6 min-h-[280px]">
           {dataUrl ? (
             <>
-              <img src={dataUrl} alt="QR Code" className="w-60 h-60 bg-white rounded" />
+              <img src={dataUrl} alt="QR Code" className="w-60 h-60 rounded" />
               <div className="mt-4 flex gap-2">
                 <button onClick={downloadPng} className="btn btn-primary">PNG 다운로드</button>
                 <button onClick={downloadSvg} className="btn btn-secondary">SVG 다운로드</button>
+              </div>
+              <div className="mt-4 flex items-center gap-3 text-xs">
+                <label className="flex items-center gap-1.5">
+                  <span>전경:</span>
+                  <input
+                    type="color"
+                    value={fgColor}
+                    onChange={(e) => setFgColor(e.target.value)}
+                    className="w-7 h-7 rounded cursor-pointer border border-gray-300"
+                  />
+                </label>
+                <label className="flex items-center gap-1.5">
+                  <span>배경:</span>
+                  <input
+                    type="color"
+                    value={bgColor}
+                    onChange={(e) => setBgColor(e.target.value)}
+                    className="w-7 h-7 rounded cursor-pointer border border-gray-300"
+                  />
+                </label>
+                <button
+                  onClick={() => {
+                    setFgColor("#000000");
+                    setBgColor("#ffffff");
+                  }}
+                  className="text-brand-600 hover:underline"
+                >
+                  초기화
+                </button>
               </div>
             </>
           ) : (

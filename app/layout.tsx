@@ -26,6 +26,14 @@ export const metadata: Metadata = {
   },
 };
 
+const themeInit = `
+try {
+  const t = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (t === 'dark' || (!t && prefersDark)) document.documentElement.classList.add('dark');
+} catch (e) {}
+`;
+
 export default function RootLayout({
   children,
 }: {
@@ -33,6 +41,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+      </head>
       <body className="min-h-screen flex flex-col antialiased">
         <Header />
         <main className="flex-1">{children}</main>

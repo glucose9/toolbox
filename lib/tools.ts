@@ -24,8 +24,16 @@ export type ToolConfig = {
   metaDescription: string;
   howTo: string[];
   faq: FAQItem[];
+  addedAt?: string;
   config?: Record<string, unknown>;
 };
+
+export function isNewTool(tool: ToolConfig): boolean {
+  if (!tool.addedAt) return false;
+  const added = new Date(tool.addedAt).getTime();
+  const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+  return added > thirtyDaysAgo;
+}
 
 export const SITE_NAME = "바로킷";
 export const SITE_URL = "https://barokit.com";
@@ -204,6 +212,7 @@ export const tools: ToolConfig[] = [
       { q: "구형 브라우저에서도 보이나요?", a: "현대 브라우저 99% 지원합니다. IE만 미지원이지만 IE는 이미 지원 종료됐습니다." },
     ],
     config: { from: "jpeg", to: "webp", defaultQuality: 0.8 },
+    addedAt: "2026-05-12",
   },
 
   // ===== Image compress / resize =====
@@ -276,6 +285,7 @@ export const tools: ToolConfig[] = [
       { q: "긴 동영상도 변환 가능한가요?", a: "기술적으로 가능하지만 GIF 특성상 30초 이상은 용량이 폭증합니다. 30초 이내를 추천합니다." },
       { q: "투명 GIF로 만들 수 있나요?", a: "동영상은 투명도가 없어 일반 GIF로 변환됩니다." },
     ],
+    addedAt: "2026-05-13",
   },
   {
     slug: "video-to-mp3",
@@ -299,6 +309,7 @@ export const tools: ToolConfig[] = [
       { q: "유튜브 영상도 변환 가능한가요?", a: "유튜브 동영상 파일을 먼저 다운로드해야 합니다. 저작권이 있는 콘텐츠 변환은 본인 책임입니다." },
       { q: "음질을 어떻게 정하나요?", a: "음성/강의는 128kbps, 음악은 192~320kbps를 추천합니다. 높을수록 용량 큼." },
     ],
+    addedAt: "2026-05-13",
   },
   {
     slug: "video-compress",
@@ -322,6 +333,7 @@ export const tools: ToolConfig[] = [
       { q: "원본 화질이 많이 떨어지나요?", a: "CRF 28은 시각적 차이를 거의 못 느끼는 표준 수준입니다. 더 좋은 화질이 필요하면 CRF 23을 선택하세요." },
       { q: "큰 파일도 처리 가능한가요?", a: "브라우저 메모리 한계로 1GB 이상은 실패할 수 있습니다. 안정적인 사이즈는 500MB 이내입니다." },
     ],
+    addedAt: "2026-05-13",
   },
   {
     slug: "video-trim",
@@ -346,6 +358,7 @@ export const tools: ToolConfig[] = [
       { q: "재인코딩 없이 자르나요?", a: "네. 스트림 복사 방식이라 화질 손실이 없고 매우 빠릅니다. 단, 키프레임 단위로만 잘리니 시작점이 약간 차이날 수 있습니다." },
       { q: "여러 구간을 한 번에 자를 수 있나요?", a: "현재는 한 구간씩만 가능합니다. 여러 번 잘라서 합치는 기능은 추후 추가 예정입니다." },
     ],
+    addedAt: "2026-05-13",
   },
 
   // ===== Text =====

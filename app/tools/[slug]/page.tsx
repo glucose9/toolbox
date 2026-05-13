@@ -5,6 +5,8 @@ import { tools, getTool, SITE_URL, categoryLabels } from "@/lib/tools";
 import ToolRenderer from "@/components/ToolRenderer";
 import FAQ from "@/components/FAQ";
 import HowTo from "@/components/HowTo";
+import TrustBadges from "@/components/TrustBadges";
+import FavoriteButton from "@/components/FavoriteButton";
 
 export function generateStaticParams() {
   return tools.map((t) => ({ slug: t.slug }));
@@ -105,7 +107,13 @@ export default async function ToolPage({
           <span>{tool.icon}</span>
           <span>{tool.h1}</span>
         </h1>
-        <p className="mt-3 text-gray-600 leading-relaxed">{tool.description}</p>
+        <p className="mt-3 text-muted leading-relaxed">{tool.description}</p>
+        <div className="mt-4">
+          <TrustBadges variant="compact" />
+        </div>
+        <div className="mt-3">
+          <FavoriteButton slug={tool.slug} />
+        </div>
       </header>
 
       <ToolRenderer tool={tool} />
