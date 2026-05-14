@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import type { Metadata } from "next";
-import { tools, getTool, SITE_URL, categoryLabels } from "@/lib/tools";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { tools, getTool, SITE_URL } from "@/lib/tools";
+import { routing } from "@/i18n/routing";
 import ToolRenderer from "@/components/ToolRenderer";
 import FAQ from "@/components/FAQ";
 import HowTo from "@/components/HowTo";
@@ -9,24 +11,38 @@ import TrustBadges from "@/components/TrustBadges";
 import FavoriteButton from "@/components/FavoriteButton";
 
 export function generateStaticParams() {
-  return tools.map((t) => ({ slug: t.slug }));
+  const params: { locale: string; slug: string }[] = [];
+  for (const locale of routing.locales) {
+    for (const t of tools) params.push({ locale, slug: t.slug });
+  }
+  return params;
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const tool = getTool(slug);
   if (!tool) return {};
-  const url = `${SITE_URL}/tools/${tool.slug}`;
+  const t = await getTranslations({ locale });
+  const localizedName = safeT(t, `tools.${slug}`, tool.navTitle);
+  const url = `${SITE_URL}${locale === "ko" ? "" : "/" + locale}/tools/${tool.slug}`;
   return {
-    title: tool.title,
+    title: locale === "ko" ? tool.title : `${localizedName} | ${t("site.name")}`,
     description: tool.metaDescription,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: {
+        ko: `${SITE_URL}/tools/${tool.slug}`,
+        en: `${SITE_URL}/en/tools/${tool.slug}`,
+        ja: `${SITE_URL}/ja/tools/${tool.slug}`,
+        zh: `${SITE_URL}/zh/tools/${tool.slug}`,
+      },
+    },
     openGraph: {
-      title: tool.title,
+      title: localizedName,
       description: tool.metaDescription,
       url,
       type: "website",
@@ -34,17 +50,31 @@ export async function generateMetadata({
   };
 }
 
+function safeT(t: (k: string) => string, key: string, fallback: string): string {
+  try {
+    const v = t(key);
+    return v === key ? fallback : v;
+  } catch {
+    return fallback;
+  }
+}
+
 export default async function ToolPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
   const tool = getTool(slug);
   if (!tool) notFound();
 
+  const t = await getTranslations();
+  const navTitle = safeT(t, `tools.${slug}`, tool.navTitle);
+  const categoryLabel = t(`categories.${tool.category}`);
+
   const related = tools
-    .filter((t) => t.category === tool.category && t.slug !== tool.slug)
+    .filter((x) => x.category === tool.category && x.slug !== tool.slug)
     .slice(0, 4);
 
   const faqJsonLd = {
@@ -72,19 +102,9 @@ export default async function ToolPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "홈", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: categoryLabels[tool.category],
-        item: `${SITE_URL}/#${tool.category}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: tool.navTitle,
-        item: `${SITE_URL}/tools/${tool.slug}`,
-      },
+      { "@type": "ListItem", position: 1, name: t("nav.home"), item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: categoryLabel, item: `${SITE_URL}/#${tool.category}` },
+      { "@type": "ListItem", position: 3, name: navTitle, item: `${SITE_URL}/tools/${tool.slug}` },
     ],
   };
 
@@ -95,11 +115,11 @@ export default async function ToolPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
       <nav className="text-sm text-gray-500 mb-4">
-        <Link href="/" className="hover:text-brand-600">홈</Link>
+        <Link href="/" className="hover:text-brand-600">{t("nav.home")}</Link>
         <span className="mx-2">›</span>
-        <span>{categoryLabels[tool.category]}</span>
+        <span>{categoryLabel}</span>
         <span className="mx-2">›</span>
-        <span className="text-gray-900">{tool.navTitle}</span>
+        <span className="text-gray-900">{navTitle}</span>
       </nav>
 
       <header className="mb-6">
@@ -123,7 +143,7 @@ export default async function ToolPage({
 
       {related.length > 0 && (
         <section className="mt-10">
-          <h2 className="text-xl font-bold mb-4">관련 도구</h2>
+          <h2 className="text-xl font-bold mb-4">{t("tool.related")}</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {related.map((r) => (
               <Link
@@ -132,7 +152,7 @@ export default async function ToolPage({
                 className="card hover:border-brand-500 text-center"
               >
                 <div className="text-2xl">{r.icon}</div>
-                <div className="mt-2 text-sm font-medium">{r.navTitle}</div>
+                <div className="mt-2 text-sm font-medium">{safeT(t, `tools.${r.slug}`, r.navTitle)}</div>
               </Link>
             ))}
           </div>
