@@ -74,7 +74,17 @@ export type ToolConfig = {
     | "MarkdownTableTool"
     | "DocxViewerTool"
     | "CssGradientTool"
-    | "KorRomanizeTool";
+    | "KorRomanizeTool"
+    | "KoreanAgeTool"
+    | "LunarSolarTool"
+    | "MorseTool"
+    | "CaesarCipherTool"
+    | "HttpStatusTool"
+    | "PdfReorderTool"
+    | "ImageStackTool"
+    | "ImageBorderTool"
+    | "TextToSpeechTool"
+    | "WordFrequencyTool";
   category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf";
   icon: string;
   navTitle: string;
@@ -669,6 +679,22 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
   {
+    slug: "pdf-reorder",
+    component: "PdfReorderTool",
+    category: "pdf",
+    icon: "🔀",
+    navTitle: "PDF 페이지 순서 변경",
+    title: "PDF 페이지 순서 변경 - 드래그로 페이지 재정렬",
+    h1: "PDF 페이지 재정렬",
+    description:
+      "PDF 페이지 썸네일을 드래그해서 순서를 자유롭게 바꾸세요. 회전·삭제도 함께 가능. 모든 처리는 브라우저 안에서.",
+    metaDescription:
+      "PDF 페이지 순서 변경 무료. 드래그 재정렬·회전·삭제, 안전 처리.",
+    howTo: ["PDF를 업로드하면 모든 페이지의 썸네일이 보입니다.", "드래그해서 순서를 바꿉니다.", "저장 버튼을 누릅니다."],
+    faq: [{ q: "한 페이지만 회전할 수 있나요?", a: "각 썸네일의 회전 버튼으로 페이지별 회전이 가능합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
     slug: "pdf-watermark",
     component: "PdfWatermarkTool",
     category: "pdf",
@@ -799,6 +825,38 @@ export const tools: ToolConfig[] = [
     faq: [
       { q: "원본 화질이 떨어지나요?", a: "PNG로 저장하면 무손실, JPG는 약간의 손실이 있을 수 있습니다." },
     ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "image-stack",
+    component: "ImageStackTool",
+    category: "image",
+    icon: "🗂️",
+    navTitle: "이미지 합치기",
+    title: "이미지 합치기 - 여러 사진 가로/세로/격자로 한 장에",
+    h1: "이미지 합치기 (가로 / 세로 / 격자)",
+    description:
+      "여러 이미지를 한 장으로 합치세요. 가로 스택, 세로 스택, 격자 레이아웃 선택. 간격·배경색 조절 가능.",
+    metaDescription:
+      "이미지 여러 장 합치기 무료. 가로/세로/격자, 간격·배경색 조절, 브라우저 안전 처리.",
+    howTo: ["이미지를 여러 장 업로드합니다.", "레이아웃(가로/세로/격자), 간격, 배경색을 설정합니다.", "다운로드 버튼을 누릅니다."],
+    faq: [{ q: "이미지 크기가 다른데 어떻게 되나요?", a: "각 이미지를 그대로 두거나, 같은 높이/너비에 맞춰 자동 정렬할 수 있습니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "image-border",
+    component: "ImageBorderTool",
+    category: "image",
+    icon: "🖼️",
+    navTitle: "이미지 액자 추가",
+    title: "이미지 액자/보더 추가 - 사진 둘러싸기 무료",
+    h1: "이미지 액자 / 보더 추가",
+    description:
+      "사진 주변에 색상 액자(보더)를 추가하세요. 두께·색상·둥근 모서리 조절 가능. SNS 업로드용 폴라로이드 효과에 좋습니다.",
+    metaDescription:
+      "이미지 액자/보더 무료 추가. 두께·색상·둥근 모서리, 폴라로이드 효과.",
+    howTo: ["이미지를 업로드합니다.", "두께·색상·모서리 둥글기를 조절합니다.", "다운로드합니다."],
+    faq: [{ q: "PNG 투명도가 유지되나요?", a: "PNG로 저장하면 액자 외 영역은 투명 또는 선택한 배경색으로 채워집니다." }],
     addedAt: "2026-05-14",
   },
   {
@@ -1059,6 +1117,57 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
   {
+    slug: "morse",
+    component: "MorseTool",
+    category: "text",
+    icon: "📡",
+    navTitle: "모스 부호 변환",
+    title: "모스 부호 변환기 - 텍스트 ↔ 모스 양방향",
+    h1: "모스 부호 변환 (Morse Code)",
+    description:
+      "텍스트를 모스 부호로, 모스 부호를 텍스트로 변환하세요. 영문·숫자·한국어 자모 지원, 소리로 듣기 기능 포함.",
+    metaDescription:
+      "모스 부호 변환 무료. 영문·숫자·한글 자모, 소리 재생 지원.",
+    howTo: ["변환할 텍스트나 모스 부호를 입력합니다.", "방향이 자동 감지되어 결과가 표시됩니다.", "▶ 버튼으로 모스 부호를 소리로 들을 수 있습니다."],
+    faq: [{ q: "한글 모스 부호도 있나요?", a: "한국어 모스 부호 표준에 따라 자음·모음을 변환합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "text-to-speech",
+    component: "TextToSpeechTool",
+    category: "text",
+    icon: "🔊",
+    navTitle: "텍스트 → 음성 (TTS)",
+    title: "텍스트 음성 변환 (TTS) - 브라우저 음성으로 읽기",
+    h1: "텍스트 → 음성 (TTS)",
+    description:
+      "텍스트를 컴퓨터 음성으로 읽어줍니다. 한국어·영어·일본어·중국어 등 OS에 설치된 음성을 사용. 속도·음높이 조절 가능.",
+    metaDescription:
+      "텍스트 음성 변환 무료. 한국어·영어·다국어, 속도·음높이 조절, 브라우저 내장 TTS.",
+    howTo: ["읽을 텍스트를 입력합니다.", "음성·속도·음높이를 선택합니다.", "▶ 재생 버튼을 누릅니다."],
+    faq: [
+      { q: "음성 종류가 적어요", a: "사용 가능한 음성은 OS와 브라우저에 따라 다릅니다. 윈도우/맥/안드로이드/아이폰 모두 기본 한국어 음성을 제공합니다." },
+      { q: "MP3로 저장할 수 있나요?", a: "Web Speech API는 파일 저장을 지원하지 않습니다. 재생만 됩니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "word-frequency",
+    component: "WordFrequencyTool",
+    category: "text",
+    icon: "📈",
+    navTitle: "단어 빈도 분석",
+    title: "단어 빈도 분석기 - 자주 쓰인 단어/글자 통계",
+    h1: "단어 / 글자 빈도 분석",
+    description:
+      "텍스트에서 단어와 글자별 등장 횟수를 셉니다. 글·논문·로그 분석에 유용. 불용어 제거·대소문자 무시 옵션.",
+    metaDescription:
+      "단어 빈도 분석 무료. 단어/글자 카운트, 불용어 제거, 정렬 옵션.",
+    howTo: ["텍스트를 입력합니다.", "옵션을 설정합니다 (불용어, 대소문자 등).", "단어별 빈도 표가 표시됩니다."],
+    faq: [{ q: "불용어가 뭔가요?", a: "'은/는/이/가' 같은 의미 없이 자주 쓰이는 조사·관사를 분석 결과에서 빼는 기능입니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
     slug: "kor-eng-keyboard",
     component: "KorEngKeyboardTool",
     category: "text",
@@ -1285,6 +1394,73 @@ export const tools: ToolConfig[] = [
   },
 
   // ===== Dev =====
+  {
+    slug: "korean-age",
+    component: "KoreanAgeTool",
+    category: "dev",
+    icon: "🎂",
+    navTitle: "만나이 계산",
+    title: "만나이 계산기 - 생년월일 → 만나이·세는 나이·연나이",
+    h1: "만나이 / 세는 나이 계산기",
+    description:
+      "생년월일을 입력하면 만나이·세는 나이·연 나이를 동시에 보여줍니다. 2023년 6월 시행 만나이 통일법 기준.",
+    metaDescription:
+      "만나이 계산기 무료. 만나이·세는 나이·연 나이 한 번에, 2023년 법 기준.",
+    howTo: ["생년월일을 선택합니다.", "기준 날짜 (보통 오늘)를 선택합니다.", "세 가지 나이가 자동 계산됩니다."],
+    faq: [
+      { q: "만나이가 뭔가요?", a: "생일을 기준으로 세는 나이입니다. 0살로 태어나 생일마다 1살씩 추가됩니다. 2023년 6월부터 한국 법령상 공식 나이가 만나이로 통일되었습니다." },
+      { q: "세는 나이는요?", a: "태어나자마자 1살이고 1월 1일마다 모두 1살씩 더하는 전통 한국 나이 셈법입니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "lunar-solar",
+    component: "LunarSolarTool",
+    category: "dev",
+    icon: "🌙",
+    navTitle: "음력 ↔ 양력",
+    title: "음력 양력 변환기 - 한국 음력/양력 양방향 변환",
+    h1: "음력 ↔ 양력 변환",
+    description:
+      "한국 음력과 양력 날짜를 양방향으로 변환합니다. 1391~2050년 범위, 윤달(閏月) 처리, 간지 표시.",
+    metaDescription:
+      "한국 음력 양력 변환 무료. 윤달·간지 지원, 1391~2050년.",
+    howTo: ["변환 방향과 날짜를 선택합니다.", "결과가 자동 표시됩니다."],
+    faq: [{ q: "왜 1391~2050년만 되나요?", a: "한국 음력 데이터의 정확한 표준 범위입니다. 이 범위 밖은 천문 계산이 부정확할 수 있어 제한합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "caesar-cipher",
+    component: "CaesarCipherTool",
+    category: "dev",
+    icon: "🔠",
+    navTitle: "시저 암호 / ROT",
+    title: "시저 암호 변환기 - ROT13 · ROT47 · 사용자 지정",
+    h1: "시저 암호 (Caesar Cipher / ROT)",
+    description:
+      "텍스트를 시저(카이사르) 방식으로 암호화·복호화합니다. ROT13·ROT47 사전 설정과 1~25 사용자 지정 회전.",
+    metaDescription:
+      "시저 암호 무료. ROT13·ROT47·1~25 회전, 양방향 변환.",
+    howTo: ["텍스트를 입력합니다.", "회전 값을 선택합니다 (13이면 ROT13).", "암호화된 결과가 즉시 표시됩니다."],
+    faq: [{ q: "보안용으로 쓸 수 있나요?", a: "시저 암호는 즉시 깨지는 약한 암호입니다. 농담·퀴즈·게임용으로만 쓰세요." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "http-status",
+    component: "HttpStatusTool",
+    category: "dev",
+    icon: "🌐",
+    navTitle: "HTTP 상태 코드",
+    title: "HTTP 상태 코드 사전 - 200 / 404 / 500 의미 검색",
+    h1: "HTTP 상태 코드 사전",
+    description:
+      "HTTP 응답 상태 코드 100~599의 의미를 검색하세요. 표준(RFC) 코드 + 자주 쓰이는 비표준 코드(418, 429 등).",
+    metaDescription:
+      "HTTP 상태 코드 사전 무료. 200/301/404/500 등 의미와 사용 예시.",
+    howTo: ["코드 번호나 키워드로 검색합니다.", "각 코드별 의미와 사용 예시가 표시됩니다."],
+    faq: [{ q: "어떤 코드가 포함되나요?", a: "RFC 9110 표준 + 자주 쓰이는 비표준(418 I'm a teapot, 429 Too Many Requests 등) 모두 포함됩니다." }],
+    addedAt: "2026-05-14",
+  },
   {
     slug: "css-gradient",
     component: "CssGradientTool",

@@ -75,6 +75,16 @@ const MarkdownTableTool = dynamic(() => import("./tools/MarkdownTableTool"), { s
 const DocxViewerTool = dynamic(() => import("./tools/DocxViewerTool"), { ssr: false });
 const CssGradientTool = dynamic(() => import("./tools/CssGradientTool"), { ssr: false });
 const KorRomanizeTool = dynamic(() => import("./tools/KorRomanizeTool"), { ssr: false });
+const KoreanAgeTool = dynamic(() => import("./tools/KoreanAgeTool"), { ssr: false });
+const LunarSolarTool = dynamic(() => import("./tools/LunarSolarTool"), { ssr: false });
+const MorseTool = dynamic(() => import("./tools/MorseTool"), { ssr: false });
+const CaesarCipherTool = dynamic(() => import("./tools/CaesarCipherTool"), { ssr: false });
+const HttpStatusTool = dynamic(() => import("./tools/HttpStatusTool"), { ssr: false });
+const PdfReorderTool = dynamic(() => import("./tools/PdfReorderTool"), { ssr: false });
+const ImageStackTool = dynamic(() => import("./tools/ImageStackTool"), { ssr: false });
+const ImageBorderTool = dynamic(() => import("./tools/ImageBorderTool"), { ssr: false });
+const TextToSpeechTool = dynamic(() => import("./tools/TextToSpeechTool"), { ssr: false });
+const WordFrequencyTool = dynamic(() => import("./tools/WordFrequencyTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -223,6 +233,26 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
       return <CssGradientTool />;
     case "KorRomanizeTool":
       return <KorRomanizeTool />;
+    case "KoreanAgeTool":
+      return <KoreanAgeTool />;
+    case "LunarSolarTool":
+      return <LunarSolarTool />;
+    case "MorseTool":
+      return <MorseTool />;
+    case "CaesarCipherTool":
+      return <CaesarCipherTool />;
+    case "HttpStatusTool":
+      return <HttpStatusTool />;
+    case "PdfReorderTool":
+      return <PdfReorderTool />;
+    case "ImageStackTool":
+      return <ImageStackTool />;
+    case "ImageBorderTool":
+      return <ImageBorderTool />;
+    case "TextToSpeechTool":
+      return <TextToSpeechTool />;
+    case "WordFrequencyTool":
+      return <WordFrequencyTool />;
     default:
       return <div>도구를 찾을 수 없습니다.</div>;
   }
