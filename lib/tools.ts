@@ -44,7 +44,17 @@ export type ToolConfig = {
     | "ImageCropTool"
     | "ImageRotateTool"
     | "SpellCheckTool"
-    | "MarkdownMathTool";
+    | "MarkdownMathTool"
+    | "FaviconTool"
+    | "ImageFilterTool"
+    | "PdfWatermarkTool"
+    | "PdfPageNumberTool"
+    | "PdfTextExtractTool"
+    | "JwtDecoderTool"
+    | "CssShadowTool"
+    | "JsonXmlTool"
+    | "DDayTool"
+    | "UnitConverterTool";
   category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf";
   icon: string;
   navTitle: string;
@@ -615,6 +625,68 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
   {
+    slug: "pdf-watermark",
+    component: "PdfWatermarkTool",
+    category: "pdf",
+    icon: "💧",
+    navTitle: "PDF 워터마크",
+    title: "PDF 워터마크 추가 - 텍스트 워터마크 무료 삽입",
+    h1: "PDF에 텍스트 워터마크 추가",
+    description:
+      "PDF 모든 페이지에 텍스트 워터마크(예: 'CONFIDENTIAL', 회사명)를 추가하세요. 색상·투명도·회전·크기 조절 가능.",
+    metaDescription:
+      "PDF 텍스트 워터마크 무료 추가. 색상·투명도·회전 조절, 모든 페이지에 일괄.",
+    howTo: [
+      "PDF를 업로드합니다.",
+      "워터마크 텍스트, 색상, 투명도, 각도를 설정합니다.",
+      "적용 버튼을 누르고 결과를 다운로드합니다.",
+    ],
+    faq: [{ q: "이미지 워터마크는요?", a: "현재 텍스트만 지원합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "pdf-page-number",
+    component: "PdfPageNumberTool",
+    category: "pdf",
+    icon: "🔢",
+    navTitle: "PDF 페이지 번호",
+    title: "PDF 페이지 번호 추가 - 머리말/꼬리말 위치 선택",
+    h1: "PDF 페이지 번호 추가",
+    description:
+      "PDF 각 페이지에 페이지 번호를 자동으로 넣으세요. 위치(머리말/꼬리말, 좌/중/우), 형식(1, 1/N, p1), 시작 번호 선택 가능.",
+    metaDescription:
+      "PDF 페이지 번호 자동 추가. 위치·형식·시작번호 선택 가능, 모든 페이지에 일괄.",
+    howTo: [
+      "PDF를 업로드합니다.",
+      "위치(상단/하단, 좌/중/우)와 형식(1, 1/N, p1)을 선택합니다.",
+      "적용 버튼을 누르고 결과를 다운로드합니다.",
+    ],
+    faq: [{ q: "특정 페이지부터 시작 번호를 바꿀 수 있나요?", a: "시작 번호를 설정할 수 있습니다 (예: 5페이지부터 1로 시작)." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "pdf-text-extract",
+    component: "PdfTextExtractTool",
+    category: "pdf",
+    icon: "📋",
+    navTitle: "PDF 텍스트 추출",
+    title: "PDF 텍스트 추출 - 본문 텍스트만 .txt로",
+    h1: "PDF에서 텍스트 추출",
+    description:
+      "PDF에서 본문 텍스트만 .txt로 추출하세요. 검색·번역기에 넣을 때 편리합니다. 스캔본 PDF(이미지)는 추출이 안 될 수 있습니다.",
+    metaDescription:
+      "PDF 본문 텍스트 무료 추출. .txt 다운로드, 클립보드 복사, 브라우저 안전 처리.",
+    howTo: [
+      "PDF를 업로드합니다.",
+      "추출된 텍스트가 미리보기에 표시됩니다.",
+      ".txt로 다운로드하거나 복사합니다.",
+    ],
+    faq: [
+      { q: "스캔본 PDF도 추출되나요?", a: "스캔본은 이미지라 텍스트가 없어 추출되지 않습니다. OCR이 필요합니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
     slug: "pdf-to-images",
     component: "PdfToImagesTool",
     category: "pdf",
@@ -640,6 +712,51 @@ export const tools: ToolConfig[] = [
   },
 
   // ===== More image tools =====
+  {
+    slug: "favicon-generator",
+    component: "FaviconTool",
+    category: "image",
+    icon: "🌐",
+    navTitle: "파비콘 생성기",
+    title: "파비콘 생성기 - PNG/JPG → 16/32/48/64/128/256 ICO 묶음",
+    h1: "파비콘 생성 (PNG → ICO + 다중 해상도)",
+    description:
+      "이미지 한 장으로 웹사이트용 파비콘 묶음을 만드세요. 16/32/48/64/128/256 PNG와 ICO 파일을 ZIP으로 한 번에 받습니다.",
+    metaDescription:
+      "파비콘 무료 생성. PNG/JPG → 16/32/48/64/128/256 + ICO 묶음, 브라우저 안전 처리.",
+    howTo: [
+      "정사각형에 가까운 이미지를 업로드합니다 (1:1 비율 추천).",
+      "생성 버튼을 누르면 6개 해상도 PNG + ICO 묶음이 만들어집니다.",
+      "ZIP을 다운로드해서 웹사이트 루트에 배치합니다.",
+    ],
+    faq: [
+      { q: "ICO와 PNG 차이가 뭔가요?", a: "ICO는 여러 해상도를 한 파일에 묶은 윈도우 표준입니다. 최신 브라우저는 PNG도 잘 인식하지만, IE 등 구버전 호환을 위해 둘 다 제공하면 안전합니다." },
+      { q: "원본은 어디로 가나요?", a: "어디로도 안 갑니다. 변환이 전부 브라우저 안에서 일어납니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "image-filter",
+    component: "ImageFilterTool",
+    category: "image",
+    icon: "🎨",
+    navTitle: "이미지 필터",
+    title: "이미지 필터 - 흑백/세피아/블러/밝기/대비 무료 적용",
+    h1: "이미지 필터 적용",
+    description:
+      "사진에 흑백·세피아·블러·밝기·대비·채도 필터를 즉시 적용하세요. 실시간 미리보기, 화질 손실 최소, 모든 처리는 브라우저 안에서.",
+    metaDescription:
+      "이미지 필터 무료 적용. 흑백·세피아·블러·밝기·대비·채도, 실시간 미리보기.",
+    howTo: [
+      "이미지를 업로드합니다.",
+      "필터 슬라이더를 조절하면 실시간으로 적용됩니다.",
+      "결과를 다운로드합니다.",
+    ],
+    faq: [
+      { q: "원본 화질이 떨어지나요?", a: "PNG로 저장하면 무손실, JPG는 약간의 손실이 있을 수 있습니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
   {
     slug: "image-exif-strip",
     component: "ImageExifStripTool",
@@ -1067,6 +1184,86 @@ export const tools: ToolConfig[] = [
       "결과를 복사합니다.",
     ],
     faq: [{ q: "어떤 YAML 사양을 따르나요?", a: "YAML 1.2 (eemeli/yaml 라이브러리 기반)를 따릅니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "jwt-decoder",
+    component: "JwtDecoderTool",
+    category: "dev",
+    icon: "🔓",
+    navTitle: "JWT 디코더",
+    title: "JWT 디코더 - JSON Web Token 헤더/페이로드 검사",
+    h1: "JWT 디코더 (헤더 / 페이로드)",
+    description:
+      "JWT 토큰의 헤더와 페이로드를 디코드하세요. 만료 시각·발급자 등을 한 눈에 확인. 서명 검증은 하지 않으므로 디버깅 용도로만 쓰세요.",
+    metaDescription:
+      "JWT 토큰 디코더 무료. 헤더·페이로드·만료 시각 표시, 브라우저에서 안전 처리.",
+    howTo: ["JWT 토큰을 붙여넣습니다.", "헤더·페이로드가 자동 디코딩됩니다.", "exp/iat 시각이 사람 읽기 좋게 표시됩니다."],
+    faq: [{ q: "서명도 검증되나요?", a: "아니요. 디코딩만 합니다. 서명 검증에는 비밀 키가 필요해 클라이언트에서 안전하게 할 수 없습니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "css-shadow",
+    component: "CssShadowTool",
+    category: "dev",
+    icon: "🌑",
+    navTitle: "CSS 그림자 생성",
+    title: "CSS box-shadow 생성기 - 슬라이더로 그림자 만들기",
+    h1: "CSS box-shadow 그림자 생성기",
+    description:
+      "슬라이더로 box-shadow를 시각적으로 만들고 코드를 복사하세요. 다중 그림자 레이어 지원, 미리보기 즉시 반영.",
+    metaDescription:
+      "CSS box-shadow 무료 생성기. 슬라이더 UI, 다중 레이어, 실시간 미리보기.",
+    howTo: ["슬라이더로 X/Y 오프셋, 블러, 확장, 색상, 투명도를 조절합니다.", "+ 버튼으로 그림자 레이어를 추가합니다.", "결과 CSS를 복사합니다."],
+    faq: [{ q: "inset 그림자도 가능한가요?", a: "네. 각 레이어마다 'inset' 토글을 켤 수 있습니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "json-xml",
+    component: "JsonXmlTool",
+    category: "dev",
+    icon: "📄",
+    navTitle: "JSON ↔ XML",
+    title: "JSON XML 변환기 - 양방향 자동 변환",
+    h1: "JSON ↔ XML 변환",
+    description:
+      "JSON과 XML 사이를 자유롭게 변환하세요. 속성 처리·들여쓰기 옵션 지원.",
+    metaDescription:
+      "JSON ↔ XML 무료 변환. 양방향, 들여쓰기 옵션, fast-xml-parser 기반.",
+    howTo: ["JSON 또는 XML을 붙여넣고 방향을 선택합니다.", "결과를 복사합니다."],
+    faq: [{ q: "XML 속성은 어떻게 변환되나요?", a: "@_ 접두사로 속성을 구분합니다 (예: `{\"@_id\": \"1\"}` ↔ `<tag id=\"1\">`)." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "dday",
+    component: "DDayTool",
+    category: "dev",
+    icon: "📅",
+    navTitle: "D-day 계산기",
+    title: "D-day 계산기 - 디데이 / 날짜 차이 / 며칠 후",
+    h1: "D-day · 날짜 계산기",
+    description:
+      "두 날짜 사이의 일수, 특정 날짜까지의 D-day, 오늘에서 N일 후 같은 날짜 계산을 한 번에. 한국 음력은 지원하지 않습니다.",
+    metaDescription:
+      "D-day 계산기 무료. 두 날짜 사이 일수, 디데이, N일 후 계산, 즉시 결과.",
+    howTo: ["탭에서 모드를 선택합니다 (D-day / 차이 / N일 후).", "날짜를 입력하면 결과가 즉시 표시됩니다."],
+    faq: [{ q: "윤년 처리는요?", a: "JavaScript Date API를 사용해 그레고리력 윤년이 자동 처리됩니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "unit-converter",
+    component: "UnitConverterTool",
+    category: "dev",
+    icon: "📏",
+    navTitle: "단위 변환기",
+    title: "단위 변환기 - 길이/무게/온도/면적/부피 변환",
+    h1: "단위 변환기",
+    description:
+      "길이(m·km·inch·ft), 무게(g·kg·lb·oz), 온도(°C·°F·K), 면적(m²·평·acre), 부피(L·mL·gallon)를 즉시 변환하세요.",
+    metaDescription:
+      "단위 변환기 무료. 길이·무게·온도·면적·부피, 즉시 양방향 변환.",
+    howTo: ["탭에서 종류를 고릅니다.", "한 쪽에 값을 입력하면 다른 쪽이 자동 계산됩니다."],
+    faq: [{ q: "한국 단위(평·근)도 지원하나요?", a: "면적의 '평'은 지원합니다. 무게 '근'은 지역마다 달라 표준값을 지정하기 어려워 미지원입니다." }],
     addedAt: "2026-05-14",
   },
   {

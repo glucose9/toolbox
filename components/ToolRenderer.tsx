@@ -45,6 +45,16 @@ const ImageCropTool = dynamic(() => import("./tools/ImageCropTool"), { ssr: fals
 const ImageRotateTool = dynamic(() => import("./tools/ImageRotateTool"), { ssr: false });
 const SpellCheckTool = dynamic(() => import("./tools/SpellCheckTool"), { ssr: false });
 const MarkdownMathTool = dynamic(() => import("./tools/MarkdownMathTool"), { ssr: false });
+const FaviconTool = dynamic(() => import("./tools/FaviconTool"), { ssr: false });
+const ImageFilterTool = dynamic(() => import("./tools/ImageFilterTool"), { ssr: false });
+const PdfWatermarkTool = dynamic(() => import("./tools/PdfWatermarkTool"), { ssr: false });
+const PdfPageNumberTool = dynamic(() => import("./tools/PdfPageNumberTool"), { ssr: false });
+const PdfTextExtractTool = dynamic(() => import("./tools/PdfTextExtractTool"), { ssr: false });
+const JwtDecoderTool = dynamic(() => import("./tools/JwtDecoderTool"), { ssr: false });
+const CssShadowTool = dynamic(() => import("./tools/CssShadowTool"), { ssr: false });
+const JsonXmlTool = dynamic(() => import("./tools/JsonXmlTool"), { ssr: false });
+const DDayTool = dynamic(() => import("./tools/DDayTool"), { ssr: false });
+const UnitConverterTool = dynamic(() => import("./tools/UnitConverterTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -133,6 +143,26 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
       return <SpellCheckTool />;
     case "MarkdownMathTool":
       return <MarkdownMathTool />;
+    case "FaviconTool":
+      return <FaviconTool />;
+    case "ImageFilterTool":
+      return <ImageFilterTool />;
+    case "PdfWatermarkTool":
+      return <PdfWatermarkTool />;
+    case "PdfPageNumberTool":
+      return <PdfPageNumberTool />;
+    case "PdfTextExtractTool":
+      return <PdfTextExtractTool />;
+    case "JwtDecoderTool":
+      return <JwtDecoderTool />;
+    case "CssShadowTool":
+      return <CssShadowTool />;
+    case "JsonXmlTool":
+      return <JsonXmlTool />;
+    case "DDayTool":
+      return <DDayTool />;
+    case "UnitConverterTool":
+      return <UnitConverterTool />;
     default:
       return <div>도구를 찾을 수 없습니다.</div>;
   }

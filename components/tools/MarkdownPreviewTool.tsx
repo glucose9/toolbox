@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { marked } from "marked";
 import { printHtmlAsPdf } from "@/lib/print";
+import { downloadText, imageToMarkdown, insertAtCursor, readMdFile } from "@/lib/markdown-io";
 
 const SAMPLE = `# 제목 1
 
@@ -33,6 +34,9 @@ export default function MarkdownPreviewTool() {
   const [showHtml, setShowHtml] = useState(false);
   const [copied, setCopied] = useState(false);
   const [printError, setPrintError] = useState("");
+  const taRef = useRef<HTMLTextAreaElement>(null);
+  const mdFileRef = useRef<HTMLInputElement>(null);
+  const imgFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     marked.setOptions({ gfm: true, breaks: true });
@@ -58,14 +62,52 @@ export default function MarkdownPreviewTool() {
     else setPrintError("");
   };
 
+  const loadMd = async (f: File) => {
+    const text = await readMdFile(f);
+    setMd(text);
+  };
+
+  const insertImage = async (f: File) => {
+    const ta = taRef.current;
+    const md2 = await imageToMarkdown(f);
+    if (!ta) {
+      setMd((cur) => cur + "\n\n" + md2);
+      return;
+    }
+    const { value, cursor } = insertAtCursor(ta, md2);
+    setMd(value);
+    requestAnimationFrame(() => {
+      ta.focus();
+      ta.setSelectionRange(cursor, cursor);
+    });
+  };
+
   return (
     <div className="card space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label className="label">마크다운</label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="label !mb-0">마크다운</label>
+            <div className="flex gap-2 text-xs">
+              <button onClick={() => mdFileRef.current?.click()} className="text-brand-600 hover:underline">📄 .md 불러오기</button>
+              <button onClick={() => imgFileRef.current?.click()} className="text-brand-600 hover:underline">🖼️ 이미지 삽입</button>
+              <button onClick={() => downloadText(md, (extractTitle(md) || "markdown") + ".md")} className="text-brand-600 hover:underline">💾 .md 저장</button>
+            </div>
+          </div>
+          <input ref={mdFileRef} type="file" accept=".md,.markdown,text/markdown" onChange={(e) => e.target.files?.[0] && loadMd(e.target.files[0])} className="hidden" />
+          <input ref={imgFileRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && insertImage(e.target.files[0])} className="hidden" />
           <textarea
+            ref={taRef}
             value={md}
             onChange={(e) => setMd(e.target.value)}
+            onDrop={async (e) => {
+              const f = e.dataTransfer.files[0];
+              if (!f) return;
+              e.preventDefault();
+              if (f.type.startsWith("image/")) await insertImage(f);
+              else if (/\.(md|markdown|txt)$/i.test(f.name) || f.type.startsWith("text/")) await loadMd(f);
+            }}
+            onDragOver={(e) => e.preventDefault()}
             className="w-full h-96 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y font-mono"
           />
         </div>
