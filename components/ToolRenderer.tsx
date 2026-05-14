@@ -85,6 +85,16 @@ const ImageStackTool = dynamic(() => import("./tools/ImageStackTool"), { ssr: fa
 const ImageBorderTool = dynamic(() => import("./tools/ImageBorderTool"), { ssr: false });
 const TextToSpeechTool = dynamic(() => import("./tools/TextToSpeechTool"), { ssr: false });
 const WordFrequencyTool = dynamic(() => import("./tools/WordFrequencyTool"), { ssr: false });
+const LatexEditorTool = dynamic(() => import("./tools/LatexEditorTool"), { ssr: false });
+const SciCalcTool = dynamic(() => import("./tools/SciCalcTool"), { ssr: false });
+const NumToKoreanTool = dynamic(() => import("./tools/NumToKoreanTool"), { ssr: false });
+const PercentTool = dynamic(() => import("./tools/PercentTool"), { ssr: false });
+const DiscountTool = dynamic(() => import("./tools/DiscountTool"), { ssr: false });
+const VatTool = dynamic(() => import("./tools/VatTool"), { ssr: false });
+const BmiTool = dynamic(() => import("./tools/BmiTool"), { ssr: false });
+const CompoundTool = dynamic(() => import("./tools/CompoundTool"), { ssr: false });
+const WorldTimeTool = dynamic(() => import("./tools/WorldTimeTool"), { ssr: false });
+const NamePickerTool = dynamic(() => import("./tools/NamePickerTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -253,6 +263,26 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
       return <TextToSpeechTool />;
     case "WordFrequencyTool":
       return <WordFrequencyTool />;
+    case "LatexEditorTool":
+      return <LatexEditorTool />;
+    case "SciCalcTool":
+      return <SciCalcTool />;
+    case "NumToKoreanTool":
+      return <NumToKoreanTool />;
+    case "PercentTool":
+      return <PercentTool />;
+    case "DiscountTool":
+      return <DiscountTool />;
+    case "VatTool":
+      return <VatTool />;
+    case "BmiTool":
+      return <BmiTool />;
+    case "CompoundTool":
+      return <CompoundTool />;
+    case "WorldTimeTool":
+      return <WorldTimeTool />;
+    case "NamePickerTool":
+      return <NamePickerTool />;
     default:
       return <div>도구를 찾을 수 없습니다.</div>;
   }

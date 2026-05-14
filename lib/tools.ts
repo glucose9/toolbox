@@ -84,8 +84,18 @@ export type ToolConfig = {
     | "ImageStackTool"
     | "ImageBorderTool"
     | "TextToSpeechTool"
-    | "WordFrequencyTool";
-  category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf";
+    | "WordFrequencyTool"
+    | "LatexEditorTool"
+    | "SciCalcTool"
+    | "NumToKoreanTool"
+    | "PercentTool"
+    | "DiscountTool"
+    | "VatTool"
+    | "BmiTool"
+    | "CompoundTool"
+    | "WorldTimeTool"
+    | "NamePickerTool";
+  category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf" | "calc";
   icon: string;
   navTitle: string;
   title: string;
@@ -1168,6 +1178,45 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
   {
+    slug: "latex-editor",
+    component: "LatexEditorTool",
+    category: "text",
+    icon: "∫",
+    navTitle: "LaTeX 수식 에디터",
+    title: "LaTeX 수식 에디터 - 실시간 KaTeX 렌더링 + 이미지 저장",
+    h1: "LaTeX 수식 에디터",
+    description:
+      "LaTeX로 수식을 입력하면 실시간으로 KaTeX가 렌더링합니다. 적분·시그마·행렬·분수 모두 지원하며 결과를 PNG/SVG로 저장하거나 코드를 복사하세요.",
+    metaDescription:
+      "LaTeX 수식 에디터 무료. 실시간 KaTeX 렌더링, PNG·SVG 저장, MathML 출력.",
+    howTo: [
+      "LaTeX 수식을 입력합니다 (예: \\frac{a}{b}, \\int_0^1 x dx).",
+      "오른쪽에 실시간으로 렌더링됩니다.",
+      "PNG/SVG로 저장하거나 LaTeX/MathML 코드를 복사합니다.",
+    ],
+    faq: [
+      { q: "어떤 명령어를 지원하나요?", a: "KaTeX 지원 범위(commonly used commands). 분수·근호·적분·시그마·행렬·그리스 문자 등 대부분 지원됩니다." },
+      { q: "결과를 워드/PPT에 붙여넣고 싶어요", a: "PNG로 저장한 뒤 워드/파워포인트에 이미지로 삽입하세요." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "num-to-korean",
+    component: "NumToKoreanTool",
+    category: "text",
+    icon: "💰",
+    navTitle: "숫자 → 한글",
+    title: "숫자를 한글로 변환 - 계약서·영수증·통장용 (일금...원정)",
+    h1: "숫자 → 한글 변환",
+    description:
+      "12,345원을 '일만 이천삼백사십오 원'으로, 계약서·영수증·세금계산서에 쓸 형식으로 변환하세요. 일/금/원정 자동 추가.",
+    metaDescription:
+      "숫자 한글 변환 무료. 계약서·영수증 표기, 일금/원정 자동 추가.",
+    howTo: ["숫자를 입력합니다.", "변환 결과가 즉시 표시됩니다.", "계약서 형식, 통장 형식 등 옵션을 선택합니다."],
+    faq: [{ q: "어디까지 표현되나요?", a: "조(10¹²) 단위까지 지원합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
     slug: "kor-eng-keyboard",
     component: "KorEngKeyboardTool",
     category: "text",
@@ -1893,6 +1942,136 @@ export const tools: ToolConfig[] = [
       { q: "강력한 비밀번호는 몇 자가 좋나요?", a: "16자 이상에 대소문자·숫자·특수문자를 모두 포함하면 사실상 안전합니다." },
     ],
   },
+
+  // ===== 계산기·생활 =====
+  {
+    slug: "sci-calc",
+    component: "SciCalcTool",
+    category: "calc",
+    icon: "🧮",
+    navTitle: "공학용 계산기",
+    title: "공학용 계산기 - sin/cos/log/√ 함수 지원",
+    h1: "공학용 계산기",
+    description:
+      "삼각함수, 로그, 거듭제곱, 제곱근 등 공학·과학 계산을 지원합니다. 식 입력 방식이라 길고 복잡한 계산도 한 번에 가능.",
+    metaDescription:
+      "공학용 계산기 무료. sin·cos·tan·log·sqrt·pow, 식 입력 방식, 즉시 결과.",
+    howTo: ["식을 입력합니다 (예: sin(30) + cos(60)).", "결과가 즉시 표시됩니다.", "괄호로 우선순위를 명확히 합니다."],
+    faq: [{ q: "각도 단위가 뭔가요?", a: "도(degree)와 라디안(radian) 모드를 선택할 수 있습니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "percent",
+    component: "PercentTool",
+    category: "calc",
+    icon: "%",
+    navTitle: "백분율 계산기",
+    title: "백분율 계산기 - 퍼센트 다양한 계산 한 번에",
+    h1: "백분율 계산기",
+    description:
+      "X의 N%, X는 Y의 몇%, X에서 Y까지 변화율, X에 N% 증가/감소를 모두 한 화면에서 계산합니다.",
+    metaDescription:
+      "백분율 계산기 무료. 퍼센트 다양한 모드, 증감률·변화율.",
+    howTo: ["원하는 모드를 선택합니다.", "값을 입력하면 결과가 즉시 표시됩니다."],
+    faq: [{ q: "증감률 계산 공식이 뭔가요?", a: "(새값 - 기존값) / 기존값 × 100" }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "discount",
+    component: "DiscountTool",
+    category: "calc",
+    icon: "🏷️",
+    navTitle: "할인율 계산기",
+    title: "할인율 계산기 - 정가/할인가/할인율 즉시 계산",
+    h1: "할인율 계산기",
+    description:
+      "정가에서 할인율 적용해 할인가 계산, 정가와 할인가로 할인율 계산, 할인가 + 할인율로 정가 역산 등 모드 지원.",
+    metaDescription:
+      "할인율 계산기 무료. 정가↔할인가↔할인율 양방향 계산.",
+    howTo: ["모드를 선택합니다.", "두 값을 입력하면 나머지가 계산됩니다."],
+    faq: [{ q: "중복 할인은요?", a: "할인 후 결과를 다시 입력하면 됩니다 (예: 30% → 다시 10%)." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "vat",
+    component: "VatTool",
+    category: "calc",
+    icon: "🧾",
+    navTitle: "부가세 계산기",
+    title: "부가세 계산기 - 공급가액·부가세·합계 자동 계산",
+    h1: "부가세(VAT) 계산기",
+    description:
+      "한국 부가가치세 10% 기준으로 공급가액·부가세·합계를 자동 계산합니다. 부가세 포함 가격에서 공급가액 역산도 지원.",
+    metaDescription:
+      "부가세 계산기 무료. 10% VAT, 공급가↔부가세↔합계, 역산 지원.",
+    howTo: ["모드(공급가 입력 / 합계 입력)를 선택합니다.", "값을 입력하면 나머지가 계산됩니다."],
+    faq: [{ q: "면세 사업자도 쓰나요?", a: "면세 사업자에게는 부가세가 없습니다. 일반 과세자(부가세 10%)용입니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "bmi",
+    component: "BmiTool",
+    category: "calc",
+    icon: "⚖️",
+    navTitle: "BMI 계산기",
+    title: "BMI 체질량지수 계산기 - 비만도 측정",
+    h1: "BMI (체질량지수) 계산기",
+    description:
+      "키와 몸무게로 BMI(체질량지수)를 계산하고 WHO 아시아-태평양 기준으로 저체중·정상·과체중·비만을 판정합니다.",
+    metaDescription:
+      "BMI 계산기 무료. 키·몸무게 입력, 비만도 즉시 판정, WHO 아시아 기준.",
+    howTo: ["키(cm)와 몸무게(kg)를 입력합니다.", "BMI 값과 단계 판정이 즉시 표시됩니다."],
+    faq: [{ q: "근육량이 많아도 정확한가요?", a: "BMI는 단순 계산이라 근육·지방 비율을 구분하지 못합니다. 운동선수 등은 따로 체지방률 측정을 권장합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "compound",
+    component: "CompoundTool",
+    category: "calc",
+    icon: "📈",
+    navTitle: "복리 계산기",
+    title: "복리 계산기 - 예금·적금 만기 금액 계산",
+    h1: "복리 / 적금 계산기",
+    description:
+      "원금·이자율·기간을 넣으면 복리로 불어난 만기 금액을 계산합니다. 일시예금과 매월 적립 두 모드 지원.",
+    metaDescription:
+      "복리 계산기 무료. 예금·적금 만기 금액, 이자 비교, 즉시 계산.",
+    howTo: ["원금(또는 매월 적립), 연이율, 기간을 입력합니다.", "복리 주기(연/월)를 선택합니다.", "만기 금액과 총 이자가 표시됩니다."],
+    faq: [{ q: "세금은 포함되나요?", a: "세전 금액입니다. 한국 이자소득세 15.4%는 별도로 차감해 계산하세요." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "world-time",
+    component: "WorldTimeTool",
+    category: "calc",
+    icon: "🌏",
+    navTitle: "세계 시간",
+    title: "세계 시간 / 시차 - 주요 도시 현재 시각",
+    h1: "세계 시간 / 시차",
+    description:
+      "서울·도쿄·뉴욕·런던·파리·시드니 등 주요 도시의 현재 시간을 한 번에 보세요. 도시 추가·삭제 가능, 실시간 업데이트.",
+    metaDescription:
+      "세계 시간 무료. 도시별 현재 시각, 시차 계산, 실시간 업데이트.",
+    howTo: ["기본 도시들이 표시됩니다.", "+ 버튼으로 도시를 추가합니다.", "X 버튼으로 도시를 제거합니다."],
+    faq: [{ q: "서머타임이 적용되나요?", a: "Intl.DateTimeFormat이 자동으로 처리합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "name-picker",
+    component: "NamePickerTool",
+    category: "calc",
+    icon: "🎲",
+    navTitle: "이름 랜덤 뽑기",
+    title: "이름 랜덤 뽑기 - 제비뽑기 / 추첨 무료",
+    h1: "이름 / 항목 랜덤 추첨",
+    description:
+      "이름이나 항목 목록에서 무작위로 N개를 뽑으세요. 회식 메뉴 정하기, 발표자 선정, 경품 추첨에 편리합니다.",
+    metaDescription:
+      "이름 랜덤 뽑기 무료. 제비뽑기·추첨, 중복 허용/제외, Web Crypto 안전 난수.",
+    howTo: ["이름이나 항목을 한 줄에 하나씩 입력합니다.", "뽑을 개수와 중복 허용 여부를 선택합니다.", "추첨 버튼을 누르면 결과가 나옵니다."],
+    faq: [{ q: "얼마나 공정한가요?", a: "Web Crypto의 안전한 난수를 사용해 통계적으로 균등하게 추첨됩니다." }],
+    addedAt: "2026-05-14",
+  },
 ];
 
 export function getTool(slug: string): ToolConfig | undefined {
@@ -1914,4 +2093,5 @@ export const categoryLabels: Record<string, string> = {
   pdf: "PDF",
   text: "텍스트",
   dev: "개발자",
+  calc: "계산기·생활",
 };
