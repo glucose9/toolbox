@@ -14,8 +14,36 @@ export type ToolConfig = {
     | "VideoToGifTool"
     | "VideoToMp3Tool"
     | "VideoCompressTool"
-    | "VideoTrimTool";
-  category: "qr" | "image" | "video" | "text" | "dev";
+    | "VideoTrimTool"
+    | "HwpViewerTool"
+    | "HwpToTextTool"
+    | "HwpToPdfTool"
+    | "HwpToHwpxTool"
+    | "PdfMergeTool"
+    | "PdfSplitTool"
+    | "PdfRotateTool"
+    | "PdfDeletePagesTool"
+    | "ImagesToPdfTool"
+    | "PdfToImagesTool"
+    | "TextCaseTool"
+    | "TextSortTool"
+    | "TextDedupeTool"
+    | "JsonFormatterTool"
+    | "UrlEncoderTool"
+    | "HashTool"
+    | "UuidTool"
+    | "RegexTesterTool"
+    | "TimestampTool"
+    | "Base64ImageTool"
+    | "LoremIpsumTool"
+    | "MarkdownPreviewTool"
+    | "DiffCheckerTool"
+    | "CsvToJsonTool"
+    | "YamlJsonTool"
+    | "ImageExifStripTool"
+    | "ImageCropTool"
+    | "ImageRotateTool";
+  category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf";
   icon: string;
   navTitle: string;
   title: string;
@@ -361,6 +389,324 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-13",
   },
 
+  // ===== HWP / HWPX =====
+  {
+    slug: "hwp-viewer",
+    component: "HwpViewerTool",
+    category: "document",
+    icon: "📄",
+    navTitle: "HWP 뷰어",
+    title: "HWP 뷰어 - 한글 파일 온라인으로 열기 (한컴 설치 불필요)",
+    h1: "HWP / HWPX 파일 뷰어",
+    description:
+      "한글과컴퓨터 오피스 없이 .hwp · .hwpx 파일을 브라우저에서 바로 열어 보세요. 페이지 넘기기, 확대/축소 지원. 파일은 외부로 전송되지 않습니다.",
+    metaDescription:
+      "HWP·HWPX 파일을 한컴오피스 없이 무료로 열기. 브라우저에서 바로 보기, 안전, 가입 불필요.",
+    howTo: [
+      ".hwp 또는 .hwpx 파일을 드래그하거나 클릭해서 업로드합니다.",
+      "WebAssembly 엔진이 처음 한 번만 로드됩니다 (~5MB).",
+      "페이지를 넘기며 문서를 확인합니다. 확대/축소 버튼으로 가독성을 조절합니다.",
+      "PDF로 저장하고 싶으면 'HWP → PDF 변환' 도구를 이용하세요.",
+    ],
+    faq: [
+      { q: "한컴오피스 없이도 정말 열리나요?", a: "네. @rhwp/core라는 오픈소스 Rust+WebAssembly 엔진을 사용해 브라우저 안에서 직접 .hwp / .hwpx를 파싱합니다. 한컴오피스 설치는 필요 없습니다." },
+      { q: "어떤 버전까지 지원하나요?", a: "HWP 5.0 이상 바이너리 형식과 KS X 6101 표준의 HWPX 형식을 지원합니다. 구버전 HWP 3.0/97은 미지원입니다." },
+      { q: "파일이 서버로 올라가나요?", a: "아니요. 파싱과 렌더링이 전부 브라우저 안에서 일어나며 파일은 어디로도 전송되지 않습니다." },
+      { q: "복잡한 서식이 모두 그대로 보이나요?", a: "본문, 표, 이미지, 머리말/꼬리말, 수식 등 대부분이 렌더링됩니다. 일부 특수 도형이나 매크로는 다르게 보일 수 있습니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "hwp-to-text",
+    component: "HwpToTextTool",
+    category: "document",
+    icon: "📝",
+    navTitle: "HWP → 텍스트",
+    title: "HWP 텍스트 추출 - 한글 파일에서 본문만 뽑아내기",
+    h1: "HWP / HWPX 텍스트 추출",
+    description:
+      "한글 문서의 본문 텍스트만 .txt로 추출하세요. 카톡·이메일·번역기에 붙여넣을 때 편리합니다. 브라우저 안에서 처리되어 안전합니다.",
+    metaDescription:
+      "HWP·HWPX 본문 텍스트 무료 추출. .txt 다운로드, 클립보드 복사, 한컴오피스 불필요.",
+    howTo: [
+      ".hwp 또는 .hwpx 파일을 업로드합니다.",
+      "본문 텍스트가 자동으로 추출되어 미리보기에 표시됩니다.",
+      "전체 복사 버튼으로 클립보드에 담거나 .txt 파일로 다운로드합니다.",
+    ],
+    faq: [
+      { q: "표 안의 글자도 추출되나요?", a: "네. 표 셀, 머리말/꼬리말, 각주의 글자까지 모두 추출됩니다." },
+      { q: "이미지나 도형은요?", a: "이미지와 도형은 텍스트가 아니라 추출되지 않습니다. 도형 안에 입력된 글자는 추출됩니다." },
+      { q: "줄바꿈은 어떻게 처리되나요?", a: "원본의 문단 단위로 줄바꿈이 들어갑니다. 페이지마다 빈 줄 한 칸이 추가되어 구분됩니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "hwp-to-pdf",
+    component: "HwpToPdfTool",
+    category: "document",
+    icon: "📕",
+    navTitle: "HWP → PDF",
+    title: "HWP를 PDF로 변환 - 한글 파일 PDF 변환기 (무료, 한컴 불필요)",
+    h1: "HWP / HWPX → PDF 변환",
+    description:
+      "한글 문서를 PDF로 변환하세요. 한컴오피스 없이도 브라우저에서 즉시 변환 가능. 출력물을 외부로 공유할 때 안성맞춤입니다.",
+    metaDescription:
+      "HWP·HWPX 파일을 PDF로 무료 변환. 한컴오피스 불필요, 브라우저 안전 처리, 가입 없음.",
+    howTo: [
+      ".hwp 또는 .hwpx 파일을 업로드합니다.",
+      "변환된 페이지 미리보기를 확인합니다.",
+      "PDF로 저장 버튼을 누르면 모든 페이지가 한 PDF로 합쳐집니다.",
+      "파일이 다운로드되면 끝입니다.",
+    ],
+    faq: [
+      { q: "원본 디자인이 그대로 보존되나요?", a: "본문, 표, 머리말/꼬리말, 수식 등 대부분 보존됩니다. 단, 일부 특수 도형이나 한컴 전용 글꼴은 비슷한 글꼴로 대체될 수 있습니다." },
+      { q: "긴 문서도 변환 가능한가요?", a: "수십 페이지까지는 일반 PC에서 무리 없이 변환됩니다. 100페이지 이상이면 시간이 좀 걸릴 수 있습니다." },
+      { q: "파일이 외부로 업로드되나요?", a: "아니요. 변환은 브라우저 안에서 일어나며 파일이 외부 서버로 전송되지 않습니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "hwp-to-hwpx",
+    component: "HwpToHwpxTool",
+    category: "document",
+    icon: "🔄",
+    navTitle: "HWP → HWPX",
+    title: "HWP를 HWPX로 변환 - 표준 한글 문서 포맷 변환기",
+    h1: "HWP → HWPX 변환",
+    description:
+      "구버전 .hwp 파일을 정부 표준 .hwpx 포맷(KS X 6101)으로 변환하세요. 공공기관 제출, 협업 도구 호환에 유용합니다.",
+    metaDescription:
+      "HWP를 HWPX(국가 표준)로 무료 변환. 공공기관 제출, 협업, 보존용에 적합.",
+    howTo: [
+      ".hwp 파일을 업로드합니다.",
+      "변환 버튼을 누르면 HWPX(zip+XML) 패키지가 생성됩니다.",
+      ".hwpx 파일을 다운로드합니다.",
+    ],
+    faq: [
+      { q: "HWPX가 뭐예요?", a: "한글 문서의 새 표준(KS X 6101)으로, XML+ZIP 기반이라 OOXML(docx)처럼 다른 도구와 호환이 좋습니다. 공공기관·정부 문서 표준으로 채택되었습니다." },
+      { q: "원본 서식이 모두 보존되나요?", a: "본문·표·서식·이미지 같은 주요 내용은 보존됩니다. 일부 한컴 전용 기능(매크로 등)은 누락될 수 있습니다." },
+      { q: "반대 방향(HWPX → HWP)도 되나요?", a: "현재는 HWP → HWPX 방향만 지원합니다. HWPX는 표준 포맷이라 한컴오피스와 대부분의 뷰어가 직접 열 수 있습니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+
+  // ===== PDF =====
+  {
+    slug: "pdf-merge",
+    component: "PdfMergeTool",
+    category: "pdf",
+    icon: "📎",
+    navTitle: "PDF 병합",
+    title: "PDF 병합 - 무료 PDF 합치기 (가입 불필요, 워터마크 없음)",
+    h1: "PDF 합치기",
+    description:
+      "여러 PDF 파일을 하나로 합치세요. 드래그로 순서를 자유롭게 바꿀 수 있고, 파일은 브라우저 안에서 처리되어 외부로 전송되지 않습니다.",
+    metaDescription:
+      "여러 PDF를 하나로 무료 병합. 순서 변경 지원, 워터마크 없음, 가입 불필요, 안전 처리.",
+    howTo: [
+      "합칠 PDF 파일을 모두 업로드합니다 (여러 개 가능).",
+      "위/아래 화살표로 순서를 조절합니다.",
+      "병합 버튼을 누르면 한 PDF로 합쳐집니다.",
+      "결과 파일을 다운로드합니다.",
+    ],
+    faq: [
+      { q: "파일이 서버로 전송되나요?", a: "아니요. 모든 작업이 브라우저 안에서 일어나며 외부로 전송되지 않습니다." },
+      { q: "최대 몇 개까지 합칠 수 있나요?", a: "기술적 제한은 없지만 메모리 한계로 보통 50개 이내, 합쳐서 200MB 이하를 권장합니다." },
+      { q: "비밀번호 걸린 PDF도 가능한가요?", a: "현재 비밀번호 보호된 PDF는 지원하지 않습니다. 먼저 잠금을 풀어주세요." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "pdf-split",
+    component: "PdfSplitTool",
+    category: "pdf",
+    icon: "✂️",
+    navTitle: "PDF 분할",
+    title: "PDF 분할 - 페이지별로 PDF 나누기 (무료)",
+    h1: "PDF 분할 / 나누기",
+    description:
+      "PDF를 페이지 단위로 분리하거나, 원하는 페이지 범위만 추출하세요. 결과는 ZIP으로 한 번에 받습니다.",
+    metaDescription:
+      "PDF를 페이지별 / 범위별로 무료 분할. ZIP 일괄 다운로드, 안전, 가입 불필요.",
+    howTo: [
+      "PDF 파일을 업로드합니다.",
+      "분할 방식을 선택합니다 (모든 페이지 / 범위 지정).",
+      "범위 지정 시 '1-3, 5, 7-9' 같은 형식으로 입력합니다.",
+      "결과 ZIP을 다운로드합니다.",
+    ],
+    faq: [
+      { q: "범위 지정 문법이 어떻게 되나요?", a: "콤마로 구분: '1-3, 5, 7-9'. 1~3페이지를 한 묶음, 5페이지 단독, 7~9페이지를 한 묶음으로 나눕니다." },
+      { q: "한 페이지짜리 PDF도 분할되나요?", a: "한 페이지짜리는 분할할 게 없어 그대로 반환됩니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "pdf-rotate",
+    component: "PdfRotateTool",
+    category: "pdf",
+    icon: "🔃",
+    navTitle: "PDF 회전",
+    title: "PDF 회전 - 페이지 방향 90/180/270도 돌리기",
+    h1: "PDF 페이지 회전",
+    description:
+      "스캔이나 촬영해서 누워있는 PDF 페이지를 똑바로 세우세요. 전체 페이지 또는 특정 페이지만 90·180·270도 회전 가능.",
+    metaDescription:
+      "PDF 페이지 회전 무료. 90·180·270도 지원, 페이지 선택 가능, 안전 처리.",
+    howTo: [
+      "PDF 파일을 업로드합니다.",
+      "회전할 페이지를 선택합니다 (전체 또는 특정 페이지).",
+      "회전 각도(90°/180°/270°)를 고릅니다.",
+      "회전된 PDF를 다운로드합니다.",
+    ],
+    faq: [
+      { q: "원본 화질이 떨어지나요?", a: "아닙니다. 페이지 메타데이터만 변경되어 화질 손실 없이 회전됩니다." },
+      { q: "스캔본인데 글자가 그대로 보이나요?", a: "네. 픽셀 단위로 다시 그리지 않고 페이지 회전 정보만 추가합니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "pdf-delete-pages",
+    component: "PdfDeletePagesTool",
+    category: "pdf",
+    icon: "🗑️",
+    navTitle: "PDF 페이지 삭제",
+    title: "PDF 페이지 삭제 - 원하지 않는 페이지 제거",
+    h1: "PDF에서 페이지 삭제",
+    description:
+      "PDF에서 빈 페이지나 필요 없는 페이지를 골라 제거하세요. 페이지를 선택해 삭제 버튼을 누르면 끝.",
+    metaDescription:
+      "PDF에서 페이지 무료 삭제. 빈 페이지·불필요 페이지 제거, 가입 불필요, 안전.",
+    howTo: [
+      "PDF 파일을 업로드합니다.",
+      "삭제할 페이지 번호를 입력합니다 ('2, 5-7' 형식).",
+      "처리 버튼을 누르면 해당 페이지가 빠진 PDF가 만들어집니다.",
+      "결과를 다운로드합니다.",
+    ],
+    faq: [
+      { q: "원본 파일이 변경되나요?", a: "아니요. 원본은 그대로 두고 새 PDF가 생성됩니다." },
+      { q: "여러 범위를 한 번에 삭제할 수 있나요?", a: "네. '2, 5-7, 10' 처럼 콤마로 여러 범위를 함께 지정할 수 있습니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "images-to-pdf",
+    component: "ImagesToPdfTool",
+    category: "pdf",
+    icon: "🖼️",
+    navTitle: "이미지 → PDF",
+    title: "이미지 PDF 변환 - JPG, PNG를 PDF로 묶기",
+    h1: "이미지를 PDF로 변환",
+    description:
+      "사진과 스캔본을 한 PDF로 묶으세요. JPG·PNG·WebP 지원, 페이지 크기 선택 가능, 순서 자유롭게 조정.",
+    metaDescription:
+      "JPG·PNG 이미지를 PDF로 무료 변환. 여러 장 묶기, 순서 변경 지원.",
+    howTo: [
+      "이미지를 모두 업로드합니다 (여러 장).",
+      "페이지 크기(A4·Letter·이미지 크기)와 여백을 선택합니다.",
+      "순서를 조정한 뒤 변환 버튼을 누릅니다.",
+      "PDF를 다운로드합니다.",
+    ],
+    faq: [
+      { q: "이미지 화질이 떨어지나요?", a: "원본 이미지 그대로 PDF에 임베드되어 화질 손실이 없습니다." },
+      { q: "A4 페이지에 맞게 자동 조정되나요?", a: "네. 비율을 유지하면서 페이지에 맞게 축소되어 들어갑니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "pdf-to-images",
+    component: "PdfToImagesTool",
+    category: "pdf",
+    icon: "🏞️",
+    navTitle: "PDF → 이미지",
+    title: "PDF 이미지 변환 - 페이지를 PNG/JPG로 추출",
+    h1: "PDF 페이지를 이미지로 추출",
+    description:
+      "PDF의 각 페이지를 PNG 또는 JPG 이미지로 저장하세요. 해상도 선택 가능, ZIP으로 일괄 다운로드.",
+    metaDescription:
+      "PDF 페이지를 PNG·JPG로 무료 추출. 해상도 선택, ZIP 일괄 다운로드.",
+    howTo: [
+      "PDF 파일을 업로드합니다.",
+      "출력 형식(PNG/JPG)과 배율(1x~3x)을 선택합니다.",
+      "변환 버튼을 누르면 각 페이지가 이미지로 렌더링됩니다.",
+      "결과 ZIP을 다운로드합니다.",
+    ],
+    faq: [
+      { q: "이미지 화질을 어떻게 조절하나요?", a: "배율 슬라이더로 1x(저용량)~3x(고화질) 사이를 선택합니다. 3x면 인쇄용으로도 적합합니다." },
+      { q: "PNG와 JPG 중 뭐가 좋나요?", a: "그림·도형이 많으면 PNG, 사진이 많으면 JPG가 용량 측면에서 유리합니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+
+  // ===== More image tools =====
+  {
+    slug: "image-exif-strip",
+    component: "ImageExifStripTool",
+    category: "image",
+    icon: "🕵️",
+    navTitle: "EXIF 정보 제거",
+    title: "이미지 EXIF 제거 - 사진 메타데이터·위치정보 삭제",
+    h1: "이미지 EXIF / 메타데이터 제거",
+    description:
+      "사진에 들어있는 위치(GPS)·촬영 시각·기기 정보를 깨끗이 지우세요. SNS 업로드 전 개인정보 보호용으로 추천합니다.",
+    metaDescription:
+      "이미지 EXIF 메타데이터·GPS 위치 무료 제거. SNS 업로드 전 개인정보 보호, 브라우저에서 안전 처리.",
+    howTo: [
+      "이미지를 업로드합니다.",
+      "EXIF 제거 버튼을 누르면 메타데이터가 없는 새 이미지가 만들어집니다.",
+      "결과를 다운로드합니다.",
+    ],
+    faq: [
+      { q: "사진 화질이 떨어지나요?", a: "동일 화질로 재인코딩되어 시각적 차이가 거의 없습니다. 원하면 화질을 조정할 수도 있습니다." },
+      { q: "정말 GPS 정보가 사라지나요?", a: "네. Canvas로 픽셀만 재인코딩하기 때문에 EXIF·GPS·촬영 시각이 모두 제거됩니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "image-crop",
+    component: "ImageCropTool",
+    category: "image",
+    icon: "✂️",
+    navTitle: "이미지 자르기",
+    title: "이미지 자르기 - 사진 크롭 (정해진 비율 / 자유)",
+    h1: "이미지 크롭 / 자르기",
+    description:
+      "사진을 원하는 영역만 잘라내세요. 1:1·4:3·16:9 비율 고정 또는 자유 크롭을 지원합니다.",
+    metaDescription:
+      "이미지 자르기 무료. 1:1·4:3·16:9 비율 고정, 자유 크롭, 브라우저 안전 처리.",
+    howTo: [
+      "이미지를 업로드합니다.",
+      "비율을 선택하거나 자유 모드로 둡니다.",
+      "마우스로 자를 영역을 드래그합니다.",
+      "잘라낸 이미지를 다운로드합니다.",
+    ],
+    faq: [
+      { q: "원본이 변경되나요?", a: "아닙니다. 잘라낸 새 이미지만 만들어지고 원본은 그대로입니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "image-rotate",
+    component: "ImageRotateTool",
+    category: "image",
+    icon: "🔄",
+    navTitle: "이미지 회전",
+    title: "이미지 회전 - 사진 90/180/270도 돌리기 + 좌우반전",
+    h1: "이미지 회전 / 반전",
+    description:
+      "사진을 90·180·270도 회전하거나 좌우/상하로 뒤집으세요. 누워있는 사진을 똑바로 세울 때 편리합니다.",
+    metaDescription:
+      "이미지 회전·반전 무료. 90·180·270도, 좌우/상하 반전, 화질 손실 없음.",
+    howTo: [
+      "이미지를 업로드합니다.",
+      "회전 또는 반전 버튼을 누릅니다.",
+      "결과를 다운로드합니다.",
+    ],
+    faq: [
+      { q: "회전하면 화질이 떨어지나요?", a: "90·180·270도 같은 직각 회전은 화질 손실이 없습니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+
   // ===== Text =====
   {
     slug: "character-counter",
@@ -385,7 +731,317 @@ export const tools: ToolConfig[] = [
     ],
   },
 
+  {
+    slug: "text-case",
+    component: "TextCaseTool",
+    category: "text",
+    icon: "🔠",
+    navTitle: "대소문자 변환",
+    title: "대소문자 변환 - UPPER/lower/camel/snake/kebab 케이스",
+    h1: "텍스트 케이스 변환",
+    description:
+      "텍스트를 UPPER·lower·Title·camelCase·snake_case·kebab-case·CONSTANT_CASE로 즉시 변환합니다.",
+    metaDescription:
+      "대소문자·케이스 변환 무료. camelCase, snake_case, kebab-case, CONSTANT_CASE 지원.",
+    howTo: [
+      "변환할 텍스트를 입력합니다.",
+      "원하는 케이스 버튼을 누르면 즉시 변환됩니다.",
+      "복사 버튼으로 결과를 클립보드에 담습니다.",
+    ],
+    faq: [{ q: "한글도 변환되나요?", a: "한글은 대소문자가 없어서 그대로 유지됩니다. 영문 부분만 변환됩니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "text-sort",
+    component: "TextSortTool",
+    category: "text",
+    icon: "🔢",
+    navTitle: "줄 정렬",
+    title: "줄 정렬 - 텍스트 라인 오름차순/내림차순/길이순",
+    h1: "텍스트 줄 정렬",
+    description:
+      "여러 줄로 된 텍스트를 알파벳/가나다 순, 역순, 길이순, 무작위로 정렬합니다. 대소문자 무시·중복 제거 옵션 지원.",
+    metaDescription:
+      "텍스트 줄 정렬 무료. 알파벳·역순·길이·랜덤, 대소문자 무시, 중복 제거 옵션.",
+    howTo: [
+      "정렬할 텍스트를 한 줄에 하나씩 붙여넣습니다.",
+      "정렬 방식을 선택합니다.",
+      "결과를 복사합니다.",
+    ],
+    faq: [{ q: "숫자도 자연 정렬되나요?", a: "네. '1, 2, 10, 11' 처럼 자연 정렬을 지원합니다 (사전 정렬 1, 10, 11, 2가 아님)." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "lorem-ipsum",
+    component: "LoremIpsumTool",
+    category: "text",
+    icon: "📜",
+    navTitle: "Lorem Ipsum",
+    title: "Lorem Ipsum 생성기 - 더미 텍스트 / 한글 더미 문장",
+    h1: "Lorem Ipsum / 한글 더미 텍스트",
+    description:
+      "디자인 시안과 목업에 쓸 더미 텍스트를 생성하세요. 라틴어 Lorem Ipsum과 한글 더미 문장을 단어/문장/단락 수로 만들어드립니다.",
+    metaDescription:
+      "Lorem Ipsum / 한글 더미 텍스트 무료 생성. 단어·문장·단락 수 선택 가능.",
+    howTo: [
+      "스타일(라틴 / 한글)을 선택합니다.",
+      "단위(단어 / 문장 / 단락)와 개수를 입력합니다.",
+      "생성 버튼을 눌러 결과를 복사합니다.",
+    ],
+    faq: [{ q: "왜 Lorem Ipsum을 쓰나요?", a: "콘텐츠 대신 디자인 자체에 집중하기 위해 의미 없는 텍스트를 채워 넣는 디자인 관행입니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "markdown-preview",
+    component: "MarkdownPreviewTool",
+    category: "text",
+    icon: "📖",
+    navTitle: "마크다운 미리보기",
+    title: "마크다운 미리보기 - Markdown → HTML 실시간 변환",
+    h1: "마크다운 → HTML 미리보기",
+    description:
+      "마크다운을 입력하면 실시간으로 HTML로 변환되어 미리보기가 표시됩니다. GitHub Flavored Markdown(GFM) 지원, HTML 소스 복사 가능.",
+    metaDescription:
+      "마크다운 무료 미리보기. GitHub Flavored Markdown, HTML 코드 복사, 실시간 변환.",
+    howTo: [
+      "왼쪽에 마크다운 텍스트를 작성합니다.",
+      "오른쪽에 HTML 결과가 즉시 표시됩니다.",
+      "필요하면 HTML 소스 보기로 복사합니다.",
+    ],
+    faq: [
+      { q: "어떤 마크다운 문법을 지원하나요?", a: "GitHub Flavored Markdown (GFM) — 표, 체크박스, 코드 펜스, 자동 링크 등을 지원합니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "diff-checker",
+    component: "DiffCheckerTool",
+    category: "text",
+    icon: "🔀",
+    navTitle: "텍스트 비교 (diff)",
+    title: "텍스트 비교 (diff) - 두 텍스트 차이점 찾기",
+    h1: "텍스트 비교 / Diff",
+    description:
+      "두 텍스트를 나란히 비교해 추가·삭제·변경된 부분을 표시합니다. 코드 리뷰·문서 변경 추적에 유용합니다.",
+    metaDescription:
+      "텍스트 두 개 무료 비교(diff). 라인·단어 단위 차이 표시, 색상 하이라이트.",
+    howTo: [
+      "왼쪽·오른쪽에 비교할 텍스트를 붙여넣습니다.",
+      "줄 단위 또는 단어 단위 모드를 선택합니다.",
+      "차이가 색상으로 표시됩니다.",
+    ],
+    faq: [{ q: "어떤 알고리즘을 쓰나요?", a: "표준 Myers diff 알고리즘 기반의 `diff` 라이브러리를 사용합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "text-dedupe",
+    component: "TextDedupeTool",
+    category: "text",
+    icon: "♻️",
+    navTitle: "중복 줄 제거",
+    title: "중복 줄 제거 - 텍스트에서 중복 라인 삭제",
+    h1: "중복 줄 제거 / Unique",
+    description:
+      "여러 줄 텍스트에서 중복된 줄을 제거하세요. 대소문자 무시·공백 무시 옵션, 빈 줄 제거 옵션 지원.",
+    metaDescription:
+      "텍스트 중복 라인 무료 제거. 대소문자·공백 무시 옵션, 즉시 처리.",
+    howTo: ["텍스트를 입력합니다.", "옵션을 선택합니다 (대소문자/공백 무시).", "결과를 복사합니다."],
+    faq: [{ q: "줄 순서가 유지되나요?", a: "네. 원본의 첫 등장 순서가 보존됩니다." }],
+    addedAt: "2026-05-14",
+  },
+
   // ===== Dev =====
+  {
+    slug: "json-formatter",
+    component: "JsonFormatterTool",
+    category: "dev",
+    icon: "{ }",
+    navTitle: "JSON 포맷터",
+    title: "JSON 포맷터 - JSON 정렬 / 검증 / 압축",
+    h1: "JSON 포맷터 & 검증기",
+    description:
+      "JSON을 보기 좋게 정렬하거나 한 줄로 압축하세요. 문법 오류를 알려주고, 키 정렬 옵션도 지원합니다.",
+    metaDescription:
+      "JSON 포맷터 무료. 정렬·압축·검증, 키 정렬 옵션, 오류 위치 표시.",
+    howTo: [
+      "JSON 문자열을 붙여넣습니다.",
+      "정렬·압축·키 정렬 버튼을 누릅니다.",
+      "유효성 검사 결과가 자동 표시됩니다.",
+    ],
+    faq: [
+      { q: "어떤 들여쓰기를 지원하나요?", a: "2칸·4칸·탭 중에서 선택할 수 있습니다." },
+      { q: "큰 JSON도 처리되나요?", a: "수 MB까지는 무리 없습니다. 브라우저 메모리 한계 안에서 처리됩니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "url-encoder",
+    component: "UrlEncoderTool",
+    category: "dev",
+    icon: "🔗",
+    navTitle: "URL 인코더",
+    title: "URL 인코더 / 디코더 - 퍼센트 인코딩 변환",
+    h1: "URL 인코더 / 디코더",
+    description:
+      "URL에 들어갈 한글·특수문자를 퍼센트 인코딩으로 변환하거나 디코딩하세요. encodeURIComponent / encodeURI 모드 지원.",
+    metaDescription:
+      "URL 퍼센트 인코딩 무료 변환. encodeURIComponent / encodeURI 모드, 한글 지원.",
+    howTo: [
+      "왼쪽에 텍스트/URL을 입력합니다.",
+      "인코딩 또는 디코딩 버튼을 누릅니다.",
+      "결과를 복사합니다.",
+    ],
+    faq: [
+      { q: "encodeURI와 encodeURIComponent 차이가 뭔가요?", a: "encodeURI는 URL 전체용이라 ':/?#&=' 같은 구분자를 보존합니다. encodeURIComponent는 쿼리스트링 값용으로 모든 특수문자를 인코딩합니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "hash-generator",
+    component: "HashTool",
+    category: "dev",
+    icon: "🔒",
+    navTitle: "해시 생성",
+    title: "해시 생성기 - SHA-256, SHA-512, MD5, SHA-1",
+    h1: "텍스트/파일 해시 생성",
+    description:
+      "텍스트나 파일의 SHA-256·SHA-512·SHA-1·MD5 해시를 즉시 계산하세요. 무결성 검증·체크섬에 사용합니다.",
+    metaDescription:
+      "SHA-256, SHA-512, SHA-1, MD5 해시 무료 생성. 텍스트·파일 둘 다 지원.",
+    howTo: [
+      "탭에서 텍스트 또는 파일을 선택합니다.",
+      "텍스트를 입력하거나 파일을 업로드합니다.",
+      "각 알고리즘별 해시가 자동 계산됩니다.",
+    ],
+    faq: [
+      { q: "어떤 게 가장 안전한가요?", a: "보안용도라면 SHA-256 이상을 권장합니다. MD5와 SHA-1은 충돌 공격이 알려져 있어 무결성 검증용으로만 쓰세요." },
+      { q: "파일이 서버로 전송되나요?", a: "아니요. 모든 계산이 브라우저 Web Crypto API로 로컬에서 일어납니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "uuid-generator",
+    component: "UuidTool",
+    category: "dev",
+    icon: "🆔",
+    navTitle: "UUID 생성",
+    title: "UUID 생성기 - UUID v4 무료 생성 (다중 생성 지원)",
+    h1: "UUID v4 생성기",
+    description:
+      "암호학적으로 안전한 UUID v4를 한 번에 여러 개 생성하세요. 하이픈 포함/제외, 대문자 옵션 지원.",
+    metaDescription:
+      "UUID v4 무료 생성. 다중 생성, 하이픈 옵션, Web Crypto 기반.",
+    howTo: ["생성할 개수를 입력합니다.", "옵션을 선택합니다 (하이픈/대문자).", "복사 버튼으로 결과를 가져갑니다."],
+    faq: [{ q: "UUID v4가 정말 고유한가요?", a: "수학적으로 122비트 랜덤이라 충돌 확률이 무시할 수준입니다. 안전한 난수원(Web Crypto)을 사용합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "timestamp-converter",
+    component: "TimestampTool",
+    category: "dev",
+    icon: "⏱️",
+    navTitle: "Unix 타임스탬프 변환",
+    title: "Unix 타임스탬프 변환기 - 초·밀리초 ↔ 사람이 읽는 시간",
+    h1: "Unix 타임스탬프 ↔ 날짜",
+    description:
+      "Unix 타임스탬프(초 또는 밀리초)를 사람이 읽는 날짜·시간으로 변환하고, 그 반대도 가능합니다. ISO 8601, 로컬, UTC 표시 모두 지원.",
+    metaDescription:
+      "Unix 타임스탬프 변환기. 초·밀리초 ↔ ISO/로컬/UTC, 현재 시각 즉시 표시.",
+    howTo: [
+      "타임스탬프 또는 날짜를 입력합니다.",
+      "단위(초/밀리초)와 표시 형식(로컬/UTC/ISO)을 선택합니다.",
+      "결과가 즉시 표시됩니다.",
+    ],
+    faq: [
+      { q: "초와 밀리초 차이가 뭔가요?", a: "Unix 표준은 초(10자리), JavaScript Date는 밀리초(13자리)를 씁니다. 자릿수로 자동 감지합니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "base64-image",
+    component: "Base64ImageTool",
+    category: "dev",
+    icon: "🖻",
+    navTitle: "이미지 ↔ Base64",
+    title: "이미지 Base64 변환 - data URL 생성기",
+    h1: "이미지 ↔ Base64 변환",
+    description:
+      "이미지를 Base64 data URL로 인코딩하거나, data URL을 다시 이미지로 디코딩하세요. CSS·이메일에 이미지 인라인 임베드할 때 사용합니다.",
+    metaDescription:
+      "이미지 ↔ Base64 무료 변환. data URL 생성, CSS·이메일 인라인 이미지용.",
+    howTo: [
+      "이미지를 업로드하면 Base64 data URL이 자동 생성됩니다.",
+      "반대로 data URL을 붙여넣으면 이미지로 미리보기 됩니다.",
+      "복사 버튼으로 결과를 가져갑니다.",
+    ],
+    faq: [{ q: "data URL 용량은 원본보다 큰가요?", a: "Base64는 약 33% 용량이 증가합니다. 인라인 임베드 외에는 보통 외부 파일이 더 효율적입니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "csv-to-json",
+    component: "CsvToJsonTool",
+    category: "dev",
+    icon: "📊",
+    navTitle: "CSV ↔ JSON",
+    title: "CSV JSON 변환기 - 양방향 자동 변환",
+    h1: "CSV ↔ JSON 변환",
+    description:
+      "CSV 데이터를 JSON 배열로, JSON 배열을 CSV로 변환하세요. 첫 줄을 헤더로 인식하며 따옴표·쉼표가 포함된 값도 정상 처리합니다.",
+    metaDescription:
+      "CSV ↔ JSON 무료 변환. 헤더 자동 인식, 인용 처리, 양방향 변환.",
+    howTo: [
+      "CSV 또는 JSON 텍스트를 붙여넣습니다.",
+      "방향(CSV→JSON / JSON→CSV)을 선택합니다.",
+      "결과를 복사하거나 .csv·.json 파일로 다운로드합니다.",
+    ],
+    faq: [
+      { q: "어떤 구분자를 지원하나요?", a: "기본은 쉼표(,)이고, 설정에서 탭(\\t)·세미콜론(;)으로 바꿀 수 있습니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "yaml-json",
+    component: "YamlJsonTool",
+    category: "dev",
+    icon: "🧾",
+    navTitle: "YAML ↔ JSON",
+    title: "YAML JSON 변환기 - 양방향 자동 변환",
+    h1: "YAML ↔ JSON 변환",
+    description:
+      "YAML과 JSON 사이를 자유롭게 변환하세요. Kubernetes, GitHub Actions, OpenAPI 설정 파일 작업에 유용합니다.",
+    metaDescription:
+      "YAML ↔ JSON 무료 변환. K8s / GitHub Actions / OpenAPI 설정 작업에 적합.",
+    howTo: [
+      "YAML 또는 JSON 텍스트를 붙여넣습니다.",
+      "방향을 선택합니다.",
+      "결과를 복사합니다.",
+    ],
+    faq: [{ q: "어떤 YAML 사양을 따르나요?", a: "YAML 1.2 (eemeli/yaml 라이브러리 기반)를 따릅니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "regex-tester",
+    component: "RegexTesterTool",
+    category: "dev",
+    icon: "🔎",
+    navTitle: "정규식 테스터",
+    title: "정규식 테스터 - JavaScript Regex 매칭 확인",
+    h1: "정규식 테스터",
+    description:
+      "정규식 패턴과 플래그(gimsuy)를 입력해 매칭 결과를 실시간으로 확인하세요. 캡처 그룹·치환 미리보기 지원.",
+    metaDescription:
+      "JavaScript 정규식 무료 테스터. 매칭 결과 실시간 표시, 캡처 그룹·치환 지원.",
+    howTo: [
+      "정규식 패턴을 입력합니다.",
+      "테스트할 문자열을 입력합니다.",
+      "플래그(g, i, m 등)를 선택합니다.",
+      "매칭 결과와 캡처 그룹이 자동 표시됩니다.",
+    ],
+    faq: [
+      { q: "어떤 엔진을 쓰나요?", a: "브라우저의 JavaScript 정규식 엔진을 사용합니다. ECMAScript 표준이며 lookahead/lookbehind 모두 지원합니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
   {
     slug: "color-converter",
     component: "ColorTool",
@@ -468,6 +1124,8 @@ export const categoryLabels: Record<string, string> = {
   qr: "QR코드",
   image: "이미지",
   video: "동영상",
+  document: "한글(HWP) 문서",
+  pdf: "PDF",
   text: "텍스트",
   dev: "개발자",
 };

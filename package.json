@@ -8,15 +8,22 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "^15.0.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "qrcode": "^1.5.4",
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@ffmpeg/util": "^0.12.2",
-    "jszip": "^3.10.1"
+    "@rhwp/core": "^0.7.11",
+    "diff": "^9.0.0",
+    "jszip": "^3.10.1",
+    "marked": "^18.0.3",
+    "next": "^15.0.3",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.7.284",
+    "qrcode": "^1.5.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
+    "@types/diff": "^7.0.2",
     "@types/node": "^22.9.0",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.0.0",
