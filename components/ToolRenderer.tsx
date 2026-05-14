@@ -55,6 +55,16 @@ const CssShadowTool = dynamic(() => import("./tools/CssShadowTool"), { ssr: fals
 const JsonXmlTool = dynamic(() => import("./tools/JsonXmlTool"), { ssr: false });
 const DDayTool = dynamic(() => import("./tools/DDayTool"), { ssr: false });
 const UnitConverterTool = dynamic(() => import("./tools/UnitConverterTool"), { ssr: false });
+const ImageTextOverlayTool = dynamic(() => import("./tools/ImageTextOverlayTool"), { ssr: false });
+const ImageToAsciiTool = dynamic(() => import("./tools/ImageToAsciiTool"), { ssr: false });
+const HeicToJpgTool = dynamic(() => import("./tools/HeicToJpgTool"), { ssr: false });
+const AudioTrimTool = dynamic(() => import("./tools/AudioTrimTool"), { ssr: false });
+const KorEngKeyboardTool = dynamic(() => import("./tools/KorEngKeyboardTool"), { ssr: false });
+const BaseConverterTool = dynamic(() => import("./tools/BaseConverterTool"), { ssr: false });
+const HtmlEntityTool = dynamic(() => import("./tools/HtmlEntityTool"), { ssr: false });
+const PasswordStrengthTool = dynamic(() => import("./tools/PasswordStrengthTool"), { ssr: false });
+const ColorContrastTool = dynamic(() => import("./tools/ColorContrastTool"), { ssr: false });
+const LottoTool = dynamic(() => import("./tools/LottoTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -163,6 +173,26 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
       return <DDayTool />;
     case "UnitConverterTool":
       return <UnitConverterTool />;
+    case "ImageTextOverlayTool":
+      return <ImageTextOverlayTool />;
+    case "ImageToAsciiTool":
+      return <ImageToAsciiTool />;
+    case "HeicToJpgTool":
+      return <HeicToJpgTool />;
+    case "AudioTrimTool":
+      return <AudioTrimTool />;
+    case "KorEngKeyboardTool":
+      return <KorEngKeyboardTool />;
+    case "BaseConverterTool":
+      return <BaseConverterTool />;
+    case "HtmlEntityTool":
+      return <HtmlEntityTool />;
+    case "PasswordStrengthTool":
+      return <PasswordStrengthTool />;
+    case "ColorContrastTool":
+      return <ColorContrastTool />;
+    case "LottoTool":
+      return <LottoTool />;
     default:
       return <div>도구를 찾을 수 없습니다.</div>;
   }

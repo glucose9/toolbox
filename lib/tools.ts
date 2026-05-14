@@ -54,7 +54,17 @@ export type ToolConfig = {
     | "CssShadowTool"
     | "JsonXmlTool"
     | "DDayTool"
-    | "UnitConverterTool";
+    | "UnitConverterTool"
+    | "ImageTextOverlayTool"
+    | "ImageToAsciiTool"
+    | "HeicToJpgTool"
+    | "AudioTrimTool"
+    | "KorEngKeyboardTool"
+    | "BaseConverterTool"
+    | "HtmlEntityTool"
+    | "PasswordStrengthTool"
+    | "ColorContrastTool"
+    | "LottoTool";
   category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf";
   icon: string;
   navTitle: string;
@@ -758,6 +768,59 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
   {
+    slug: "image-text-overlay",
+    component: "ImageTextOverlayTool",
+    category: "image",
+    icon: "🔤",
+    navTitle: "이미지에 글자 넣기",
+    title: "이미지에 텍스트 추가 - 썸네일·짤·공지 이미지 무료 제작",
+    h1: "이미지에 글자 넣기 (텍스트 오버레이)",
+    description:
+      "사진 위에 제목·문구를 즉시 얹으세요. 폰트·색상·크기·외곽선·위치 자유 조절. 썸네일, 명언짤, 공지 이미지 만들 때 편리합니다.",
+    metaDescription:
+      "이미지에 텍스트 추가 무료. 폰트·색·외곽선·위치 조절, 브라우저 안전 처리.",
+    howTo: [
+      "이미지를 업로드합니다.",
+      "텍스트, 크기, 색상, 외곽선을 설정합니다.",
+      "이미지 위에서 텍스트를 드래그해 위치를 잡습니다.",
+      "결과를 다운로드합니다.",
+    ],
+    faq: [{ q: "한글 폰트는요?", a: "사용자 OS에 설치된 폰트와 웹 표준 폰트를 사용합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "image-to-ascii",
+    component: "ImageToAsciiTool",
+    category: "image",
+    icon: "👾",
+    navTitle: "이미지 → ASCII",
+    title: "이미지 ASCII 아트 변환 - 글자로 그림 그리기",
+    h1: "이미지 → ASCII 아트",
+    description:
+      "사진을 글자(문자)로 표현한 ASCII 아트로 변환하세요. 너비·반전·문자셋 선택 가능. 결과는 텍스트로 복사하거나 PNG로 저장.",
+    metaDescription:
+      "이미지 ASCII 아트 무료 변환. 너비·문자셋 선택, 텍스트/PNG 저장.",
+    howTo: ["이미지를 업로드합니다.", "너비와 문자셋을 선택합니다.", "결과를 복사하거나 다운로드합니다."],
+    faq: [{ q: "어떤 이미지가 잘 나오나요?", a: "콘트라스트가 뚜렷한 사진(인물 실루엣, 로고)이 가장 잘 나옵니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "heic-to-jpg",
+    component: "HeicToJpgTool",
+    category: "image",
+    icon: "📱",
+    navTitle: "HEIC → JPG",
+    title: "HEIC를 JPG로 변환 - 아이폰 사진 무료 변환",
+    h1: "HEIC (아이폰 사진) → JPG",
+    description:
+      "아이폰에서 찍은 .heic 사진을 어디서나 보이는 .jpg로 변환하세요. 카톡·문서 호환 문제를 한 번에 해결합니다.",
+    metaDescription:
+      "HEIC → JPG 무료 변환. 아이폰 사진 호환 문제 해결, 브라우저에서 안전 처리.",
+    howTo: ["HEIC 파일을 업로드합니다.", "화질을 선택합니다.", "JPG로 다운로드합니다."],
+    faq: [{ q: "여러 장을 한 번에 변환할 수 있나요?", a: "현재는 한 장씩 변환됩니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
     slug: "image-exif-strip",
     component: "ImageExifStripTool",
     category: "image",
@@ -826,7 +889,41 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
 
+  // ===== More Video / Audio =====
+  {
+    slug: "audio-trim",
+    component: "AudioTrimTool",
+    category: "video",
+    icon: "🎚️",
+    navTitle: "오디오 자르기",
+    title: "오디오 자르기 - MP3 구간 잘라내기 무료",
+    h1: "오디오 자르기 / 구간 추출",
+    description:
+      "MP3·WAV·M4A·OGG 등 오디오 파일에서 원하는 구간만 잘라내세요. 화질 손실 없는 빠른 컷팅, ffmpeg.wasm 기반.",
+    metaDescription:
+      "오디오 자르기 무료. MP3/WAV/M4A 구간 추출, 화질 손실 없음.",
+    howTo: ["오디오 파일을 업로드합니다.", "시작·끝 시점을 슬라이더로 지정합니다.", "자르기 버튼을 누르고 결과를 다운로드합니다."],
+    faq: [{ q: "어떤 포맷을 지원하나요?", a: "MP3, WAV, M4A, OGG, AAC, FLAC 대부분의 일반 오디오 포맷을 지원합니다." }],
+    addedAt: "2026-05-14",
+  },
+
   // ===== Text =====
+  {
+    slug: "kor-eng-keyboard",
+    component: "KorEngKeyboardTool",
+    category: "text",
+    icon: "⌨️",
+    navTitle: "한↔영 자판 변환",
+    title: "한영 자판 변환기 - 영타 한글 변환 (dkssud → 안녕)",
+    h1: "한영 자판 변환 (오타 변환)",
+    description:
+      "한글 키보드에 영문으로 친 'dkssudgktpdy'를 '안녕하세요'로 즉시 변환하세요. 반대도 가능. 실수로 입력한 글 복구에 유용합니다.",
+    metaDescription:
+      "한영 자판 변환 무료. dkssudgktpdy → 안녕하세요 양방향 변환.",
+    howTo: ["변환할 텍스트를 입력합니다.", "방향(한→영, 영→한)을 선택하면 즉시 변환됩니다."],
+    faq: [{ q: "특수문자나 숫자는 어떻게 되나요?", a: "한글·영문에 해당하지 않는 글자는 그대로 유지됩니다." }],
+    addedAt: "2026-05-14",
+  },
   {
     slug: "character-counter",
     component: "CounterTool",
@@ -1018,6 +1115,86 @@ export const tools: ToolConfig[] = [
   },
 
   // ===== Dev =====
+  {
+    slug: "base-converter",
+    component: "BaseConverterTool",
+    category: "dev",
+    icon: "🔢",
+    navTitle: "진법 변환",
+    title: "진법 변환기 - 10진수 ↔ 2/8/16진수 변환",
+    h1: "숫자 진법 변환",
+    description:
+      "10진수, 2진수, 8진수, 16진수 사이를 즉시 변환하세요. 음수·소수도 지원, 자릿수 자동 그룹화.",
+    metaDescription:
+      "진법 변환 무료. 10/2/8/16 진수 양방향 변환, 음수·소수 지원.",
+    howTo: ["변환할 숫자를 입력하고 입력 진법을 선택합니다.", "다른 진법의 값이 자동 계산됩니다."],
+    faq: [{ q: "음수도 변환되나요?", a: "네. 2's complement는 아니고 부호 표시 방식입니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "html-entity",
+    component: "HtmlEntityTool",
+    category: "dev",
+    icon: "🔣",
+    navTitle: "HTML 엔티티",
+    title: "HTML 엔티티 인코더/디코더 - & → &amp; 변환",
+    h1: "HTML 엔티티 인코더 / 디코더",
+    description:
+      "&, <, >, \", ' 같은 특수문자를 &amp; &lt; &gt; 같은 HTML 엔티티로 변환하거나 디코딩하세요. 한글·이모지의 숫자 엔티티도 지원.",
+    metaDescription:
+      "HTML 엔티티 인코더/디코더 무료. & < > \" ' 변환, 숫자 엔티티(한글·이모지) 지원.",
+    howTo: ["텍스트를 입력하고 방향을 선택합니다.", "결과를 복사합니다."],
+    faq: [{ q: "왜 HTML 엔티티가 필요한가요?", a: "HTML 안에 직접 들어가면 깨지는 글자(< > & 등)를 안전하게 표시하기 위한 표기 방식입니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "password-strength",
+    component: "PasswordStrengthTool",
+    category: "dev",
+    icon: "🛡️",
+    navTitle: "비밀번호 강도",
+    title: "비밀번호 강도 검사기 - 보안 점수 즉시 확인",
+    h1: "비밀번호 강도 검사",
+    description:
+      "비밀번호의 길이·문자 종류·예측 가능성을 점수화해 강도를 평가합니다. 흔한 패스워드·반복 패턴·키보드 시퀀스도 감지.",
+    metaDescription:
+      "비밀번호 강도 무료 검사. 길이·문자 종류·흔한 패턴 분석, 즉시 점수.",
+    howTo: ["검사할 비밀번호를 입력합니다.", "강도 점수와 개선 제안이 실시간 표시됩니다."],
+    faq: [{ q: "입력한 비밀번호가 저장되나요?", a: "아니요. 평가가 전부 브라우저 안에서만 일어나고 외부로 전송되지 않습니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "color-contrast",
+    component: "ColorContrastTool",
+    category: "dev",
+    icon: "🎯",
+    navTitle: "색 대비 검사 (WCAG)",
+    title: "WCAG 색 대비 검사기 - 웹 접근성 명도비 측정",
+    h1: "WCAG 색상 대비 검사",
+    description:
+      "글자색·배경색의 명도 대비비를 계산하고 WCAG AA/AAA 기준 통과 여부를 알려줍니다. 디자인 접근성 검수에 사용하세요.",
+    metaDescription:
+      "WCAG 색 대비 무료 검사. 명도비·AA/AAA 통과 여부, 미리보기.",
+    howTo: ["글자색·배경색을 고릅니다.", "대비비와 통과 기준이 즉시 표시됩니다."],
+    faq: [{ q: "기준이 뭐예요?", a: "WCAG 2.1에서 일반 텍스트는 AA 4.5:1, AAA 7:1. 큰 텍스트(18pt 이상)는 AA 3:1, AAA 4.5:1입니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "lotto",
+    component: "LottoTool",
+    category: "dev",
+    icon: "🎰",
+    navTitle: "로또 번호 생성기",
+    title: "로또 번호 생성기 - 1~45 6자리 무료 자동 추출",
+    h1: "로또 6/45 번호 생성기",
+    description:
+      "Web Crypto의 안전한 난수로 로또 6/45 번호를 생성합니다. 여러 게임 한 번에 뽑기, 제외 번호 설정 가능.",
+    metaDescription:
+      "로또 번호 생성기 무료. Web Crypto 기반 안전 난수, 다중 게임, 제외 번호 옵션.",
+    howTo: ["게임 수와 제외할 번호를 선택합니다.", "생성 버튼을 누르면 6자리씩 자동 추출됩니다."],
+    faq: [{ q: "당첨률이 올라가나요?", a: "아닙니다. 추첨은 완전 무작위라 어떤 번호 조합도 동일한 확률입니다. 재미로만 쓰세요." }],
+    addedAt: "2026-05-14",
+  },
   {
     slug: "json-formatter",
     component: "JsonFormatterTool",
