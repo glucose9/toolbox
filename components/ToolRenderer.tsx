@@ -43,6 +43,8 @@ const YamlJsonTool = dynamic(() => import("./tools/YamlJsonTool"), { ssr: false 
 const ImageExifStripTool = dynamic(() => import("./tools/ImageExifStripTool"), { ssr: false });
 const ImageCropTool = dynamic(() => import("./tools/ImageCropTool"), { ssr: false });
 const ImageRotateTool = dynamic(() => import("./tools/ImageRotateTool"), { ssr: false });
+const SpellCheckTool = dynamic(() => import("./tools/SpellCheckTool"), { ssr: false });
+const MarkdownMathTool = dynamic(() => import("./tools/MarkdownMathTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -127,6 +129,10 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
       return <ImageCropTool />;
     case "ImageRotateTool":
       return <ImageRotateTool />;
+    case "SpellCheckTool":
+      return <SpellCheckTool />;
+    case "MarkdownMathTool":
+      return <MarkdownMathTool />;
     default:
       return <div>도구를 찾을 수 없습니다.</div>;
   }

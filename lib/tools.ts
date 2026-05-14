@@ -42,7 +42,9 @@ export type ToolConfig = {
     | "YamlJsonTool"
     | "ImageExifStripTool"
     | "ImageCropTool"
-    | "ImageRotateTool";
+    | "ImageRotateTool"
+    | "SpellCheckTool"
+    | "MarkdownMathTool";
   category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf";
   icon: string;
   navTitle: string;
@@ -810,6 +812,54 @@ export const tools: ToolConfig[] = [
     ],
     faq: [
       { q: "어떤 마크다운 문법을 지원하나요?", a: "GitHub Flavored Markdown (GFM) — 표, 체크박스, 코드 펜스, 자동 링크 등을 지원합니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "spell-check",
+    component: "SpellCheckTool",
+    category: "text",
+    icon: "📝",
+    navTitle: "맞춤법 검사",
+    title: "한국어 맞춤법 검사 - 자주 틀리는 표현 무료 검사",
+    h1: "한국어 맞춤법 검사기 (오프라인)",
+    description:
+      "자주 틀리는 한국어 표현 100여 개를 즉시 검사합니다. 외부 서버 없이 브라우저 안에서 처리되며 텍스트는 전송되지 않습니다. 초중급 가이드용이라 문맥이 필요한 오류는 잡지 못합니다.",
+    metaDescription:
+      "한국어 맞춤법 무료 검사. 외부 서버 없이 브라우저에서 처리, 자주 틀리는 표현 100+, 가입 불필요.",
+    howTo: [
+      "검사할 한국어 텍스트를 붙여넣습니다.",
+      "오른쪽에 자동으로 오류 후보가 표시됩니다.",
+      "각 항목 옆 '적용' 버튼으로 한 개씩 고치거나, '전체 적용'으로 일괄 수정합니다.",
+    ],
+    faq: [
+      { q: "부산대·네이버 맞춤법 검사기처럼 정확한가요?", a: "아니요. 이건 자주 틀리는 표현 ~120개를 매칭하는 가벼운 도구입니다. 형태소 분석과 문맥 판단을 하는 전문 검사기와 같은 수준은 아닙니다." },
+      { q: "왜 서버 검사기를 안 쓰나요?", a: "이 사이트의 모든 도구는 외부 서버 없이 브라우저 안에서만 처리되도록 설계했습니다. 부산대 등 공개 검사기는 상업·외부 호출이 라이센스로 제한됩니다." },
+      { q: "내 글이 저장되거나 전송되나요?", a: "아니요. 검사 전 과정이 브라우저 안에서만 일어나며 어디로도 전송되지 않습니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "markdown-math",
+    component: "MarkdownMathTool",
+    category: "text",
+    icon: "🧮",
+    navTitle: "마크다운 + 수식",
+    title: "마크다운 + 수학(KaTeX) 미리보기 - 논문·수업 자료용",
+    h1: "마크다운 + LaTeX 수식 미리보기",
+    description:
+      "$x^2 + y^2 = 1$ 같은 LaTeX 수식이 포함된 마크다운을 실시간으로 렌더링합니다. KaTeX 기반이며 PDF로 출력할 수 있어 논문 초안·수업 자료에 적합합니다.",
+    metaDescription:
+      "마크다운 + LaTeX 수식 무료 미리보기. KaTeX 기반, PDF 출력 지원, 논문·수업 자료용.",
+    howTo: [
+      "왼쪽에 마크다운을 작성합니다.",
+      "수식은 인라인 `$E=mc^2$` 또는 블록 `$$ \\\\int_0^1 x dx $$` 형식으로 적습니다.",
+      "오른쪽 미리보기에 수식이 실시간으로 렌더링됩니다.",
+      "PDF로 저장 버튼을 누르면 인쇄 다이얼로그가 열립니다.",
+    ],
+    faq: [
+      { q: "어떤 LaTeX 문법을 지원하나요?", a: "KaTeX 지원 범위(commonly used commands)를 따릅니다. 일반 수식, 행렬, 분수, 적분, 합계, 그리스 문자 등 대부분 지원됩니다." },
+      { q: "PDF 화질이 깨지나요?", a: "수식이 SVG/HTML로 렌더링되어 PDF에서 벡터 품질로 저장됩니다." },
     ],
     addedAt: "2026-05-14",
   },

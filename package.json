@@ -13,6 +13,7 @@
     "@rhwp/core": "^0.7.11",
     "diff": "^9.0.0",
     "jszip": "^3.10.1",
+    "katex": "^0.16.46",
     "marked": "^18.0.3",
     "next": "^15.0.3",
     "pdf-lib": "^1.17.1",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@types/diff": "^7.0.2",
+    "@types/katex": "^0.16.8",
     "@types/node": "^22.9.0",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.0.0",

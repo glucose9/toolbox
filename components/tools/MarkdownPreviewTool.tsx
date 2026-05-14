@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { marked } from "marked";
+import { printHtmlAsPdf } from "@/lib/print";
 
 const SAMPLE = `# 제목 1
 
@@ -31,6 +32,7 @@ export default function MarkdownPreviewTool() {
   const [md, setMd] = useState(SAMPLE);
   const [showHtml, setShowHtml] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [printError, setPrintError] = useState("");
 
   useEffect(() => {
     marked.setOptions({ gfm: true, breaks: true });
@@ -48,6 +50,12 @@ export default function MarkdownPreviewTool() {
     await navigator.clipboard.writeText(html);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
+  };
+
+  const printPdf = () => {
+    const ok = printHtmlAsPdf(html, { title: extractTitle(md) || "마크다운" });
+    if (!ok) setPrintError("팝업 차단을 해제해주세요.");
+    else setPrintError("");
   };
 
   return (
@@ -77,12 +85,19 @@ export default function MarkdownPreviewTool() {
           )}
         </div>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <button onClick={() => setShowHtml((v) => !v)} className="btn btn-secondary">
           {showHtml ? "👁️ 렌더링 보기" : "📄 HTML 코드 보기"}
         </button>
-        <button onClick={copy} className="btn btn-primary">{copied ? "✓ HTML 복사됨" : "HTML 복사"}</button>
+        <button onClick={copy} className="btn btn-secondary">{copied ? "✓ HTML 복사됨" : "HTML 복사"}</button>
+        <button onClick={printPdf} className="btn btn-primary">📕 PDF로 저장</button>
       </div>
+      {printError && <div className="text-sm text-red-600">{printError}</div>}
     </div>
   );
+}
+
+function extractTitle(md: string): string | null {
+  const m = md.match(/^#\s+(.+)$/m);
+  return m ? m[1].trim() : null;
 }
