@@ -64,7 +64,17 @@ export type ToolConfig = {
     | "HtmlEntityTool"
     | "PasswordStrengthTool"
     | "ColorContrastTool"
-    | "LottoTool";
+    | "LottoTool"
+    | "QrDecoderTool"
+    | "ExifViewerTool"
+    | "ColorExtractTool"
+    | "GifToMp4Tool"
+    | "VideoThumbnailTool"
+    | "VideoSpeedTool"
+    | "MarkdownTableTool"
+    | "DocxViewerTool"
+    | "CssGradientTool"
+    | "KorRomanizeTool";
   category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf";
   icon: string;
   navTitle: string;
@@ -166,6 +176,30 @@ export const tools: ToolConfig[] = [
       { q: "한글 이름도 지원되나요?", a: "네. 한국어, 영어, 일본어, 중국어 모두 정상 인식됩니다." },
     ],
     config: { defaultTab: "vcard" },
+  },
+
+  {
+    slug: "qr-decoder",
+    component: "QrDecoderTool",
+    category: "qr",
+    icon: "🔍",
+    navTitle: "QR 코드 읽기",
+    title: "QR 코드 디코더 - 이미지에서 QR 자동 인식",
+    h1: "QR 코드 디코더 (이미지 → 텍스트)",
+    description:
+      "QR 코드가 찍힌 사진을 업로드하면 내용을 자동으로 읽어냅니다. 와이파이·URL·명함 QR 모두 인식. 카메라 없이 PC에서도 사용 가능.",
+    metaDescription:
+      "QR 코드 이미지 무료 디코더. URL·와이파이·명함 QR 인식, 브라우저에서 안전 처리.",
+    howTo: [
+      "QR 코드가 있는 이미지를 업로드합니다.",
+      "내용이 자동으로 인식되어 표시됩니다.",
+      "URL이면 클릭해 바로 열고, 텍스트면 복사합니다.",
+    ],
+    faq: [
+      { q: "어떤 QR 타입을 인식하나요?", a: "표준 QR 모두 (URL, 와이파이, vCard, 텍스트). 흐릿하거나 작은 QR은 인식이 어려울 수 있습니다." },
+      { q: "사진이 외부로 가나요?", a: "아니요. 브라우저 안에서 jsQR로 처리됩니다." },
+    ],
+    addedAt: "2026-05-14",
   },
 
   // ===== Image converters =====
@@ -768,6 +802,41 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
   {
+    slug: "exif-viewer",
+    component: "ExifViewerTool",
+    category: "image",
+    icon: "🔬",
+    navTitle: "EXIF 정보 보기",
+    title: "이미지 EXIF 정보 보기 - 촬영 시각·GPS·카메라 정보",
+    h1: "이미지 EXIF / 메타데이터 보기",
+    description:
+      "JPG/HEIC 사진의 메타데이터를 확인하세요. 카메라 모델, 촬영 시각, GPS 좌표, ISO·셔터·조리개·렌즈 등이 한 눈에 표시됩니다.",
+    metaDescription:
+      "이미지 EXIF 정보 무료 보기. 카메라·촬영시각·GPS·조리개·ISO 표시.",
+    howTo: ["이미지를 업로드합니다.", "EXIF 정보가 자동 표시됩니다.", "GPS가 있으면 지도 링크가 함께 보입니다."],
+    faq: [
+      { q: "EXIF가 없는 이미지는요?", a: "PNG, GIF나 EXIF를 지운 JPG는 표시할 정보가 없습니다." },
+      { q: "EXIF를 제거하려면?", a: "이 사이트의 '이미지 EXIF 제거' 도구를 이용하세요." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "color-extract",
+    component: "ColorExtractTool",
+    category: "image",
+    icon: "🎨",
+    navTitle: "이미지 색상 추출",
+    title: "이미지 주요 색상 추출 - 팔레트 생성기",
+    h1: "이미지에서 색상 팔레트 추출",
+    description:
+      "사진에서 주요 색상 N개를 자동으로 뽑아 팔레트를 만드세요. 디자인 색상 영감, 브랜드 컬러 분석에 유용합니다.",
+    metaDescription:
+      "이미지 색상 팔레트 무료 추출. HEX 코드 표시, 5~10색 추출.",
+    howTo: ["이미지를 업로드합니다.", "추출할 색상 개수를 선택합니다.", "각 색을 클릭해 HEX 코드를 복사합니다."],
+    faq: [{ q: "어떤 알고리즘인가요?", a: "median-cut 양자화로 이미지의 대표 색상을 추출합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
     slug: "image-text-overlay",
     component: "ImageTextOverlayTool",
     category: "image",
@@ -889,6 +958,55 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
 
+  {
+    slug: "gif-to-mp4",
+    component: "GifToMp4Tool",
+    category: "video",
+    icon: "🎬",
+    navTitle: "GIF → MP4",
+    title: "GIF를 MP4로 변환 - 용량 줄이고 호환성 높이기",
+    h1: "GIF → MP4 변환",
+    description:
+      "GIF 애니메이션을 MP4 동영상으로 변환하세요. 일반적으로 용량이 70~90% 줄고 모든 플랫폼에서 호환됩니다.",
+    metaDescription:
+      "GIF → MP4 무료 변환. 용량 최대 90% 절감, 브라우저에서 안전 처리.",
+    howTo: ["GIF 파일을 업로드합니다.", "변환 버튼을 누르면 MP4가 생성됩니다.", "결과를 다운로드합니다."],
+    faq: [{ q: "투명도는 어떻게 되나요?", a: "MP4는 투명도를 지원하지 않아 검은 배경으로 채워집니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "video-thumbnail",
+    component: "VideoThumbnailTool",
+    category: "video",
+    icon: "🖼️",
+    navTitle: "동영상 썸네일 추출",
+    title: "동영상에서 썸네일 추출 - 특정 시점 캡처 무료",
+    h1: "동영상 썸네일 / 프레임 캡처",
+    description:
+      "동영상의 원하는 시점에서 정지화면을 PNG로 저장하세요. 유튜브 영상 썸네일 만들기, 강의 슬라이드 캡처에 유용합니다.",
+    metaDescription:
+      "동영상 썸네일 무료 추출. 시점 선택, PNG 다운로드, 모든 처리는 브라우저 안.",
+    howTo: ["동영상을 업로드합니다.", "원하는 시점에서 캡처 버튼을 누릅니다.", "PNG로 다운로드합니다."],
+    faq: [{ q: "어떤 포맷을 지원하나요?", a: "MP4, MOV, WebM 등 브라우저가 재생할 수 있는 포맷이면 됩니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "video-speed",
+    component: "VideoSpeedTool",
+    category: "video",
+    icon: "⏩",
+    navTitle: "동영상 속도 변경",
+    title: "동영상 재생속도 변경 - 0.25x ~ 4x 무료",
+    h1: "동영상 재생속도 변경",
+    description:
+      "동영상 재생속도를 늦추거나 빠르게 만드세요. 강의 빠르게 듣기·운동 영상 분석에 유용합니다. ffmpeg.wasm 기반.",
+    metaDescription:
+      "동영상 재생속도 무료 변경. 0.25x ~ 4x, 음성 함께 처리.",
+    howTo: ["동영상을 업로드합니다.", "속도 배율을 선택합니다.", "변환 후 다운로드합니다."],
+    faq: [{ q: "음성도 함께 변하나요?", a: "네. 영상과 음성 모두 같은 비율로 처리됩니다." }],
+    addedAt: "2026-05-14",
+  },
+
   // ===== More Video / Audio =====
   {
     slug: "audio-trim",
@@ -908,6 +1026,38 @@ export const tools: ToolConfig[] = [
   },
 
   // ===== Text =====
+  {
+    slug: "markdown-table",
+    component: "MarkdownTableTool",
+    category: "text",
+    icon: "📊",
+    navTitle: "마크다운 표 생성",
+    title: "마크다운 표 생성기 - 행/열 입력으로 즉시 작성",
+    h1: "마크다운 표 생성기",
+    description:
+      "행/열 수를 정하고 셀에 내용을 채우면 마크다운 표 문법으로 자동 생성됩니다. 정렬·셀 추가/삭제, 미리보기 동시 제공.",
+    metaDescription:
+      "마크다운 표 무료 생성기. 행/열 추가, 정렬 선택, 실시간 미리보기.",
+    howTo: ["행/열 수를 정하거나 +/- 버튼으로 조절합니다.", "각 셀에 내용을 입력합니다.", "정렬을 선택하고 결과를 복사합니다."],
+    faq: [{ q: "복잡한 표(병합 셀)도 가능한가요?", a: "마크다운 표 문법은 셀 병합을 지원하지 않습니다. 단순 표만 가능합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "kor-romanize",
+    component: "KorRomanizeTool",
+    category: "text",
+    icon: "🅰️",
+    navTitle: "한글 → 로마자",
+    title: "한글 로마자 변환 - 국립국어원 표기법 (Revised Romanization)",
+    h1: "한글 → 로마자 변환",
+    description:
+      "한글을 국립국어원 로마자 표기법(Revised Romanization)으로 변환하세요. 영문 명함·이름·주소 표기에 유용합니다.",
+    metaDescription:
+      "한글 로마자 변환 무료. Revised Romanization 표준, 즉시 변환.",
+    howTo: ["한글 텍스트를 입력합니다.", "로마자 결과가 자동 표시됩니다.", "복사해서 사용합니다."],
+    faq: [{ q: "어떤 표기법을 따르나요?", a: "2000년 국립국어원 고시 '국어의 로마자 표기법'을 기반으로 합니다." }],
+    addedAt: "2026-05-14",
+  },
   {
     slug: "kor-eng-keyboard",
     component: "KorEngKeyboardTool",
@@ -1114,7 +1264,43 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
 
+  {
+    slug: "docx-viewer",
+    component: "DocxViewerTool",
+    category: "document",
+    icon: "📃",
+    navTitle: "워드(DOCX) 뷰어",
+    title: "DOCX 뷰어 - 마이크로소프트 워드 파일 브라우저에서 보기",
+    h1: "DOCX 뷰어 (워드 파일 미리보기)",
+    description:
+      "마이크로소프트 워드 .docx 파일을 워드 없이 브라우저에서 바로 봅니다. 텍스트만 추출하거나 .txt로 저장도 가능.",
+    metaDescription:
+      "DOCX 뷰어 무료. 워드 없이 .docx 보기, 텍스트 추출, 브라우저 안전 처리.",
+    howTo: ["DOCX 파일을 업로드합니다.", "본문이 자동으로 렌더링됩니다.", "텍스트 추출 버튼으로 .txt로 저장할 수 있습니다."],
+    faq: [
+      { q: "복잡한 서식이 그대로 보이나요?", a: "mammoth.js 변환기를 사용하며, 본문·표·기본 스타일은 지원됩니다. 복잡한 레이아웃은 단순화될 수 있습니다." },
+      { q: ".doc(구버전)도 되나요?", a: "DOCX(2007년 이후 OOXML)만 지원합니다." },
+    ],
+    addedAt: "2026-05-14",
+  },
+
   // ===== Dev =====
+  {
+    slug: "css-gradient",
+    component: "CssGradientTool",
+    category: "dev",
+    icon: "🌈",
+    navTitle: "CSS 그라데이션",
+    title: "CSS 그라데이션 생성기 - linear / radial 시각적 빌더",
+    h1: "CSS 그라데이션 생성기",
+    description:
+      "색상 stop을 추가/조절하며 linear·radial 그라데이션을 시각적으로 만들고 CSS 코드를 받으세요. 미리보기 실시간 반영.",
+    metaDescription:
+      "CSS 그라데이션 무료 생성기. linear/radial, 다중 색상 stop, 실시간 미리보기.",
+    howTo: ["타입(linear/radial)과 각도를 정합니다.", "색상 stop을 추가/조절합니다.", "결과 CSS를 복사합니다."],
+    faq: [{ q: "복잡한 conic-gradient도 가능한가요?", a: "현재는 linear / radial만 지원합니다." }],
+    addedAt: "2026-05-14",
+  },
   {
     slug: "base-converter",
     component: "BaseConverterTool",

@@ -65,6 +65,16 @@ const HtmlEntityTool = dynamic(() => import("./tools/HtmlEntityTool"), { ssr: fa
 const PasswordStrengthTool = dynamic(() => import("./tools/PasswordStrengthTool"), { ssr: false });
 const ColorContrastTool = dynamic(() => import("./tools/ColorContrastTool"), { ssr: false });
 const LottoTool = dynamic(() => import("./tools/LottoTool"), { ssr: false });
+const QrDecoderTool = dynamic(() => import("./tools/QrDecoderTool"), { ssr: false });
+const ExifViewerTool = dynamic(() => import("./tools/ExifViewerTool"), { ssr: false });
+const ColorExtractTool = dynamic(() => import("./tools/ColorExtractTool"), { ssr: false });
+const GifToMp4Tool = dynamic(() => import("./tools/GifToMp4Tool"), { ssr: false });
+const VideoThumbnailTool = dynamic(() => import("./tools/VideoThumbnailTool"), { ssr: false });
+const VideoSpeedTool = dynamic(() => import("./tools/VideoSpeedTool"), { ssr: false });
+const MarkdownTableTool = dynamic(() => import("./tools/MarkdownTableTool"), { ssr: false });
+const DocxViewerTool = dynamic(() => import("./tools/DocxViewerTool"), { ssr: false });
+const CssGradientTool = dynamic(() => import("./tools/CssGradientTool"), { ssr: false });
+const KorRomanizeTool = dynamic(() => import("./tools/KorRomanizeTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -193,6 +203,26 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
       return <ColorContrastTool />;
     case "LottoTool":
       return <LottoTool />;
+    case "QrDecoderTool":
+      return <QrDecoderTool />;
+    case "ExifViewerTool":
+      return <ExifViewerTool />;
+    case "ColorExtractTool":
+      return <ColorExtractTool />;
+    case "GifToMp4Tool":
+      return <GifToMp4Tool />;
+    case "VideoThumbnailTool":
+      return <VideoThumbnailTool />;
+    case "VideoSpeedTool":
+      return <VideoSpeedTool />;
+    case "MarkdownTableTool":
+      return <MarkdownTableTool />;
+    case "DocxViewerTool":
+      return <DocxViewerTool />;
+    case "CssGradientTool":
+      return <CssGradientTool />;
+    case "KorRomanizeTool":
+      return <KorRomanizeTool />;
     default:
       return <div>도구를 찾을 수 없습니다.</div>;
   }
