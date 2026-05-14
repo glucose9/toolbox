@@ -147,7 +147,57 @@ export type ToolConfig = {
     | "KoreaHolidaysTool"
     | "LunchPickerTool"
     | "BaseballStatsTool"
-    | "BookReadingTimeTool";
+    | "BookReadingTimeTool"
+    | "ImageInvertTool"
+    | "ImageWatermarkImgTool"
+    | "ImageColorTransparentTool"
+    | "ImageChannelsTool"
+    | "ImageFreeRotateTool"
+    | "HtmlToTextTool"
+    | "HtmlToMarkdownTool"
+    | "MarkdownToTextTool"
+    | "TextCompressTool"
+    | "TextBlockquoteTool"
+    | "DataSizeTool"
+    | "MimeTypesTool"
+    | "CssColorsTool"
+    | "HttpMethodsTool"
+    | "EnvParserTool"
+    | "JamoDecomposeTool"
+    | "DurationFormatTool"
+    | "BcryptHashTool"
+    | "RotAllTool"
+    | "CardMaskTool"
+    | "PdfImagesExtractTool"
+    | "PdfNUpTool"
+    | "PdfPageSizeTool"
+    | "VideoResizeTool"
+    | "AudioMergeTool"
+    | "AudioVolumeTool"
+    | "ExchangeRateTool"
+    | "StatisticsTool"
+    | "CarFuelTool"
+    | "RentCalcTool"
+    | "SleepRecommendTool"
+    | "BloodDonationTool"
+    | "InstallmentTool"
+    | "KoreanPhoneTool"
+    | "KoreanBizNumTool"
+    | "KoreanRrnTool"
+    | "FamilyKinshipTool"
+    | "NumberFormatTool"
+    | "StarsTool"
+    | "GolfHandicapTool"
+    | "TextSimilarityTool"
+    | "FontPreviewTool"
+    | "WordCloudTool"
+    | "RandomStringTool"
+    | "EmojiSearchTool"
+    | "UserAgentTool"
+    | "PasswordComparatorTool"
+    | "NumberToEnglishTool"
+    | "JsBeautifierTool"
+    | "TextStatsTool";
   category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf" | "calc";
   icon: string;
   navTitle: string;
@@ -2343,6 +2393,58 @@ export const tools: ToolConfig[] = [
   { slug: "lunch-picker", component: "LunchPickerTool", category: "calc", icon: "🍱", navTitle: "점심 메뉴 추천", title: "점심 메뉴 룰렛 - 뭐 먹지 결정 도와줌", h1: "점심 메뉴 추천 룰렛", description: "메뉴를 못 정할 때 룰렛으로 결정. 한식·중식·일식·양식 카테고리 미리 입력, 직접 추가도 가능.", metaDescription: "점심 메뉴 룰렛 무료. 한식·중식·일식·양식, 직접 추가.", howTo: ["카테고리를 선택하거나 직접 메뉴를 추가합니다.", "룰렛을 돌립니다."], faq: [{ q: "결과 그대로 따라야 하나요?", a: "재미로만 쓰세요. 동료들과 합의하시고요." }], addedAt: "2026-05-14" },
   { slug: "baseball-stats", component: "BaseballStatsTool", category: "calc", icon: "⚾", navTitle: "야구 ERA/타율", title: "야구 ERA·타율·OPS 계산기", h1: "야구 통계 계산기 (ERA / AVG / OPS)", description: "투수 ERA, 타자 타율·출루율·장타율·OPS를 즉시 계산합니다. 사회인 야구·중계 시청 보조용.", metaDescription: "야구 ERA·타율·OPS 무료 계산. KBO·MLB.", howTo: ["계산하고 싶은 항목을 선택합니다.", "값을 입력합니다."], faq: [{ q: "OPS가 뭐예요?", a: "출루율(OBP) + 장타율(SLG). 타자 전반적 능력 지표." }], addedAt: "2026-05-14" },
   { slug: "book-reading-time", component: "BookReadingTimeTool", category: "calc", icon: "📚", navTitle: "책 읽기 시간", title: "책 읽는 시간 계산기 - 페이지수 → 완독 시간", h1: "책 완독 시간 예측", description: "총 페이지 수와 분당 읽는 속도로 책 완독에 걸리는 시간을 추정합니다. 평균 한국어 독서 속도 적용.", metaDescription: "책 읽기 시간 무료 추정. 페이지수·속도, 완독 시간.", howTo: ["총 페이지를 입력합니다.", "독서 속도를 조절합니다."], faq: [{ q: "기본 속도는?", a: "한국어 평균 분당 250~350자 (페이지당 약 2~3분)." }], addedAt: "2026-05-14" },
+
+  // ===== Batch H (50 tools) =====
+  { slug: "image-invert", component: "ImageInvertTool", category: "image", icon: "◐", navTitle: "이미지 색반전", title: "이미지 색반전 (네거티브) - 음화 효과 무료", h1: "이미지 색 반전 / 네거티브", description: "이미지 색상을 반전해 음화(네거티브) 효과를 만들어요.", metaDescription: "이미지 색반전 무료. 네거티브 효과, 즉시 변환.", howTo: ["이미지를 업로드합니다.", "결과를 다운로드합니다."], faq: [{ q: "투명도는?", a: "투명도는 유지되고 색만 반전됩니다." }], addedAt: "2026-05-15" },
+  { slug: "image-watermark-img", component: "ImageWatermarkImgTool", category: "image", icon: "🏷️", navTitle: "이미지 워터마크", title: "이미지 워터마크 - 로고/이미지 워터마크 삽입", h1: "이미지 워터마크 (이미지로)", description: "사진에 로고나 이미지를 워터마크로 얹습니다. 위치·투명도·크기 조절.", metaDescription: "이미지 워터마크 무료. 로고 삽입.", howTo: ["배경 이미지를 업로드합니다.", "워터마크 이미지를 업로드합니다."], faq: [{ q: "위치 자유?", a: "9개 위치 선택 + 미세 조정 가능." }], addedAt: "2026-05-15" },
+  { slug: "image-color-transparent", component: "ImageColorTransparentTool", category: "image", icon: "🟦", navTitle: "특정 색 → 투명", title: "이미지 특정 색을 투명으로 - 배경 색 제거", h1: "이미지 색상 → 투명", description: "이미지에서 특정 색(보통 흰색 배경)을 투명으로 만들어요.", metaDescription: "이미지 배경색 투명 무료.", howTo: ["이미지를 업로드합니다.", "색상과 허용 범위를 선택합니다."], faq: [{ q: "복잡한 배경도?", a: "단색 배경에만 효과적입니다." }], addedAt: "2026-05-15" },
+  { slug: "image-channels", component: "ImageChannelsTool", category: "image", icon: "🎚️", navTitle: "RGB 채널 분리", title: "이미지 RGB 채널 분리 - 빨강/녹색/파랑 보기", h1: "이미지 RGB 채널 분리", description: "이미지의 빨강·녹색·파랑 채널을 각각 분리해 그레이스케일 이미지로 보여줍니다.", metaDescription: "이미지 RGB 채널 분리 무료.", howTo: ["이미지를 업로드합니다.", "각 채널이 자동 표시됩니다."], faq: [{ q: "왜?", a: "이미지 분석·합성에 사용." }], addedAt: "2026-05-15" },
+  { slug: "image-free-rotate", component: "ImageFreeRotateTool", category: "image", icon: "↻", navTitle: "이미지 임의 각도", title: "이미지 임의 각도 회전 - 1° 단위 정밀 회전", h1: "이미지 1° 단위 회전", description: "이미지를 1° 단위로 자유롭게 회전합니다. 비뚤어진 사진 보정에 사용.", metaDescription: "이미지 임의 각도 회전 무료.", howTo: ["이미지를 업로드합니다.", "각도를 조절합니다."], faq: [{ q: "여백은?", a: "투명 또는 선택한 색으로 채워집니다." }], addedAt: "2026-05-15" },
+  { slug: "html-to-text", component: "HtmlToTextTool", category: "text", icon: "📰", navTitle: "HTML → 텍스트", title: "HTML 태그 제거 - 본문 텍스트만 추출", h1: "HTML → 일반 텍스트", description: "HTML 코드에서 모든 태그를 제거하고 본문 텍스트만 추출합니다.", metaDescription: "HTML 태그 제거 무료.", howTo: ["HTML을 붙여넣습니다."], faq: [{ q: "스크립트?", a: "<script>는 본문에 포함되지 않습니다." }], addedAt: "2026-05-15" },
+  { slug: "html-to-markdown", component: "HtmlToMarkdownTool", category: "text", icon: "↻", navTitle: "HTML → 마크다운", title: "HTML 마크다운 변환 - turndown 기반", h1: "HTML → 마크다운 변환", description: "HTML을 마크다운으로 변환합니다. 블로그 마이그레이션·위키 변환에 유용.", metaDescription: "HTML 마크다운 변환 무료. turndown 기반.", howTo: ["HTML을 붙여넣습니다."], faq: [{ q: "표도?", a: "GFM 확장으로 표가 변환됩니다." }], addedAt: "2026-05-15" },
+  { slug: "markdown-to-text", component: "MarkdownToTextTool", category: "text", icon: "📜", navTitle: "마크다운 → 텍스트", title: "마크다운 문법 제거 - 일반 텍스트만", h1: "마크다운 → 일반 텍스트", description: "마크다운 문법을 제거하고 텍스트만 남깁니다.", metaDescription: "마크다운 텍스트 변환 무료.", howTo: ["마크다운을 붙여넣습니다."], faq: [{ q: "링크?", a: "[텍스트](url) → 텍스트로 변환." }], addedAt: "2026-05-15" },
+  { slug: "text-compress", component: "TextCompressTool", category: "text", icon: "🗜️", navTitle: "텍스트 압축", title: "텍스트 LZ 압축 - URL용 짧은 문자열", h1: "텍스트 LZ 압축 / 해제", description: "긴 텍스트를 LZ-string으로 압축해 짧은 문자열로 변환.", metaDescription: "텍스트 압축 무료. LZ-string.", howTo: ["텍스트를 입력하고 압축합니다."], faq: [{ q: "압축률?", a: "JSON 등 반복이 많으면 70%+." }], addedAt: "2026-05-15" },
+  { slug: "text-blockquote", component: "TextBlockquoteTool", category: "text", icon: "❝", navTitle: "인용구 만들기", title: "인용구 / 블록쿼트 변환", h1: "인용구 / 블록쿼트 만들기", description: "텍스트 앞에 '>'를 붙여 마크다운 블록쿼트나 이메일 인용 형식으로.", metaDescription: "블록쿼트 인용구 무료 변환.", howTo: ["텍스트를 입력합니다.", "깊이를 선택합니다."], faq: [{ q: "중첩은?", a: "깊이 2 이상이면 '>>'." }], addedAt: "2026-05-15" },
+  { slug: "data-size", component: "DataSizeTool", category: "dev", icon: "💾", navTitle: "데이터 단위 변환", title: "데이터 단위 변환 - B/KB/MB/GB/TB", h1: "데이터 크기 변환", description: "바이트·킬로바이트·메가·기가·테라·페타 사이를 변환. SI(1000) vs IEC(1024) 모두 지원.", metaDescription: "데이터 단위 변환 무료.", howTo: ["값과 단위를 입력합니다."], faq: [{ q: "KB vs KiB?", a: "KB=1000B, KiB=1024B." }], addedAt: "2026-05-15" },
+  { slug: "mime-types", component: "MimeTypesTool", category: "dev", icon: "📁", navTitle: "MIME 타입 사전", title: "MIME 타입 사전 - 파일 확장자 ↔ Content-Type", h1: "MIME 타입 사전", description: "확장자나 MIME 타입을 양방향 검색합니다.", metaDescription: "MIME 타입 사전 무료.", howTo: ["검색합니다."], faq: [{ q: "얼마나?", a: "주요 100+ 확장자." }], addedAt: "2026-05-15" },
+  { slug: "css-colors", component: "CssColorsTool", category: "dev", icon: "🎨", navTitle: "CSS 색상 사전", title: "CSS named colors 사전 - 148개 색상", h1: "CSS 색상 이름 사전", description: "CSS에서 쓰는 148개 색상 이름을 HEX와 함께 보여줍니다.", metaDescription: "CSS 색상 사전 무료.", howTo: ["검색하거나 클릭해 복사."], faq: [{ q: "표준?", a: "CSS Color Module Level 4." }], addedAt: "2026-05-15" },
+  { slug: "http-methods", component: "HttpMethodsTool", category: "dev", icon: "🔁", navTitle: "HTTP 메소드 사전", title: "HTTP 메소드 사전 - GET/POST/PUT/DELETE", h1: "HTTP 메소드 사전", description: "HTTP 메소드 의미·사용법·멱등성 정리.", metaDescription: "HTTP 메소드 사전 무료.", howTo: ["메소드를 클릭."], faq: [{ q: "멱등성?", a: "여러 번 실행해도 같은 결과." }], addedAt: "2026-05-15" },
+  { slug: "env-parser", component: "EnvParserTool", category: "dev", icon: "🔐", navTitle: ".env 파서", title: ".env 파일 파서 - KEY=VALUE → JSON", h1: ".env 파일 파서", description: "환경 변수 파일을 JSON 객체로 변환.", metaDescription: ".env 파서 무료.", howTo: [".env 내용을 붙여넣습니다."], faq: [{ q: "인용은?", a: "쌍·홑따옴표 모두 처리." }], addedAt: "2026-05-15" },
+  { slug: "jamo-decompose", component: "JamoDecomposeTool", category: "dev", icon: "ㄱ", navTitle: "한글 자모 분해", title: "한글 자모 분해/결합", h1: "한글 자모 분해 / 결합", description: "한글 음절을 초성·중성·종성으로 분해 또는 결합.", metaDescription: "한글 자모 분해 무료.", howTo: ["글자를 입력합니다."], faq: [{ q: "겹받침?", a: "ㄳ, ㄵ 등 분해/결합 지원." }], addedAt: "2026-05-15" },
+  { slug: "duration-format", component: "DurationFormatTool", category: "dev", icon: "⏳", navTitle: "초 → 시간 형식", title: "초 ↔ 시:분:초 변환", h1: "초 ↔ 시간 형식 변환", description: "초 단위 숫자를 사람이 읽기 좋은 형식으로 변환.", metaDescription: "초 시간 변환 무료.", howTo: ["값을 입력합니다."], faq: [{ q: "ISO 8601?", a: "PT1H30M도 지원." }], addedAt: "2026-05-15" },
+  { slug: "bcrypt-hash", component: "BcryptHashTool", category: "dev", icon: "🔒", navTitle: "bcrypt 해시", title: "bcrypt 해시 생성기", h1: "bcrypt 해시 / 검증", description: "bcrypt 해시 생성·검증. cost factor 조절.", metaDescription: "bcrypt 해시 무료.", howTo: ["비밀번호를 입력합니다."], faq: [{ q: "운영용?", a: "테스트용입니다." }], addedAt: "2026-05-15" },
+  { slug: "rot-all", component: "RotAllTool", category: "dev", icon: "🔠", navTitle: "ROT 전체 보기", title: "ROT 1~25 한 번에 보기", h1: "ROT 전체 변환 (1~25)", description: "ROT1~25 모두 적용한 결과를 한 번에 표시. 시저 암호 해독.", metaDescription: "ROT 전체 변환 무료.", howTo: ["텍스트를 입력합니다."], faq: [{ q: "ROT13?", a: "가장 흔히 쓰는 회전." }], addedAt: "2026-05-15" },
+  { slug: "card-mask", component: "CardMaskTool", category: "dev", icon: "💳", navTitle: "민감정보 마스킹", title: "민감정보 마스킹 - 카드/주민번호/전화", h1: "민감정보 자동 마스킹", description: "카드번호·주민번호·전화번호·이메일을 자동 감지해 별표 처리.", metaDescription: "민감정보 마스킹 무료.", howTo: ["텍스트를 입력합니다."], faq: [{ q: "어떤 패턴?", a: "한국 카드/RRN/전화/이메일." }], addedAt: "2026-05-15" },
+  { slug: "pdf-images-extract", component: "PdfImagesExtractTool", category: "pdf", icon: "🖼️", navTitle: "PDF 이미지 추출", title: "PDF 페이지를 이미지로 일괄 추출", h1: "PDF에서 이미지 추출", description: "PDF 각 페이지를 고해상도 PNG로 렌더링해 ZIP 묶음으로 저장.", metaDescription: "PDF 이미지 추출 무료.", howTo: ["PDF를 업로드합니다."], faq: [{ q: "원본 이미지 추출?", a: "현재는 페이지 렌더 방식." }], addedAt: "2026-05-15" },
+  { slug: "pdf-n-up", component: "PdfNUpTool", category: "pdf", icon: "🧱", navTitle: "PDF N-up", title: "PDF N-up - 한 페이지에 여러 페이지", h1: "PDF N-up (페이지 합치기)", description: "여러 페이지를 한 페이지에 2x2·2x1로 모아 인쇄용 책자.", metaDescription: "PDF N-up 무료.", howTo: ["페이지 수를 선택합니다."], faq: [{ q: "여백?", a: "기본 여백 적용." }], addedAt: "2026-05-15" },
+  { slug: "pdf-page-size", component: "PdfPageSizeTool", category: "pdf", icon: "📐", navTitle: "PDF 페이지 크기", title: "PDF 페이지 크기 변경 - A4/Letter", h1: "PDF 페이지 크기 변경", description: "모든 페이지를 A4·Letter·Legal·B5 등으로 변경.", metaDescription: "PDF 페이지 크기 변경 무료.", howTo: ["크기를 선택합니다."], faq: [{ q: "잘림?", a: "기본은 비율 유지 fit." }], addedAt: "2026-05-15" },
+  { slug: "video-resize", component: "VideoResizeTool", category: "video", icon: "📐", navTitle: "동영상 리사이즈", title: "동영상 해상도 변경 - 720p/1080p/4K", h1: "동영상 해상도 변경", description: "동영상을 720p/1080p/4K로 변환.", metaDescription: "동영상 해상도 변경 무료.", howTo: ["해상도를 선택합니다."], faq: [{ q: "비율?", a: "기본 유지." }], addedAt: "2026-05-15" },
+  { slug: "audio-merge", component: "AudioMergeTool", category: "video", icon: "🎵", navTitle: "오디오 합치기", title: "오디오 파일 합치기", h1: "오디오 합치기", description: "여러 MP3를 순서대로 합쳐 하나로.", metaDescription: "오디오 합치기 무료.", howTo: ["파일을 업로드합니다."], faq: [{ q: "다른 포맷?", a: "같은 포맷 권장." }], addedAt: "2026-05-15" },
+  { slug: "audio-volume", component: "AudioVolumeTool", category: "video", icon: "🔉", navTitle: "오디오 볼륨", title: "오디오 볼륨 조절 - dB 단위", h1: "오디오 볼륨 조절", description: "음원을 dB 단위로 키우거나 줄입니다.", metaDescription: "오디오 볼륨 무료.", howTo: ["dB 값을 선택합니다."], faq: [{ q: "왜곡?", a: "+6dB 이상은 클리핑 가능." }], addedAt: "2026-05-15" },
+  { slug: "exchange-rate", component: "ExchangeRateTool", category: "calc", icon: "💱", navTitle: "환율 계산기", title: "환율 계산기 - 사용자 입력 환율", h1: "환율 / 통화 환산", description: "환율을 직접 입력하고 여러 통화로 환산. 라이브 환율은 외부 사이트 확인.", metaDescription: "환율 계산기 무료.", howTo: ["환율을 입력합니다."], faq: [{ q: "실시간?", a: "외부 API 없음 → 사용자 입력." }], addedAt: "2026-05-15" },
+  { slug: "statistics", component: "StatisticsTool", category: "calc", icon: "📊", navTitle: "통계 계산", title: "통계 계산기 - 평균/중앙값/표준편차", h1: "기초 통계 계산기", description: "평균·중앙값·최빈값·표준편차·분산·사분위.", metaDescription: "통계 계산기 무료.", howTo: ["숫자들을 입력합니다."], faq: [{ q: "표본 vs 모집단?", a: "둘 다 표시." }], addedAt: "2026-05-15" },
+  { slug: "car-fuel", component: "CarFuelTool", category: "calc", icon: "⛽", navTitle: "자동차 연비", title: "자동차 연비 계산 - 주유 비용", h1: "자동차 연비 / 주유비 계산", description: "연비·기름값·거리로 비용 계산.", metaDescription: "자동차 연비 무료 계산.", howTo: ["연비와 가격을 입력합니다."], faq: [{ q: "전기차?", a: "현재 휘발유·경유 기준." }], addedAt: "2026-05-15" },
+  { slug: "rent-calc", component: "RentCalcTool", category: "calc", icon: "🏠", navTitle: "전세 ↔ 월세", title: "전세 ↔ 월세 환산", h1: "전세 ↔ 월세 환산", description: "전월세 전환율 기반 환산.", metaDescription: "전월세 환산 무료.", howTo: ["전세금이나 월세를 입력합니다."], faq: [{ q: "전환율?", a: "한국 평균 3~6%/년." }], addedAt: "2026-05-15" },
+  { slug: "sleep-recommend", component: "SleepRecommendTool", category: "calc", icon: "😴", navTitle: "잠 시간 추천", title: "수면 시간 추천 - 90분 사이클", h1: "수면 사이클 / 기상 시간", description: "90분 사이클 기반 최적 기상/취침 시간.", metaDescription: "수면 시간 추천 무료.", howTo: ["시간을 입력합니다."], faq: [{ q: "왜 90분?", a: "한 수면 사이클." }], addedAt: "2026-05-15" },
+  { slug: "blood-donation", component: "BloodDonationTool", category: "calc", icon: "🩸", navTitle: "헌혈 가능일", title: "헌혈 다음 가능일 - 전혈/혈장/혈소판", h1: "헌혈 다음 가능일", description: "한국 적십자사 기준 헌혈 간격 계산.", metaDescription: "헌혈 가능일 무료 계산.", howTo: ["마지막 날짜를 입력합니다."], faq: [{ q: "기준?", a: "전혈 8주, 혈장 2주." }], addedAt: "2026-05-15" },
+  { slug: "installment", component: "InstallmentTool", category: "calc", icon: "💳", navTitle: "할부 계산", title: "할부 계산기 - 월 부담액", h1: "신용카드 할부 계산", description: "원금·이자율·기간으로 월 부담 계산.", metaDescription: "할부 계산기 무료.", howTo: ["원금·이자율·기간을 입력합니다."], faq: [{ q: "수수료?", a: "이자율로 대체 입력." }], addedAt: "2026-05-15" },
+  { slug: "korean-phone", component: "KoreanPhoneTool", category: "calc", icon: "📞", navTitle: "전화번호 정규화", title: "한국 전화번호 형식 변환", h1: "한국 전화번호 형식 변환", description: "010-XXXX-XXXX 형식으로 정규화.", metaDescription: "한국 전화번호 정규화 무료.", howTo: ["전화번호를 입력합니다."], faq: [{ q: "+82?", a: "국제 형식도 지원." }], addedAt: "2026-05-15" },
+  { slug: "korean-biz-num", component: "KoreanBizNumTool", category: "calc", icon: "🏢", navTitle: "사업자등록번호 검증", title: "사업자등록번호 검증 - 체크섬 확인", h1: "사업자등록번호 검증", description: "10자리 사업자등록번호 체크섬 검증.", metaDescription: "사업자등록번호 검증 무료.", howTo: ["번호를 입력합니다."], faq: [{ q: "실존 검증?", a: "형식만 검증." }], addedAt: "2026-05-15" },
+  { slug: "korean-rrn", component: "KoreanRrnTool", category: "calc", icon: "🆔", navTitle: "주민번호 검증", title: "주민등록번호 형식 검증", h1: "주민등록번호 형식 검증", description: "주민번호 체크섬·생년월일·성별 추출. 브라우저 내 처리.", metaDescription: "주민번호 검증 무료.", howTo: ["13자리 입력."], faq: [{ q: "안전?", a: "브라우저 안에서만 처리, 전송 없음." }], addedAt: "2026-05-15" },
+  { slug: "family-kinship", component: "FamilyKinshipTool", category: "calc", icon: "👨‍👩‍👧", navTitle: "촌수 계산", title: "촌수 계산 - 가족 호칭 찾기", h1: "촌수 / 가족 호칭", description: "친가·외가 관계 입력하면 한국식 호칭 표시.", metaDescription: "촌수 계산 무료.", howTo: ["관계 단계를 선택합니다."], faq: [{ q: "사돈?", a: "직계·방계만 지원." }], addedAt: "2026-05-15" },
+  { slug: "number-format", component: "NumberFormatTool", category: "calc", icon: "🔢", navTitle: "숫자 형식 변환", title: "숫자 형식 변환 - 콤마/한국식 단위", h1: "숫자 자릿수 포맷", description: "콤마·언더스코어·100만 등 다양한 형식.", metaDescription: "숫자 형식 변환 무료.", howTo: ["숫자를 입력합니다."], faq: [{ q: "큰 숫자?", a: "BigInt로 무제한." }], addedAt: "2026-05-15" },
+  { slug: "stars", component: "StarsTool", category: "calc", icon: "⭐", navTitle: "별점 시각화", title: "별점 시각화 - 4.5/5 → ★★★★½", h1: "별점 / 평점 시각화", description: "점수를 별 모양으로 시각화. 반쪽 별 지원.", metaDescription: "별점 시각화 무료.", howTo: ["점수와 만점을 입력."], faq: [{ q: "이모지?", a: "유니코드 별." }], addedAt: "2026-05-15" },
+  { slug: "golf-handicap", component: "GolfHandicapTool", category: "calc", icon: "⛳", navTitle: "골프 핸디캡", title: "골프 핸디캡 - USGA 방식", h1: "골프 핸디캡 계산", description: "최근 스코어로 USGA 방식 핸디캡 추정.", metaDescription: "골프 핸디캡 무료.", howTo: ["스코어를 입력합니다."], faq: [{ q: "정확?", a: "공식 핸디캡은 협회 등록 필요." }], addedAt: "2026-05-15" },
+  { slug: "text-similarity", component: "TextSimilarityTool", category: "dev", icon: "≈", navTitle: "텍스트 유사도", title: "텍스트 유사도 - Levenshtein", h1: "텍스트 유사도 (Levenshtein)", description: "두 문자열의 편집 거리·유사도.", metaDescription: "텍스트 유사도 무료.", howTo: ["두 텍스트를 입력합니다."], faq: [{ q: "긴 문서?", a: "수천 글자까지 빠름." }], addedAt: "2026-05-15" },
+  { slug: "font-preview", component: "FontPreviewTool", category: "dev", icon: "🔤", navTitle: "폰트 미리보기", title: "폰트 미리보기 - 시스템·웹 폰트", h1: "웹 폰트 미리보기", description: "폰트로 텍스트가 어떻게 보이는지 미리보기.", metaDescription: "폰트 미리보기 무료.", howTo: ["폰트 이름과 텍스트를 입력."], faq: [{ q: "구글 폰트?", a: "URL 추가 가능." }], addedAt: "2026-05-15" },
+  { slug: "word-cloud", component: "WordCloudTool", category: "text", icon: "☁️", navTitle: "워드 클라우드", title: "워드 클라우드 생성", h1: "워드 클라우드 생성", description: "자주 등장하는 단어를 크기로 시각화.", metaDescription: "워드 클라우드 무료.", howTo: ["텍스트를 입력합니다."], faq: [{ q: "한글?", a: "불용어 제거 옵션." }], addedAt: "2026-05-15" },
+  { slug: "random-string", component: "RandomStringTool", category: "dev", icon: "🎲", navTitle: "랜덤 문자열", title: "랜덤 문자열 생성기 - 토큰/ID/API 키", h1: "랜덤 문자열 / 토큰 생성", description: "Web Crypto 기반 안전 난수 문자열.", metaDescription: "랜덤 문자열 무료.", howTo: ["길이·문자셋을 선택합니다."], faq: [{ q: "비번?", a: "비번은 별도 도구." }], addedAt: "2026-05-15" },
+  { slug: "emoji-search", component: "EmojiSearchTool", category: "text", icon: "😀", navTitle: "이모지 검색", title: "이모지 검색 - 한글·영문 키워드", h1: "이모지 검색", description: "키워드로 이모지 검색·복사.", metaDescription: "이모지 검색 무료.", howTo: ["검색어를 입력합니다."], faq: [{ q: "최신?", a: "Unicode 15 이상." }], addedAt: "2026-05-15" },
+  { slug: "user-agent", component: "UserAgentTool", category: "dev", icon: "🌐", navTitle: "User-Agent 분석", title: "User-Agent 분석 - 브라우저·OS·기기", h1: "User-Agent 파서", description: "UA 문자열에서 브라우저·OS·기기 추출.", metaDescription: "User-Agent 파서 무료.", howTo: ["UA를 붙여넣거나 자기 UA를 봅니다."], faq: [{ q: "UA?", a: "브라우저 자기 소개 문자열." }], addedAt: "2026-05-15" },
+  { slug: "password-comparator", component: "PasswordComparatorTool", category: "dev", icon: "⚖️", navTitle: "비밀번호 비교", title: "비밀번호 강도 비교 - 두 비밀번호 동시", h1: "비밀번호 강도 비교", description: "두 비밀번호 강도 비교.", metaDescription: "비밀번호 비교 무료.", howTo: ["두 비번을 입력합니다."], faq: [{ q: "어떻게?", a: "엔트로피·패턴 종합." }], addedAt: "2026-05-15" },
+  { slug: "number-to-english", component: "NumberToEnglishTool", category: "text", icon: "🔤", navTitle: "숫자 → 영어", title: "숫자 영어 변환 - twelve thousand", h1: "숫자 → 영어 변환", description: "숫자를 영어 단어로. 영문 수표·계약서.", metaDescription: "숫자 영어 변환 무료.", howTo: ["숫자를 입력합니다."], faq: [{ q: "소수?", a: "'point' 뒤 각 자리." }], addedAt: "2026-05-15" },
+  { slug: "js-beautifier", component: "JsBeautifierTool", category: "dev", icon: "✨", navTitle: "JS 정리", title: "JavaScript 포맷터", h1: "JavaScript 포맷터", description: "minify된 JS를 보기 좋게 재정렬.", metaDescription: "JS 포맷 무료.", howTo: ["JS를 붙여넣습니다."], faq: [{ q: "TS?", a: "비슷하게 작동." }], addedAt: "2026-05-15" },
+  { slug: "text-stats", component: "TextStatsTool", category: "text", icon: "📊", navTitle: "텍스트 종합 통계", title: "텍스트 종합 통계 - 가독성 포함", h1: "텍스트 종합 통계", description: "글자·단어·문장·단락·가독성 분석.", metaDescription: "텍스트 통계 무료.", howTo: ["텍스트를 입력합니다."], faq: [{ q: "가독성?", a: "Flesch Reading Ease." }], addedAt: "2026-05-15" },
 ];
 
 export function getTool(slug: string): ToolConfig | undefined {
