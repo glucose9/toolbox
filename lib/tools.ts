@@ -104,7 +104,50 @@ export type ToolConfig = {
     | "CidrCalcTool"
     | "TimeCalcTool"
     | "WageConverterTool"
-    | "DueDateTool";
+    | "DueDateTool"
+    | "SlugGeneratorTool"
+    | "HtmlMinifierTool"
+    | "CssMinifierTool"
+    | "JsMinifierTool"
+    | "JsonDiffTool"
+    | "TextBinaryTool"
+    | "TextHexTool"
+    | "AnsiToHtmlTool"
+    | "KeycodeTool"
+    | "FileToBase64Tool"
+    | "UnicodeLookupTool"
+    | "SvgMinifierTool"
+    | "TextReverseTool"
+    | "LineNumbersTool"
+    | "ReadingTimeTool"
+    | "HanjaToHangulTool"
+    | "AsciiBoxTool"
+    | "EncodingConvertTool"
+    | "LineJoinerTool"
+    | "TextCardTool"
+    | "ImageCompareTool"
+    | "ImageZipTool"
+    | "QrLogoTool"
+    | "VideoMergeTool"
+    | "VideoMuteTool"
+    | "VideoInfoTool"
+    | "PdfBlankPageTool"
+    | "PdfMetadataTool"
+    | "PdfCropTool"
+    | "CaffeineTool"
+    | "ZodiacTool"
+    | "ChineseZodiacTool"
+    | "AlcoholConverterTool"
+    | "BmrTool"
+    | "RunningPaceTool"
+    | "TipTool"
+    | "UnitPriceTool"
+    | "DiceCoinTool"
+    | "RpsTool"
+    | "KoreaHolidaysTool"
+    | "LunchPickerTool"
+    | "BaseballStatsTool"
+    | "BookReadingTimeTool";
   category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf" | "calc";
   icon: string;
   navTitle: string;
@@ -2065,6 +2108,45 @@ export const tools: ToolConfig[] = [
     ],
   },
 
+  // ===== Batch G (43 new tools) - dev =====
+  { slug: "slug-generator", component: "SlugGeneratorTool", category: "dev", icon: "🔗", navTitle: "URL 슬러그 생성", title: "URL 슬러그 생성기 - 한글·공백 → SEO 친화 URL", h1: "URL 슬러그 생성기", description: "한글이나 공백, 특수문자를 SEO 친화적인 URL 슬러그로 변환합니다. 한글 로마자 변환 옵션 포함.", metaDescription: "URL 슬러그 무료 생성. 한글·특수문자 → SEO 친화 URL.", howTo: ["원본 텍스트를 입력합니다.", "옵션을 선택합니다.", "슬러그를 복사합니다."], faq: [{ q: "한글은 어떻게 처리되나요?", a: "한글 그대로 두거나 로마자 변환 옵션을 선택할 수 있습니다." }], addedAt: "2026-05-14" },
+  { slug: "html-minifier", component: "HtmlMinifierTool", category: "dev", icon: "📦", navTitle: "HTML 미니파이어", title: "HTML 미니파이어 - 공백·주석 제거로 용량 절감", h1: "HTML 미니파이어", description: "HTML에서 공백·주석·줄바꿈을 제거해 용량을 줄입니다. 빠른 로딩을 위한 배포 최적화에 사용.", metaDescription: "HTML 미니파이 무료. 공백·주석 제거, 용량 절감.", howTo: ["HTML을 붙여넣습니다.", "압축 버튼을 누릅니다.", "결과를 복사합니다."], faq: [{ q: "원본 의미가 바뀌나요?", a: "아닙니다. 공백·주석만 제거합니다." }], addedAt: "2026-05-14" },
+  { slug: "css-minifier", component: "CssMinifierTool", category: "dev", icon: "🎨", navTitle: "CSS 미니파이어", title: "CSS 미니파이어 - 공백·주석 제거", h1: "CSS 미니파이어", description: "CSS에서 공백·주석·불필요한 세미콜론을 제거해 용량을 절감합니다.", metaDescription: "CSS 미니파이 무료. 공백·주석 제거, 용량 절감.", howTo: ["CSS를 붙여넣습니다.", "압축 버튼을 누릅니다."], faq: [{ q: "복원 가능한가요?", a: "구조는 살아 있어 가독성이 떨어질 뿐 의미는 같습니다." }], addedAt: "2026-05-14" },
+  { slug: "js-minifier", component: "JsMinifierTool", category: "dev", icon: "📦", navTitle: "JavaScript 미니파이어", title: "JavaScript 미니파이어 - terser 기반 압축", h1: "JavaScript 미니파이어", description: "Terser 기반으로 JavaScript를 압축하고 mangle합니다. 식별자 단축·dead code 제거 포함.", metaDescription: "JavaScript 미니파이 무료. terser 기반, mangle·dead code 제거.", howTo: ["JS를 붙여넣고 압축 버튼을 누릅니다.", "결과를 복사합니다."], faq: [{ q: "ES6+ 문법 지원?", a: "네. ES2022까지 지원합니다." }], addedAt: "2026-05-14" },
+  { slug: "json-diff", component: "JsonDiffTool", category: "dev", icon: "🔍", navTitle: "JSON 비교 (diff)", title: "JSON 비교 - 두 JSON 차이점 즉시 찾기", h1: "JSON 비교 / Diff", description: "두 JSON의 차이점을 객체 단위로 비교해 추가·제거·변경된 키를 표시합니다.", metaDescription: "JSON 비교 무료. 객체 단위 diff, 추가·제거·변경 표시.", howTo: ["왼쪽·오른쪽에 JSON을 붙여넣습니다.", "차이점이 자동 표시됩니다."], faq: [{ q: "배열 순서가 다르면?", a: "JSON 표준에 따라 배열 순서는 의미가 있으니 다른 것으로 표시됩니다." }], addedAt: "2026-05-14" },
+  { slug: "text-binary", component: "TextBinaryTool", category: "dev", icon: "0️⃣", navTitle: "텍스트 ↔ 2진수", title: "텍스트 2진수 변환 - 글자 → Binary 양방향", h1: "텍스트 ↔ 2진수 변환", description: "텍스트를 비트 단위 2진수로, 2진수를 텍스트로 변환합니다. ASCII와 UTF-8 모두 지원.", metaDescription: "텍스트 2진수 무료 변환. UTF-8 지원, 양방향.", howTo: ["변환할 텍스트나 2진수를 입력합니다."], faq: [{ q: "한글도 되나요?", a: "UTF-8 인코딩으로 한글도 변환됩니다 (한 글자 3바이트)." }], addedAt: "2026-05-14" },
+  { slug: "text-hex", component: "TextHexTool", category: "dev", icon: "1️⃣6️⃣", navTitle: "텍스트 ↔ 16진수", title: "텍스트 16진수 변환 - UTF-8 hex dump", h1: "텍스트 ↔ 16진수 변환", description: "텍스트를 16진수(hex)로, 16진수를 텍스트로 변환합니다. 디버깅·인코딩 확인에 유용.", metaDescription: "텍스트 16진수 무료 변환. UTF-8 hex dump, 양방향.", howTo: ["변환할 텍스트나 hex를 입력합니다."], faq: [{ q: "공백 구분도 되나요?", a: "공백 포함/제외 출력을 선택할 수 있습니다." }], addedAt: "2026-05-14" },
+  { slug: "ansi-to-html", component: "AnsiToHtmlTool", category: "dev", icon: "🌈", navTitle: "ANSI → HTML", title: "ANSI 컬러 코드 → HTML 변환 - 터미널 출력 시각화", h1: "ANSI 색상 코드 → HTML", description: "터미널의 ANSI 이스케이프 시퀀스를 HTML로 변환해 웹 페이지에 색상 그대로 표시합니다.", metaDescription: "ANSI → HTML 무료 변환. 터미널 색상 그대로 웹에 표시.", howTo: ["ANSI 이스케이프 시퀀스 텍스트를 붙여넣습니다.", "HTML 결과를 받습니다."], faq: [{ q: "어떤 코드 지원?", a: "기본 16색 + 256색 + RGB(트루컬러)를 모두 지원합니다." }], addedAt: "2026-05-14" },
+  { slug: "keycode-viewer", component: "KeycodeTool", category: "dev", icon: "⌨️", navTitle: "키 코드 확인", title: "JavaScript 키 코드 확인 - keyCode / key / code", h1: "JavaScript 키 이벤트 코드 확인", description: "키보드 키를 누르면 해당 이벤트의 key·code·keyCode·which 속성이 표시됩니다.", metaDescription: "JS 키보드 이벤트 코드 무료 확인. key·code·keyCode 표시.", howTo: ["페이지에서 아무 키나 누릅니다.", "이벤트 속성이 실시간 표시됩니다."], faq: [{ q: "key와 code 차이는?", a: "key는 입력 결과(예: 'A'), code는 물리적 키 위치(예: 'KeyA')입니다." }], addedAt: "2026-05-14" },
+  { slug: "file-to-base64", component: "FileToBase64Tool", category: "dev", icon: "📂", navTitle: "파일 → Base64", title: "파일 Base64 인코딩 - 모든 파일 → data URL", h1: "파일 → Base64 변환", description: "이미지·PDF·동영상 등 모든 파일을 Base64 data URL로 인코딩합니다. data URL → 파일 디코딩도 지원.", metaDescription: "파일 Base64 무료 변환. data URL 생성, 모든 파일 지원.", howTo: ["파일을 업로드합니다.", "Base64 결과를 복사하거나 다운로드합니다."], faq: [{ q: "큰 파일도 되나요?", a: "10MB 이하 권장. Base64는 약 33% 용량이 증가합니다." }], addedAt: "2026-05-14" },
+  { slug: "unicode-lookup", component: "UnicodeLookupTool", category: "dev", icon: "Ⓤ", navTitle: "유니코드 찾기", title: "유니코드 코드포인트 변환 - 글자 ↔ U+XXXX", h1: "유니코드 코드포인트 ↔ 글자", description: "글자의 유니코드 코드포인트(U+XXXX)와 이름을 확인하고, 코드포인트로 글자를 만들 수 있습니다.", metaDescription: "유니코드 코드포인트 무료 검색. 글자 ↔ U+XXXX, 이모지 분석.", howTo: ["글자를 입력하면 코드포인트가 표시됩니다.", "반대로 U+XXXX를 입력하면 글자가 표시됩니다."], faq: [{ q: "이모지도 되나요?", a: "네. 다중 코드포인트(서러게이트 페어, ZWJ 시퀀스)까지 표시합니다." }], addedAt: "2026-05-14" },
+  { slug: "svg-minifier", component: "SvgMinifierTool", category: "dev", icon: "🎨", navTitle: "SVG 미니파이어", title: "SVG 미니파이어 - 주석·공백·메타데이터 제거", h1: "SVG 미니파이어", description: "SVG 파일에서 주석·여분 공백·에디터 메타데이터를 제거해 용량을 줄입니다.", metaDescription: "SVG 미니파이 무료. 주석·메타데이터 제거, 용량 절감.", howTo: ["SVG 코드를 붙여넣습니다.", "최적화 버튼을 누릅니다."], faq: [{ q: "어디까지 줄여요?", a: "보통 30~60% 용량이 줄어듭니다." }], addedAt: "2026-05-14" },
+
+  // ===== Batch G - text =====
+  { slug: "text-reverse", component: "TextReverseTool", category: "text", icon: "↩️", navTitle: "텍스트 거꾸로", title: "텍스트 거꾸로 - 글자/단어/줄 단위 역순", h1: "텍스트 거꾸로 만들기", description: "글자, 단어, 줄 단위로 텍스트를 역순으로 뒤집습니다. 짤·재미용·암호화 연습에 사용.", metaDescription: "텍스트 거꾸로 무료. 글자·단어·줄 역순.", howTo: ["텍스트를 입력합니다.", "모드를 선택합니다.", "복사합니다."], faq: [{ q: "한글도 되나요?", a: "네. 한글 음절 단위로 역순됩니다." }], addedAt: "2026-05-14" },
+  { slug: "line-numbers", component: "LineNumbersTool", category: "text", icon: "1️⃣", navTitle: "줄 번호 추가", title: "텍스트 줄 번호 추가 - 자동 번호 매기기", h1: "줄 번호 추가", description: "여러 줄 텍스트에 자동으로 줄 번호를 매깁니다. 시작 번호·구분자·자릿수 패딩 설정 가능.", metaDescription: "줄 번호 추가 무료. 시작 번호·구분자 조절, 일괄 처리.", howTo: ["텍스트를 입력합니다.", "옵션을 조절하면 즉시 반영됩니다."], faq: [{ q: "0부터 시작도 되나요?", a: "시작 번호를 자유롭게 입력할 수 있습니다." }], addedAt: "2026-05-14" },
+  { slug: "reading-time", component: "ReadingTimeTool", category: "text", icon: "⏰", navTitle: "발표·읽기 시간", title: "발표 시간 / 읽기 시간 추정 - 글자수 → 분", h1: "발표 / 읽기 시간 추정", description: "텍스트 글자수로 발표 시간(WPM)과 묵독 시간을 추정합니다. 한국어·영어 분당 속도 조절 가능.", metaDescription: "발표 시간 추정 무료. WPM 기반, 한국어·영어 지원.", howTo: ["원고를 붙여넣습니다.", "분당 단어/글자 수를 조절합니다."], faq: [{ q: "기본 속도?", a: "한국어 발표 평균 분당 300자, 묵독 분당 500자입니다." }], addedAt: "2026-05-14" },
+  { slug: "hanja-to-hangul", component: "HanjaToHangulTool", category: "text", icon: "漢", navTitle: "한자 → 한글", title: "한자 한글 변환 - 자주 쓰는 한자 600자", h1: "한자 → 한글 변환", description: "자주 쓰는 한자 600자를 한글 음으로 변환합니다. 이름·기사·계약서 한자 읽기에 유용.", metaDescription: "한자 한글 변환 무료. 자주 쓰는 한자 600자, 빠른 검색.", howTo: ["한자가 포함된 텍스트를 입력합니다.", "한글 변환 결과가 표시됩니다."], faq: [{ q: "모든 한자가 되나요?", a: "자주 쓰는 600자 사전 기반입니다. 누락된 한자는 그대로 둡니다." }], addedAt: "2026-05-14" },
+  { slug: "ascii-box", component: "AsciiBoxTool", category: "text", icon: "▢", navTitle: "ASCII 박스", title: "ASCII 박스 / 테두리 - 텍스트를 박스로 둘러싸기", h1: "ASCII 박스 만들기", description: "텍스트를 깔끔한 ASCII / 유니코드 박스로 둘러쌉니다. 코드 주석, README 강조, 채팅 메시지에 사용.", metaDescription: "ASCII 박스 무료. 텍스트 둘러싸기, 다양한 박스 스타일.", howTo: ["텍스트를 입력합니다.", "박스 스타일을 선택합니다.", "복사합니다."], faq: [{ q: "스타일 종류?", a: "단순 ASCII (+-|), 둥근 모서리, 두꺼운 선 등 여러 스타일 지원." }], addedAt: "2026-05-14" },
+  { slug: "encoding-convert", component: "EncodingConvertTool", category: "text", icon: "🔤", navTitle: "텍스트 인코딩 변환", title: "텍스트 인코딩 변환 - EUC-KR / CP949 / UTF-8 깨진 글자 복구", h1: "텍스트 인코딩 변환", description: "EUC-KR / CP949로 저장된 파일이 UTF-8로 잘못 읽혀 깨진 한글을 복원합니다. ��대신 글자가 보이게 됩니다.", metaDescription: "한글 깨짐 복구 무료. EUC-KR / CP949 / UTF-8 변환, 텍스트·파일 지원.", howTo: ["깨진 글자가 포함된 텍스트를 붙여넣거나 파일을 업로드합니다.", "원본 인코딩을 선택합니다.", "복원된 결과를 받습니다."], faq: [{ q: "왜 한글이 깨지나요?", a: "파일이 EUC-KR/CP949로 저장됐는데 프로그램이 UTF-8로 읽으면 깨집니다. 원본 인코딩을 알려주면 복원 가능합니다." }], addedAt: "2026-05-14" },
+  { slug: "line-joiner", component: "LineJoinerTool", category: "text", icon: "🔗", navTitle: "여러 줄 → 한 줄", title: "줄 합치기 - 여러 줄을 한 줄로 또는 구분자로 연결", h1: "텍스트 줄 합치기", description: "여러 줄 텍스트를 한 줄로 합치거나, 쉼표·세미콜론 등 구분자로 연결합니다. 엑셀 셀에서 SQL IN 절 등에 유용.", metaDescription: "여러 줄 합치기 무료. 구분자 선택, 빈 줄 제거, 따옴표 옵션.", howTo: ["줄별로 입력된 텍스트를 붙여넣습니다.", "구분자와 옵션을 선택합니다."], faq: [{ q: "SQL IN 절은 어떻게?", a: "구분자 쉼표 + 따옴표 옵션을 켜면 'A','B','C' 형식이 됩니다." }], addedAt: "2026-05-14" },
+
+  // ===== Batch G - image =====
+  { slug: "text-card", component: "TextCardTool", category: "image", icon: "📇", navTitle: "텍스트 카드 만들기", title: "텍스트 카드 만들기 - 글자 → SNS용 이미지", h1: "텍스트 → 이미지 카드", description: "명언·인용·공지 글을 SNS 공유용 이미지 카드로 만들어 PNG로 저장하세요. 그라데이션 배경·폰트·크기 조절.", metaDescription: "텍스트 카드 무료 생성. SNS 공유용 이미지, 그라데이션 배경.", howTo: ["문구를 입력합니다.", "배경·폰트·크기를 조절합니다.", "PNG로 저장합니다."], faq: [{ q: "어떤 크기로 저장돼요?", a: "정사각형 1080×1080, 세로형 1080×1350, 가로형 1200×630 중 선택." }], addedAt: "2026-05-14" },
+  { slug: "image-compare", component: "ImageCompareTool", category: "image", icon: "↔️", navTitle: "이미지 비교 슬라이더", title: "이미지 Before/After 비교 - 슬라이더로 두 사진 비교", h1: "이미지 Before/After 슬라이더", description: "두 이미지를 비교하는 슬라이더형 미리보기를 만듭니다. 보정 전·후, 리뉴얼 전·후 비교에 좋습니다.", metaDescription: "Before/After 슬라이더 무료. 두 이미지 비교, PNG 저장.", howTo: ["두 이미지를 업로드합니다.", "슬라이더를 좌우로 움직여 비교합니다.", "스크린샷을 저장하거나 캡처합니다."], faq: [{ q: "두 이미지 크기가 다르면?", a: "큰 쪽에 맞춰 자동 정렬합니다." }], addedAt: "2026-05-14" },
+  { slug: "image-zip", component: "ImageZipTool", category: "image", icon: "🗜️", navTitle: "이미지 ZIP 묶기", title: "이미지 ZIP 일괄 묶기 - 여러 사진 한 ZIP으로", h1: "이미지 → ZIP 묶기", description: "여러 이미지를 한 ZIP 파일로 묶습니다. 메일 첨부, 카톡 공유, 백업용으로 편리.", metaDescription: "이미지 ZIP 무료 묶기. 여러 사진 한 번에, 폴더 구조 유지.", howTo: ["이미지들을 업로드합니다.", "ZIP 다운로드 버튼을 누릅니다."], faq: [{ q: "압축률은요?", a: "이미지는 이미 압축돼 있어 ZIP 추가 압축률이 낮습니다. 묶기 위주로 쓰세요." }], addedAt: "2026-05-14" },
+  { slug: "qr-logo", component: "QrLogoTool", category: "qr", icon: "🖼️", navTitle: "로고 있는 QR", title: "로고 들어간 QR 코드 - 중앙에 이미지 삽입", h1: "로고 들어간 QR 코드", description: "QR 코드 중앙에 로고/아이콘을 삽입하세요. 브랜드 QR에 유용. 오류 정정 레벨 자동 설정.", metaDescription: "로고 QR 무료 생성. 중앙 이미지 삽입, 브랜드 QR.", howTo: ["URL/텍스트를 입력합니다.", "로고 이미지를 업로드합니다.", "PNG로 다운로드합니다."], faq: [{ q: "스캔이 잘 되나요?", a: "오류 정정 레벨 H를 사용해 로고 영역(중앙 25%까지)을 가려도 스캔 가능합니다." }], addedAt: "2026-05-14" },
+
+  // ===== Batch G - video =====
+  { slug: "video-merge", component: "VideoMergeTool", category: "video", icon: "🎞️", navTitle: "동영상 합치기", title: "동영상 합치기 - 여러 클립을 한 동영상으로", h1: "동영상 합치기 (concat)", description: "여러 동영상을 순서대로 이어붙여 한 파일로 만듭니다. ffmpeg.wasm 기반. 동일 코덱 권장.", metaDescription: "동영상 합치기 무료. 여러 클립 연결, ffmpeg.wasm.", howTo: ["동영상 파일들을 업로드합니다.", "순서를 조절하고 합치기 버튼을 누릅니다."], faq: [{ q: "다른 해상도여도 되나요?", a: "같은 해상도·코덱 권장. 다르면 재인코딩이 길어집니다." }], addedAt: "2026-05-14" },
+  { slug: "video-mute", component: "VideoMuteTool", category: "video", icon: "🔇", navTitle: "동영상 무음", title: "동영상 무음 만들기 - 오디오 트랙 제거", h1: "동영상 무음 / 오디오 제거", description: "동영상의 소리를 완전히 제거합니다. ffmpeg로 비디오 스트림만 복사해 빠른 처리.", metaDescription: "동영상 무음 무료. 오디오 트랙 제거, 화질 손실 없음.", howTo: ["동영상을 업로드합니다.", "처리 버튼을 누르고 다운로드합니다."], faq: [{ q: "화질이 떨어지나요?", a: "재인코딩 없이 처리하므로 화질 손실이 없습니다." }], addedAt: "2026-05-14" },
+  { slug: "video-info", component: "VideoInfoTool", category: "video", icon: "ℹ️", navTitle: "동영상 정보 보기", title: "동영상 정보 보기 - 해상도/길이/용량 확인", h1: "동영상 정보 / 메타데이터", description: "동영상의 해상도·길이·용량·재생시간·프레임수 등 기본 정보를 보여줍니다.", metaDescription: "동영상 정보 무료 보기. 해상도·길이·용량 확인.", howTo: ["동영상을 업로드합니다.", "정보가 자동 표시됩니다."], faq: [{ q: "코덱 정보도 보이나요?", a: "브라우저 비디오 API는 코덱 정보를 제공하지 않습니다. 해상도·길이·용량만 표시됩니다." }], addedAt: "2026-05-14" },
+
+  // ===== Batch G - pdf =====
+  { slug: "pdf-blank-page", component: "PdfBlankPageTool", category: "pdf", icon: "📄", navTitle: "PDF 빈 페이지 추가", title: "PDF 빈 페이지 추가 - 원하는 위치에 빈 페이지", h1: "PDF에 빈 페이지 추가", description: "PDF의 원하는 위치에 빈 페이지를 끼워 넣습니다. 인쇄 페이지 매수 맞춤, 메모 공간 추가에 사용.", metaDescription: "PDF 빈 페이지 추가 무료. 위치 선택, 여러 페이지 일괄.", howTo: ["PDF를 업로드합니다.", "삽입 위치와 개수를 선택합니다."], faq: [{ q: "빈 페이지 크기는요?", a: "원본 PDF의 첫 페이지 크기를 따라갑니다." }], addedAt: "2026-05-14" },
+  { slug: "pdf-metadata", component: "PdfMetadataTool", category: "pdf", icon: "📋", navTitle: "PDF 메타데이터 편집", title: "PDF 메타데이터 편집 - 제목·저자·키워드 변경", h1: "PDF 메타데이터 / 속성 편집", description: "PDF의 제목·저자·주제·키워드·작성자 정보를 보고 수정합니다.", metaDescription: "PDF 메타데이터 무료 편집. 제목·저자·키워드 변경.", howTo: ["PDF를 업로드합니다.", "필드를 수정합니다.", "저장합니다."], faq: [{ q: "기존 메타데이터를 보려면?", a: "업로드하면 현재 값이 자동 입력됩니다." }], addedAt: "2026-05-14" },
+  { slug: "pdf-crop", component: "PdfCropTool", category: "pdf", icon: "✂️", navTitle: "PDF 페이지 자르기", title: "PDF 페이지 여백 자르기 - 모든 페이지 일괄 크롭", h1: "PDF 페이지 자르기 (crop)", description: "PDF 모든 페이지의 상·하·좌·우 여백을 mm 단위로 잘라냅니다. 스캔본 여백 제거에 유용.", metaDescription: "PDF 여백 자르기 무료. 상하좌우 mm 단위 크롭.", howTo: ["PDF를 업로드합니다.", "각 방향 여백을 입력합니다.", "처리합니다."], faq: [{ q: "각 페이지마다 다르게 자를 수 있나요?", a: "현재는 모든 페이지에 동일한 크롭 값이 적용됩니다." }], addedAt: "2026-05-14" },
+
   // ===== 계산기·생활 =====
   {
     slug: "time-calc",
@@ -2245,6 +2327,22 @@ export const tools: ToolConfig[] = [
     faq: [{ q: "얼마나 공정한가요?", a: "Web Crypto의 안전한 난수를 사용해 통계적으로 균등하게 추첨됩니다." }],
     addedAt: "2026-05-14",
   },
+
+  // ===== Batch G - 계산기·생활 (14) =====
+  { slug: "caffeine", component: "CaffeineTool", category: "calc", icon: "☕", navTitle: "카페인 섭취 추적", title: "카페인 섭취 계산기 - 일일 권장량 비교", h1: "카페인 섭취 추적기", description: "오늘 마신 커피·차·에너지 음료의 총 카페인을 합산하고 일일 권장량(성인 400mg)과 비교합니다.", metaDescription: "카페인 계산기 무료. 음료별 합산, 권장량 비교.", howTo: ["마신 음료를 추가합니다.", "총 카페인이 자동 표시됩니다."], faq: [{ q: "임산부는 얼마까지?", a: "임산부는 200mg/일 이하 권장 (WHO)." }], addedAt: "2026-05-14" },
+  { slug: "zodiac", component: "ZodiacTool", category: "calc", icon: "♓", navTitle: "별자리 찾기", title: "별자리 찾기 - 생일로 별자리 확인 (서양 12궁)", h1: "별자리 찾기", description: "생일을 입력하면 서양 12궁 별자리와 기간, 성격 특징을 알려줍니다.", metaDescription: "별자리 찾기 무료. 서양 12궁, 생일로 확인.", howTo: ["생년월일을 입력합니다.", "결과가 표시됩니다."], faq: [{ q: "음력 생일도 되나요?", a: "별자리는 양력 기준입니다. 음력→양력 변환 도구를 함께 쓰세요." }], addedAt: "2026-05-14" },
+  { slug: "chinese-zodiac", component: "ChineseZodiacTool", category: "calc", icon: "🐰", navTitle: "12지 띠 찾기", title: "띠 찾기 - 생년으로 12지 동물 확인", h1: "12지 / 띠 찾기", description: "출생 연도로 12지 띠(쥐·소·호랑이·토끼…)와 천간을 함께 보여줍니다.", metaDescription: "띠 찾기 무료. 12지 동물, 천간/지지, 음력 입춘 기준.", howTo: ["출생 연도를 입력합니다.", "띠와 간지가 표시됩니다."], faq: [{ q: "음력 입춘 전 출생은?", a: "전통적으로 띠는 음력 입춘 기준이라 1~2월 출생은 전 해 띠인 경우가 있습니다." }], addedAt: "2026-05-14" },
+  { slug: "alcohol-converter", component: "AlcoholConverterTool", category: "calc", icon: "🍶", navTitle: "알코올 도수 환산", title: "알코올 도수 환산 - 소주 N잔 = 맥주 M잔", h1: "알코올 도수·총량 환산", description: "술 종류별 알코올 함유량을 같은 양으로 환산합니다. 소주·맥주·와인·위스키 등 비교.", metaDescription: "알코올 환산 무료. 소주↔맥주↔와인, 도수·총량 비교.", howTo: ["기준 술과 잔 수를 선택합니다.", "다른 술로 환산된 잔 수가 표시됩니다."], faq: [{ q: "음주운전 가능한가요?", a: "법정 한계 0.03% 이상이면 음주운전입니다. 한 잔도 위험하니 운전 시 절대 금주하세요." }], addedAt: "2026-05-14" },
+  { slug: "bmr", component: "BmrTool", category: "calc", icon: "🔥", navTitle: "기초대사량 (BMR)", title: "기초대사량 BMR 계산기 - Mifflin-St Jeor 공식", h1: "기초대사량 (BMR) / TDEE", description: "성별·나이·키·몸무게로 기초대사량(BMR)과 활동량 반영 TDEE를 계산합니다. 다이어트·증량 칼로리 기준값.", metaDescription: "BMR 기초대사량 무료 계산. Mifflin-St Jeor, TDEE 포함.", howTo: ["정보를 입력합니다.", "활동량 레벨을 선택합니다.", "BMR과 TDEE가 표시됩니다."], faq: [{ q: "어떤 공식인가요?", a: "Mifflin-St Jeor (가장 정확하다고 알려진 공식)." }], addedAt: "2026-05-14" },
+  { slug: "running-pace", component: "RunningPaceTool", category: "calc", icon: "🏃", navTitle: "러닝 페이스 계산", title: "러닝 페이스 계산기 - km당 분, 5K/10K/마라톤 예측", h1: "러닝 페이스 / 시간 계산", description: "거리·시간·페이스 중 두 개를 입력하면 나머지가 계산됩니다. 5K/10K/하프/풀 마라톤 완주 시간 예측 포함.", metaDescription: "러닝 페이스 무료 계산. km당 분, 5K/10K/마라톤 시간 예측.", howTo: ["거리·시간·페이스 중 두 개를 입력합니다.", "다른 값들이 자동 계산됩니다."], faq: [{ q: "마라톤 시간 예측은 정확한가요?", a: "Riegel 공식 기반으로 5K 페이스로 마라톤 시간을 추정합니다. 실전 페이스는 조금 더 느릴 수 있습니다." }], addedAt: "2026-05-14" },
+  { slug: "tip-calculator", component: "TipTool", category: "calc", icon: "💵", navTitle: "팁 계산기", title: "팁 계산기 - 식당 팁 비율 + N분의 1 나누기", h1: "팁 계산기 (Tip)", description: "총 금액·팁 비율·인원 수를 입력하면 1인당 부담액을 계산합니다. 미국·유럽 식당용.", metaDescription: "팁 계산기 무료. 비율·인원 N분의 1, 미국·유럽 식당.", howTo: ["총액·팁 비율·인원을 입력합니다.", "1인당 금액이 표시됩니다."], faq: [{ q: "한국에서도 쓰나요?", a: "한국은 보통 팁 문화가 없습니다. 해외여행 때 유용." }], addedAt: "2026-05-14" },
+  { slug: "unit-price", component: "UnitPriceTool", category: "calc", icon: "🏪", navTitle: "단가 비교", title: "단가 비교 계산기 - 큰 용량 vs 작은 용량 어느 게 싸나", h1: "단위당 가격 비교", description: "용량 다른 두 상품의 가격을 단위(100ml, 100g 등) 기준으로 비교해 어느 게 싼지 알려줍니다.", metaDescription: "단가 비교 무료. 용량 다른 두 상품 가격 비교.", howTo: ["두 상품의 가격과 용량을 입력합니다.", "어느 게 더 싼지 즉시 표시됩니다."], faq: [{ q: "어떤 단위가 되나요?", a: "ml, L, g, kg, 개수 등 자유롭게 입력 가능합니다." }], addedAt: "2026-05-14" },
+  { slug: "dice-coin", component: "DiceCoinTool", category: "calc", icon: "🎲", navTitle: "주사위 / 동전", title: "주사위 / 동전 던지기 - D4/D6/D8/D10/D20 + 동전", h1: "주사위 굴리기 / 동전 던지기", description: "다양한 주사위(D4·D6·D8·D10·D12·D20·D100)와 동전을 굴립니다. 보드게임·TRPG·결정 보조에 사용.", metaDescription: "주사위·동전 무료. D4~D100, Web Crypto 안전 난수.", howTo: ["주사위 종류와 개수를 선택합니다.", "굴리기 버튼을 누릅니다."], faq: [{ q: "어떻게 공정한가요?", a: "Web Crypto의 안전한 난수를 사용합니다." }], addedAt: "2026-05-14" },
+  { slug: "rps", component: "RpsTool", category: "calc", icon: "✊", navTitle: "가위바위보", title: "가위바위보 봇 - 컴퓨터와 즉시 한 판", h1: "가위바위보 (Rock Paper Scissors)", description: "컴퓨터와 가위바위보 한 판. 승률 통계도 함께 표시됩니다.", metaDescription: "가위바위보 무료. 컴퓨터와 한 판, 승률 통계.", howTo: ["가위·바위·보 중 하나를 선택합니다.", "결과가 즉시 표시됩니다."], faq: [{ q: "컴퓨터가 치팅하나요?", a: "공정한 랜덤입니다. 사용자 패턴을 학습하지 않습니다." }], addedAt: "2026-05-14" },
+  { slug: "korea-holidays", component: "KoreaHolidaysTool", category: "calc", icon: "🎌", navTitle: "한국 공휴일", title: "한국 공휴일 - 올해 / 내년 공휴일 모음", h1: "한국 공휴일 캘린더", description: "현재 연도와 다음 연도의 한국 법정 공휴일을 한 번에 보여줍니다. 음력 명절·대체공휴일 포함.", metaDescription: "한국 공휴일 무료. 올해·내년, 음력 명절·대체공휴일.", howTo: ["연도를 선택합니다.", "공휴일 목록이 표시됩니다."], faq: [{ q: "임시공휴일은요?", a: "정부가 임시 지정한 공휴일은 발표 시기에 따라 갱신됩니다." }], addedAt: "2026-05-14" },
+  { slug: "lunch-picker", component: "LunchPickerTool", category: "calc", icon: "🍱", navTitle: "점심 메뉴 추천", title: "점심 메뉴 룰렛 - 뭐 먹지 결정 도와줌", h1: "점심 메뉴 추천 룰렛", description: "메뉴를 못 정할 때 룰렛으로 결정. 한식·중식·일식·양식 카테고리 미리 입력, 직접 추가도 가능.", metaDescription: "점심 메뉴 룰렛 무료. 한식·중식·일식·양식, 직접 추가.", howTo: ["카테고리를 선택하거나 직접 메뉴를 추가합니다.", "룰렛을 돌립니다."], faq: [{ q: "결과 그대로 따라야 하나요?", a: "재미로만 쓰세요. 동료들과 합의하시고요." }], addedAt: "2026-05-14" },
+  { slug: "baseball-stats", component: "BaseballStatsTool", category: "calc", icon: "⚾", navTitle: "야구 ERA/타율", title: "야구 ERA·타율·OPS 계산기", h1: "야구 통계 계산기 (ERA / AVG / OPS)", description: "투수 ERA, 타자 타율·출루율·장타율·OPS를 즉시 계산합니다. 사회인 야구·중계 시청 보조용.", metaDescription: "야구 ERA·타율·OPS 무료 계산. KBO·MLB.", howTo: ["계산하고 싶은 항목을 선택합니다.", "값을 입력합니다."], faq: [{ q: "OPS가 뭐예요?", a: "출루율(OBP) + 장타율(SLG). 타자 전반적 능력 지표." }], addedAt: "2026-05-14" },
+  { slug: "book-reading-time", component: "BookReadingTimeTool", category: "calc", icon: "📚", navTitle: "책 읽기 시간", title: "책 읽는 시간 계산기 - 페이지수 → 완독 시간", h1: "책 완독 시간 예측", description: "총 페이지 수와 분당 읽는 속도로 책 완독에 걸리는 시간을 추정합니다. 평균 한국어 독서 속도 적용.", metaDescription: "책 읽기 시간 무료 추정. 페이지수·속도, 완독 시간.", howTo: ["총 페이지를 입력합니다.", "독서 속도를 조절합니다."], faq: [{ q: "기본 속도는?", a: "한국어 평균 분당 250~350자 (페이지당 약 2~3분)." }], addedAt: "2026-05-14" },
 ];
 
 export function getTool(slug: string): ToolConfig | undefined {
