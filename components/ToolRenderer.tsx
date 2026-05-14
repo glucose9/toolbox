@@ -95,6 +95,16 @@ const BmiTool = dynamic(() => import("./tools/BmiTool"), { ssr: false });
 const CompoundTool = dynamic(() => import("./tools/CompoundTool"), { ssr: false });
 const WorldTimeTool = dynamic(() => import("./tools/WorldTimeTool"), { ssr: false });
 const NamePickerTool = dynamic(() => import("./tools/NamePickerTool"), { ssr: false });
+const VideoRotateTool = dynamic(() => import("./tools/VideoRotateTool"), { ssr: false });
+const ImagePixelateTool = dynamic(() => import("./tools/ImagePixelateTool"), { ssr: false });
+const PdfExtractTool = dynamic(() => import("./tools/PdfExtractTool"), { ssr: false });
+const MarkdownTocTool = dynamic(() => import("./tools/MarkdownTocTool"), { ssr: false });
+const SqlFormatterTool = dynamic(() => import("./tools/SqlFormatterTool"), { ssr: false });
+const CronParserTool = dynamic(() => import("./tools/CronParserTool"), { ssr: false });
+const CidrCalcTool = dynamic(() => import("./tools/CidrCalcTool"), { ssr: false });
+const TimeCalcTool = dynamic(() => import("./tools/TimeCalcTool"), { ssr: false });
+const WageConverterTool = dynamic(() => import("./tools/WageConverterTool"), { ssr: false });
+const DueDateTool = dynamic(() => import("./tools/DueDateTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -283,6 +293,26 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
       return <WorldTimeTool />;
     case "NamePickerTool":
       return <NamePickerTool />;
+    case "VideoRotateTool":
+      return <VideoRotateTool />;
+    case "ImagePixelateTool":
+      return <ImagePixelateTool />;
+    case "PdfExtractTool":
+      return <PdfExtractTool />;
+    case "MarkdownTocTool":
+      return <MarkdownTocTool />;
+    case "SqlFormatterTool":
+      return <SqlFormatterTool />;
+    case "CronParserTool":
+      return <CronParserTool />;
+    case "CidrCalcTool":
+      return <CidrCalcTool />;
+    case "TimeCalcTool":
+      return <TimeCalcTool />;
+    case "WageConverterTool":
+      return <WageConverterTool />;
+    case "DueDateTool":
+      return <DueDateTool />;
     default:
       return <div>도구를 찾을 수 없습니다.</div>;
   }

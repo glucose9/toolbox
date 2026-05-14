@@ -94,7 +94,17 @@ export type ToolConfig = {
     | "BmiTool"
     | "CompoundTool"
     | "WorldTimeTool"
-    | "NamePickerTool";
+    | "NamePickerTool"
+    | "VideoRotateTool"
+    | "ImagePixelateTool"
+    | "PdfExtractTool"
+    | "MarkdownTocTool"
+    | "SqlFormatterTool"
+    | "CronParserTool"
+    | "CidrCalcTool"
+    | "TimeCalcTool"
+    | "WageConverterTool"
+    | "DueDateTool";
   category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf" | "calc";
   icon: string;
   navTitle: string;
@@ -705,6 +715,22 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
   {
+    slug: "pdf-extract",
+    component: "PdfExtractTool",
+    category: "pdf",
+    icon: "📑",
+    navTitle: "PDF 페이지 추출",
+    title: "PDF 페이지 추출 - 원하는 페이지만 빼서 새 PDF로",
+    h1: "PDF 특정 페이지 추출",
+    description:
+      "PDF에서 원하는 페이지 번호 또는 범위만 골라 새 PDF로 저장하세요. 한 PDF에서 일부 페이지만 공유할 때 편리.",
+    metaDescription:
+      "PDF 페이지 추출 무료. 원하는 페이지·범위 선택, 새 PDF 저장.",
+    howTo: ["PDF 파일을 업로드합니다.", "추출할 페이지를 '1-3, 5, 7-9' 형식으로 입력합니다.", "추출 버튼을 누릅니다."],
+    faq: [{ q: "PDF 분할과 뭐가 달라요?", a: "분할은 여러 PDF로 쪼개고 ZIP으로 받습니다. 추출은 선택한 페이지만 모은 한 PDF를 만듭니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
     slug: "pdf-watermark",
     component: "PdfWatermarkTool",
     category: "pdf",
@@ -835,6 +861,22 @@ export const tools: ToolConfig[] = [
     faq: [
       { q: "원본 화질이 떨어지나요?", a: "PNG로 저장하면 무손실, JPG는 약간의 손실이 있을 수 있습니다." },
     ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "image-pixelate",
+    component: "ImagePixelateTool",
+    category: "image",
+    icon: "🔲",
+    navTitle: "이미지 픽셀화/모자이크",
+    title: "이미지 픽셀화 / 모자이크 - 얼굴/번호판 가리기",
+    h1: "이미지 픽셀화 / 모자이크",
+    description:
+      "사진 전체나 선택 영역에 모자이크를 적용해 얼굴·번호판·민감한 정보를 가리세요. 픽셀 크기 조절 가능.",
+    metaDescription:
+      "이미지 모자이크 무료. 영역 선택, 픽셀 크기 조절, 얼굴/번호판 가리기.",
+    howTo: ["이미지를 업로드합니다.", "가릴 영역을 마우스로 드래그합니다.", "픽셀 크기를 조절하고 다운로드합니다."],
+    faq: [{ q: "원래대로 복원되나요?", a: "모자이크는 비가역적입니다. 복원되지 않으니 원본 파일을 따로 보관하세요." }],
     addedAt: "2026-05-14",
   },
   {
@@ -1043,6 +1085,22 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
   {
+    slug: "video-rotate",
+    component: "VideoRotateTool",
+    category: "video",
+    icon: "🔃",
+    navTitle: "동영상 회전",
+    title: "동영상 회전 - 90/180/270도 + 좌우 반전",
+    h1: "동영상 회전 / 반전",
+    description:
+      "옆으로 누운 동영상을 똑바로 세우거나, 좌우/상하로 반전하세요. ffmpeg.wasm 기반, 음성 그대로 유지.",
+    metaDescription:
+      "동영상 회전 무료. 90/180/270도, 좌우/상하 반전, ffmpeg.wasm.",
+    howTo: ["동영상을 업로드합니다.", "회전 각도 또는 반전을 선택합니다.", "변환 후 다운로드합니다."],
+    faq: [{ q: "메타데이터만 바꾸나요?", a: "MP4 메타데이터 회전이 아니라 실제로 영상을 재인코딩합니다. 모든 플레이어에서 똑바로 보입니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
     slug: "video-thumbnail",
     component: "VideoThumbnailTool",
     category: "video",
@@ -1094,6 +1152,22 @@ export const tools: ToolConfig[] = [
   },
 
   // ===== Text =====
+  {
+    slug: "markdown-toc",
+    component: "MarkdownTocTool",
+    category: "text",
+    icon: "📑",
+    navTitle: "마크다운 목차 생성",
+    title: "마크다운 목차(TOC) 생성기 - 헤딩 자동 추출",
+    h1: "마크다운 TOC 생성기",
+    description:
+      "마크다운 본문의 H1~H6 헤딩을 자동으로 분석해 목차(Table of Contents)를 만들어 줍니다. 들여쓰기와 앵커 링크 자동.",
+    metaDescription:
+      "마크다운 목차 자동 생성. 헤딩 H1-H6 추출, 앵커 링크, 들여쓰기.",
+    howTo: ["마크다운을 붙여넣습니다.", "TOC가 자동 생성됩니다.", "복사해서 문서 맨 위에 붙입니다."],
+    faq: [{ q: "어떤 레벨까지 포함되나요?", a: "기본 H1~H3이고 슬라이더로 조절할 수 있습니다." }],
+    addedAt: "2026-05-14",
+  },
   {
     slug: "markdown-table",
     component: "MarkdownTableTool",
@@ -1775,6 +1849,54 @@ export const tools: ToolConfig[] = [
     addedAt: "2026-05-14",
   },
   {
+    slug: "sql-formatter",
+    component: "SqlFormatterTool",
+    category: "dev",
+    icon: "🗃️",
+    navTitle: "SQL 포맷터",
+    title: "SQL 포맷터 - 정렬·들여쓰기 자동 (MySQL/Postgres/SQLite/MSSQL)",
+    h1: "SQL 포맷터 / 정렬기",
+    description:
+      "복잡한 SQL을 보기 좋게 정렬합니다. MySQL·Postgres·SQLite·MSSQL·BigQuery·Snowflake 등 14가지 dialect 지원.",
+    metaDescription:
+      "SQL 포맷터 무료. MySQL·Postgres·SQLite·MSSQL 등 14 dialect.",
+    howTo: ["SQL을 붙여넣습니다.", "dialect를 선택합니다.", "포맷 버튼을 누릅니다."],
+    faq: [{ q: "여러 쿼리도 되나요?", a: "세미콜론(;)으로 구분된 여러 쿼리도 함께 포맷됩니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "cron-parser",
+    component: "CronParserTool",
+    category: "dev",
+    icon: "⏰",
+    navTitle: "Cron 표현식 분석",
+    title: "Cron 표현식 분석기 - 다음 실행 시각 + 사람이 읽는 설명",
+    h1: "Cron 표현식 분석 (Next Run)",
+    description:
+      "Cron 표현식을 입력하면 사람이 읽기 좋은 설명과 다음 N회 실행 시각을 보여줍니다. 5필드·6필드(초 포함) 지원.",
+    metaDescription:
+      "Cron 표현식 분석 무료. 다음 실행 시각, 사람 읽는 설명, 5/6 필드.",
+    howTo: ["Cron 표현식을 입력합니다 (예: '0 9 * * 1').", "설명과 다음 10회 실행 시각이 표시됩니다."],
+    faq: [{ q: "한국 시간대로 보이나요?", a: "브라우저 시간대(보통 한국 시간)를 사용합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "cidr-calc",
+    component: "CidrCalcTool",
+    category: "dev",
+    icon: "🌐",
+    navTitle: "IPv4 / CIDR 계산기",
+    title: "IPv4 CIDR 서브넷 계산기 - 네트워크/브로드캐스트/호스트 수",
+    h1: "IPv4 / CIDR 서브넷 계산기",
+    description:
+      "CIDR 표기(예: 192.168.0.0/24)에서 네트워크 주소·브로드캐스트·서브넷 마스크·사용 가능 호스트 수를 계산합니다.",
+    metaDescription:
+      "IPv4 CIDR 계산기 무료. 네트워크/브로드캐스트/마스크/호스트 수.",
+    howTo: ["IPv4 주소와 prefix 길이를 입력합니다 (예: 192.168.0.0/24).", "결과가 즉시 표시됩니다."],
+    faq: [{ q: "IPv6도 되나요?", a: "현재는 IPv4만 지원합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
     slug: "jwt-decoder",
     component: "JwtDecoderTool",
     category: "dev",
@@ -1944,6 +2066,57 @@ export const tools: ToolConfig[] = [
   },
 
   // ===== 계산기·생활 =====
+  {
+    slug: "time-calc",
+    component: "TimeCalcTool",
+    category: "calc",
+    icon: "⏱️",
+    navTitle: "시간 계산기",
+    title: "시간 계산기 - 시각 ± 시간 / 두 시각 차이",
+    h1: "시간 계산기",
+    description:
+      "시각에 시간을 더하거나 빼고, 두 시각의 차이를 계산합니다. 24시간/12시간 표기 모두 지원.",
+    metaDescription:
+      "시간 계산기 무료. 시각 ± 시간, 두 시각 차이, 24/12시간.",
+    howTo: ["모드를 선택합니다 (덧셈/뺄셈/차이).", "값을 입력하면 즉시 계산됩니다."],
+    faq: [{ q: "초 단위까지 되나요?", a: "네. 시:분:초 모두 지원합니다." }],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "wage-converter",
+    component: "WageConverterTool",
+    category: "calc",
+    icon: "💼",
+    navTitle: "시급 ↔ 월급 환산",
+    title: "시급 ↔ 월급 ↔ 연봉 환산기 - 한국 근로기준법 기준",
+    h1: "시급 / 월급 / 연봉 환산기",
+    description:
+      "시급·일급·주급·월급·연봉을 서로 환산합니다. 주 40시간(주휴수당 포함 209시간/월) 기준. 한국 최저시급 비교도 표시.",
+    metaDescription:
+      "시급 월급 환산 무료. 주 40h, 주휴수당 포함, 한국 최저시급 비교.",
+    howTo: ["한 칸에 금액을 입력합니다.", "나머지 모든 단위가 자동 환산됩니다.", "주 근로시간을 조절할 수 있습니다."],
+    faq: [
+      { q: "주휴수당이 뭐예요?", a: "주 15시간 이상 근무하면 받는 유급 휴일 수당입니다. 시급 → 월급 환산 시 209시간 기준에 자동 포함됩니다." },
+      { q: "2026년 최저시급은?", a: "도구 안에 최신 한국 최저시급이 표시됩니다 (참고용)." },
+    ],
+    addedAt: "2026-05-14",
+  },
+  {
+    slug: "due-date",
+    component: "DueDateTool",
+    category: "calc",
+    icon: "🤰",
+    navTitle: "출산 예정일",
+    title: "출산 예정일 계산기 - 마지막 생리일 또는 수정일 기준",
+    h1: "임신 / 출산 예정일 계산기",
+    description:
+      "마지막 생리 시작일(LMP) 또는 수정일 기준으로 예상 출산일·현재 임신 주수·삼분기를 계산합니다. Naegele 공식 기반.",
+    metaDescription:
+      "출산 예정일 계산 무료. 마지막 생리일 / 수정일, 임신 주수, 삼분기.",
+    howTo: ["기준 모드(마지막 생리일 / 수정일)를 선택합니다.", "날짜를 입력하면 예정일·주수가 계산됩니다."],
+    faq: [{ q: "정확한가요?", a: "Naegele 공식 기반 추정치입니다. 정확한 예정일은 산부인과 초음파 검진을 따르세요." }],
+    addedAt: "2026-05-14",
+  },
   {
     slug: "sci-calc",
     component: "SciCalcTool",
