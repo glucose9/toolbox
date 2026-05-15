@@ -18,6 +18,15 @@ export function generateStaticParams() {
   return params;
 }
 
+function safeT(t: (k: string) => string, key: string, fallback: string): string {
+  try {
+    const v = t(key);
+    return v === key ? fallback : v;
+  } catch {
+    return fallback;
+  }
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -28,10 +37,11 @@ export async function generateMetadata({
   if (!tool) return {};
   const t = await getTranslations({ locale });
   const localizedName = safeT(t, `tools.${slug}`, tool.navTitle);
+  const localizedDesc = safeT(t, `toolMeta.${slug}.description`, tool.metaDescription);
   const url = `${SITE_URL}${locale === "ko" ? "" : "/" + locale}/tools/${tool.slug}`;
   return {
-    title: locale === "ko" ? tool.title : `${localizedName} | ${t("site.name")}`,
-    description: tool.metaDescription,
+    title: `${localizedName} | ${t("site.name")}`,
+    description: localizedDesc,
     alternates: {
       canonical: url,
       languages: {
@@ -43,20 +53,11 @@ export async function generateMetadata({
     },
     openGraph: {
       title: localizedName,
-      description: tool.metaDescription,
+      description: localizedDesc,
       url,
       type: "website",
     },
   };
-}
-
-function safeT(t: (k: string) => string, key: string, fallback: string): string {
-  try {
-    const v = t(key);
-    return v === key ? fallback : v;
-  } catch {
-    return fallback;
-  }
 }
 
 export default async function ToolPage({
@@ -71,6 +72,8 @@ export default async function ToolPage({
 
   const t = await getTranslations();
   const navTitle = safeT(t, `tools.${slug}`, tool.navTitle);
+  const localizedH1 = safeT(t, `toolMeta.${slug}.h1`, tool.h1);
+  const localizedDesc = safeT(t, `toolMeta.${slug}.description`, tool.description);
   const categoryLabel = t(`categories.${tool.category}`);
 
   const related = tools
@@ -90,7 +93,7 @@ export default async function ToolPage({
   const howToJsonLd = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: tool.h1,
+    name: localizedH1,
     step: tool.howTo.map((s, i) => ({
       "@type": "HowToStep",
       position: i + 1,
@@ -125,9 +128,9 @@ export default async function ToolPage({
       <header className="mb-6">
         <h1 className="text-3xl font-bold flex items-center gap-3">
           <span>{tool.icon}</span>
-          <span>{tool.h1}</span>
+          <span>{localizedH1}</span>
         </h1>
-        <p className="mt-3 text-muted leading-relaxed">{tool.description}</p>
+        <p className="mt-3 text-muted leading-relaxed">{localizedDesc}</p>
         <div className="mt-4">
           <TrustBadges variant="compact" />
         </div>
