@@ -30,7 +30,8 @@
     "pdf": "PDF",
     "text": "Text",
     "dev": "Developer",
-    "calc": "Calculator · Life"
+    "calc": "Calculator · Life",
+    "academic": "Citation · Essay"
   },
   "nav": {
     "home": "Home",
@@ -107,7 +108,9 @@
     "line-numbers": "Line Numbers", "reading-time": "Reading Time", "hanja-to-hangul": "Hanja → Hangul",
     "ascii-box": "ASCII Box", "encoding-convert": "Encoding Convert", "line-joiner": "Lines → Single Line",
     "text-card": "Text Card Maker", "image-compare": "Image Compare Slider", "image-zip": "Image ZIP",
-    "qr-logo": "QR with Logo", "qr-text": "QR with Text", "video-merge": "Video Merge", "video-mute": "Video Mute",
+    "qr-logo": "QR with Logo", "qr-text": "QR with Text",
+    "cite-format": "Citation Formatter", "doi-lookup": "DOI · ISBN Lookup", "bibtex-convert": "BibTeX Converter", "bib-sort": "Bibliography Sorter", "title-case": "Title Case Converter",
+    "video-merge": "Video Merge", "video-mute": "Video Mute",
     "video-info": "Video Info", "pdf-blank-page": "PDF Add Blank Page", "pdf-metadata": "PDF Metadata",
     "pdf-crop": "PDF Crop", "time-calc": "Time Calc", "wage-converter": "Hourly ↔ Monthly Wage",
     "due-date": "Due Date", "sci-calc": "Scientific Calc", "percent": "Percent Calc",

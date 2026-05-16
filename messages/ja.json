@@ -30,7 +30,8 @@
     "pdf": "PDF",
     "text": "テキスト",
     "dev": "開発者",
-    "calc": "計算機・生活"
+    "calc": "計算機・生活",
+    "academic": "論文・引用"
   },
   "nav": {
     "home": "ホーム",
@@ -107,7 +108,9 @@
     "line-numbers": "行番号付け", "reading-time": "発表・読書時間", "hanja-to-hangul": "漢字 → ハングル",
     "ascii-box": "ASCII枠線", "encoding-convert": "文字エンコーディング", "line-joiner": "複数行 → 1行",
     "text-card": "テキストカード", "image-compare": "画像比較スライダー", "image-zip": "画像ZIP",
-    "qr-logo": "ロゴ入りQR", "qr-text": "テキスト入りQR", "video-merge": "動画連結", "video-mute": "動画無音",
+    "qr-logo": "ロゴ入りQR", "qr-text": "テキスト入りQR",
+    "cite-format": "引用形式変換", "doi-lookup": "DOI·ISBN自動取得", "bibtex-convert": "BibTeX変換", "bib-sort": "参考文献ソート·重複削除", "title-case": "英文タイトル大文字化",
+    "video-merge": "動画連結", "video-mute": "動画無音",
     "video-info": "動画情報", "pdf-blank-page": "PDF空白ページ追加", "pdf-metadata": "PDFメタデータ",
     "pdf-crop": "PDFトリミング", "time-calc": "時間計算", "wage-converter": "時給 ↔ 月給",
     "due-date": "出産予定日", "sci-calc": "関数電卓", "percent": "パーセント計算",

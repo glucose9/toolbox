@@ -129,6 +129,11 @@ const ImageCompareTool = dynamic(() => import("./tools/ImageCompareTool"), { ssr
 const ImageZipTool = dynamic(() => import("./tools/ImageZipTool"), { ssr: false });
 const QrLogoTool = dynamic(() => import("./tools/QrLogoTool"), { ssr: false });
 const QrTextTool = dynamic(() => import("./tools/QrTextTool"), { ssr: false });
+const CiteFormatTool = dynamic(() => import("./tools/CiteFormatTool"), { ssr: false });
+const DoiLookupTool = dynamic(() => import("./tools/DoiLookupTool"), { ssr: false });
+const BibtexConvertTool = dynamic(() => import("./tools/BibtexConvertTool"), { ssr: false });
+const BibSortTool = dynamic(() => import("./tools/BibSortTool"), { ssr: false });
+const TitleCaseTool = dynamic(() => import("./tools/TitleCaseTool"), { ssr: false });
 const VideoMergeTool = dynamic(() => import("./tools/VideoMergeTool"), { ssr: false });
 const VideoMuteTool = dynamic(() => import("./tools/VideoMuteTool"), { ssr: false });
 const VideoInfoTool = dynamic(() => import("./tools/VideoInfoTool"), { ssr: false });
@@ -431,6 +436,11 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "ImageZipTool": return <ImageZipTool />;
     case "QrLogoTool": return <QrLogoTool />;
     case "QrTextTool": return <QrTextTool />;
+    case "CiteFormatTool": return <CiteFormatTool />;
+    case "DoiLookupTool": return <DoiLookupTool />;
+    case "BibtexConvertTool": return <BibtexConvertTool />;
+    case "BibSortTool": return <BibSortTool />;
+    case "TitleCaseTool": return <TitleCaseTool />;
     case "VideoMergeTool": return <VideoMergeTool />;
     case "VideoMuteTool": return <VideoMuteTool />;
     case "VideoInfoTool": return <VideoInfoTool />;

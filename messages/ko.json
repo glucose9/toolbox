@@ -30,7 +30,8 @@
     "pdf": "PDF",
     "text": "텍스트",
     "dev": "개발자",
-    "calc": "계산기·생활"
+    "calc": "계산기·생활",
+    "academic": "논문·인용"
   },
   "nav": {
     "home": "홈",
@@ -107,7 +108,9 @@
     "line-numbers": "줄 번호 추가", "reading-time": "발표·읽기 시간", "hanja-to-hangul": "한자 → 한글",
     "ascii-box": "ASCII 박스", "encoding-convert": "텍스트 인코딩 변환", "line-joiner": "여러 줄 → 한 줄",
     "text-card": "텍스트 카드 만들기", "image-compare": "이미지 비교 슬라이더", "image-zip": "이미지 ZIP 묶기",
-    "qr-logo": "로고 있는 QR", "qr-text": "텍스트 있는 QR", "video-merge": "동영상 합치기", "video-mute": "동영상 무음",
+    "qr-logo": "로고 있는 QR", "qr-text": "텍스트 있는 QR",
+    "cite-format": "인용 형식 변환기", "doi-lookup": "DOI·ISBN 자동 조회", "bibtex-convert": "BibTeX 변환", "bib-sort": "참고문헌 정렬·중복제거", "title-case": "영문 제목 대문자화",
+    "video-merge": "동영상 합치기", "video-mute": "동영상 무음",
     "video-info": "동영상 정보 보기", "pdf-blank-page": "PDF 빈 페이지 추가", "pdf-metadata": "PDF 메타데이터 편집",
     "pdf-crop": "PDF 페이지 자르기", "time-calc": "시간 계산기", "wage-converter": "시급 ↔ 월급 환산",
     "due-date": "출산 예정일", "sci-calc": "공학용 계산기", "percent": "백분율 계산기",

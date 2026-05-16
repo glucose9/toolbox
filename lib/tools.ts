@@ -129,6 +129,11 @@ export type ToolConfig = {
     | "ImageZipTool"
     | "QrLogoTool"
     | "QrTextTool"
+    | "CiteFormatTool"
+    | "DoiLookupTool"
+    | "BibtexConvertTool"
+    | "BibSortTool"
+    | "TitleCaseTool"
     | "VideoMergeTool"
     | "VideoMuteTool"
     | "VideoInfoTool"
@@ -199,7 +204,7 @@ export type ToolConfig = {
     | "NumberToEnglishTool"
     | "JsBeautifierTool"
     | "TextStatsTool";
-  category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf" | "calc";
+  category: "qr" | "image" | "video" | "text" | "dev" | "document" | "pdf" | "calc" | "academic";
   icon: string;
   navTitle: string;
   title: string;
@@ -2188,6 +2193,13 @@ export const tools: ToolConfig[] = [
   { slug: "image-zip", component: "ImageZipTool", category: "image", icon: "🗜️", navTitle: "이미지 ZIP 묶기", title: "이미지 ZIP 일괄 묶기 - 여러 사진 한 ZIP으로", h1: "이미지 → ZIP 묶기", description: "여러 이미지를 한 ZIP 파일로 묶습니다. 메일 첨부, 카톡 공유, 백업용으로 편리.", metaDescription: "이미지 ZIP 무료 묶기. 여러 사진 한 번에, 폴더 구조 유지.", howTo: ["이미지들을 업로드합니다.", "ZIP 다운로드 버튼을 누릅니다."], faq: [{ q: "압축률은요?", a: "이미지는 이미 압축돼 있어 ZIP 추가 압축률이 낮습니다. 묶기 위주로 쓰세요." }], addedAt: "2026-05-14" },
   { slug: "qr-logo", component: "QrLogoTool", category: "qr", icon: "🖼️", navTitle: "로고 있는 QR", title: "로고 들어간 QR 코드 - 중앙에 이미지 삽입", h1: "로고 들어간 QR 코드", description: "QR 코드 중앙에 로고/아이콘을 삽입하세요. 브랜드 QR에 유용. 오류 정정 레벨 자동 설정.", metaDescription: "로고 QR 무료 생성. 중앙 이미지 삽입, 브랜드 QR.", howTo: ["URL/텍스트를 입력합니다.", "로고 이미지를 업로드합니다.", "PNG로 다운로드합니다."], faq: [{ q: "스캔이 잘 되나요?", a: "오류 정정 레벨 H를 사용해 로고 영역(중앙 25%까지)을 가려도 스캔 가능합니다." }], addedAt: "2026-05-14" },
   { slug: "qr-text", component: "QrTextTool", category: "qr", icon: "🆎", navTitle: "텍스트 있는 QR", title: "텍스트 들어간 QR 코드 - 중앙에 글자 삽입", h1: "텍스트 들어간 QR 코드", description: "QR 코드 중앙에 가게 이름·이름·행사명·로고 텍스트 등 글자를 삽입합니다. 색상·배경 모양 자유 설정.", metaDescription: "텍스트 QR 무료 생성. 중앙 글자 삽입, 배경 모양·색상 선택.", howTo: ["QR에 담을 URL/텍스트를 입력합니다.", "중앙에 표시할 글자를 입력합니다.", "글자 크기·색·배경 모양을 조절합니다.", "PNG로 다운로드합니다."], faq: [{ q: "스캔이 잘 되나요?", a: "오류 정정 레벨 H로 생성되어 중앙 영역(약 25%까지)을 글자로 가려도 스캔이 가능합니다. 너무 크게 가리면 인식이 어려울 수 있어요." }, { q: "한글도 되나요?", a: "한글·영어·이모지 모두 가능합니다. 시스템 폰트로 렌더링됩니다." }], addedAt: "2026-05-16" },
+
+  // ===== Batch H - academic / 논문·인용 =====
+  { slug: "cite-format", component: "CiteFormatTool", category: "academic", icon: "📑", navTitle: "인용 형식 변환기", title: "인용 형식 변환기 - APA·MLA·Chicago·Harvard·IEEE 5종 동시", h1: "인용 형식 변환기 (APA·MLA·Chicago·Harvard·IEEE)", description: "저자·연도·제목·저널 등을 입력하면 APA 7판, MLA 9판, Chicago, Harvard, IEEE 5가지 형식의 참고문헌 항목을 동시에 생성합니다. 학술지·단행본·웹사이트 지원.", metaDescription: "참고문헌 형식 변환 무료. APA, MLA, Chicago, Harvard, IEEE 5종 동시 생성.", howTo: ["자료 유형(학술지·단행본·웹사이트)을 선택합니다.", "저자·연도·제목 등 정보를 입력합니다.", "5종 형식이 자동 생성되며 원하는 것을 복사합니다."], faq: [{ q: "어떤 형식을 지원하나요?", a: "APA 7판, MLA 9판, Chicago(Notes-Bibliography), Harvard, IEEE 등 가장 널리 쓰이는 5가지를 지원합니다." }, { q: "이탤릭 처리는?", a: "저널명·서명은 별표(*)로 표시되며, 워드/한글에 붙여넣은 뒤 이탤릭으로 변환해주세요." }], addedAt: "2026-05-16" },
+  { slug: "doi-lookup", component: "DoiLookupTool", category: "academic", icon: "🔍", navTitle: "DOI·ISBN 자동 조회", title: "DOI / ISBN → 참고문헌 자동 생성", h1: "DOI · ISBN 자동 참고문헌 조회", description: "DOI 또는 ISBN을 입력하면 CrossRef·Open Library API로 메타데이터를 자동 조회해 APA·MLA·Chicago 형식의 참고문헌을 만듭니다.", metaDescription: "DOI ISBN 자동 인용 무료. CrossRef Open Library 메타데이터 조회.", howTo: ["DOI(예: 10.1038/nature12373) 또는 ISBN(예: 9780262033848)을 입력합니다.", "조회 버튼을 누르면 자동으로 메타데이터를 가져옵니다.", "APA·MLA·Chicago 형식 중 복사합니다."], faq: [{ q: "어떤 데이터베이스를 쓰나요?", a: "DOI는 CrossRef(api.crossref.org), ISBN은 Open Library(openlibrary.org)의 공개 API를 직접 호출합니다." }, { q: "한국 학술지도 되나요?", a: "DOI가 CrossRef에 등록되어 있다면 가능합니다. KCI 등재 학술지는 대부분 등록되어 있습니다." }], addedAt: "2026-05-16" },
+  { slug: "bibtex-convert", component: "BibtexConvertTool", category: "academic", icon: "📚", navTitle: "BibTeX 변환", title: "BibTeX → APA·MLA·Chicago 변환", h1: "BibTeX 참고문헌 변환기", description: "LaTeX의 BibTeX 항목을 일반 텍스트(APA·MLA·Chicago) 참고문헌으로 변환합니다. 워드/한글 논문 작성 시 유용.", metaDescription: "BibTeX 변환 무료. APA MLA Chicago 텍스트 변환, 여러 항목 한번에.", howTo: ["@article, @book 등 BibTeX 항목을 붙여넣습니다.", "원하는 인용 스타일을 선택합니다.", "변환 결과를 복사해 문서에 붙여넣습니다."], faq: [{ q: "여러 항목을 한 번에?", a: "예. 여러 @entry를 한 번에 붙여넣어도 모두 변환됩니다." }, { q: "지원하는 항목 유형?", a: "@article, @book, @inproceedings, @incollection 등 주요 BibTeX 유형을 지원합니다." }], addedAt: "2026-05-16" },
+  { slug: "bib-sort", component: "BibSortTool", category: "academic", icon: "🔤", navTitle: "참고문헌 정렬·중복제거", title: "참고문헌 가나다·알파벳 정렬 + 중복 제거", h1: "참고문헌 정렬 / 중복 제거 / Hanging indent", description: "참고문헌 목록을 가나다·알파벳 순으로 정렬하고 중복 항목을 제거합니다. Hanging indent 미리보기 제공.", metaDescription: "참고문헌 정렬 무료. 가나다 알파벳, 중복 제거, hanging indent.", howTo: ["참고문헌 항목들을 빈 줄로 구분해 붙여넣습니다.", "정렬 순서와 중복 제거 옵션을 선택합니다.", "결과를 복사해 워드/한글에 붙여넣습니다."], faq: [{ q: "한글과 영문 섞여 있어도 되나요?", a: "예. Intl.Collator로 자연 정렬되어 한글은 가나다, 영문은 알파벳 순으로 처리됩니다." }, { q: "Hanging indent란?", a: "참고문헌 목록에서 첫 줄은 그대로 두고 두 번째 줄부터 들여쓰는 방식입니다. APA·MLA 표준." }], addedAt: "2026-05-16" },
+  { slug: "title-case", component: "TitleCaseTool", category: "academic", icon: "🅰️", navTitle: "영문 제목 대문자화", title: "영문 제목 Title Case 변환 (APA · Chicago · MLA)", h1: "영문 제목 Title Case 변환", description: "영문 논문·에세이 제목을 APA, Chicago, MLA 규칙에 맞춰 자동으로 대문자화합니다. 짧은 전치사·접속사는 소문자 유지.", metaDescription: "Title Case 변환 무료. APA Chicago MLA 규칙, 영문 논문 제목 대문자화.", howTo: ["영문 제목을 입력합니다.", "APA·Chicago·MLA 등 다양한 결과를 비교합니다.", "원하는 스타일을 복사합니다."], faq: [{ q: "APA와 Chicago 차이는?", a: "APA는 4자 이상 단어를 대문자, Chicago는 모든 주요 단어를 대문자로 처리합니다. 짧은 전치사·접속사·관사는 둘 다 소문자 유지." }], addedAt: "2026-05-16" },
 
   // ===== Batch G - video =====
   { slug: "video-merge", component: "VideoMergeTool", category: "video", icon: "🎞️", navTitle: "동영상 합치기", title: "동영상 합치기 - 여러 클립을 한 동영상으로", h1: "동영상 합치기 (concat)", description: "여러 동영상을 순서대로 이어붙여 한 파일로 만듭니다. ffmpeg.wasm 기반. 동일 코덱 권장.", metaDescription: "동영상 합치기 무료. 여러 클립 연결, ffmpeg.wasm.", howTo: ["동영상 파일들을 업로드합니다.", "순서를 조절하고 합치기 버튼을 누릅니다."], faq: [{ q: "다른 해상도여도 되나요?", a: "같은 해상도·코덱 권장. 다르면 재인코딩이 길어집니다." }], addedAt: "2026-05-14" },
