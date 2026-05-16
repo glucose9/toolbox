@@ -142,6 +142,7 @@ const SavingsCalcTool = dynamic(() => import("./tools/SavingsCalcTool"), { ssr: 
 const NetSalaryTool = dynamic(() => import("./tools/NetSalaryTool"), { ssr: false });
 const GpaTool = dynamic(() => import("./tools/GpaTool"), { ssr: false });
 const PyeongTool = dynamic(() => import("./tools/PyeongTool"), { ssr: false });
+const GraphCalcTool = dynamic(() => import("./tools/GraphCalcTool"), { ssr: false });
 const VideoMergeTool = dynamic(() => import("./tools/VideoMergeTool"), { ssr: false });
 const VideoMuteTool = dynamic(() => import("./tools/VideoMuteTool"), { ssr: false });
 const VideoInfoTool = dynamic(() => import("./tools/VideoInfoTool"), { ssr: false });
@@ -457,6 +458,7 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "NetSalaryTool": return <NetSalaryTool />;
     case "GpaTool": return <GpaTool />;
     case "PyeongTool": return <PyeongTool />;
+    case "GraphCalcTool": return <GraphCalcTool />;
     case "VideoMergeTool": return <VideoMergeTool />;
     case "VideoMuteTool": return <VideoMuteTool />;
     case "VideoInfoTool": return <VideoInfoTool />;

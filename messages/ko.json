@@ -111,7 +111,7 @@
     "qr-logo": "로고 있는 QR", "qr-text": "텍스트 있는 QR",
     "cite-format": "인용 형식 변환기", "doi-lookup": "DOI·ISBN 자동 조회", "bibtex-convert": "BibTeX 변환", "bib-sort": "참고문헌 정렬·중복제거", "title-case": "영문 제목 대문자화",
     "korean-cite": "한국 학회지 인용", "text-normalize": "표절검사 텍스트 정규화", "footnote-format": "각주 포맷터",
-    "loan-calc": "대출 이자 계산기", "savings-calc": "적금·예금 계산기", "net-salary": "연봉 실수령액", "gpa": "GPA 학점 계산기", "pyeong": "평 ↔ ㎡ 변환",
+    "loan-calc": "대출 이자 계산기", "savings-calc": "적금·예금 계산기", "net-salary": "연봉 실수령액", "gpa": "GPA 학점 계산기", "pyeong": "평 ↔ ㎡ 변환", "graph-calc": "그래픽 계산기",
     "video-merge": "동영상 합치기", "video-mute": "동영상 무음",
     "video-info": "동영상 정보 보기", "pdf-blank-page": "PDF 빈 페이지 추가", "pdf-metadata": "PDF 메타데이터 편집",
     "pdf-crop": "PDF 페이지 자르기", "time-calc": "시간 계산기", "wage-converter": "시급 ↔ 월급 환산",

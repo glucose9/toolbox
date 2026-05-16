@@ -132,6 +132,7 @@
   "net-salary": { "h1": "Korean Net Salary Calculator", "description": "From gross annual salary, deduct national pension, health insurance, employment insurance, income tax, and local tax to get monthly take-home pay. Supports dependents, children, and non-taxable income." },
   "gpa": { "h1": "GPA Calculator (4.5 · 4.3 · 4.0 Scales)", "description": "Enter courses, grades, and credits to compute GPA. Converts between 4.5, 4.3, 4.0, and 100-point scales — useful for Korean undergrads applying to US grad school." },
   "pyeong": { "h1": "Pyeong ↔ m² Real Estate Converter", "description": "Convert between Korean pyeong (평) and square meters precisely. Preset common Korean apartment sizes and approximate exclusive-use area." },
+  "graph-calc": { "h1": "Graphing Calculator (Function Plot)", "description": "Plot y = f(x) functions interactively on a 2D canvas. Multiple functions with colors, mouse-drag pan, wheel zoom, and cursor coordinate readout." },
   "video-merge": { "h1": "Merge Videos (concat)", "description": "Join multiple videos in sequence into one file. Based on ffmpeg.wasm. Same codec recommended." },
   "video-mute": { "h1": "Mute Video / Remove Audio", "description": "Completely remove sound from a video. ffmpeg copies the video stream only for fast processing." },
   "video-info": { "h1": "Video Info / Metadata", "description": "Show video resolution, length, file size, duration, and basic info." },
