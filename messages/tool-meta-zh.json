@@ -118,6 +118,7 @@
   "image-compare": { "h1": "图像Before/After滑块", "description": "制作比较两张图像的滑块预览。修图前后、改造前后比较好用。" },
   "image-zip": { "h1": "图像 → ZIP打包", "description": "将多张图像打包为一个ZIP文件。便于邮件附件、消息分享、备份。" },
   "qr-logo": { "h1": "带Logo的QR码", "description": "在QR码中心插入Logo/图标。品牌QR码有用。错误校正级别自动设置。" },
+  "qr-text": { "h1": "带文字的QR码", "description": "在QR码中心插入店名、人名、活动名、品牌文字等文字。颜色和背景形状可自由设置。" },
   "video-merge": { "h1": "视频合并 (concat)", "description": "将多个视频按顺序合并为一个文件。基于ffmpeg.wasm,推荐相同编码。" },
   "video-mute": { "h1": "视频静音 / 移除音频", "description": "完全移除视频的声音。ffmpeg只复制视频流,处理快速。" },
   "video-info": { "h1": "视频信息 / 元数据", "description": "显示视频的分辨率、长度、大小、播放时间、帧数等基本信息。" },

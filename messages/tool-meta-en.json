@@ -118,6 +118,7 @@
   "image-compare": { "h1": "Before/After Image Slider", "description": "Create a slider preview comparing two images. Great for before/after edits and renovations." },
   "image-zip": { "h1": "Bundle Images into ZIP", "description": "Bundle multiple images into one ZIP file. Convenient for email attachments, messenger sharing, and backups." },
   "qr-logo": { "h1": "QR Code with Logo", "description": "Insert a logo or icon into the center of a QR code. Great for branded QRs. Error correction level auto-adjusted." },
+  "qr-text": { "h1": "QR Code with Center Text", "description": "Insert text (shop name, person, event title, brand text) into the center of a QR code. Customize color and background shape freely." },
   "video-merge": { "h1": "Merge Videos (concat)", "description": "Join multiple videos in sequence into one file. Based on ffmpeg.wasm. Same codec recommended." },
   "video-mute": { "h1": "Mute Video / Remove Audio", "description": "Completely remove sound from a video. ffmpeg copies the video stream only for fast processing." },
   "video-info": { "h1": "Video Info / Metadata", "description": "Show video resolution, length, file size, duration, and basic info." },

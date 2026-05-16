@@ -107,7 +107,7 @@
     "line-numbers": "添加行号", "reading-time": "演讲·阅读时间", "hanja-to-hangul": "汉字 → 韩文",
     "ascii-box": "ASCII方框", "encoding-convert": "编码转换", "line-joiner": "多行 → 一行",
     "text-card": "文字卡片", "image-compare": "图像对比滑块", "image-zip": "图像ZIP",
-    "qr-logo": "带Logo的QR", "video-merge": "视频合并", "video-mute": "视频静音",
+    "qr-logo": "带Logo的QR", "qr-text": "带文字的QR", "video-merge": "视频合并", "video-mute": "视频静音",
     "video-info": "视频信息", "pdf-blank-page": "PDF添加空白页", "pdf-metadata": "PDF元数据",
     "pdf-crop": "PDF裁剪", "time-calc": "时间计算", "wage-converter": "时薪 ↔ 月薪",
     "due-date": "预产期", "sci-calc": "科学计算器", "percent": "百分比计算",

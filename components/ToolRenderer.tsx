@@ -128,6 +128,7 @@ const TextCardTool = dynamic(() => import("./tools/TextCardTool"), { ssr: false 
 const ImageCompareTool = dynamic(() => import("./tools/ImageCompareTool"), { ssr: false });
 const ImageZipTool = dynamic(() => import("./tools/ImageZipTool"), { ssr: false });
 const QrLogoTool = dynamic(() => import("./tools/QrLogoTool"), { ssr: false });
+const QrTextTool = dynamic(() => import("./tools/QrTextTool"), { ssr: false });
 const VideoMergeTool = dynamic(() => import("./tools/VideoMergeTool"), { ssr: false });
 const VideoMuteTool = dynamic(() => import("./tools/VideoMuteTool"), { ssr: false });
 const VideoInfoTool = dynamic(() => import("./tools/VideoInfoTool"), { ssr: false });
@@ -429,6 +430,7 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "ImageCompareTool": return <ImageCompareTool />;
     case "ImageZipTool": return <ImageZipTool />;
     case "QrLogoTool": return <QrLogoTool />;
+    case "QrTextTool": return <QrTextTool />;
     case "VideoMergeTool": return <VideoMergeTool />;
     case "VideoMuteTool": return <VideoMuteTool />;
     case "VideoInfoTool": return <VideoInfoTool />;

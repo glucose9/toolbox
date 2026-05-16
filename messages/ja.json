@@ -107,7 +107,7 @@
     "line-numbers": "行番号付け", "reading-time": "発表・読書時間", "hanja-to-hangul": "漢字 → ハングル",
     "ascii-box": "ASCII枠線", "encoding-convert": "文字エンコーディング", "line-joiner": "複数行 → 1行",
     "text-card": "テキストカード", "image-compare": "画像比較スライダー", "image-zip": "画像ZIP",
-    "qr-logo": "ロゴ入りQR", "video-merge": "動画連結", "video-mute": "動画無音",
+    "qr-logo": "ロゴ入りQR", "qr-text": "テキスト入りQR", "video-merge": "動画連結", "video-mute": "動画無音",
     "video-info": "動画情報", "pdf-blank-page": "PDF空白ページ追加", "pdf-metadata": "PDFメタデータ",
     "pdf-crop": "PDFトリミング", "time-calc": "時間計算", "wage-converter": "時給 ↔ 月給",
     "due-date": "出産予定日", "sci-calc": "関数電卓", "percent": "パーセント計算",

@@ -128,6 +128,7 @@ export type ToolConfig = {
     | "ImageCompareTool"
     | "ImageZipTool"
     | "QrLogoTool"
+    | "QrTextTool"
     | "VideoMergeTool"
     | "VideoMuteTool"
     | "VideoInfoTool"
@@ -2186,6 +2187,7 @@ export const tools: ToolConfig[] = [
   { slug: "image-compare", component: "ImageCompareTool", category: "image", icon: "↔️", navTitle: "이미지 비교 슬라이더", title: "이미지 Before/After 비교 - 슬라이더로 두 사진 비교", h1: "이미지 Before/After 슬라이더", description: "두 이미지를 비교하는 슬라이더형 미리보기를 만듭니다. 보정 전·후, 리뉴얼 전·후 비교에 좋습니다.", metaDescription: "Before/After 슬라이더 무료. 두 이미지 비교, PNG 저장.", howTo: ["두 이미지를 업로드합니다.", "슬라이더를 좌우로 움직여 비교합니다.", "스크린샷을 저장하거나 캡처합니다."], faq: [{ q: "두 이미지 크기가 다르면?", a: "큰 쪽에 맞춰 자동 정렬합니다." }], addedAt: "2026-05-14" },
   { slug: "image-zip", component: "ImageZipTool", category: "image", icon: "🗜️", navTitle: "이미지 ZIP 묶기", title: "이미지 ZIP 일괄 묶기 - 여러 사진 한 ZIP으로", h1: "이미지 → ZIP 묶기", description: "여러 이미지를 한 ZIP 파일로 묶습니다. 메일 첨부, 카톡 공유, 백업용으로 편리.", metaDescription: "이미지 ZIP 무료 묶기. 여러 사진 한 번에, 폴더 구조 유지.", howTo: ["이미지들을 업로드합니다.", "ZIP 다운로드 버튼을 누릅니다."], faq: [{ q: "압축률은요?", a: "이미지는 이미 압축돼 있어 ZIP 추가 압축률이 낮습니다. 묶기 위주로 쓰세요." }], addedAt: "2026-05-14" },
   { slug: "qr-logo", component: "QrLogoTool", category: "qr", icon: "🖼️", navTitle: "로고 있는 QR", title: "로고 들어간 QR 코드 - 중앙에 이미지 삽입", h1: "로고 들어간 QR 코드", description: "QR 코드 중앙에 로고/아이콘을 삽입하세요. 브랜드 QR에 유용. 오류 정정 레벨 자동 설정.", metaDescription: "로고 QR 무료 생성. 중앙 이미지 삽입, 브랜드 QR.", howTo: ["URL/텍스트를 입력합니다.", "로고 이미지를 업로드합니다.", "PNG로 다운로드합니다."], faq: [{ q: "스캔이 잘 되나요?", a: "오류 정정 레벨 H를 사용해 로고 영역(중앙 25%까지)을 가려도 스캔 가능합니다." }], addedAt: "2026-05-14" },
+  { slug: "qr-text", component: "QrTextTool", category: "qr", icon: "🆎", navTitle: "텍스트 있는 QR", title: "텍스트 들어간 QR 코드 - 중앙에 글자 삽입", h1: "텍스트 들어간 QR 코드", description: "QR 코드 중앙에 가게 이름·이름·행사명·로고 텍스트 등 글자를 삽입합니다. 색상·배경 모양 자유 설정.", metaDescription: "텍스트 QR 무료 생성. 중앙 글자 삽입, 배경 모양·색상 선택.", howTo: ["QR에 담을 URL/텍스트를 입력합니다.", "중앙에 표시할 글자를 입력합니다.", "글자 크기·색·배경 모양을 조절합니다.", "PNG로 다운로드합니다."], faq: [{ q: "스캔이 잘 되나요?", a: "오류 정정 레벨 H로 생성되어 중앙 영역(약 25%까지)을 글자로 가려도 스캔이 가능합니다. 너무 크게 가리면 인식이 어려울 수 있어요." }, { q: "한글도 되나요?", a: "한글·영어·이모지 모두 가능합니다. 시스템 폰트로 렌더링됩니다." }], addedAt: "2026-05-16" },
 
   // ===== Batch G - video =====
   { slug: "video-merge", component: "VideoMergeTool", category: "video", icon: "🎞️", navTitle: "동영상 합치기", title: "동영상 합치기 - 여러 클립을 한 동영상으로", h1: "동영상 합치기 (concat)", description: "여러 동영상을 순서대로 이어붙여 한 파일로 만듭니다. ffmpeg.wasm 기반. 동일 코덱 권장.", metaDescription: "동영상 합치기 무료. 여러 클립 연결, ffmpeg.wasm.", howTo: ["동영상 파일들을 업로드합니다.", "순서를 조절하고 합치기 버튼을 누릅니다."], faq: [{ q: "다른 해상도여도 되나요?", a: "같은 해상도·코덱 권장. 다르면 재인코딩이 길어집니다." }], addedAt: "2026-05-14" },
