@@ -134,6 +134,7 @@
   "pyeong": { "h1": "Pyeong ↔ m² Real Estate Converter", "description": "Convert between Korean pyeong (평) and square meters precisely. Preset common Korean apartment sizes and approximate exclusive-use area." },
   "graph-calc": { "h1": "Graphing Calculator (Function Plot)", "description": "Plot y = f(x) functions interactively on a 2D canvas. Multiple functions with colors, mouse-drag pan, wheel zoom, and cursor coordinate readout." },
   "formula-builder": { "h1": "Formula Builder (Click-to-Build LaTeX)", "description": "Build math formulas by clicking buttons — fractions, roots, integrals, sums, matrices, Greek letters. Live KaTeX preview with LaTeX source copy." },
+  "periodic-table": { "h1": "Interactive Periodic Table (118 Elements)", "description": "All 118 elements from Hydrogen to Oganesson with name (Korean/English), atomic mass, electron configuration, melting/boiling points, and electronegativity. Search by name, symbol, or atomic number." },
   "video-merge": { "h1": "Merge Videos (concat)", "description": "Join multiple videos in sequence into one file. Based on ffmpeg.wasm. Same codec recommended." },
   "video-mute": { "h1": "Mute Video / Remove Audio", "description": "Completely remove sound from a video. ffmpeg copies the video stream only for fast processing." },
   "video-info": { "h1": "Video Info / Metadata", "description": "Show video resolution, length, file size, duration, and basic info." },
