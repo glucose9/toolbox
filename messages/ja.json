@@ -110,6 +110,8 @@
     "text-card": "テキストカード", "image-compare": "画像比較スライダー", "image-zip": "画像ZIP",
     "qr-logo": "ロゴ入りQR", "qr-text": "テキスト入りQR",
     "cite-format": "引用形式変換", "doi-lookup": "DOI·ISBN自動取得", "bibtex-convert": "BibTeX変換", "bib-sort": "参考文献ソート·重複削除", "title-case": "英文タイトル大文字化",
+    "korean-cite": "韓国学会誌引用", "text-normalize": "盗用検査用テキスト正規化", "footnote-format": "脚注フォーマッタ",
+    "loan-calc": "ローン計算機", "savings-calc": "積立·定期預金計算機", "net-salary": "韓国手取り給与", "gpa": "GPA計算機", "pyeong": "坪 ↔ m² 変換",
     "video-merge": "動画連結", "video-mute": "動画無音",
     "video-info": "動画情報", "pdf-blank-page": "PDF空白ページ追加", "pdf-metadata": "PDFメタデータ",
     "pdf-crop": "PDFトリミング", "time-calc": "時間計算", "wage-converter": "時給 ↔ 月給",

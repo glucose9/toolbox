@@ -110,6 +110,8 @@
     "text-card": "Text Card Maker", "image-compare": "Image Compare Slider", "image-zip": "Image ZIP",
     "qr-logo": "QR with Logo", "qr-text": "QR with Text",
     "cite-format": "Citation Formatter", "doi-lookup": "DOI · ISBN Lookup", "bibtex-convert": "BibTeX Converter", "bib-sort": "Bibliography Sorter", "title-case": "Title Case Converter",
+    "korean-cite": "Korean Journal Citation", "text-normalize": "Text Normalizer (Plagiarism)", "footnote-format": "Footnote Formatter",
+    "loan-calc": "Loan Calculator", "savings-calc": "Savings · Deposit Calculator", "net-salary": "Net Salary (Korea)", "gpa": "GPA Calculator", "pyeong": "Pyeong ↔ m² Converter",
     "video-merge": "Video Merge", "video-mute": "Video Mute",
     "video-info": "Video Info", "pdf-blank-page": "PDF Add Blank Page", "pdf-metadata": "PDF Metadata",
     "pdf-crop": "PDF Crop", "time-calc": "Time Calc", "wage-converter": "Hourly ↔ Monthly Wage",
