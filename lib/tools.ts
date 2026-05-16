@@ -2505,4 +2505,5 @@ export const categoryLabels: Record<string, string> = {
   text: "텍스트",
   dev: "개발자",
   calc: "계산기·생활",
+  academic: "논문·인용",
 };

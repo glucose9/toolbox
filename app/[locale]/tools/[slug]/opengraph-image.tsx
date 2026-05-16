@@ -27,7 +27,7 @@ export default async function OGImage({ params }: { params: { slug: string } }) 
         }}
       >
         <div style={{ fontSize: 32, opacity: 0.8, marginBottom: 12, display: "flex" }}>
-          {`${SITE_NAME} · ${categoryLabels[tool.category]}`}
+          {`${SITE_NAME} · ${categoryLabels[tool.category] || tool.category}`}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 24, marginBottom: 24 }}>
           <div style={{ fontSize: 140, display: "flex" }}>{tool.icon}</div>

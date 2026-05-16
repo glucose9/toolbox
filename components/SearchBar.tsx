@@ -40,7 +40,7 @@ export default function SearchBar() {
           t.navTitle.toLowerCase().includes(q) ||
           t.title.toLowerCase().includes(q) ||
           t.slug.toLowerCase().includes(q) ||
-          categoryLabels[t.category].toLowerCase().includes(q)
+          (categoryLabels[t.category] || "").toLowerCase().includes(q)
       )
     : tools.slice(0, 6);
 
@@ -72,7 +72,7 @@ export default function SearchBar() {
                 <span className="text-xl">{t.icon}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium truncate">{t.navTitle}</div>
-                  <div className="text-xs text-muted truncate">{categoryLabels[t.category]}</div>
+                  <div className="text-xs text-muted truncate">{categoryLabels[t.category] || t.category}</div>
                 </div>
               </Link>
             ))
