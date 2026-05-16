@@ -111,7 +111,7 @@
     "qr-logo": "带Logo的QR", "qr-text": "带文字的QR",
     "cite-format": "引用格式转换", "doi-lookup": "DOI·ISBN自动查询", "bibtex-convert": "BibTeX转换", "bib-sort": "参考文献排序·去重", "title-case": "英文标题首字母大写",
     "korean-cite": "韩国学会引用", "text-normalize": "查重文本正规化", "footnote-format": "脚注格式器",
-    "loan-calc": "贷款利息计算", "savings-calc": "定存·零存计算", "net-salary": "韩国实领工资", "gpa": "GPA学分计算", "pyeong": "坪 ↔ m² 换算", "graph-calc": "图形计算器",
+    "loan-calc": "贷款利息计算", "savings-calc": "定存·零存计算", "net-salary": "韩国实领工资", "gpa": "GPA学分计算", "pyeong": "坪 ↔ m² 换算", "graph-calc": "图形计算器", "formula-builder": "公式构建器 (按钮式)",
     "video-merge": "视频合并", "video-mute": "视频静音",
     "video-info": "视频信息", "pdf-blank-page": "PDF添加空白页", "pdf-metadata": "PDF元数据",
     "pdf-crop": "PDF裁剪", "time-calc": "时间计算", "wage-converter": "时薪 ↔ 月薪",
