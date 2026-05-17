@@ -74,7 +74,7 @@
     "png-to-jpg": "PNG → JPG", "jpg-to-png": "JPG → PNG", "webp-to-jpg": "WebP → JPG", "jpg-to-webp": "JPG → WebP",
     "image-compress": "图像压缩", "image-resize": "图像调整大小",
     "video-to-gif": "视频 → GIF", "video-to-mp3": "视频 → MP3", "video-compress": "视频压缩", "video-trim": "视频剪辑",
-    "hwp-viewer": "HWP查看器", "hwp-to-text": "HWP → 文本", "hwp-to-pdf": "HWP → PDF", "hwp-to-hwpx": "HWP → HWPX",
+    "hwp-viewer": "HWP查看器", "hwp-to-text": "HWP → 文本", "hwp-to-pdf": "HWP → PDF", "hwp-to-hwpx": "HWP → HWPX", "hwp-editor": "HWPX编辑器",
     "pdf-merge": "PDF合并", "pdf-split": "PDF拆分", "pdf-rotate": "PDF旋转", "pdf-delete-pages": "PDF删除页",
     "images-to-pdf": "图像 → PDF", "pdf-reorder": "PDF页面排序", "pdf-extract": "PDF提取页",
     "pdf-watermark": "PDF水印", "pdf-page-number": "PDF页码", "pdf-text-extract": "PDF文本提取",

@@ -74,7 +74,7 @@
     "png-to-jpg": "PNG → JPG", "jpg-to-png": "JPG → PNG", "webp-to-jpg": "WebP → JPG", "jpg-to-webp": "JPG → WebP",
     "image-compress": "이미지 압축", "image-resize": "이미지 크기 변경",
     "video-to-gif": "동영상 → GIF", "video-to-mp3": "동영상 → MP3", "video-compress": "동영상 압축", "video-trim": "동영상 자르기",
-    "hwp-viewer": "HWP 뷰어", "hwp-to-text": "HWP → 텍스트", "hwp-to-pdf": "HWP → PDF", "hwp-to-hwpx": "HWP → HWPX",
+    "hwp-viewer": "HWP 뷰어", "hwp-to-text": "HWP → 텍스트", "hwp-to-pdf": "HWP → PDF", "hwp-to-hwpx": "HWP → HWPX", "hwp-editor": "HWPX 에디터",
     "pdf-merge": "PDF 병합", "pdf-split": "PDF 분할", "pdf-rotate": "PDF 회전", "pdf-delete-pages": "PDF 페이지 삭제",
     "images-to-pdf": "이미지 → PDF", "pdf-reorder": "PDF 페이지 순서 변경", "pdf-extract": "PDF 페이지 추출",
     "pdf-watermark": "PDF 워터마크", "pdf-page-number": "PDF 페이지 번호", "pdf-text-extract": "PDF 텍스트 추출",

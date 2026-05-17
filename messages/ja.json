@@ -74,7 +74,7 @@
     "png-to-jpg": "PNG → JPG", "jpg-to-png": "JPG → PNG", "webp-to-jpg": "WebP → JPG", "jpg-to-webp": "JPG → WebP",
     "image-compress": "画像圧縮", "image-resize": "画像リサイズ",
     "video-to-gif": "動画 → GIF", "video-to-mp3": "動画 → MP3", "video-compress": "動画圧縮", "video-trim": "動画カット",
-    "hwp-viewer": "HWPビューア", "hwp-to-text": "HWP → テキスト", "hwp-to-pdf": "HWP → PDF", "hwp-to-hwpx": "HWP → HWPX",
+    "hwp-viewer": "HWPビューア", "hwp-to-text": "HWP → テキスト", "hwp-to-pdf": "HWP → PDF", "hwp-to-hwpx": "HWP → HWPX", "hwp-editor": "HWPXエディタ",
     "pdf-merge": "PDF結合", "pdf-split": "PDF分割", "pdf-rotate": "PDF回転", "pdf-delete-pages": "PDFページ削除",
     "images-to-pdf": "画像 → PDF", "pdf-reorder": "PDFページ順序", "pdf-extract": "PDFページ抽出",
     "pdf-watermark": "PDFウォーターマーク", "pdf-page-number": "PDFページ番号", "pdf-text-extract": "PDFテキスト抽出",

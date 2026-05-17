@@ -74,7 +74,7 @@
     "png-to-jpg": "PNG → JPG", "jpg-to-png": "JPG → PNG", "webp-to-jpg": "WebP → JPG", "jpg-to-webp": "JPG → WebP",
     "image-compress": "Image Compress", "image-resize": "Image Resize",
     "video-to-gif": "Video → GIF", "video-to-mp3": "Video → MP3", "video-compress": "Video Compress", "video-trim": "Video Trim",
-    "hwp-viewer": "HWP Viewer", "hwp-to-text": "HWP → Text", "hwp-to-pdf": "HWP → PDF", "hwp-to-hwpx": "HWP → HWPX",
+    "hwp-viewer": "HWP Viewer", "hwp-to-text": "HWP → Text", "hwp-to-pdf": "HWP → PDF", "hwp-to-hwpx": "HWP → HWPX", "hwp-editor": "HWPX Editor",
     "pdf-merge": "PDF Merge", "pdf-split": "PDF Split", "pdf-rotate": "PDF Rotate", "pdf-delete-pages": "PDF Delete Pages",
     "images-to-pdf": "Images → PDF", "pdf-reorder": "PDF Reorder Pages", "pdf-extract": "PDF Extract Pages",
     "pdf-watermark": "PDF Watermark", "pdf-page-number": "PDF Page Numbers", "pdf-text-extract": "PDF Text Extract",

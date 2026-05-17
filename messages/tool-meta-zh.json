@@ -17,6 +17,7 @@
   "hwp-to-text": { "h1": "HWP / HWPX文本提取", "description": "将韩文文档的正文文本提取为.txt。便于粘贴到消息应用、邮件、翻译器。浏览器内安全处理。" },
   "hwp-to-pdf": { "h1": "HWP / HWPX → PDF转换", "description": "将韩文文档转换为PDF。无需Hancom Office,浏览器即时转换。适合分享或打印。" },
   "hwp-to-hwpx": { "h1": "HWP → HWPX转换", "description": "将旧版.hwp文件转换为政府标准.hwpx格式(KS X 6101)。便于公共机构提交和现代工具兼容。" },
+  "hwp-editor": { "h1": "HWPX 编辑器 (正文 · 字体 · 大小)", "description": "无需 Hancom Office,在浏览器中编写正文并选择字体、大小,保存为韩国标准 HWPX(KS X 6101)文件。无 Hancom 许可证的电脑也可使用。" },
   "pdf-merge": { "h1": "PDF合并", "description": "将多个PDF合并为一个。拖拽自由调整顺序,文件在浏览器内处理,不外传。" },
   "pdf-split": { "h1": "PDF拆分", "description": "按页拆分PDF或提取指定页面范围。结果以ZIP一次性下载。" },
   "pdf-rotate": { "h1": "PDF页面旋转", "description": "将扫描或拍摄的横置PDF页面摆正。可旋转所有页面或特定页面90/180/270度。" },

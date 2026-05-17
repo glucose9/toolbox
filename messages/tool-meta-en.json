@@ -17,6 +17,7 @@
   "hwp-to-text": { "h1": "HWP / HWPX Text Extractor", "description": "Extract body text from Korean HWP documents as .txt. Useful for pasting into messengers, email, or translators. Safe browser-based processing." },
   "hwp-to-pdf": { "h1": "HWP / HWPX → PDF Converter", "description": "Convert Korean HWP documents to PDF instantly — no Hancom Office needed. Perfect for sharing or printing." },
   "hwp-to-hwpx": { "h1": "HWP → HWPX Converter", "description": "Convert legacy .hwp files to the Korean government standard .hwpx format (KS X 6101). Useful for public-sector submissions and modern tool compatibility." },
+  "hwp-editor": { "h1": "HWPX Editor (Body · Font · Size)", "description": "Write text and pick a font and size, then save as a Korean-standard HWPX file (KS X 6101) — no Hancom Office required. Useful on machines without a Hancom license." },
   "pdf-merge": { "h1": "Merge PDFs", "description": "Combine multiple PDFs into one. Drag to reorder, and files are processed in your browser and never uploaded." },
   "pdf-split": { "h1": "Split PDF", "description": "Split a PDF by page or extract specific page ranges. Receive everything as a single ZIP." },
   "pdf-rotate": { "h1": "Rotate PDF Pages", "description": "Stand up sideways or upside-down PDF pages. Rotate all pages or specific pages by 90/180/270 degrees." },

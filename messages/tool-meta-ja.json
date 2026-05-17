@@ -17,6 +17,7 @@
   "hwp-to-text": { "h1": "HWP / HWPXテキスト抽出", "description": "ハングル文書の本文テキストを.txtに抽出。メッセンジャー・メール・翻訳機への貼付に便利。ブラウザ内で安全処理。" },
   "hwp-to-pdf": { "h1": "HWP / HWPX → PDF変換", "description": "ハングル文書をPDFに変換。ハンコムオフィスなしでブラウザから即変換。共有や印刷に最適。" },
   "hwp-to-hwpx": { "h1": "HWP → HWPX変換", "description": "旧.hwpファイルを韓国政府標準.hwpx(KS X 6101)に変換。公的機関提出や協業ツール互換に有用。" },
+  "hwp-editor": { "h1": "HWPXエディタ (本文・フォント・サイズ)", "description": "Hancom Office なしでブラウザで本文を作成し、フォント・サイズを選択して HWPX(KS X 6101)ファイルとして保存。Hancom ライセンスがない PC でも韓国文書を作成可能。" },
   "pdf-merge": { "h1": "PDF結合", "description": "複数のPDFを1つに結合。ドラッグで順序変更、ブラウザ内処理で外部送信なし。" },
   "pdf-split": { "h1": "PDF分割", "description": "PDFをページ単位で分割、または指定範囲のみ抽出。結果はZIPで一括ダウンロード。" },
   "pdf-rotate": { "h1": "PDFページ回転", "description": "横向きのPDFページを正しい向きに。全ページまたは特定ページを90/180/270度回転。" },
