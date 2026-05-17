@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { marked } from "marked";
 import katex from "katex";
 import "katex/dist/katex.min.css";
@@ -76,13 +76,11 @@ const blockMathExt = {
   },
 };
 
-let extensionsRegistered = false;
-
-function registerExtensions() {
-  if (extensionsRegistered) return;
-  marked.use({ extensions: [blockMathExt, inlineMathExt] });
-  extensionsRegistered = true;
-}
+// Register extensions at module level so the first useMemo() render
+// already has KaTeX support. useEffect runs *after* render, which made
+// the initial preview show raw $...$ text until the user typed.
+marked.use({ extensions: [blockMathExt, inlineMathExt] });
+marked.setOptions({ gfm: true, breaks: true });
 
 export default function MarkdownMathTool() {
   const [md, setMd] = useState(SAMPLE);
@@ -91,11 +89,6 @@ export default function MarkdownMathTool() {
   const taRef = useRef<HTMLTextAreaElement>(null);
   const mdFileRef = useRef<HTMLInputElement>(null);
   const imgFileRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    registerExtensions();
-    marked.setOptions({ gfm: true, breaks: true });
-  }, []);
 
   const loadMd = async (f: File) => setMd(await readMdFile(f));
   const insertImage = async (f: File) => {
