@@ -152,6 +152,11 @@ const IncomeTaxTool = dynamic(() => import("./tools/IncomeTaxTool"), { ssr: fals
 const SttTool = dynamic(() => import("./tools/SttTool"), { ssr: false });
 const OcrTool = dynamic(() => import("./tools/OcrTool"), { ssr: false });
 const PdfUnlockTool = dynamic(() => import("./tools/PdfUnlockTool"), { ssr: false });
+const RealEstateTaxTool = dynamic(() => import("./tools/RealEstateTaxTool"), { ssr: false });
+const YoutubeThumbnailTool = dynamic(() => import("./tools/YoutubeThumbnailTool"), { ssr: false });
+const SubtitleTool = dynamic(() => import("./tools/SubtitleTool"), { ssr: false });
+const ColorPaletteTool = dynamic(() => import("./tools/ColorPaletteTool"), { ssr: false });
+const HanjaDictTool = dynamic(() => import("./tools/HanjaDictTool"), { ssr: false });
 const VideoMergeTool = dynamic(() => import("./tools/VideoMergeTool"), { ssr: false });
 const VideoMuteTool = dynamic(() => import("./tools/VideoMuteTool"), { ssr: false });
 const VideoInfoTool = dynamic(() => import("./tools/VideoInfoTool"), { ssr: false });
@@ -477,6 +482,11 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "SttTool": return <SttTool />;
     case "OcrTool": return <OcrTool />;
     case "PdfUnlockTool": return <PdfUnlockTool />;
+    case "RealEstateTaxTool": return <RealEstateTaxTool />;
+    case "YoutubeThumbnailTool": return <YoutubeThumbnailTool />;
+    case "SubtitleTool": return <SubtitleTool />;
+    case "ColorPaletteTool": return <ColorPaletteTool />;
+    case "HanjaDictTool": return <HanjaDictTool />;
     case "VideoMergeTool": return <VideoMergeTool />;
     case "VideoMuteTool": return <VideoMuteTool />;
     case "VideoInfoTool": return <VideoInfoTool />;
