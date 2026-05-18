@@ -157,6 +157,7 @@ const YoutubeThumbnailTool = dynamic(() => import("./tools/YoutubeThumbnailTool"
 const SubtitleTool = dynamic(() => import("./tools/SubtitleTool"), { ssr: false });
 const ColorPaletteTool = dynamic(() => import("./tools/ColorPaletteTool"), { ssr: false });
 const HanjaDictTool = dynamic(() => import("./tools/HanjaDictTool"), { ssr: false });
+const VideoEditorTool = dynamic(() => import("./tools/VideoEditorTool"), { ssr: false });
 const VideoMergeTool = dynamic(() => import("./tools/VideoMergeTool"), { ssr: false });
 const VideoMuteTool = dynamic(() => import("./tools/VideoMuteTool"), { ssr: false });
 const VideoInfoTool = dynamic(() => import("./tools/VideoInfoTool"), { ssr: false });
@@ -487,6 +488,7 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "SubtitleTool": return <SubtitleTool />;
     case "ColorPaletteTool": return <ColorPaletteTool />;
     case "HanjaDictTool": return <HanjaDictTool />;
+    case "VideoEditorTool": return <VideoEditorTool />;
     case "VideoMergeTool": return <VideoMergeTool />;
     case "VideoMuteTool": return <VideoMuteTool />;
     case "VideoInfoTool": return <VideoInfoTool />;

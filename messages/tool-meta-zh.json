@@ -29,6 +29,7 @@
   "subtitle": { "h1": "字幕转换·编辑 (SRT · VTT · TXT)", "description": "SRT 与 VTT 字幕文件双向转换,时间偏移一键调整。视频字幕不同步时实用。" },
   "color-palette": { "h1": "调色板生成器 (色彩调和规则)", "description": "按色彩调和规则(单色·类似·互补·三角·四角)生成 5 色调色板。点击复制 HEX。" },
   "hanja-dict": { "h1": "汉字字典 (读音 · 意思 · 笔画)", "description": "查询约 170 个常用汉字的韩文读音、含义、笔画数、韩国汉字能力检定级别。" },
+  "video-editor": { "h1": "一体视频编辑器", "description": "裁剪、旋转、翻转、变速、静音、调整分辨率、压缩 — 一个工具一次处理。基于 ffmpeg.wasm。" },
   "pdf-merge": { "h1": "PDF合并", "description": "将多个PDF合并为一个。拖拽自由调整顺序,文件在浏览器内处理,不外传。" },
   "pdf-split": { "h1": "PDF拆分", "description": "按页拆分PDF或提取指定页面范围。结果以ZIP一次性下载。" },
   "pdf-rotate": { "h1": "PDF页面旋转", "description": "将扫描或拍摄的横置PDF页面摆正。可旋转所有页面或特定页面90/180/270度。" },

@@ -29,6 +29,7 @@
   "subtitle": { "h1": "Subtitle Converter / Editor (SRT · VTT · TXT)", "description": "Convert between SRT and VTT subtitle files and shift timing by an offset to fix sync. Extract plain text too." },
   "color-palette": { "h1": "Color Palette Generator (Harmony Rules)", "description": "Generate 5-color palettes by harmony rule — monochrome, analogous, complementary, triadic, tetradic. Click to copy HEX." },
   "hanja-dict": { "h1": "Hanja Dictionary (Reading · Meaning · Strokes)", "description": "Look up ~170 common hanja with Korean reading, meaning, stroke count, and Korean Hanja Proficiency Test grade." },
+  "video-editor": { "h1": "All-in-One Video Editor", "description": "Trim, rotate, flip, change speed, mute, resize, and compress in a single tool. Combine multiple edits in one ffmpeg.wasm pass to minimize quality loss." },
   "pdf-merge": { "h1": "Merge PDFs", "description": "Combine multiple PDFs into one. Drag to reorder, and files are processed in your browser and never uploaded." },
   "pdf-split": { "h1": "Split PDF", "description": "Split a PDF by page or extract specific page ranges. Receive everything as a single ZIP." },
   "pdf-rotate": { "h1": "Rotate PDF Pages", "description": "Stand up sideways or upside-down PDF pages. Rotate all pages or specific pages by 90/180/270 degrees." },
