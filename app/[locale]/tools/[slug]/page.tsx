@@ -27,6 +27,17 @@ function safeT(t: (k: string) => string, key: string, fallback: string): string 
   }
 }
 
+type TRaw = { raw: (key: string) => unknown };
+function safeArr<T>(t: TRaw, key: string, fallback: T[]): T[] {
+  try {
+    const v = t.raw(key);
+    if (Array.isArray(v) && v.length > 0) return v as T[];
+  } catch {
+    /* ignore */
+  }
+  return fallback;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -37,7 +48,7 @@ export async function generateMetadata({
   if (!tool) return {};
   const t = await getTranslations({ locale });
   const localizedName = safeT(t, `tools.${slug}`, tool.navTitle);
-  const localizedDesc = safeT(t, `toolMeta.${slug}.description`, tool.metaDescription);
+  const localizedDesc = safeT(t, `toolMeta.${slug}.metaDescription`, safeT(t, `toolMeta.${slug}.description`, tool.metaDescription));
   const url = `${SITE_URL}${locale === "ko" ? "" : "/" + locale}/tools/${tool.slug}`;
   return {
     title: `${localizedName} | ${t("site.name")}`,
@@ -74,6 +85,8 @@ export default async function ToolPage({
   const navTitle = safeT(t, `tools.${slug}`, tool.navTitle);
   const localizedH1 = safeT(t, `toolMeta.${slug}.h1`, tool.h1);
   const localizedDesc = safeT(t, `toolMeta.${slug}.description`, tool.description);
+  const localizedHowTo = safeArr<string>(t as unknown as TRaw, `toolMeta.${slug}.howTo`, tool.howTo);
+  const localizedFaq = safeArr<{ q: string; a: string }>(t as unknown as TRaw, `toolMeta.${slug}.faq`, tool.faq);
   const categoryLabel = t(`categories.${tool.category}`);
 
   const related = tools
@@ -83,7 +96,7 @@ export default async function ToolPage({
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: tool.faq.map((f) => ({
+    mainEntity: localizedFaq.map((f) => ({
       "@type": "Question",
       name: f.q,
       acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -94,7 +107,7 @@ export default async function ToolPage({
     "@context": "https://schema.org",
     "@type": "HowTo",
     name: localizedH1,
-    step: tool.howTo.map((s, i) => ({
+    step: localizedHowTo.map((s, i) => ({
       "@type": "HowToStep",
       position: i + 1,
       text: s,
@@ -141,8 +154,8 @@ export default async function ToolPage({
 
       <ToolRenderer tool={tool} />
 
-      <HowTo steps={tool.howTo} />
-      <FAQ items={tool.faq} />
+      <HowTo steps={localizedHowTo} />
+      <FAQ items={localizedFaq} />
 
       {related.length > 0 && (
         <section className="mt-10">
