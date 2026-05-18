@@ -158,6 +158,11 @@ const SubtitleTool = dynamic(() => import("./tools/SubtitleTool"), { ssr: false 
 const ColorPaletteTool = dynamic(() => import("./tools/ColorPaletteTool"), { ssr: false });
 const HanjaDictTool = dynamic(() => import("./tools/HanjaDictTool"), { ssr: false });
 const VideoEditorTool = dynamic(() => import("./tools/VideoEditorTool"), { ssr: false });
+const PomodoroTool = dynamic(() => import("./tools/PomodoroTool"), { ssr: false });
+const TripSplitTool = dynamic(() => import("./tools/TripSplitTool"), { ssr: false });
+const OgCardMakerTool = dynamic(() => import("./tools/OgCardMakerTool"), { ssr: false });
+const MermaidTool = dynamic(() => import("./tools/MermaidTool"), { ssr: false });
+const ImageBatchTool = dynamic(() => import("./tools/ImageBatchTool"), { ssr: false });
 const VideoMergeTool = dynamic(() => import("./tools/VideoMergeTool"), { ssr: false });
 const VideoMuteTool = dynamic(() => import("./tools/VideoMuteTool"), { ssr: false });
 const VideoInfoTool = dynamic(() => import("./tools/VideoInfoTool"), { ssr: false });
@@ -489,6 +494,11 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "ColorPaletteTool": return <ColorPaletteTool />;
     case "HanjaDictTool": return <HanjaDictTool />;
     case "VideoEditorTool": return <VideoEditorTool />;
+    case "PomodoroTool": return <PomodoroTool />;
+    case "TripSplitTool": return <TripSplitTool />;
+    case "OgCardMakerTool": return <OgCardMakerTool />;
+    case "MermaidTool": return <MermaidTool />;
+    case "ImageBatchTool": return <ImageBatchTool />;
     case "VideoMergeTool": return <VideoMergeTool />;
     case "VideoMuteTool": return <VideoMuteTool />;
     case "VideoInfoTool": return <VideoInfoTool />;
