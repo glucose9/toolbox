@@ -146,6 +146,12 @@ const GraphCalcTool = dynamic(() => import("./tools/GraphCalcTool"), { ssr: fals
 const FormulaBuilderTool = dynamic(() => import("./tools/FormulaBuilderTool"), { ssr: false });
 const PeriodicTableTool = dynamic(() => import("./tools/PeriodicTableTool"), { ssr: false });
 const HwpEditorTool = dynamic(() => import("./tools/HwpEditorTool"), { ssr: false });
+const CarTaxTool = dynamic(() => import("./tools/CarTaxTool"), { ssr: false });
+const SeverancePayTool = dynamic(() => import("./tools/SeverancePayTool"), { ssr: false });
+const IncomeTaxTool = dynamic(() => import("./tools/IncomeTaxTool"), { ssr: false });
+const SttTool = dynamic(() => import("./tools/SttTool"), { ssr: false });
+const OcrTool = dynamic(() => import("./tools/OcrTool"), { ssr: false });
+const PdfUnlockTool = dynamic(() => import("./tools/PdfUnlockTool"), { ssr: false });
 const VideoMergeTool = dynamic(() => import("./tools/VideoMergeTool"), { ssr: false });
 const VideoMuteTool = dynamic(() => import("./tools/VideoMuteTool"), { ssr: false });
 const VideoInfoTool = dynamic(() => import("./tools/VideoInfoTool"), { ssr: false });
@@ -465,6 +471,12 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "FormulaBuilderTool": return <FormulaBuilderTool />;
     case "PeriodicTableTool": return <PeriodicTableTool />;
     case "HwpEditorTool": return <HwpEditorTool />;
+    case "CarTaxTool": return <CarTaxTool />;
+    case "SeverancePayTool": return <SeverancePayTool />;
+    case "IncomeTaxTool": return <IncomeTaxTool />;
+    case "SttTool": return <SttTool />;
+    case "OcrTool": return <OcrTool />;
+    case "PdfUnlockTool": return <PdfUnlockTool />;
     case "VideoMergeTool": return <VideoMergeTool />;
     case "VideoMuteTool": return <VideoMuteTool />;
     case "VideoInfoTool": return <VideoInfoTool />;
