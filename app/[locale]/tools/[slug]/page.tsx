@@ -88,6 +88,9 @@ export default async function ToolPage({
   const localizedHowTo = safeArr<string>(t as unknown as TRaw, `toolMeta.${slug}.howTo`, tool.howTo);
   const localizedFaq = safeArr<{ q: string; a: string }>(t as unknown as TRaw, `toolMeta.${slug}.faq`, tool.faq);
   const categoryLabel = t(`categories.${tool.category}`);
+  const howToTitle = t("tool.howToTitle");
+  const faqTitle = t("tool.faqTitle");
+  const relatedTitle = t("tool.related");
 
   const related = tools
     .filter((x) => x.category === tool.category && x.slug !== tool.slug)
@@ -154,12 +157,12 @@ export default async function ToolPage({
 
       <ToolRenderer tool={tool} />
 
-      <HowTo steps={localizedHowTo} />
-      <FAQ items={localizedFaq} />
+      <HowTo steps={localizedHowTo} title={howToTitle} />
+      <FAQ items={localizedFaq} title={faqTitle} />
 
       {related.length > 0 && (
         <section className="mt-10">
-          <h2 className="text-xl font-bold mb-4">{t("tool.related")}</h2>
+          <h2 className="text-xl font-bold mb-4">{relatedTitle}</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {related.map((r) => (
               <Link

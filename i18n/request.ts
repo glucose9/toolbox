@@ -10,5 +10,12 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages: { ...main, toolMeta },
+    onError(err) {
+      // eslint-disable-next-line no-console
+      console.error("[next-intl error]", err.code, err.message);
+    },
+    getMessageFallback({ key }) {
+      return key;
+    },
   };
 });

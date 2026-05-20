@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { getTranslations } from "next-intl/server";
 import { getTool, tools, SITE_NAME, categoryLabels } from "@/lib/tools";
 
 export const size = { width: 1200, height: 630 };
@@ -12,33 +11,38 @@ const TRUST_LINE: Record<string, string> = {
   zh: "免费 · 无需注册 · 无水印",
 };
 
-function safeT(t: (k: string) => string, key: string, fallback: string): string {
+type ToolMetaEntry = { h1?: string; metaDescription?: string; description?: string };
+type MessagesShape = { site?: { name?: string }; categories?: Record<string, string> };
+
+async function loadMessages(locale: string): Promise<{ main: MessagesShape; meta: Record<string, ToolMetaEntry> }> {
   try {
-    const v = t(key);
-    return v === key ? fallback : v;
+    const main = (await import(`@/messages/${locale}.json`)).default as MessagesShape;
+    const meta = (await import(`@/messages/tool-meta-${locale}.json`)).default as Record<string, ToolMetaEntry>;
+    return { main, meta };
   } catch {
-    return fallback;
+    const main = (await import(`@/messages/ko.json`)).default as MessagesShape;
+    const meta = (await import(`@/messages/tool-meta-ko.json`)).default as Record<string, ToolMetaEntry>;
+    return { main, meta };
   }
 }
 
 export async function generateImageMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   const tool = getTool(slug);
-  const t = await getTranslations({ locale });
-  const alt = tool
-    ? safeT(t, `toolMeta.${slug}.h1`, tool.h1)
-    : safeT(t, "site.name", SITE_NAME);
+  const { main, meta } = await loadMessages(locale);
+  const siteName = main?.site?.name || SITE_NAME;
+  const alt = tool ? (meta?.[slug]?.h1 || tool.h1) : siteName;
   return [{ id: tool?.slug || "default", size, contentType, alt }];
 }
 
 export default async function OGImage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   const tool = getTool(slug) || tools[0];
-  const t = await getTranslations({ locale });
-  const siteName = safeT(t, "site.name", SITE_NAME);
-  const category = safeT(t, `categories.${tool.category}`, categoryLabels[tool.category] || tool.category);
-  const h1 = safeT(t, `toolMeta.${tool.slug}.h1`, tool.h1);
-  const meta = safeT(t, `toolMeta.${tool.slug}.metaDescription`, tool.metaDescription);
+  const { main, meta } = await loadMessages(locale);
+  const siteName = main?.site?.name || SITE_NAME;
+  const category = main?.categories?.[tool.category] || categoryLabels[tool.category] || tool.category;
+  const h1 = meta?.[tool.slug]?.h1 || tool.h1;
+  const metaDesc = meta?.[tool.slug]?.metaDescription || meta?.[tool.slug]?.description || tool.metaDescription;
   const trust = TRUST_LINE[locale] || TRUST_LINE.ko;
   return new ImageResponse(
     (
@@ -65,7 +69,7 @@ export default async function OGImage({ params }: { params: Promise<{ locale: st
           </div>
         </div>
         <div style={{ fontSize: 28, opacity: 0.85, marginTop: 16, lineHeight: 1.4, maxWidth: 1000, display: "flex" }}>
-          {meta}
+          {metaDesc}
         </div>
         <div style={{ fontSize: 24, opacity: 0.7, marginTop: 32, display: "flex" }}>
           {trust}
