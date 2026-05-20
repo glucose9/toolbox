@@ -86,6 +86,7 @@ export default function PdfEsignTool() {
         // Original PDF page size in points (scale 1)
         const orig = page.getViewport({ scale: 1 });
         setPdfPageSize({ w: orig.width, h: orig.height });
+        setError("");
       } catch (e) {
         setError((e as Error).message);
       }

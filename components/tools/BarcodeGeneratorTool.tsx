@@ -47,32 +47,25 @@ export default function BarcodeGeneratorTool({ config }: { config: Record<string
   const effectiveValue = isIsbn ? toIsbnInput(value) : value;
 
   useEffect(() => {
-    if (!effectiveValue || !svgRef.current) return;
+    if (!svgRef.current) return;
+    if (!effectiveValue) {
+      setError("");
+      return;
+    }
+    const opts = {
+      format,
+      displayValue: showText,
+      background: bg,
+      lineColor: fg,
+      width: 2,
+      height: 100,
+      margin: 10,
+      font: "monospace",
+      fontSize: 18,
+    };
     try {
-      JsBarcode(svgRef.current, effectiveValue, {
-        format,
-        displayValue: showText,
-        background: bg,
-        lineColor: fg,
-        width: 2,
-        height: 100,
-        margin: 10,
-        font: "monospace",
-        fontSize: 18,
-      });
-      if (canvasRef.current) {
-        JsBarcode(canvasRef.current, effectiveValue, {
-          format,
-          displayValue: showText,
-          background: bg,
-          lineColor: fg,
-          width: 2,
-          height: 100,
-          margin: 10,
-          font: "monospace",
-          fontSize: 18,
-        });
-      }
+      JsBarcode(svgRef.current, effectiveValue, opts);
+      if (canvasRef.current) JsBarcode(canvasRef.current, effectiveValue, opts);
       setError("");
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -183,15 +176,13 @@ export default function BarcodeGeneratorTool({ config }: { config: Record<string
         </div>
 
         <div className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-lg p-6 min-h-[260px]">
+          <svg ref={svgRef} className={`max-w-full ${error ? "hidden" : ""}`} />
+          <canvas ref={canvasRef} className="hidden" />
           {!error && (
-            <>
-              <svg ref={svgRef} className="max-w-full" />
-              <canvas ref={canvasRef} className="hidden" />
-              <div className="mt-4 flex gap-2">
-                <button onClick={downloadPng} className="btn btn-primary">{t("downloadPng")}</button>
-                <button onClick={downloadSvg} className="btn btn-secondary">{t("downloadSvg")}</button>
-              </div>
-            </>
+            <div className="mt-4 flex gap-2">
+              <button onClick={downloadPng} className="btn btn-primary">{t("downloadPng")}</button>
+              <button onClick={downloadSvg} className="btn btn-secondary">{t("downloadSvg")}</button>
+            </div>
           )}
           {error && (
             <div className="text-sm text-muted text-center">{t("invalidInput")}</div>
