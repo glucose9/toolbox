@@ -235,6 +235,9 @@ const JsBeautifierTool = dynamic(() => import("./tools/JsBeautifierTool"), { ssr
 const TextStatsTool = dynamic(() => import("./tools/TextStatsTool"), { ssr: false });
 const BarcodeGeneratorTool = dynamic(() => import("./tools/BarcodeGeneratorTool"), { ssr: false });
 const BarcodeReaderTool = dynamic(() => import("./tools/BarcodeReaderTool"), { ssr: false });
+const BackgroundRemoverTool = dynamic(() => import("./tools/BackgroundRemoverTool"), { ssr: false });
+const AspectRatioTool = dynamic(() => import("./tools/AspectRatioTool"), { ssr: false });
+const ColorBlindnessTool = dynamic(() => import("./tools/ColorBlindnessTool"), { ssr: false });
 const KakaoChatTool = dynamic(() => import("./tools/KakaoChatTool"), { ssr: false });
 const MemeGeneratorTool = dynamic(() => import("./tools/MemeGeneratorTool"), { ssr: false });
 const ImageColorPickerTool = dynamic(() => import("./tools/ImageColorPickerTool"), { ssr: false });
@@ -583,6 +586,9 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "TextStatsTool": return <TextStatsTool />;
     case "BarcodeGeneratorTool": return <BarcodeGeneratorTool config={config} />;
     case "BarcodeReaderTool": return <BarcodeReaderTool />;
+    case "BackgroundRemoverTool": return <BackgroundRemoverTool />;
+    case "AspectRatioTool": return <AspectRatioTool />;
+    case "ColorBlindnessTool": return <ColorBlindnessTool />;
     case "KakaoChatTool": return <KakaoChatTool />;
     case "MemeGeneratorTool": return <MemeGeneratorTool />;
     case "ImageColorPickerTool": return <ImageColorPickerTool />;

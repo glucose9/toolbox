@@ -8907,5 +8907,109 @@
         "a": "Forgery. Use only your own signature."
       }
     ]
+  },
+  "background-remover": {
+    "h1": "Image Background Remover",
+    "description": "Automatically remove the background from photos of people or objects and save as a transparent PNG. The AI model runs entirely in your browser — your photos are never uploaded. Great for profile photo cutouts, product photos, ID photos, sticker making, and compositing.",
+    "metaDescription": "Free image background remover. Transparent PNG, in-browser AI (no upload).",
+    "howTo": [
+      "Upload or drag an image.",
+      "The AI model downloads once on first use (cached after).",
+      "The background is removed automatically — download the transparent PNG."
+    ],
+    "faq": [
+      {
+        "q": "Are my photos uploaded anywhere?",
+        "a": "No. The background-removal model runs in your browser (WASM/ONNX). Photos never leave your device."
+      },
+      {
+        "q": "Will this slow down the site?",
+        "a": "No. The AI model is downloaded only when you actually use this tool; other pages are unaffected. After the first use it is cached."
+      },
+      {
+        "q": "Why is the first run slow?",
+        "a": "It downloads the model (a few MB) once. Subsequent runs are instant from cache."
+      },
+      {
+        "q": "Which photos work best?",
+        "a": "Subjects with a clear foreground/background distinction (people, products, animals). Fine edges like hair are handled reasonably well."
+      },
+      {
+        "q": "Is the result transparent?",
+        "a": "Yes — a transparent PNG, ready for compositing, stickers, and design."
+      },
+      {
+        "q": "How is this different from remove.bg?",
+        "a": "remove.bg processes on a server (upload required, free tier limited). This runs in your browser — free, unlimited, and private."
+      }
+    ]
+  },
+  "aspect-ratio-calculator": {
+    "h1": "Aspect Ratio Calculator",
+    "description": "Keep an aspect ratio (e.g. 16:9) and enter just the width or height — the other is calculated automatically. Useful for matching video resolutions, thumbnail/banner sizes, image resizing, and monitor/design work. Also reverse-calculates the ratio from two dimensions.",
+    "metaDescription": "Free aspect ratio calculator. 16:9/4:3 ratio-locked sizing, reverse ratio. For video & design.",
+    "howTo": [
+      "Pick a ratio (e.g. 16:9) or enter your own.",
+      "Enter either width or height.",
+      "The other dimension is auto-calculated to match the ratio."
+    ],
+    "faq": [
+      {
+        "q": "Can I reverse-calculate a ratio?",
+        "a": "Yes. Enter the current width and height to get the simplified ratio (e.g. 1920×1080 → 16:9)."
+      },
+      {
+        "q": "Which ratios are common?",
+        "a": "16:9 (YouTube/monitors), 9:16 (Shorts/Reels), 4:3 (legacy), 1:1 (Instagram), 3:2 (photography), 21:9 (ultrawide)."
+      },
+      {
+        "q": "What about fractional results?",
+        "a": "Pixels are rounded to integers. If the ratio doesn't divide evenly, the nearest integer is shown."
+      },
+      {
+        "q": "Can I use it for video resolution?",
+        "a": "Yes. Enter width 1280 at 16:9 and height 720 is computed — handy before encoding or cropping."
+      },
+      {
+        "q": "Compare multiple ratios at once?",
+        "a": "Use the preset buttons to switch quickly between common ratios."
+      }
+    ]
+  },
+  "color-blindness-simulator": {
+    "h1": "Color Blindness Simulator",
+    "description": "Simulate how an image or color appears to people with color vision deficiencies — protanopia (red-blind), deuteranopia (green-blind), tritanopia (blue-blind), and achromatopsia. Useful for web/app accessibility checks, contrast verification, and infographic/chart color choices. Processed in your browser.",
+    "metaDescription": "Free color blindness simulator. Preview images as red/green/blue-blind. Design accessibility.",
+    "howTo": [
+      "Upload an image.",
+      "Pick a color vision deficiency type.",
+      "Compare the original and simulated results side by side."
+    ],
+    "faq": [
+      {
+        "q": "Which types are supported?",
+        "a": "Protanopia, deuteranopia, tritanopia, protanomaly/deuteranomaly (anomalous), and achromatopsia."
+      },
+      {
+        "q": "Why check for color blindness?",
+        "a": "About 8% of men and 0.5% of women have color vision deficiency. Designs that rely only on red/green can be invisible to them — important for WCAG accessibility."
+      },
+      {
+        "q": "Is it accurate?",
+        "a": "It uses widely-used color transform matrices (Brettel/Viénot-based). Not identical to real perception, but valid for design checks."
+      },
+      {
+        "q": "Are photos uploaded?",
+        "a": "No. All transforms run on a browser canvas — nothing is uploaded."
+      },
+      {
+        "q": "Can I test a single color?",
+        "a": "Yes — test color swatches as well as images, useful for checking a design palette."
+      },
+      {
+        "q": "How do I improve accessibility?",
+        "a": "Don't rely on color alone — add brightness contrast, patterns, and labels. Avoid red↔green; prefer safer pairs like blue↔orange."
+      }
+    ]
   }
 }

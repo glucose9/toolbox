@@ -326,7 +326,10 @@
     "data-uri": "Data URI生成",
     "file-hash-verify": "ファイルハッシュ検証",
     "file-split-join": "ファイル分割/結合",
-    "pdf-esign": "PDF電子サイン"
+    "pdf-esign": "PDF電子サイン",
+    "background-remover": "背景除去",
+    "aspect-ratio-calculator": "アスペクト比計算",
+    "color-blindness-simulator": "色覚シミュレーター"
   },
   "toolUI": {
     "qr": {
@@ -3262,6 +3265,36 @@
       "originalSize": "元のサイズ",
       "uriSize": "URIサイズ",
       "sizeIncrease": "増加率"
+    },
+    "background-remover": {
+      "uploadImage": "画像をドラッグまたはクリック",
+      "firstRunNote": "※ 初回のみAIモデルをダウンロード（以降はキャッシュ）",
+      "loadingModel": "モデル準備中...",
+      "downloadingModel": "モデルダウンロード中 {pct}%",
+      "processing": "背景除去中...",
+      "original": "元画像",
+      "result": "結果（透明背景）",
+      "downloadPng": "PNGダウンロード"
+    },
+    "aspect-ratio-calculator": {
+      "ratio": "比率",
+      "width": "幅 (px)",
+      "height": "高さ (px)",
+      "derivedRatio": "現在のサイズの比率"
+    },
+    "color-blindness-simulator": {
+      "uploadImage": "画像をドラッグまたはクリック",
+      "type": "色覚特性",
+      "original": "元画像",
+      "simulated": "シミュレーション",
+      "types": {
+        "protanopia": "1型色覚（赤）",
+        "deuteranopia": "2型色覚（緑）",
+        "tritanopia": "3型色覚（青）",
+        "protanomaly": "1型色弱",
+        "deuteranomaly": "2型色弱",
+        "achromatopsia": "全色盲"
+      }
     }
   }
 }

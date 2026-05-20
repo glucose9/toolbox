@@ -326,7 +326,10 @@
     "data-uri": "Data URI Generator",
     "file-hash-verify": "File Hash Verify",
     "file-split-join": "File Split/Join",
-    "pdf-esign": "PDF e-Sign"
+    "pdf-esign": "PDF e-Sign",
+    "background-remover": "Background Remover",
+    "aspect-ratio-calculator": "Aspect Ratio Calculator",
+    "color-blindness-simulator": "Color Blindness Simulator"
   },
   "toolUI": {
     "qr": {
@@ -3262,6 +3265,36 @@
       "originalSize": "Original",
       "uriSize": "URI size",
       "sizeIncrease": "Increase"
+    },
+    "background-remover": {
+      "uploadImage": "Drag or click to upload an image",
+      "firstRunNote": "※ Downloads the AI model once on first use (cached after)",
+      "loadingModel": "Preparing model...",
+      "downloadingModel": "Downloading model {pct}%",
+      "processing": "Removing background...",
+      "original": "Original",
+      "result": "Result (transparent)",
+      "downloadPng": "Download PNG"
+    },
+    "aspect-ratio-calculator": {
+      "ratio": "Ratio",
+      "width": "Width (px)",
+      "height": "Height (px)",
+      "derivedRatio": "Ratio of current size"
+    },
+    "color-blindness-simulator": {
+      "uploadImage": "Drag or click to upload an image",
+      "type": "Color vision deficiency",
+      "original": "Original",
+      "simulated": "Simulated",
+      "types": {
+        "protanopia": "Protanopia (red-blind)",
+        "deuteranopia": "Deuteranopia (green-blind)",
+        "tritanopia": "Tritanopia (blue-blind)",
+        "protanomaly": "Protanomaly",
+        "deuteranomaly": "Deuteranomaly",
+        "achromatopsia": "Achromatopsia (mono)"
+      }
     }
   }
 }

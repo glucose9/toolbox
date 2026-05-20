@@ -326,7 +326,10 @@
     "data-uri": "Data URI 生成",
     "file-hash-verify": "文件哈希校验",
     "file-split-join": "文件分割/合并",
-    "pdf-esign": "PDF 电子签名"
+    "pdf-esign": "PDF 电子签名",
+    "background-remover": "背景去除",
+    "aspect-ratio-calculator": "宽高比计算器",
+    "color-blindness-simulator": "色盲模拟器"
   },
   "toolUI": {
     "qr": {
@@ -3262,6 +3265,36 @@
       "originalSize": "原始大小",
       "uriSize": "URI大小",
       "sizeIncrease": "增加率"
+    },
+    "background-remover": {
+      "uploadImage": "拖放或点击上传图片",
+      "firstRunNote": "※ 首次使用时下载一次AI模型（之后缓存）",
+      "loadingModel": "准备模型中...",
+      "downloadingModel": "下载模型中 {pct}%",
+      "processing": "正在去除背景...",
+      "original": "原图",
+      "result": "结果（透明背景）",
+      "downloadPng": "下载PNG"
+    },
+    "aspect-ratio-calculator": {
+      "ratio": "比例",
+      "width": "宽度 (px)",
+      "height": "高度 (px)",
+      "derivedRatio": "当前尺寸的比例"
+    },
+    "color-blindness-simulator": {
+      "uploadImage": "拖放或点击上传图片",
+      "type": "色觉异常类型",
+      "original": "原图",
+      "simulated": "模拟",
+      "types": {
+        "protanopia": "红色盲",
+        "deuteranopia": "绿色盲",
+        "tritanopia": "蓝色盲",
+        "protanomaly": "红色弱",
+        "deuteranomaly": "绿色弱",
+        "achromatopsia": "全色盲"
+      }
     }
   }
 }

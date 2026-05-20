@@ -326,7 +326,10 @@
     "data-uri": "Data URI 생성",
     "file-hash-verify": "파일 해시 검증",
     "file-split-join": "파일 분할/결합",
-    "pdf-esign": "PDF 전자 서명"
+    "pdf-esign": "PDF 전자 서명",
+    "background-remover": "배경 제거",
+    "aspect-ratio-calculator": "화면비 계산기",
+    "color-blindness-simulator": "색약 시뮬레이터"
   },
   "toolUI": {
     "qr": {
@@ -3262,6 +3265,36 @@
       "originalSize": "원본 크기",
       "uriSize": "URI 크기",
       "sizeIncrease": "증가율"
+    },
+    "background-remover": {
+      "uploadImage": "이미지를 드래그하거나 클릭",
+      "firstRunNote": "※ 처음 한 번만 AI 모델을 다운로드합니다 (이후 캐시)",
+      "loadingModel": "모델 준비 중...",
+      "downloadingModel": "모델 다운로드 중 {pct}%",
+      "processing": "배경 제거 중...",
+      "original": "원본",
+      "result": "결과 (투명 배경)",
+      "downloadPng": "PNG 다운로드"
+    },
+    "aspect-ratio-calculator": {
+      "ratio": "비율",
+      "width": "너비 (px)",
+      "height": "높이 (px)",
+      "derivedRatio": "현재 크기의 비율"
+    },
+    "color-blindness-simulator": {
+      "uploadImage": "이미지를 드래그하거나 클릭",
+      "type": "색각이상 유형",
+      "original": "원본",
+      "simulated": "시뮬레이션",
+      "types": {
+        "protanopia": "적색맹",
+        "deuteranopia": "녹색맹",
+        "tritanopia": "청색맹",
+        "protanomaly": "적색약",
+        "deuteranomaly": "녹색약",
+        "achromatopsia": "전색맹"
+      }
     }
   }
 }
