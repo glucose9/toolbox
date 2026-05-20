@@ -157,7 +157,7 @@
     "diff-checker": "文本对比",
     "text-dedupe": "去除重复行",
     "docx-viewer": "Word (DOCX)查看",
-    "korean-age": "韩国虚岁计算",
+    "korean-age": "年龄计算 (周岁/虚岁)",
     "lunar-solar": "阴历 ↔ 阳历",
     "caesar-cipher": "凯撒密码 / ROT",
     "http-status": "HTTP状态码",
@@ -216,7 +216,7 @@
     "bibtex-convert": "BibTeX转换",
     "bib-sort": "参考文献排序·去重",
     "title-case": "英文标题首字母大写",
-    "korean-cite": "韩国学会引用",
+    "korean-cite": "学术引用",
     "text-normalize": "查重文本正规化",
     "footnote-format": "脚注格式器",
     "loan-calc": "贷款利息计算",
@@ -254,7 +254,7 @@
     "unit-price": "单价比较",
     "dice-coin": "骰子 / 硬币",
     "rps": "石头剪刀布",
-    "korea-holidays": "韩国节日",
+    "korea-holidays": "法定节假日",
     "lunch-picker": "午餐选择",
     "baseball-stats": "棒球 ERA/打率",
     "book-reading-time": "阅读时间",
@@ -291,7 +291,7 @@
     "sleep-recommend": "睡眠时间",
     "blood-donation": "下次献血",
     "installment": "分期付款",
-    "korean-phone": "韩国电话号码格式化",
+    "korean-phone": "中国电话号码格式化",
     "korean-biz-num": "韩国企业号码",
     "korean-rrn": "韩国身份号",
     "family-kinship": "亲属称谓",
@@ -490,7 +490,9 @@
       "national": "国内标准",
       "international": "国际格式",
       "digitsOnly": "仅数字",
-      "copy": "复制"
+      "telLink": "tel: 链接",
+      "copy": "复制",
+      "note": "示例: <code>13812345678</code> → <code>138 1234 5678</code>。支持手机号 (1开头11位)、固定电话 (010北京、021上海等区号)、国际格式 (+86)。"
     },
     "markdown-to-text": {
       "copy": "复制",
@@ -1942,14 +1944,18 @@
       "birthDate": "出生日期",
       "refDate": "基准日期",
       "errorDate": "请检查日期。",
-      "manAge": "周岁（法律标准）",
+      "manAge": "周岁（国际标准）",
       "birthdayPassed": "今年生日已过",
       "birthdayBefore": "今年生日尚未到",
       "yearAge": "年龄（按年）",
       "yearAgeFormula": "（当前年 − 出生年）",
-      "countAge": "虚岁",
-      "countAgeFormula": "（韩国传统计法）",
-      "note": "自 2023 年 6 月 28 日施行的<strong>年龄统一法</strong>起，韩国所有官方文件和法令均以<strong>周岁</strong>计算。"
+      "countAge": "韩国式 세는 나이",
+      "countAgeFormula": "（出生即1岁，每年元旦+1）",
+      "kazoeAge": "日本式 数え年",
+      "kazoeAgeFormula": "（出生即1岁，每年1月1日+1）",
+      "xusuiAge": "虚岁",
+      "xusuiAgeFormula": "（出生即1岁，每逢春节+1）",
+      "note": "中国传统<strong>虚岁</strong>以出生当年为1岁，每逢春节加1岁；<strong>周岁</strong>是以生日为准的国际通用算法。韩国的传统「세는 나이」与虚岁算法接近，但 2023 年 6 月 28 日施行的年龄统一法后，韩国官方文件均以周岁计算。"
     },
     "markdown-toc": {
       "markdown": "Markdown",
@@ -2458,7 +2464,7 @@
       "thu": "四",
       "fri": "五",
       "sat": "六",
-      "note": "替代节假日、临时公休日按政府公告另行反映。"
+      "note": "调休安排、临时假日按国务院公告另行反映。"
     },
     "world-time": {
       "addCity": "添加城市",
@@ -2652,14 +2658,18 @@
     },
     "korean-cite": {
       "selectStyle": "选择格式",
-      "labelKpa": "韩国心理学会 (KPA)",
-      "labelKera": "韩国教育学会 (KERA)",
-      "labelKss": "韩国社会学会 (KSS)",
-      "labelKoreaU": "高丽大人文学院 / 研究生院",
-      "noteKpa": "韩国心理学会将 APA 形式翻译为韩文。作者间以逗号分隔,年份用括号。",
-      "noteKera": "韩国教育学会标准。直接引用时需注明页码。",
-      "noteKss": "韩国社会学会格式。标题用双引号,期刊名用书名号。",
-      "noteKoreaU": "韩国论文最常见的格式。标题用单书名号,期刊名用书名号。",
+      "styles": {
+        "gb7714": "GB/T 7714-2015 (国家标准)",
+        "cnki": "中国期刊全文数据库 (CNKI)",
+        "cma": "中华医学会 (CMA)",
+        "apaCn": "APA 中文版"
+      },
+      "notes": {
+        "gb7714": "GB/T 7714-2015 — 中国国家标准,最常用。文献类型标识 [J] 表示期刊。",
+        "cnki": "中国期刊全文数据库引用格式 — 在 GB/T 7714 基础上常附 DOI。",
+        "cma": "中华医学会出版物推荐格式 — 用于医学期刊。正文引用包含页码。",
+        "apaCn": "APA 中文翻译版本 — 心理学、教育学等社科领域,作者年份制。"
+      },
       "authorsCommaSep": "作者 (以逗号分隔)",
       "year": "年份",
       "volIssue": "卷(期)",

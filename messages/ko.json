@@ -254,7 +254,7 @@
     "unit-price": "단가 비교",
     "dice-coin": "주사위 / 동전",
     "rps": "가위바위보",
-    "korea-holidays": "한국 공휴일",
+    "korea-holidays": "공휴일",
     "lunch-picker": "점심 메뉴 추천",
     "baseball-stats": "야구 ERA/타율",
     "book-reading-time": "책 읽기 시간",
@@ -490,7 +490,9 @@
       "national": "국내 표준",
       "international": "국제 형식",
       "digitsOnly": "숫자만",
-      "copy": "복사"
+      "telLink": "tel: 링크",
+      "copy": "복사",
+      "note": "예: <code>01012345678</code> → <code>010-1234-5678</code>. 010 휴대폰, 02 서울, 070 인터넷전화, +82 국제 형식을 지원합니다."
     },
     "markdown-to-text": {
       "copy": "복사",
@@ -1949,6 +1951,10 @@
       "yearAgeFormula": "(현재 연도 − 출생 연도)",
       "countAge": "세는 나이",
       "countAgeFormula": "(전통 한국 셈법)",
+      "kazoeAge": "数え年 (일본 셈법)",
+      "kazoeAgeFormula": "(태어나면 1세, 새해마다 +1)",
+      "xusuiAge": "虚岁 (중국 셈법)",
+      "xusuiAgeFormula": "(태어나면 1세, 새해마다 +1)",
       "note": "2023년 6월 28일 시행된 <strong>만 나이 통일법</strong>에 따라, 한국의 모든 공식 문서·법령에서 나이는 <strong>만 나이</strong>로 셉니다."
     },
     "markdown-toc": {
@@ -2652,14 +2658,18 @@
     },
     "korean-cite": {
       "selectStyle": "양식 선택",
-      "labelKpa": "한국심리학회 (KPA)",
-      "labelKera": "한국교육학회 (KERA)",
-      "labelKss": "한국사회학회 (KSS)",
-      "labelKoreaU": "고려대 인문대 / 일반대학원",
-      "noteKpa": "한국심리학회는 APA 형식을 한국어로 번안. 저자명 사이 쉼표, 연도는 괄호.",
-      "noteKera": "한국교육학회 표준. 직접 인용 시 페이지 번호 명시.",
-      "noteKss": "한국사회학회 양식. 제목은 큰따옴표, 저널은 겹화살괄호.",
-      "noteKoreaU": "국문 논문 가장 흔한 형식. 제목은 낫표, 저널은 겹화살괄호.",
+      "styles": {
+        "kpa": "한국심리학회 (KPA)",
+        "kera": "한국교육학회 (KERA)",
+        "kss": "한국사회학회 (KSS)",
+        "koreaU": "고려대 인문대 / 일반대학원"
+      },
+      "notes": {
+        "kpa": "한국심리학회는 APA 형식을 한국어로 번안. 저자명 사이 쉼표, 연도는 괄호.",
+        "kera": "한국교육학회 표준. 직접 인용 시 페이지 번호 명시.",
+        "kss": "한국사회학회 양식. 제목은 큰따옴표, 저널은 겹화살괄호.",
+        "koreaU": "국문 논문 가장 흔한 형식. 제목은 낫표, 저널은 겹화살괄호."
+      },
       "authorsCommaSep": "저자 (쉼표로 구분)",
       "year": "연도",
       "volIssue": "권(호)",

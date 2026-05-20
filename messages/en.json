@@ -157,7 +157,7 @@
     "diff-checker": "Text Diff",
     "text-dedupe": "Remove Duplicate Lines",
     "docx-viewer": "Word (DOCX) Viewer",
-    "korean-age": "Korean Age Calc",
+    "korean-age": "Age Calculator (Western/Korean)",
     "lunar-solar": "Lunar ↔ Solar",
     "caesar-cipher": "Caesar Cipher / ROT",
     "http-status": "HTTP Status Codes",
@@ -216,7 +216,7 @@
     "bibtex-convert": "BibTeX Converter",
     "bib-sort": "Bibliography Sorter",
     "title-case": "Title Case Converter",
-    "korean-cite": "Korean Journal Citation",
+    "korean-cite": "Academic Citation",
     "text-normalize": "Text Normalizer (Plagiarism)",
     "footnote-format": "Footnote Formatter",
     "loan-calc": "Loan Calculator",
@@ -254,7 +254,7 @@
     "unit-price": "Unit Price Compare",
     "dice-coin": "Dice / Coin",
     "rps": "Rock Paper Scissors",
-    "korea-holidays": "Korean Holidays",
+    "korea-holidays": "Public Holidays",
     "lunch-picker": "Lunch Picker",
     "baseball-stats": "Baseball ERA/AVG",
     "book-reading-time": "Book Reading Time",
@@ -291,7 +291,7 @@
     "sleep-recommend": "Sleep Time",
     "blood-donation": "Blood Donation",
     "installment": "Installment Calc",
-    "korean-phone": "Korean Phone Normalize",
+    "korean-phone": "US Phone Formatter",
     "korean-biz-num": "Korean Biz Number",
     "korean-rrn": "Korean RRN",
     "family-kinship": "Family Kinship",
@@ -490,7 +490,9 @@
       "national": "National",
       "international": "International",
       "digitsOnly": "Digits only",
-      "copy": "Copy"
+      "telLink": "tel: link",
+      "copy": "Copy",
+      "note": "Example: <code>2125551234</code> → <code>(212) 555-1234</code>. Accepts 10-digit US numbers or 11 digits starting with country code <code>1</code>. Area code must start with 2-9."
     },
     "markdown-to-text": {
       "copy": "Copy",
@@ -1942,14 +1944,18 @@
       "birthDate": "Birth date",
       "refDate": "Reference date",
       "errorDate": "Please check the dates.",
-      "manAge": "Man age (legal)",
+      "manAge": "Western age (international)",
       "birthdayPassed": "Birthday passed this year",
       "birthdayBefore": "Before birthday this year",
       "yearAge": "Year age",
       "yearAgeFormula": "(current year − birth year)",
-      "countAge": "Counting age",
-      "countAgeFormula": "(traditional Korean count)",
-      "note": "Since the <strong>Age Unification Law</strong> took effect on June 28, 2023, every official document and statute in Korea uses <strong>man age</strong>."
+      "countAge": "Korean traditional age (세는 나이)",
+      "countAgeFormula": "(born = 1, +1 every New Year)",
+      "kazoeAge": "Japanese 数え年",
+      "kazoeAgeFormula": "(born = 1, +1 every January 1)",
+      "xusuiAge": "Chinese 虚岁",
+      "xusuiAgeFormula": "(born = 1, +1 every Lunar New Year)",
+      "note": "<strong>Western age</strong> (also called international age) is what most countries use. <strong>Korean traditional age</strong> counts everyone as 1 at birth and adds a year every January 1 — Korea officially adopted Western age on June 28, 2023, but the traditional count still appears culturally."
     },
     "markdown-toc": {
       "markdown": "Markdown",
@@ -2458,7 +2464,7 @@
       "thu": "Thu",
       "fri": "Fri",
       "sat": "Sat",
-      "note": "Substitute holidays and special temporary holidays are added by government announcement."
+      "note": "Federal observed dates and special declarations may shift; check official sources for confirmed dates."
     },
     "world-time": {
       "addCity": "Add city",
@@ -2652,14 +2658,18 @@
     },
     "korean-cite": {
       "selectStyle": "Select style",
-      "labelKpa": "Korean Psychological Association (KPA)",
-      "labelKera": "Korean Educational Research Association (KERA)",
-      "labelKss": "Korean Sociological Association (KSS)",
-      "labelKoreaU": "Korea Univ. Humanities / Graduate School",
-      "noteKpa": "KPA adapts APA into Korean. Authors separated by commas, year in parentheses.",
-      "noteKera": "KERA standard. Specify the page number when quoting directly.",
-      "noteKss": "KSS style. Titles in double quotes, journals in double angle brackets.",
-      "noteKoreaU": "The most common style for Korean papers. Titles in bracket marks, journals in double angle brackets.",
+      "styles": {
+        "apa": "APA 7th",
+        "mla": "MLA 9th",
+        "chicago": "Chicago Author-Date",
+        "harvard": "Harvard"
+      },
+      "notes": {
+        "apa": "American Psychological Association 7th — psychology and most social sciences. Author-date with year in parentheses, italicized journal, vol(issue).",
+        "mla": "Modern Language Association 9th — humanities and languages. Title in quotes, italicized journal, vol./no., author-page in-text.",
+        "chicago": "Chicago Manual of Style 17th, Author-Date — common in history and social sciences. Year follows author, page in in-text.",
+        "harvard": "Harvard referencing — widely used in the UK and Australia. Author-date; quoted title with italicized journal."
+      },
       "authorsCommaSep": "Authors (comma-separated)",
       "year": "Year",
       "volIssue": "Vol(Issue)",

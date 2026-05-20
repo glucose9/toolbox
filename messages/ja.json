@@ -157,7 +157,7 @@
     "diff-checker": "テキスト差分",
     "text-dedupe": "重複行削除",
     "docx-viewer": "Word(DOCX)ビューア",
-    "korean-age": "韓国式満年齢",
+    "korean-age": "年齢計算 (満年齢・数え年)",
     "lunar-solar": "陰暦 ↔ 陽暦",
     "caesar-cipher": "シーザー暗号 / ROT",
     "http-status": "HTTPステータスコード",
@@ -216,7 +216,7 @@
     "bibtex-convert": "BibTeX変換",
     "bib-sort": "参考文献ソート·重複削除",
     "title-case": "英文タイトル大文字化",
-    "korean-cite": "韓国学会誌引用",
+    "korean-cite": "学術引用",
     "text-normalize": "盗用検査用テキスト正規化",
     "footnote-format": "脚注フォーマッタ",
     "loan-calc": "ローン計算機",
@@ -254,7 +254,7 @@
     "unit-price": "単価比較",
     "dice-coin": "サイコロ / コイン",
     "rps": "じゃんけん",
-    "korea-holidays": "韓国祝日",
+    "korea-holidays": "祝日",
     "lunch-picker": "ランチ選び",
     "baseball-stats": "野球 ERA/打率",
     "book-reading-time": "読書時間",
@@ -291,7 +291,7 @@
     "sleep-recommend": "睡眠時間",
     "blood-donation": "次の献血日",
     "installment": "分割払い計算",
-    "korean-phone": "韓国電話番号正規化",
+    "korean-phone": "日本の電話番号フォーマット",
     "korean-biz-num": "韓国事業者番号",
     "korean-rrn": "韓国住民番号",
     "family-kinship": "親族関係",
@@ -490,7 +490,9 @@
       "national": "国内標準",
       "international": "国際形式",
       "digitsOnly": "数字のみ",
-      "copy": "コピー"
+      "telLink": "tel: リンク",
+      "copy": "コピー",
+      "note": "例: <code>09012345678</code> → <code>090-1234-5678</code>。携帯 (070/080/090)、固定電話、IP電話 (050)、フリーダイヤル (0120)、国際形式 (+81) に対応します。"
     },
     "markdown-to-text": {
       "copy": "コピー",
@@ -1942,14 +1944,18 @@
       "birthDate": "生年月日",
       "refDate": "基準日",
       "errorDate": "日付を再度ご確認ください。",
-      "manAge": "満年齢 (法令基準)",
+      "manAge": "満年齢 (国際基準)",
       "birthdayPassed": "今年の誕生日を過ぎた",
       "birthdayBefore": "今年の誕生日前",
       "yearAge": "年年齢",
       "yearAgeFormula": "(現在の年 − 出生年)",
-      "countAge": "数え年",
-      "countAgeFormula": "(韓国の伝統的な数え方)",
-      "note": "2023年6月28日に施行された<strong>満年齢統一法</strong>により、韓国のすべての公式書類・法令で年齢は<strong>満年齢</strong>で数えます。"
+      "countAge": "韓国式 세는 나이",
+      "countAgeFormula": "(生まれた年を1歳とし、新年ごとに+1)",
+      "kazoeAge": "数え年",
+      "kazoeAgeFormula": "(生まれた年を1歳とし、1月1日ごとに+1)",
+      "xusuiAge": "中国式 虚岁",
+      "xusuiAgeFormula": "(生まれた年を1歳とし、旧正月ごとに+1)",
+      "note": "日本の<strong>数え年</strong>は生まれた年を1歳とし、お正月ごとに1歳ずつ加算します。<strong>満年齢</strong>は誕生日基準の国際的な数え方です。韓国の伝統的な「세는 나이」も数え年と同様の考え方ですが、2023年6月28日施行の満年齢統一法により公式書類では満年齢が使われます。"
     },
     "markdown-toc": {
       "markdown": "Markdown",
@@ -2458,7 +2464,7 @@
       "thu": "木",
       "fri": "金",
       "sat": "土",
-      "note": "振替休日・臨時祝日は政府発表により別途反映されます。"
+      "note": "振替休日・臨時祝日は政府発表により別途反映されます。春分・秋分の日は予測値で、正式日程は前年に確定します。"
     },
     "world-time": {
       "addCity": "都市を追加",
@@ -2652,14 +2658,18 @@
     },
     "korean-cite": {
       "selectStyle": "様式を選択",
-      "labelKpa": "韓国心理学会 (KPA)",
-      "labelKera": "韓国教育学会 (KERA)",
-      "labelKss": "韓国社会学会 (KSS)",
-      "labelKoreaU": "高麗大人文大 / 一般大学院",
-      "noteKpa": "韓国心理学会は APA 形式を韓国語に翻案。著者名はカンマで区切り、年は括弧。",
-      "noteKera": "韓国教育学会標準。直接引用時はページ番号を明記。",
-      "noteKss": "韓国社会学会様式。タイトルは二重引用符、ジャーナル名は二重山かっこ。",
-      "noteKoreaU": "韓国語論文で最も一般的な形式。タイトルは括弧記号、ジャーナル名は二重山かっこ。",
+      "styles": {
+        "jpa": "日本心理学会 (JPA)",
+        "jst": "学術雑誌標準 (JST 様式)",
+        "jss": "日本社会学会 (JSS)",
+        "sist": "SIST 02 (科学技術情報)"
+      },
+      "notes": {
+        "jpa": "日本心理学会 — APA を日本語に準拠。著者名はカンマ区切り、年は括弧、ジャーナル名はイタリック。",
+        "jst": "JST 学術雑誌標準形式 — 科学技術情報の引用に広く使用。著者、タイトル、誌名、年、巻号、ページの順。",
+        "jss": "日本社会学会 — タイトルは「 」、ジャーナル名は『 』。本文内は (著者 年: ページ)。",
+        "sist": "SIST 02 — 科学技術情報流通技術基準。vol./no. を明示し、著者順を保持。"
+      },
       "authorsCommaSep": "著者 (カンマ区切り)",
       "year": "年",
       "volIssue": "巻(号)",

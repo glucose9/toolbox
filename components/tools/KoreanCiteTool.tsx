@@ -1,17 +1,182 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
-type Style = "kpa" | "kera" | "kss" | "korea-univ";
+type LocaleKey = "ko" | "en" | "ja" | "zh";
+
+interface FormatDef {
+  reference: (args: BuildArgs) => string;
+  intext: (args: BuildArgs) => string;
+}
+
+interface BuildArgs {
+  refList: string;
+  intextAuthors: string;
+  year: string;
+  title: string;
+  journal: string;
+  volume: string;
+  issue: string;
+  pages: string;
+  doi: string;
+}
+
+interface LocaleConfig {
+  styles: string[];
+  defaults: {
+    authors: string;
+    title: string;
+    journal: string;
+  };
+  formats: Record<string, FormatDef>;
+}
+
+const firstPage = (pages: string) => pages.split(/[-–—]/)[0]?.trim() ?? pages;
+
+const LOCALE_CONFIGS: Record<LocaleKey, LocaleConfig> = {
+  ko: {
+    styles: ["kpa", "kera", "kss", "koreaU"],
+    defaults: {
+      authors: "김민지, 이서연, 박지훈",
+      title: "작업기억과 주의의 상호작용 연구",
+      journal: "한국심리학회지: 인지",
+    },
+    formats: {
+      kpa: {
+        reference: ({ refList, year, title, journal, volume, issue, pages, doi }) =>
+          `${refList} (${year}). ${title}. *${journal}*, ${volume}(${issue}), ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
+        intext: ({ intextAuthors, year }) => `(${intextAuthors}, ${year})`,
+      },
+      kera: {
+        reference: ({ refList, year, title, journal, volume, issue, pages }) =>
+          `${refList} (${year}). ${title}. *${journal}*, ${volume}(${issue}), ${pages}.`,
+        intext: ({ intextAuthors, year, pages }) => `(${intextAuthors}, ${year}, p. ${firstPage(pages)})`,
+      },
+      kss: {
+        reference: ({ refList, year, title, journal, volume, issue, pages }) =>
+          `${refList}. ${year}. "${title}." 《${journal}》 ${volume}(${issue}): ${pages}.`,
+        intext: ({ intextAuthors, year, pages }) => `(${intextAuthors} ${year}: ${firstPage(pages)})`,
+      },
+      koreaU: {
+        reference: ({ refList, year, title, journal, volume, issue, pages }) =>
+          `${refList}, 「${title}」, 《${journal}》, ${volume}권 ${issue}호 (${year}), ${pages}쪽.`,
+        intext: ({ intextAuthors, year, pages }) => `(${intextAuthors}, ${year}, ${firstPage(pages)}쪽)`,
+      },
+    },
+  },
+  en: {
+    styles: ["apa", "mla", "chicago", "harvard"],
+    defaults: {
+      authors: "Smith, J., Park, A., Chen, L.",
+      title: "Working memory and attention",
+      journal: "Journal of Cognitive Psychology",
+    },
+    formats: {
+      apa: {
+        reference: ({ refList, year, title, journal, volume, issue, pages, doi }) =>
+          `${refList} (${year}). ${title}. *${journal}*, ${volume}(${issue}), ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
+        intext: ({ intextAuthors, year }) => `(${intextAuthors}, ${year})`,
+      },
+      mla: {
+        reference: ({ refList, title, journal, volume, issue, year, pages, doi }) =>
+          `${refList}. "${title}." *${journal}*, vol. ${volume}, no. ${issue}, ${year}, pp. ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
+        intext: ({ intextAuthors, pages }) => `(${intextAuthors} ${firstPage(pages)})`,
+      },
+      chicago: {
+        reference: ({ refList, year, title, journal, volume, issue, pages, doi }) =>
+          `${refList}. ${year}. "${title}." *${journal}* ${volume}(${issue}): ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
+        intext: ({ intextAuthors, year, pages }) => `(${intextAuthors} ${year}, ${firstPage(pages)})`,
+      },
+      harvard: {
+        reference: ({ refList, year, title, journal, volume, issue, pages, doi }) =>
+          `${refList} (${year}) '${title}', *${journal}*, ${volume}(${issue}), pp. ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
+        intext: ({ intextAuthors, year, pages }) => `(${intextAuthors}, ${year}, p. ${firstPage(pages)})`,
+      },
+    },
+  },
+  ja: {
+    styles: ["jpa", "jst", "jss", "sist"],
+    defaults: {
+      authors: "田中太郎, 佐藤花子",
+      title: "ワーキングメモリと注意の研究",
+      journal: "心理学研究",
+    },
+    formats: {
+      jpa: {
+        reference: ({ refList, year, title, journal, volume, issue, pages, doi }) =>
+          `${refList} (${year}). ${title}. *${journal}*, ${volume}(${issue}), ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
+        intext: ({ intextAuthors, year }) => `(${intextAuthors}, ${year})`,
+      },
+      jst: {
+        reference: ({ refList, title, journal, year, volume, issue, pages, doi }) =>
+          `${refList}. ${title}. ${journal}. ${year}, ${volume}(${issue}), p.${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
+        intext: ({ intextAuthors, year }) => `(${intextAuthors}, ${year})`,
+      },
+      jss: {
+        reference: ({ refList, year, title, journal, volume, issue, pages }) =>
+          `${refList}, ${year}, 「${title}」『${journal}』${volume}(${issue}): ${pages}.`,
+        intext: ({ intextAuthors, year, pages }) => `(${intextAuthors} ${year}: ${firstPage(pages)})`,
+      },
+      sist: {
+        reference: ({ refList, title, journal, year, volume, issue, pages, doi }) =>
+          `${refList}. ${title}. ${journal}. ${year}, vol.${volume}, no.${issue}, p.${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
+        intext: ({ intextAuthors, year }) => `(${intextAuthors} ${year})`,
+      },
+    },
+  },
+  zh: {
+    styles: ["gb7714", "cnki", "cma", "apaCn"],
+    defaults: {
+      authors: "张伟, 王芳, 李娜",
+      title: "工作记忆与注意力相互作用",
+      journal: "心理学报",
+    },
+    formats: {
+      gb7714: {
+        reference: ({ refList, title, journal, year, volume, issue, pages }) =>
+          `${refList}. ${title}[J]. ${journal}, ${year}, ${volume}(${issue}): ${pages}.`,
+        intext: ({ intextAuthors, year }) => `(${intextAuthors}, ${year})`,
+      },
+      cnki: {
+        reference: ({ refList, title, journal, year, volume, issue, pages, doi }) =>
+          `${refList}. ${title}[J]. ${journal}, ${year}, ${volume}(${issue}): ${pages}.${doi ? ` DOI:${doi}.` : ""}`,
+        intext: ({ intextAuthors, year }) => `(${intextAuthors}, ${year})`,
+      },
+      cma: {
+        reference: ({ refList, title, journal, year, volume, issue, pages }) =>
+          `${refList}. ${title}. ${journal}, ${year}, ${volume}(${issue}): ${pages}.`,
+        intext: ({ intextAuthors, year, pages }) => `(${intextAuthors}, ${year}, 第${firstPage(pages)}页)`,
+      },
+      apaCn: {
+        reference: ({ refList, year, title, journal, volume, issue, pages, doi }) =>
+          `${refList} (${year}). ${title}. *${journal}*, ${volume}(${issue}), ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
+        intext: ({ intextAuthors, year }) => `(${intextAuthors}, ${year})`,
+      },
+    },
+  },
+};
+
+function getLocaleKey(locale: string): LocaleKey {
+  if (locale === "en" || locale === "ja" || locale === "zh") return locale;
+  return "ko";
+}
 
 export default function KoreanCiteTool() {
   const t = useTranslations("toolUI.korean-cite");
-  const [style, setStyle] = useState<Style>("kpa");
-  const [authors, setAuthors] = useState("김민지, 이서연, 박지훈");
+  const localeRaw = useLocale();
+  const localeKey = getLocaleKey(localeRaw);
+  const config = LOCALE_CONFIGS[localeKey];
+  const styleKeys = config.styles;
+
+  const stylesMap = t.raw("styles") as Record<string, string>;
+  const notesMap = t.raw("notes") as Record<string, string>;
+
+  const [style, setStyle] = useState<string>(styleKeys[0]);
+  const [authors, setAuthors] = useState(config.defaults.authors);
   const [year, setYear] = useState("2024");
-  const [title, setTitle] = useState("작업기억과 주의의 상호작용 연구");
-  const [journal, setJournal] = useState("한국심리학회지: 인지");
+  const [title, setTitle] = useState(config.defaults.title);
+  const [journal, setJournal] = useState(config.defaults.journal);
   const [volume, setVolume] = useState("36");
   const [issue, setIssue] = useState("2");
   const [pages, setPages] = useState("123-145");
@@ -19,41 +184,36 @@ export default function KoreanCiteTool() {
 
   const splitAuthors = authors.split(/[,·、]/).map((a) => a.trim()).filter(Boolean);
   const intextAuthors = (() => {
+    if (splitAuthors.length === 0) return "";
     if (splitAuthors.length === 1) return splitAuthors[0];
-    if (splitAuthors.length === 2) return `${splitAuthors[0]}, ${splitAuthors[1]}`;
+    if (splitAuthors.length === 2) {
+      if (localeKey === "en") return `${splitAuthors[0]} & ${splitAuthors[1]}`;
+      return `${splitAuthors[0]}, ${splitAuthors[1]}`;
+    }
+    if (localeKey === "en") return `${splitAuthors[0]} et al.`;
+    if (localeKey === "ja") return `${splitAuthors[0]} ほか`;
+    if (localeKey === "zh") return `${splitAuthors[0]} 等`;
     return `${splitAuthors[0]} 외`;
   })();
 
   const refList = splitAuthors.join(", ");
-
-  const formats: Record<Style, { label: string; reference: string; intext: string; note: string }> = {
-    kpa: {
-      label: t("labelKpa"),
-      reference: `${refList} (${year}). ${title}. *${journal}*, ${volume}(${issue}), ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
-      intext: `(${intextAuthors}, ${year})`,
-      note: t("noteKpa"),
-    },
-    kera: {
-      label: t("labelKera"),
-      reference: `${refList} (${year}). ${title}. *${journal}*, ${volume}(${issue}), ${pages}.`,
-      intext: `(${intextAuthors}, ${year}, p. ${pages.split("-")[0]})`,
-      note: t("noteKera"),
-    },
-    kss: {
-      label: t("labelKss"),
-      reference: `${refList}. ${year}. "${title}." 《${journal}》 ${volume}(${issue}): ${pages}.`,
-      intext: `(${intextAuthors} ${year}: ${pages.split("-")[0]})`,
-      note: t("noteKss"),
-    },
-    "korea-univ": {
-      label: t("labelKoreaU"),
-      reference: `${refList}, 「${title}」, 《${journal}》, ${volume}권 ${issue}호 (${year}), ${pages}쪽.`,
-      intext: `(${intextAuthors}, ${year}, ${pages.split("-")[0]}쪽)`,
-      note: t("noteKoreaU"),
-    },
+  const buildArgs: BuildArgs = {
+    refList,
+    intextAuthors,
+    year,
+    title,
+    journal,
+    volume,
+    issue,
+    pages,
+    doi,
   };
 
-  const cur = formats[style];
+  const activeFormat = config.formats[style] ?? config.formats[styleKeys[0]];
+  const referenceText = activeFormat.reference(buildArgs);
+  const intextText = activeFormat.intext(buildArgs);
+  const noteText = notesMap?.[style] ?? "";
+
   const copy = (txt: string) => navigator.clipboard.writeText(txt);
 
   return (
@@ -61,13 +221,13 @@ export default function KoreanCiteTool() {
       <div>
         <label className="label">{t("selectStyle")}</label>
         <div className="flex flex-wrap gap-2">
-          {(Object.keys(formats) as Style[]).map((s) => (
+          {styleKeys.map((s) => (
             <button
               key={s}
               onClick={() => setStyle(s)}
               className={`px-3 py-1.5 rounded text-sm ${style === s ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800"}`}
             >
-              {formats[s].label}
+              {stylesMap?.[s] ?? s}
             </button>
           ))}
         </div>
@@ -104,20 +264,20 @@ export default function KoreanCiteTool() {
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
           <div className="flex justify-between items-center mb-1">
             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("referenceItem")}</span>
-            <button onClick={() => copy(cur.reference.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+            <button onClick={() => copy(referenceText.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
           </div>
-          <div className="text-sm leading-relaxed break-words">{cur.reference.split(/(\*[^*]+\*)/).map((p, i) =>
+          <div className="text-sm leading-relaxed break-words">{referenceText.split(/(\*[^*]+\*)/).map((p, i) =>
             p.startsWith("*") ? <em key={i}>{p.slice(1, -1)}</em> : <span key={i}>{p}</span>
           )}</div>
         </div>
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
           <div className="flex justify-between items-center mb-1">
             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("intextLabel")}</span>
-            <button onClick={() => copy(cur.intext)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+            <button onClick={() => copy(intextText)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
           </div>
-          <div className="text-sm leading-relaxed">{cur.intext}</div>
+          <div className="text-sm leading-relaxed">{intextText}</div>
         </div>
-        <div className="text-xs text-muted leading-relaxed">{cur.note}</div>
+        {noteText && <div className="text-xs text-muted leading-relaxed">{noteText}</div>}
       </div>
     </div>
   );

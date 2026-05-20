@@ -3054,7 +3054,7 @@
     ]
   },
   "korean-age": {
-    "h1": "Korean Age / Western Age Calculator",
+    "h1": "Age Calculator (Western + Korean/Traditional)",
     "description": "Enter your birth date and see Western (international) age, Korean counting age, and yeonnai (year age) at once. Reflects Korea's June 2023 standardization to international age. Useful for paperwork, medical prescriptions, insurance, job applications, and confirming legal age for alcohol or tobacco.",
     "metaDescription": "Free Korean age calculator. Western age, Korean age, and year age at once, based on 2023 law.",
     "howTo": [
@@ -5109,38 +5109,38 @@
     ]
   },
   "korean-cite": {
-    "h1": "Korean Journal Citation (KPA · KERA · KSS · Humanities)",
-    "description": "Auto-generate Korean academic citation styles including KPA (Psychology), KERA (Educational Research), KSS (Sociology), and traditional Korean humanities formats — both reference list and in-text. Useful for theses, Korean journal submissions, and KCI-listed publications.",
-    "metaDescription": "Free Korean academic citation generator. KPA, KERA, KSS journal formats.",
+    "h1": "Academic Citation Generator (APA, MLA, Chicago, Harvard)",
+    "description": "Auto-generate academic citation entries in APA 7th, MLA 9th, Chicago Author-Date, and Harvard styles — both the reference list entry and the in-text citation. Useful for theses, journal submissions, and student papers.",
+    "metaDescription": "Free academic citation generator. APA 7, MLA 9, Chicago, Harvard formats.",
     "howTo": [
-      "Pick the target Korean society style.",
+      "Pick the target citation style.",
       "Enter author, year, title, and journal.",
       "Copy both the reference list entry and in-text citation."
     ],
     "faq": [
       {
-        "q": "Which societies are supported?",
-        "a": "Korean Psychological Association (KPA), Korean Educational Research Association (KERA), Korean Sociological Association (KSS), and a generic Korean humanities standard."
+        "q": "Which citation styles are supported?",
+        "a": "APA 7th edition, MLA 9th edition, Chicago Manual of Style 17 (Author-Date), and Harvard referencing."
       },
       {
-        "q": "KPA vs APA?",
-        "a": "KPA is adapted from APA into Korean. Author-listing conventions and some punctuation differ. APA: 'Smith, J. (2024)', KPA: '김철수 (2024)'."
-      },
-      {
-        "q": "My target society isn't listed.",
-        "a": "Pick the closest format, then tweak manually against the society's guidelines. For very different formats, check the official 'Manuscript Guidelines'."
+        "q": "Which style should I use?",
+        "a": "APA is standard in psychology and most social sciences. MLA is common in humanities/languages. Chicago Author-Date is used in history and some social sciences. Harvard is widely used in the UK and Australia. Always check your instructor's or journal's required style."
       },
       {
         "q": "How are in-text citations formatted?",
-        "a": "Direct: '(저자, 연도, p. 페이지)'. Indirect: '(저자, 연도)'. The tool builds these automatically."
+        "a": "APA/Harvard: (Author, Year) or (Author, Year, p. xx) for direct quotes. MLA: (Author Page). Chicago Author-Date: (Author Year, Page)."
       },
       {
-        "q": "Multiple authors?",
-        "a": "Two: '김철수와 이영희(2024)'. Three or more: first time spell out all, then use '김철수 등(2024)' or '김철수 외(2024)'."
+        "q": "What about multiple authors?",
+        "a": "APA: two authors joined with '&'; three or more, list the first followed by 'et al.'. MLA/Chicago/Harvard use similar conventions — check the official manuals for edge cases."
       },
       {
-        "q": "How do I cite English papers in Korean style?",
-        "a": "Korean styles use 'author, year, title, journal' order. Keep English author names as-is and convert."
+        "q": "Do I need a DOI?",
+        "a": "Modern APA 7th requires DOI when available (as a https://doi.org/ URL). MLA 9th encourages DOI. The tool appends it automatically if you provide one."
+      },
+      {
+        "q": "Can I use this for books or websites?",
+        "a": "This generator targets journal-article citations. Books, edited volumes, and websites use slightly different field orders; refer to the style manual or a full citation manager (Zotero, Mendeley) for those."
       }
     ]
   },
@@ -6386,9 +6386,9 @@
     ]
   },
   "korea-holidays": {
-    "h1": "Korean Holidays Calendar",
-    "description": "See Korean legal holidays for this and next year at a glance. Includes lunar festivals and alternate holidays.",
-    "metaDescription": "Free Korean holidays. This and next year, lunar holidays and substitute days.",
+    "h1": "US Holidays Calendar",
+    "description": "See US federal holidays for this and next year at a glance. Includes floating holidays like Thanksgiving and Memorial Day, computed automatically.",
+    "metaDescription": "Free US federal holidays calendar. New Year's, MLK, Presidents' Day, Memorial Day, Juneteenth, July 4th, Labor Day, Thanksgiving, Christmas.",
     "howTo": [
       "Pick the year.",
       "The holiday list appears.",
@@ -6396,28 +6396,28 @@
     ],
     "faq": [
       {
-        "q": "What about temporary holidays?",
-        "a": "Government-declared temporary holidays update when announced. Usually decided just before elections or national events."
+        "q": "Are state holidays included?",
+        "a": "No — this tool lists federal holidays only. States observe their own additional holidays (e.g., Cesar Chavez Day in California, Patriots' Day in Massachusetts)."
       },
       {
-        "q": "What's a substitute holiday?",
-        "a": "When a legal holiday falls on Saturday or Sunday, the next Monday becomes a day off. Applies to Lunar New Year, Chuseok, Children's Day, Independence Movement Day, Liberation Day, etc."
+        "q": "Why does Memorial Day move each year?",
+        "a": "Several US federal holidays are tied to a weekday rather than a date. Memorial Day is the last Monday of May; Thanksgiving is the fourth Thursday of November. The tool computes these automatically."
       },
       {
-        "q": "Do lunar holiday dates change each year?",
-        "a": "Yes. Lunar New Year (1st of lunar Jan) and Chuseok (15th of lunar Aug) fall on different solar dates each year. The tool converts automatically."
+        "q": "What if a holiday falls on a weekend?",
+        "a": "Federally observed holidays usually shift to the nearest weekday (Friday if Saturday, Monday if Sunday). The tool shows the actual date; observance may differ at your employer."
+      },
+      {
+        "q": "Is Juneteenth a federal holiday?",
+        "a": "Yes — Juneteenth (June 19) became a federal holiday in 2021. It commemorates the end of slavery in the United States."
       },
       {
         "q": "Can I see how many consecutive days off?",
         "a": "The tool auto-highlights long weekends (3+ consecutive days). Useful for planning vacations."
       },
       {
-        "q": "Same holidays for foreign workers/companies?",
-        "a": "All Korean entities follow the same calendar. Foreign branches in Korea sometimes follow headquarters' calendars too."
-      },
-      {
-        "q": "Do I get holiday pay for working on a holiday?",
-        "a": "Korean labor law requires 1.5x regular pay for holiday work. Workplaces with fewer than 5 employees may have different rules."
+        "q": "Do I get extra pay for working on a holiday?",
+        "a": "Federal law does not require holiday premium pay for private-sector workers. Most companies offer 1.5x or compensatory time off as a benefit; check your employer's policy."
       }
     ]
   },
@@ -7657,7 +7657,7 @@
     ]
   },
   "korean-phone": {
-    "h1": "Korean Phone Number Normalizer",
+    "h1": "US Phone Number Formatter",
     "description": "Normalize phone numbers of any format to the standard 010-XXXX-XXXX. Useful for cleaning up Excel/CRM/contact data, handling regional numbers like 02-1234-5678, and international (+82) conversion.",
     "metaDescription": "Free Korean phone normalizer. 010 format, +82 international, Excel batch.",
     "howTo": [
