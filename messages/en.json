@@ -316,7 +316,17 @@
     "barcode-isbn": "ISBN Barcode",
     "barcode-code128": "Code 128 Barcode",
     "barcode-code39": "Code 39 Barcode",
-    "barcode-itf14": "ITF-14 Barcode"
+    "barcode-itf14": "ITF-14 Barcode",
+    "kakaotalk-chat": "KakaoTalk Chat Screenshot",
+    "meme-generator": "Meme Generator",
+    "image-color-picker": "Image Color Picker",
+    "code-to-image": "Code to Image",
+    "html-to-image": "HTML to Image",
+    "svg-blob": "SVG Blob",
+    "data-uri": "Data URI Generator",
+    "file-hash-verify": "File Hash Verify",
+    "file-split-join": "File Split/Join",
+    "pdf-esign": "PDF e-Sign"
   },
   "toolUI": {
     "qr": {
@@ -3138,7 +3148,9 @@
       "light": "Light",
       "dark": "Dark",
       "downloadPng": "Download PNG",
-      "disclaimer": "Note: images created with this tool are for parody/composition only. Do not use for fraud, defamation, or any criminal purpose."
+      "disclaimer": "Note: images created with this tool are for parody/composition only. Do not use for fraud, defamation, or any criminal purpose.",
+      "am": "AM",
+      "pm": "PM"
     },
     "meme-generator": {
       "uploadImage": "Upload image",

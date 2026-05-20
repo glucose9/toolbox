@@ -316,7 +316,17 @@
     "barcode-isbn": "ISBN バーコード",
     "barcode-code128": "Code 128 バーコード",
     "barcode-code39": "Code 39 バーコード",
-    "barcode-itf14": "ITF-14 バーコード"
+    "barcode-itf14": "ITF-14 バーコード",
+    "kakaotalk-chat": "KakaoTalkチャット画面",
+    "meme-generator": "ミーム生成",
+    "image-color-picker": "画像カラーピッカー",
+    "code-to-image": "コード→画像",
+    "html-to-image": "HTML→画像",
+    "svg-blob": "SVGブロブ",
+    "data-uri": "Data URI生成",
+    "file-hash-verify": "ファイルハッシュ検証",
+    "file-split-join": "ファイル分割/結合",
+    "pdf-esign": "PDF電子サイン"
   },
   "toolUI": {
     "qr": {
@@ -3138,7 +3148,9 @@
       "light": "ライト",
       "dark": "ダーク",
       "downloadPng": "PNGダウンロード",
-      "disclaimer": "※ このツールで作成した画像はパロディ・合成用です。詐欺や名誉毀損などの犯罪行為には使用しないでください。"
+      "disclaimer": "※ このツールで作成した画像はパロディ・合成用です。詐欺や名誉毀損などの犯罪行為には使用しないでください。",
+      "am": "午前",
+      "pm": "午後"
     },
     "meme-generator": {
       "uploadImage": "画像をアップロード",

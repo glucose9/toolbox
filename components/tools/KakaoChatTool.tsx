@@ -13,11 +13,11 @@ type Message = {
   time: string;
 };
 
-function nowHHMM(): string {
+function nowHHMM(am: string, pm: string): string {
   const d = new Date();
   const h = d.getHours();
   const m = d.getMinutes();
-  const ampm = h < 12 ? "오전" : "오후";
+  const ampm = h < 12 ? am : pm;
   const hour12 = h % 12 === 0 ? 12 : h % 12;
   return `${ampm} ${hour12}:${m.toString().padStart(2, "0")}`;
 }
@@ -45,7 +45,7 @@ export default function KakaoChatTool() {
       id: nextId++,
       sender: draftSender,
       text: draftText,
-      time: draftTime || nowHHMM(),
+      time: draftTime || nowHHMM(t("am"), t("pm")),
     };
     setMessages((prev) => [...prev, m]);
     setDraftText("");

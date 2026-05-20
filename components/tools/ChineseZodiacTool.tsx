@@ -1,15 +1,24 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const ANIMAL_KEYS = ["monkey","rooster","dog","pig","rat","ox","tiger","rabbit","dragon","snake","horse","goat"];
 const EMOJI = ["🐒","🐔","🐕","🐖","🐀","🐂","🐅","🐇","🐉","🐍","🐎","🐑"];
-const HEAVEN = ["갑","을","병","정","무","기","경","신","임","계"];
-const EARTH = ["자","축","인","묘","진","사","오","미","신","유","술","해"];
+// Sexagenary cycle stems (天干) and branches (地支) per locale.
+// Korean uses Hangul readings; CJK locales use the canonical Han characters.
+const HEAVEN: Record<string, string[]> = {
+  ko: ["갑","을","병","정","무","기","경","신","임","계"],
+  cjk: ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"],
+};
+const EARTH: Record<string, string[]> = {
+  ko: ["자","축","인","묘","진","사","오","미","신","유","술","해"],
+  cjk: ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"],
+};
 
 export default function ChineseZodiacTool() {
   const t = useTranslations("toolUI.chinese-zodiac");
+  const locale = useLocale();
   const [year, setYear] = useState(2000);
   const result = useMemo(() => {
     const idx = year % 12;
@@ -17,9 +26,11 @@ export default function ChineseZodiacTool() {
     const emoji = EMOJI[idx];
     const heavenIdx = (year - 4) % 10;
     const earthIdx = (year - 4) % 12;
-    const ganji = `${HEAVEN[heavenIdx]}${EARTH[earthIdx]}`;
+    const stems = locale === "ko" ? HEAVEN.ko : HEAVEN.cjk;
+    const branches = locale === "ko" ? EARTH.ko : EARTH.cjk;
+    const ganji = `${stems[heavenIdx]}${branches[earthIdx]}`;
     return { animal, emoji, ganji };
-  }, [year, t]);
+  }, [year, t, locale]);
 
   return (
     <div className="card space-y-3">

@@ -316,7 +316,17 @@
     "barcode-isbn": "ISBN 条码",
     "barcode-code128": "Code 128 条码",
     "barcode-code39": "Code 39 条码",
-    "barcode-itf14": "ITF-14 条码"
+    "barcode-itf14": "ITF-14 条码",
+    "kakaotalk-chat": "KakaoTalk 聊天截图",
+    "meme-generator": "梗图生成器",
+    "image-color-picker": "图片取色器",
+    "code-to-image": "代码转图片",
+    "html-to-image": "HTML转图片",
+    "svg-blob": "SVG Blob",
+    "data-uri": "Data URI 生成",
+    "file-hash-verify": "文件哈希校验",
+    "file-split-join": "文件分割/合并",
+    "pdf-esign": "PDF 电子签名"
   },
   "toolUI": {
     "qr": {
@@ -3138,7 +3148,9 @@
       "light": "浅色",
       "dark": "深色",
       "downloadPng": "下载 PNG",
-      "disclaimer": "※ 本工具生成的图片仅供合成/恶搞使用。请勿用于诈骗、诽谤等违法行为。"
+      "disclaimer": "※ 本工具生成的图片仅供合成/恶搞使用。请勿用于诈骗、诽谤等违法行为。",
+      "am": "上午",
+      "pm": "下午"
     },
     "meme-generator": {
       "uploadImage": "上传图片",

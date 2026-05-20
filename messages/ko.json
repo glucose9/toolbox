@@ -316,7 +316,17 @@
     "barcode-isbn": "ISBN 바코드",
     "barcode-code128": "Code 128 바코드",
     "barcode-code39": "Code 39 바코드",
-    "barcode-itf14": "ITF-14 바코드"
+    "barcode-itf14": "ITF-14 바코드",
+    "kakaotalk-chat": "카카오톡 채팅 캡처",
+    "meme-generator": "밈 생성기",
+    "image-color-picker": "이미지 색 추출",
+    "code-to-image": "코드 → 이미지",
+    "html-to-image": "HTML → 이미지",
+    "svg-blob": "SVG 블롭",
+    "data-uri": "Data URI 생성",
+    "file-hash-verify": "파일 해시 검증",
+    "file-split-join": "파일 분할/결합",
+    "pdf-esign": "PDF 전자 서명"
   },
   "toolUI": {
     "qr": {
@@ -3138,7 +3148,9 @@
       "light": "라이트",
       "dark": "다크",
       "downloadPng": "PNG 다운로드",
-      "disclaimer": "※ 본 도구로 만든 이미지는 합성/패러디용입니다. 사기, 명예훼손 등 범죄에 사용하지 마세요."
+      "disclaimer": "※ 본 도구로 만든 이미지는 합성/패러디용입니다. 사기, 명예훼손 등 범죄에 사용하지 마세요.",
+      "am": "오전",
+      "pm": "오후"
     },
     "meme-generator": {
       "uploadImage": "이미지 업로드",

@@ -1,14 +1,22 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { ELEMENTS, CATEGORY_LABELS, type Element, type Category } from "@/lib/periodic-elements";
+
+type Lang = "ko" | "en" | "ja" | "zh";
 
 export default function PeriodicTableTool() {
   const t = useTranslations("toolUI.periodic-table");
+  const locale = useLocale() as Lang;
   const [selected, setSelected] = useState<Element | null>(ELEMENTS[0]);
   const [search, setSearch] = useState("");
   const [hoverCat, setHoverCat] = useState<Category | null>(null);
+
+  const elName = (el: Element): string =>
+    (locale === "en" ? el.name : el[locale]) ?? el.name;
+  const catLabel = (cat: Category): string =>
+    (locale === "en" ? CATEGORY_LABELS[cat].en : CATEGORY_LABELS[cat][locale]) ?? CATEGORY_LABELS[cat].en;
 
   const searchLower = search.toLowerCase().trim();
   const matchSet = useMemo(() => {
@@ -18,11 +26,12 @@ export default function PeriodicTableTool() {
         e.sym.toLowerCase() === searchLower ||
         e.sym.toLowerCase().startsWith(searchLower) ||
         e.name.toLowerCase().includes(searchLower) ||
+        elName(e).toLowerCase().includes(searchLower) ||
         e.ko.includes(searchLower) ||
         e.z.toString() === searchLower
       ).map((e) => e.z)
     );
-  }, [searchLower]);
+  }, [searchLower, locale]);
 
   // Build sparse 10x18 grid
   const grid: (Element | null)[][] = Array.from({ length: 10 }, () => Array(18).fill(null));
@@ -58,11 +67,11 @@ export default function PeriodicTableTool() {
         key={el.z}
         onClick={() => setSelected(el)}
         className={`aspect-square border-2 rounded p-0.5 flex flex-col items-center justify-center transition leading-none ${cat.bg} ${cat.border} ${dimmed ? "opacity-25" : ""} ${isSelected ? "ring-2 ring-blue-500 ring-offset-1 dark:ring-offset-gray-900" : ""} hover:scale-110 hover:z-10 relative`}
-        title={`${el.z} ${el.sym} ${el.ko}`}
+        title={`${el.z} ${el.sym} ${elName(el)}`}
       >
         <div className="text-[0.55rem] sm:text-xs text-gray-700 dark:text-gray-300">{el.z}</div>
         <div className="text-xs sm:text-base font-bold">{el.sym}</div>
-        <div className="text-[0.5rem] sm:text-[0.6rem] truncate w-full text-center text-gray-700 dark:text-gray-300 hidden sm:block">{el.ko}</div>
+        <div className="text-[0.5rem] sm:text-[0.6rem] truncate w-full text-center text-gray-700 dark:text-gray-300 hidden sm:block">{elName(el)}</div>
       </button>
     );
   };
@@ -93,7 +102,7 @@ export default function PeriodicTableTool() {
               onMouseLeave={() => setHoverCat(null)}
               className={`px-2 py-1 border rounded ${lbl.bg} ${lbl.border} ${hoverCat === c ? "ring-2 ring-blue-500" : ""}`}
             >
-              {lbl.ko}
+              {catLabel(c)}
             </button>
           );
         })}
@@ -129,11 +138,11 @@ export default function PeriodicTableTool() {
             <div className="text-center">
               <div className="text-xs text-muted">{selected.z}</div>
               <div className="text-4xl sm:text-5xl font-bold">{selected.sym}</div>
-              <div className="text-sm font-semibold">{selected.ko}</div>
-              <div className="text-xs text-muted">{selected.name}</div>
+              <div className="text-sm font-semibold">{elName(selected)}</div>
+              {locale !== "en" && <div className="text-xs text-muted">{selected.name}</div>}
             </div>
             <div className="flex-1 grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
-              <Stat label={t("category")} value={CATEGORY_LABELS[selected.cat].ko} />
+              <Stat label={t("category")} value={catLabel(selected.cat)} />
               <Stat label={t("atomicMass")} value={selected.mass.toString()} />
               {selected.config && <Stat label={t("electronConfig")} value={selected.config} mono />}
               {selected.en !== undefined && <Stat label={t("electronegativity")} value={selected.en.toString()} />}
