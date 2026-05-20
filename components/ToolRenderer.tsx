@@ -235,6 +235,16 @@ const JsBeautifierTool = dynamic(() => import("./tools/JsBeautifierTool"), { ssr
 const TextStatsTool = dynamic(() => import("./tools/TextStatsTool"), { ssr: false });
 const BarcodeGeneratorTool = dynamic(() => import("./tools/BarcodeGeneratorTool"), { ssr: false });
 const BarcodeReaderTool = dynamic(() => import("./tools/BarcodeReaderTool"), { ssr: false });
+const KakaoChatTool = dynamic(() => import("./tools/KakaoChatTool"), { ssr: false });
+const MemeGeneratorTool = dynamic(() => import("./tools/MemeGeneratorTool"), { ssr: false });
+const ImageColorPickerTool = dynamic(() => import("./tools/ImageColorPickerTool"), { ssr: false });
+const CodeToImageTool = dynamic(() => import("./tools/CodeToImageTool"), { ssr: false });
+const HtmlToImageTool = dynamic(() => import("./tools/HtmlToImageTool"), { ssr: false });
+const SvgBlobTool = dynamic(() => import("./tools/SvgBlobTool"), { ssr: false });
+const DataUriTool = dynamic(() => import("./tools/DataUriTool"), { ssr: false });
+const FileHashVerifyTool = dynamic(() => import("./tools/FileHashVerifyTool"), { ssr: false });
+const FileSplitJoinTool = dynamic(() => import("./tools/FileSplitJoinTool"), { ssr: false });
+const PdfEsignTool = dynamic(() => import("./tools/PdfEsignTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -573,6 +583,16 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "TextStatsTool": return <TextStatsTool />;
     case "BarcodeGeneratorTool": return <BarcodeGeneratorTool config={config} />;
     case "BarcodeReaderTool": return <BarcodeReaderTool />;
+    case "KakaoChatTool": return <KakaoChatTool />;
+    case "MemeGeneratorTool": return <MemeGeneratorTool />;
+    case "ImageColorPickerTool": return <ImageColorPickerTool />;
+    case "CodeToImageTool": return <CodeToImageTool />;
+    case "HtmlToImageTool": return <HtmlToImageTool />;
+    case "SvgBlobTool": return <SvgBlobTool />;
+    case "DataUriTool": return <DataUriTool />;
+    case "FileHashVerifyTool": return <FileHashVerifyTool />;
+    case "FileSplitJoinTool": return <FileSplitJoinTool />;
+    case "PdfEsignTool": return <PdfEsignTool />;
     default:
       return <div>Tool not found.</div>;
   }

@@ -8580,5 +8580,332 @@
         "a": "ITF-14 is the visual encoding of GTIN-14 (global trade item number). Use your assigned GTIN-14 directly."
       }
     ]
+  },
+  "kakaotalk-chat": {
+    "h1": "KakaoTalk Chat Screenshot Generator",
+    "description": "Create KakaoTalk-style fake chat screenshots and download as PNG. For blog reviews, fiction, humor, scenario examples, or ad mockups. Customize the room name, other person's name, individual messages, and times. Visually mimics KakaoTalk bubble design.",
+    "metaDescription": "Free KakaoTalk chat screenshot generator. Fake chat images for blog/fiction/ad mockups.",
+    "howTo": [
+      "Enter the room name and other person's name at the top.",
+      "Add messages line by line (left/right sender, timestamp).",
+      "Download as PNG."
+    ],
+    "faq": [
+      {
+        "q": "Is it identical to the real KakaoTalk?",
+        "a": "Visually similar but not 100% identical. Using it for fraud, threats, or defamation may be illegal — only use for legitimate purposes."
+      },
+      {
+        "q": "Can I use it for scams or threats?",
+        "a": "No. That would violate fraud, threat, and defamation laws in many countries. This tool is for blog reviews, humor, fiction, and ad mockups only."
+      },
+      {
+        "q": "Can I upload a profile picture?",
+        "a": "Currently uses default avatars. Image upload is planned for a future update."
+      },
+      {
+        "q": "Is dark mode supported?",
+        "a": "Yes. Toggle between light and dark to create both styles."
+      },
+      {
+        "q": "How are these images typically used?",
+        "a": "Blog post evidence, YouTube thumbnails, ad scenario mockups, novel illustrations, SNS card news."
+      }
+    ]
+  },
+  "meme-generator": {
+    "h1": "Meme Generator",
+    "description": "Upload an image and add top/bottom text to create classic memes. Adjust font size, color, and outline. Download as PNG. For SNS sharing, chat reactions, YouTube thumbnails, and blog humor posts.",
+    "metaDescription": "Free meme generator. Top/bottom text on image, outline & color options, PNG download.",
+    "howTo": [
+      "Upload a photo.",
+      "Type top and bottom text.",
+      "Adjust font size and colors.",
+      "Download as PNG."
+    ],
+    "faq": [
+      {
+        "q": "Which font is used?",
+        "a": "Classic meme-style Impact for English, with a bold Korean Gothic for Korean text."
+      },
+      {
+        "q": "Why the outline?",
+        "a": "Makes white text readable over dark backgrounds. Black outline is the standard meme style."
+      },
+      {
+        "q": "Is there a watermark?",
+        "a": "No. Free with no watermarks."
+      },
+      {
+        "q": "Which image formats are supported?",
+        "a": "JPG, PNG, WebP, HEIC, and other common formats."
+      },
+      {
+        "q": "What about output size?",
+        "a": "Original dimensions are preserved. Resize separately before posting to SNS if needed."
+      }
+    ]
+  },
+  "image-color-picker": {
+    "h1": "Image Pixel Color Picker",
+    "description": "Upload an image and click any point to get that pixel's HEX/RGB/HSL color. Great for design color matching, brand color extraction, identifying specific colors in photos, and unifying PPT/poster palettes.",
+    "metaDescription": "Free image color picker. Click photo → HEX/RGB/HSL. For design color matching.",
+    "howTo": [
+      "Upload an image.",
+      "Click any point to capture its color.",
+      "Copy the HEX or click multiple points to build a palette."
+    ],
+    "faq": [
+      {
+        "q": "How is this different from Color Palette Extractor?",
+        "a": "Palette extractor automatically finds the N most prominent colors. This tool gives the exact color of a specific pixel you click."
+      },
+      {
+        "q": "Can I zoom for precision?",
+        "a": "Hover to see a magnifier that shows the pixel under your cursor."
+      },
+      {
+        "q": "Can I save multiple colors?",
+        "a": "Yes, clicked colors accumulate in a side panel. Copy them as a palette."
+      },
+      {
+        "q": "Which color spaces are shown?",
+        "a": "HEX (#RRGGBB), RGB, and HSL — all three."
+      },
+      {
+        "q": "Is my photo uploaded anywhere?",
+        "a": "No. Processing happens entirely in your browser."
+      }
+    ]
+  },
+  "code-to-image": {
+    "h1": "Code-to-Image (Carbon-style)",
+    "description": "Paste source code, choose a language, and get a beautiful syntax-highlighted screenshot (Carbon-style) as PNG. For blog/SNS sharing, showing off code on Twitter, embedding in Notion or slides, and code review captures. 16+ languages.",
+    "metaDescription": "Free code screenshot generator. Carbon-style, 16+ languages, PNG download.",
+    "howTo": [
+      "Paste code and pick a language.",
+      "Choose a theme and background.",
+      "Download as PNG for SNS, blog, or slides."
+    ],
+    "faq": [
+      {
+        "q": "Which languages are supported?",
+        "a": "JavaScript, TypeScript, Python, Java, C/C++, C#, Go, Rust, Ruby, Swift, Kotlin, SQL, HTML, CSS, JSON, YAML, Markdown — 16+."
+      },
+      {
+        "q": "Is this the same as carbon.now.sh?",
+        "a": "Similar style with the core features (highlighting, themes, window chrome)."
+      },
+      {
+        "q": "Can the background be transparent?",
+        "a": "You can choose white, black, gradients, or solid colors."
+      },
+      {
+        "q": "High-resolution (Retina) output?",
+        "a": "Output is rendered at 2x for sharp display in slides and print."
+      },
+      {
+        "q": "Why PNG, not SVG?",
+        "a": "html2canvas produces PNGs. PNG is standard for slides, SNS, and blogs."
+      }
+    ]
+  },
+  "html-to-image": {
+    "h1": "HTML to PNG Image",
+    "description": "Enter HTML and CSS, then download the rendered result as a PNG. Useful for demo/portfolio previews, design mockups, email template checks, and widget design output. Powered by html2canvas.",
+    "metaDescription": "Free HTML to image. Render HTML/CSS to PNG via html2canvas.",
+    "howTo": [
+      "Paste HTML code.",
+      "Set the desired width.",
+      "Download as PNG."
+    ],
+    "faq": [
+      {
+        "q": "Which CSS is supported?",
+        "a": "Most standard CSS. Some bleeding-edge features (backdrop-filter, etc.) and external fonts may be limited."
+      },
+      {
+        "q": "Can I use external images?",
+        "a": "Only CORS-allowed images. Use inline Base64 images for safety."
+      },
+      {
+        "q": "Is JavaScript executed?",
+        "a": "No. For security, only pure HTML+CSS is rendered."
+      },
+      {
+        "q": "How is this different from Code-to-Image?",
+        "a": "Code-to-Image shows code as a syntax-highlighted screenshot. This tool actually renders HTML/CSS to image."
+      },
+      {
+        "q": "What about large pages?",
+        "a": "Width is fixed; height scales automatically. Very large pages may hit memory limits."
+      }
+    ]
+  },
+  "svg-blob": {
+    "h1": "SVG Blob Generator",
+    "description": "Generate random organic, curved SVG blobs. Use as website background decoration, hero-section accents, logo supplements, or illustration backgrounds. Control complexity, randomness, and color. Copy SVG code or download PNG.",
+    "metaDescription": "Free SVG blob generator. Organic blob shapes for web design decoration.",
+    "howTo": [
+      "Adjust complexity and randomness.",
+      "Pick a color.",
+      "Click Generate until you like the shape.",
+      "Copy SVG or download PNG."
+    ],
+    "faq": [
+      {
+        "q": "What is a blob?",
+        "a": "An organic, free-form curved shape. Popular in modern web design as background decoration or hero accents."
+      },
+      {
+        "q": "Where do I use it?",
+        "a": "Landing page backgrounds, card accents, illustration backgrounds, slide decorations."
+      },
+      {
+        "q": "Can I get just SVG code?",
+        "a": "Yes — copy the SVG. PNG download is also available if you need a bitmap."
+      },
+      {
+        "q": "Gradients?",
+        "a": "Both solid and 2-stop gradient modes are supported."
+      },
+      {
+        "q": "License?",
+        "a": "Generated blobs are yours. Commercial use is unrestricted."
+      }
+    ]
+  },
+  "data-uri": {
+    "h1": "Data URI Generator",
+    "description": "Convert images, SVG, or text into Base64-encoded Data URIs. Inline in CSS background-image, embed images in HTML emails, build single-file demos with no external requests, or embed small favicons. Auto-detects MIME type.",
+    "metaDescription": "Free Data URI generator. Image/SVG/text → Base64 inline URI.",
+    "howTo": [
+      "Upload a file or enter text.",
+      "MIME type is auto-detected.",
+      "A data: URI is generated.",
+      "Copy and use in CSS, HTML img src, or email."
+    ],
+    "faq": [
+      {
+        "q": "What is a Data URI?",
+        "a": "A `data:image/png;base64,...` URL that embeds the file content directly. No external request needed."
+      },
+      {
+        "q": "Size limit?",
+        "a": "Theoretically unlimited; <10KB is practical. Base64 adds ~33% size overhead."
+      },
+      {
+        "q": "Why Base64?",
+        "a": "To safely embed in URIs. Binary files (images, PDFs) conflict with URI special characters, so Base64 encoding is required."
+      },
+      {
+        "q": "Common use cases?",
+        "a": "(1) Small CSS background icons, (2) HTML email images, (3) Webpack/Vite asset inlining, (4) single-file HTML demos."
+      },
+      {
+        "q": "Drawbacks?",
+        "a": "(1) +33% size, (2) browser cache misses, (3) large files slow page parsing."
+      }
+    ]
+  },
+  "file-hash-verify": {
+    "h1": "File Integrity Verifier (Hash)",
+    "description": "Upload a file and paste the expected hash to auto-verify integrity. Useful for verifying downloaded files, checking OS ISO/executable tampering, and Git commit matching. Supports MD5, SHA-1, SHA-256, SHA-512. Browser-only processing.",
+    "metaDescription": "Free file hash verifier. MD5/SHA-1/SHA-256/SHA-512 integrity check, browser-only.",
+    "howTo": [
+      "Drag or upload a file.",
+      "Paste an expected hash (or leave blank to just see computed values).",
+      "Match/mismatch displays automatically."
+    ],
+    "faq": [
+      {
+        "q": "Why verify integrity?",
+        "a": "To confirm a file wasn't corrupted during download or tampered with. Essential for OS ISOs, security tools, and backups."
+      },
+      {
+        "q": "Which hash should I use?",
+        "a": "SHA-256 is the modern standard. MD5/SHA-1 are not safe for security checks (collisions possible) but fine for casual integrity checks."
+      },
+      {
+        "q": "Large files?",
+        "a": "Up to several GB. Files are streamed in chunks, but 4GB+ files may slow due to browser memory limits."
+      },
+      {
+        "q": "Is the file uploaded?",
+        "a": "No. SubtleCrypto runs locally in your browser. No data leaves your device."
+      },
+      {
+        "q": "Multiple hashes at once?",
+        "a": "Yes — MD5/SHA-1/SHA-256/SHA-512 are all computed in one pass."
+      }
+    ]
+  },
+  "file-split-join": {
+    "h1": "File Splitter / Joiner",
+    "description": "Split large files into smaller chunks (e.g. 10MB) or rejoin pieces. For email attachment limits, KakaoTalk transfer limits, cloud upload chunking. Splits auto-name `.part1`, `.part2`. Browser-only processing.",
+    "metaDescription": "Free file split/join tool. Work around email/messenger attachment limits, cloud chunking.",
+    "howTo": [
+      "Split: upload file → set chunk size → \"Split\" → download each part.",
+      "Join: upload all parts in order → \"Join\" → download the reassembled file."
+    ],
+    "faq": [
+      {
+        "q": "What's the output format?",
+        "a": "Original-filename.part1, .part2, ... in order. Upload them in the same order to rejoin."
+      },
+      {
+        "q": "Max file size?",
+        "a": "Practically up to 4-8GB depending on browser memory."
+      },
+      {
+        "q": "Why split files?",
+        "a": "(1) 25MB email attachment limits, (2) ~100MB KakaoTalk limit, (3) cloud chunked uploads, (4) backup media capacity."
+      },
+      {
+        "q": "Can these be rejoined with a normal archive tool?",
+        "a": "This tool does plain binary split. Rejoin here, or use Windows `copy /b part1+part2 result.ext`."
+      },
+      {
+        "q": "Can I open a single part?",
+        "a": "No. Parts are partial data; you must rejoin them to recover the original."
+      }
+    ]
+  },
+  "pdf-esign": {
+    "h1": "PDF e-Sign",
+    "description": "Draw or upload a signature image directly onto a PDF. For contract signing, consent forms, or quote confirmations. Browser-only processing — no upload. Powered by pdf-lib.",
+    "metaDescription": "Free PDF e-sign. Draw/upload signature & stamp on PDF. Browser-only, no upload.",
+    "howTo": [
+      "Upload a PDF.",
+      "Draw a signature with your mouse or upload a signature image.",
+      "Drag it to the desired position on a page.",
+      "Download the signed PDF."
+    ],
+    "faq": [
+      {
+        "q": "Is it legally binding?",
+        "a": "In Korea, an image signature can be valid if both parties accept it. For important contracts, use accredited digital signatures (PKI)."
+      },
+      {
+        "q": "How do I draw a signature?",
+        "a": "Use your mouse or touch screen (tablet). Use \"Clear\" to redo."
+      },
+      {
+        "q": "Can I use an existing signature image?",
+        "a": "Yes. Upload a transparent PNG of your signature for stamp-style placement."
+      },
+      {
+        "q": "Is the file uploaded?",
+        "a": "No. pdf-lib processes everything in your browser. Safe for sensitive documents."
+      },
+      {
+        "q": "Can I sign multiple pages?",
+        "a": "Yes. You can repeat the stamping process for each page."
+      },
+      {
+        "q": "Signing as someone else?",
+        "a": "Forgery. Use only your own signature."
+      }
+    ]
   }
 }
