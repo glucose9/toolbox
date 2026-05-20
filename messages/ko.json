@@ -32,7 +32,8 @@
     "text": "텍스트",
     "dev": "개발자",
     "calc": "계산기·생활",
-    "academic": "논문·인용"
+    "academic": "논문·인용",
+    "barcode": "바코드"
   },
   "nav": {
     "home": "홈",
@@ -306,7 +307,16 @@
     "password-comparator": "비밀번호 비교",
     "number-to-english": "숫자 → 영어",
     "js-beautifier": "JS 정리",
-    "text-stats": "텍스트 종합 통계"
+    "text-stats": "텍스트 종합 통계",
+    "barcode-generator": "바코드 생성기",
+    "barcode-reader": "바코드 인식기",
+    "barcode-ean13": "EAN-13 바코드",
+    "barcode-ean8": "EAN-8 바코드",
+    "barcode-upc": "UPC-A 바코드",
+    "barcode-isbn": "ISBN 바코드",
+    "barcode-code128": "Code 128 바코드",
+    "barcode-code39": "Code 39 바코드",
+    "barcode-itf14": "ITF-14 바코드"
   },
   "toolUI": {
     "qr": {
@@ -3081,6 +3091,28 @@
     "video-base": {
       "defaultLabel": "동영상을 드래그하거나 클릭",
       "ffmpegNotice": "※ 첫 실행 시 ffmpeg.wasm(~25MB)이 한 번 다운로드됩니다. 이후엔 즉시 처리."
+    },
+    "barcode-generator": {
+      "input": "입력 값",
+      "formatHint": "형식",
+      "isbnHint": "ISBN-10 또는 ISBN-13을 입력하세요. 10자리면 978 접두 ISBN-13으로 자동 변환됩니다.",
+      "showText": "바코드 아래 텍스트 표시",
+      "foreground": "전경:",
+      "background": "배경:",
+      "downloadPng": "PNG 다운로드",
+      "downloadSvg": "SVG 다운로드",
+      "invalidInput": "유효하지 않은 입력입니다."
+    },
+    "barcode-reader": {
+      "dropOrClick": "바코드 이미지를 드래그하거나 클릭",
+      "supports": "지원: EAN-13, Code 128, UPC, Code 39, ITF, QR, DataMatrix, PDF417 등",
+      "decoding": "디코딩 중...",
+      "preview": "미리보기",
+      "format": "포맷",
+      "content": "내용",
+      "copy": "복사",
+      "openUrl": "URL 열기",
+      "notFound": "바코드를 찾지 못했습니다. 더 선명한 사진으로 다시 시도해 주세요."
     }
   }
 }

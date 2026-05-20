@@ -233,6 +233,8 @@ const PasswordComparatorTool = dynamic(() => import("./tools/PasswordComparatorT
 const NumberToEnglishTool = dynamic(() => import("./tools/NumberToEnglishTool"), { ssr: false });
 const JsBeautifierTool = dynamic(() => import("./tools/JsBeautifierTool"), { ssr: false });
 const TextStatsTool = dynamic(() => import("./tools/TextStatsTool"), { ssr: false });
+const BarcodeGeneratorTool = dynamic(() => import("./tools/BarcodeGeneratorTool"), { ssr: false });
+const BarcodeReaderTool = dynamic(() => import("./tools/BarcodeReaderTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -569,6 +571,8 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "NumberToEnglishTool": return <NumberToEnglishTool />;
     case "JsBeautifierTool": return <JsBeautifierTool />;
     case "TextStatsTool": return <TextStatsTool />;
+    case "BarcodeGeneratorTool": return <BarcodeGeneratorTool config={config} />;
+    case "BarcodeReaderTool": return <BarcodeReaderTool />;
     default:
       return <div>Tool not found.</div>;
   }

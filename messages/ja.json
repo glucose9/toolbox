@@ -32,7 +32,8 @@
     "text": "テキスト",
     "dev": "開発者",
     "calc": "計算機・生活",
-    "academic": "論文・引用"
+    "academic": "論文・引用",
+    "barcode": "バーコード"
   },
   "nav": {
     "home": "ホーム",
@@ -306,7 +307,16 @@
     "password-comparator": "パスワード比較",
     "number-to-english": "数字 → 英語",
     "js-beautifier": "JS整形",
-    "text-stats": "テキスト総合統計"
+    "text-stats": "テキスト総合統計",
+    "barcode-generator": "バーコード生成",
+    "barcode-reader": "バーコード読み取り",
+    "barcode-ean13": "EAN-13 バーコード",
+    "barcode-ean8": "EAN-8 バーコード",
+    "barcode-upc": "UPC-A バーコード",
+    "barcode-isbn": "ISBN バーコード",
+    "barcode-code128": "Code 128 バーコード",
+    "barcode-code39": "Code 39 バーコード",
+    "barcode-itf14": "ITF-14 バーコード"
   },
   "toolUI": {
     "qr": {
@@ -3081,6 +3091,28 @@
     "video-base": {
       "defaultLabel": "動画をドラッグまたはクリック",
       "ffmpegNotice": "※ 初回実行時に ffmpeg.wasm (~25MB) を一度ダウンロードします。以降は即時処理。"
+    },
+    "barcode-generator": {
+      "input": "入力値",
+      "formatHint": "フォーマット",
+      "isbnHint": "ISBN-10またはISBN-13を入力。ISBN-10は978接頭辞付きISBN-13に自動変換されます。",
+      "showText": "バーコード下にテキスト表示",
+      "foreground": "前景:",
+      "background": "背景:",
+      "downloadPng": "PNGダウンロード",
+      "downloadSvg": "SVGダウンロード",
+      "invalidInput": "無効な入力です。"
+    },
+    "barcode-reader": {
+      "dropOrClick": "バーコード画像をドラッグまたはクリック",
+      "supports": "対応: EAN-13, Code 128, UPC, Code 39, ITF, QR, DataMatrix, PDF417 など",
+      "decoding": "デコード中...",
+      "preview": "プレビュー",
+      "format": "フォーマット",
+      "content": "内容",
+      "copy": "コピー",
+      "openUrl": "URLを開く",
+      "notFound": "バーコードが見つかりません。より鮮明な画像で再試行してください。"
     }
   }
 }

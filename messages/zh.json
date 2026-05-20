@@ -32,7 +32,8 @@
     "text": "文本",
     "dev": "开发者",
     "calc": "计算器·生活",
-    "academic": "论文·引用"
+    "academic": "论文·引用",
+    "barcode": "条码"
   },
   "nav": {
     "home": "首页",
@@ -306,7 +307,16 @@
     "password-comparator": "密码比较",
     "number-to-english": "数字 → 英文",
     "js-beautifier": "JS美化",
-    "text-stats": "文本综合统计"
+    "text-stats": "文本综合统计",
+    "barcode-generator": "条码生成器",
+    "barcode-reader": "条码扫描器",
+    "barcode-ean13": "EAN-13 条码",
+    "barcode-ean8": "EAN-8 条码",
+    "barcode-upc": "UPC-A 条码",
+    "barcode-isbn": "ISBN 条码",
+    "barcode-code128": "Code 128 条码",
+    "barcode-code39": "Code 39 条码",
+    "barcode-itf14": "ITF-14 条码"
   },
   "toolUI": {
     "qr": {
@@ -3081,6 +3091,28 @@
     "video-base": {
       "defaultLabel": "拖放视频或点击上传",
       "ffmpegNotice": "※ 首次运行时下载 ffmpeg.wasm (~25MB)，之后即时处理。"
+    },
+    "barcode-generator": {
+      "input": "输入值",
+      "formatHint": "格式",
+      "isbnHint": "输入ISBN-10或ISBN-13。ISBN-10将自动转换为带978前缀的ISBN-13。",
+      "showText": "在条码下方显示文本",
+      "foreground": "前景:",
+      "background": "背景:",
+      "downloadPng": "下载PNG",
+      "downloadSvg": "下载SVG",
+      "invalidInput": "输入无效。"
+    },
+    "barcode-reader": {
+      "dropOrClick": "拖放或点击上传条码图片",
+      "supports": "支持: EAN-13, Code 128, UPC, Code 39, ITF, QR, DataMatrix, PDF417 等",
+      "decoding": "解码中...",
+      "preview": "预览",
+      "format": "格式",
+      "content": "内容",
+      "copy": "复制",
+      "openUrl": "打开URL",
+      "notFound": "未找到条码。请尝试更清晰的图片。"
     }
   }
 }

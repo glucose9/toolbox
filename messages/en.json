@@ -32,7 +32,8 @@
     "text": "Text",
     "dev": "Developer",
     "calc": "Calculator · Life",
-    "academic": "Citation · Essay"
+    "academic": "Citation · Essay",
+    "barcode": "Barcode"
   },
   "nav": {
     "home": "Home",
@@ -306,7 +307,16 @@
     "password-comparator": "Password Compare",
     "number-to-english": "Number → English",
     "js-beautifier": "JS Beautify",
-    "text-stats": "Text Stats"
+    "text-stats": "Text Stats",
+    "barcode-generator": "Barcode Generator",
+    "barcode-reader": "Barcode Reader",
+    "barcode-ean13": "EAN-13 Barcode",
+    "barcode-ean8": "EAN-8 Barcode",
+    "barcode-upc": "UPC-A Barcode",
+    "barcode-isbn": "ISBN Barcode",
+    "barcode-code128": "Code 128 Barcode",
+    "barcode-code39": "Code 39 Barcode",
+    "barcode-itf14": "ITF-14 Barcode"
   },
   "toolUI": {
     "qr": {
@@ -3081,6 +3091,28 @@
     "video-base": {
       "defaultLabel": "Drag video here or click",
       "ffmpegNotice": "※ On first run, ffmpeg.wasm (~25MB) downloads once. Subsequent runs are instant."
+    },
+    "barcode-generator": {
+      "input": "Value",
+      "formatHint": "Format",
+      "isbnHint": "Enter ISBN-10 or ISBN-13. ISBN-10 is auto-converted to ISBN-13 with 978 prefix.",
+      "showText": "Show text under barcode",
+      "foreground": "Foreground:",
+      "background": "Background:",
+      "downloadPng": "Download PNG",
+      "downloadSvg": "Download SVG",
+      "invalidInput": "Invalid input."
+    },
+    "barcode-reader": {
+      "dropOrClick": "Drag or click to upload a barcode image",
+      "supports": "Supports: EAN-13, Code 128, UPC, Code 39, ITF, QR, DataMatrix, PDF417, and more",
+      "decoding": "Decoding...",
+      "preview": "Preview",
+      "format": "Format",
+      "content": "Content",
+      "copy": "Copy",
+      "openUrl": "Open URL",
+      "notFound": "No barcode found. Try a clearer image."
     }
   }
 }
