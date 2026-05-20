@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Row = { key: string; value: string };
 
@@ -12,6 +13,7 @@ function fmtVal(v: unknown): string {
 }
 
 export default function ExifViewerTool() {
+  const t = useTranslations("toolUI.exif-viewer");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [rows, setRows] = useState<Row[]>([]);
@@ -32,7 +34,7 @@ export default function ExifViewerTool() {
       const exifr = (await import("exifr")).default;
       const meta = await exifr.parse(f, true);
       if (!meta) {
-        setError("EXIF 정보가 없습니다.");
+        setError(t("noExif"));
         return;
       }
       const ignore = new Set(["MakerNote", "UserComment", "thumbnail"]);
@@ -64,8 +66,8 @@ export default function ExifViewerTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🔬</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">JPG·HEIC EXIF 지원</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("formatHint")}</div>
           <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
       </div>
@@ -76,14 +78,14 @@ export default function ExifViewerTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setRows([]); setGps(null); setError(""); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setRows([]); setGps(null); setError(""); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {preview && <img src={preview} alt="" className="max-w-full max-h-72 rounded border border-gray-200 dark:border-gray-700 mx-auto" />}
         <div>
           {busy ? (
-            <div className="text-sm text-muted">읽는 중...</div>
+            <div className="text-sm text-muted">{t("reading")}</div>
           ) : error ? (
             <div className="text-sm text-red-600">{error}</div>
           ) : (
@@ -95,7 +97,7 @@ export default function ExifViewerTool() {
                   rel="noreferrer"
                   className="block mb-2 p-2 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded text-sm hover:underline"
                 >
-                  📍 GPS: {gps.lat.toFixed(6)}, {gps.lon.toFixed(6)} — 지도에서 보기
+                  📍 GPS: {gps.lat.toFixed(6)}, {gps.lon.toFixed(6)} — {t("viewOnMap")}
                 </a>
               )}
               <div className="max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded">
@@ -110,7 +112,7 @@ export default function ExifViewerTool() {
                   </tbody>
                 </table>
               </div>
-              <div className="text-xs text-muted mt-2">{rows.length}개 항목</div>
+              <div className="text-xs text-muted mt-2">{t("itemCount", { count: rows.length })}</div>
             </>
           )}
         </div>

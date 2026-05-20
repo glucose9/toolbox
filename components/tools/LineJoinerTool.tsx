@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function LineJoinerTool() {
+  const t = useTranslations("toolUI.line-joiner");
   const [text, setText] = useState("apple\nbanana\ncherry");
   const [sep, setSep] = useState(", ");
   const [quote, setQuote] = useState<"none" | "single" | "double">("none");
@@ -25,13 +27,13 @@ export default function LineJoinerTool() {
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y font-mono" />
       <div className="grid grid-cols-2 gap-3 text-sm">
-        <label>구분자<input type="text" value={sep} onChange={(e) => setSep(e.target.value)} placeholder=", " className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1" /></label>
-        <label>따옴표<select value={quote} onChange={(e) => setQuote(e.target.value as typeof quote)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1"><option value="none">없음</option><option value="single">홑따옴표 '</option><option value="double">쌍따옴표 "</option></select></label>
-        <label className="flex items-center gap-1"><input type="checkbox" checked={trim} onChange={(e) => setTrim(e.target.checked)} /> 줄 양끝 공백 제거</label>
-        <label className="flex items-center gap-1"><input type="checkbox" checked={removeEmpty} onChange={(e) => setRemoveEmpty(e.target.checked)} /> 빈 줄 제거</label>
+        <label>{t("separator")}<input type="text" value={sep} onChange={(e) => setSep(e.target.value)} placeholder=", " className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1" /></label>
+        <label>{t("quotes")}<select value={quote} onChange={(e) => setQuote(e.target.value as typeof quote)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1"><option value="none">{t("none")}</option><option value="single">{t("single")}</option><option value="double">{t("double")}</option></select></label>
+        <label className="flex items-center gap-1"><input type="checkbox" checked={trim} onChange={(e) => setTrim(e.target.checked)} /> {t("trim")}</label>
+        <label className="flex items-center gap-1"><input type="checkbox" checked={removeEmpty} onChange={(e) => setRemoveEmpty(e.target.checked)} /> {t("removeEmpty")}</label>
       </div>
       <textarea readOnly value={output} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono break-all" />
-      <button onClick={copy} className="btn btn-primary">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} className="btn btn-primary">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

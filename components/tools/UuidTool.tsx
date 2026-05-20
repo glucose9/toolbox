@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 function uuidv4(): string {
   const bytes = new Uint8Array(16);
@@ -12,6 +13,7 @@ function uuidv4(): string {
 }
 
 export default function UuidTool() {
+  const t = useTranslations("toolUI.uuid-generator");
   const [count, setCount] = useState(5);
   const [hyphens, setHyphens] = useState(true);
   const [upper, setUpper] = useState(false);
@@ -39,7 +41,7 @@ export default function UuidTool() {
     <div className="card space-y-3">
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <label className="flex items-center gap-1">
-          개수
+          {t("count")}
           <input
             type="number"
             min="1"
@@ -51,14 +53,14 @@ export default function UuidTool() {
         </label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={hyphens} onChange={(e) => setHyphens(e.target.checked)} />
-          하이픈
+          {t("hyphens")}
         </label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={upper} onChange={(e) => setUpper(e.target.checked)} />
-          대문자
+          {t("uppercase")}
         </label>
-        <button onClick={generate} className="btn btn-primary">생성</button>
-        <button onClick={copy} className="btn btn-secondary">{copied ? "✓ 복사됨" : "전체 복사"}</button>
+        <button onClick={generate} className="btn btn-primary">{t("generate")}</button>
+        <button onClick={copy} className="btn btn-secondary">{copied ? t("copied") : t("copyAll")}</button>
       </div>
       <textarea
         readOnly

@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Item = { id: string; file: File; img: HTMLImageElement; src: string };
 type Layout = "horizontal" | "vertical" | "grid";
 
 export default function ImageStackTool() {
+  const t = useTranslations("toolUI.image-stack");
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [items, setItems] = useState<Item[]>([]);
@@ -22,7 +24,7 @@ export default function ImageStackTool() {
       const img = await new Promise<HTMLImageElement>((resolve, reject) => {
         const i = new Image();
         i.onload = () => resolve(i);
-        i.onerror = () => reject(new Error("이미지 로드 실패"));
+        i.onerror = () => reject(new Error(t("errImageLoad")));
         i.src = src;
       });
       next.push({ id: Math.random().toString(36).slice(2), file: f, img, src });
@@ -130,7 +132,7 @@ export default function ImageStackTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🗂️</div>
-          <div className="font-medium">이미지를 여러 장 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="image/*" multiple onChange={(e) => e.target.files && addFiles(e.target.files)} className="hidden" />
         </div>
       </div>
@@ -140,24 +142,24 @@ export default function ImageStackTool() {
   return (
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="text-sm text-muted">{items.length}장</div>
-        <button onClick={() => inputRef.current?.click()} className="text-sm text-brand-600 hover:underline">+ 추가</button>
+        <div className="text-sm text-muted">{t("imageCount", { count: items.length })}</div>
+        <button onClick={() => inputRef.current?.click()} className="text-sm text-brand-600 hover:underline">{t("addMore")}</button>
         <input ref={inputRef} type="file" accept="image/*" multiple onChange={(e) => e.target.files && addFiles(e.target.files)} className="hidden" />
       </div>
 
       <div className="flex flex-wrap gap-2 text-sm">
         {(["horizontal", "vertical", "grid"] as Layout[]).map((l) => (
           <button key={l} onClick={() => setLayout(l)} className={`btn ${layout === l ? "btn-primary" : "btn-secondary"}`}>
-            {l === "horizontal" ? "가로" : l === "vertical" ? "세로" : "격자"}
+            {l === "horizontal" ? t("horizontal") : l === "vertical" ? t("vertical") : t("grid")}
           </button>
         ))}
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-sm items-end">
-        <label>간격 ({gap}px)<input type="range" min="0" max="40" value={gap} onChange={(e) => setGap(+e.target.value)} className="w-full" /></label>
-        <label>배경<input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="w-full h-7" /></label>
+        <label>{t("gap")} ({gap}px)<input type="range" min="0" max="40" value={gap} onChange={(e) => setGap(+e.target.value)} className="w-full" /></label>
+        <label>{t("background")}<input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="w-full h-7" /></label>
         {layout === "grid" && (
-          <label>열 ({cols})<input type="range" min="1" max="6" value={cols} onChange={(e) => setCols(+e.target.value)} className="w-full" /></label>
+          <label>{t("columns")} ({cols})<input type="range" min="1" max="6" value={cols} onChange={(e) => setCols(+e.target.value)} className="w-full" /></label>
         )}
       </div>
 
@@ -178,7 +180,7 @@ export default function ImageStackTool() {
         <canvas ref={canvasRef} className="max-w-full" />
       </div>
 
-      <button onClick={download} className="btn btn-primary">📥 PNG 다운로드</button>
+      <button onClick={download} className="btn btn-primary">📥 {t("downloadPng")}</button>
     </div>
   );
 }

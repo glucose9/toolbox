@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 type Cue = { idx: number; start: number; end: number; text: string };
 
@@ -55,6 +56,7 @@ function cuesToText(cues: Cue[]): string {
 }
 
 export default function SubtitleTool() {
+  const t = useTranslations("toolUI.subtitle");
   const [input, setInput] = useState(`1
 00:00:01,000 --> 00:00:04,500
 안녕하세요, 바로킷입니다.
@@ -103,7 +105,7 @@ SRT와 VTT를 양방향 변환합니다.`);
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="label !mb-0">원본 자막 (SRT 또는 VTT)</label>
+            <label className="label !mb-0">{t("originalLabel")}</label>
             <input
               type="file"
               accept=".srt,.vtt,text/plain"
@@ -117,12 +119,12 @@ SRT와 VTT를 양방향 변환합니다.`);
             rows={14}
             className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono"
           />
-          <div className="text-xs text-muted mt-1">{cues.length}개 자막 인식됨</div>
+          <div className="text-xs text-muted mt-1">{t("recognized", { n: cues.length })}</div>
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="label !mb-0">변환 결과</label>
+            <label className="label !mb-0">{t("resultLabel")}</label>
             <div className="flex gap-1 text-xs">
               {(["srt", "vtt", "txt"] as const).map((f) => (
                 <button
@@ -146,7 +148,7 @@ SRT와 VTT를 양방향 변환합니다.`);
 
       <div className="flex flex-wrap items-end gap-3 text-sm">
         <label>
-          시간 오프셋 (초)
+          {t("offsetLabel")}
           <input
             type="number"
             step="0.1"
@@ -154,14 +156,14 @@ SRT와 VTT를 양방향 변환합니다.`);
             onChange={(e) => setOffset(+e.target.value)}
             className="w-32 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
           />
-          <div className="text-xs text-muted mt-1">양수: 늦춤, 음수: 당김</div>
+          <div className="text-xs text-muted mt-1">{t("offsetHint")}</div>
         </label>
-        <button onClick={() => navigator.clipboard.writeText(output)} className="btn">📋 복사</button>
-        <button onClick={download} className="btn btn-primary">💾 .{outputFormat} 저장</button>
+        <button onClick={() => navigator.clipboard.writeText(output)} className="btn">{t("copy")}</button>
+        <button onClick={download} className="btn btn-primary">{t("saveAs", { ext: outputFormat })}</button>
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 SRT(SubRip)와 VTT(WebVTT) 양방향 변환, 시간 오프셋 일괄 조정, 본문 텍스트만 추출. 영상과 자막이 안 맞을 때 오프셋 ±1~3초 정도로 미세 조정하세요. 모든 처리는 브라우저 안에서 일어납니다.
+        {t("hint")}
       </div>
     </div>
   );

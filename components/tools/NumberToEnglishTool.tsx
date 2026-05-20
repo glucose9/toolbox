@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const ONES = ["", "one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
 const TENS = ["", "", "twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
@@ -32,6 +33,7 @@ function toEnglish(n: number): string {
 }
 
 export default function NumberToEnglishTool() {
+  const t = useTranslations("toolUI.number-to-english");
   const [input, setInput] = useState("12345");
   const result = useMemo(() => {
     const n = parseFloat(input.replace(/,/g, ""));
@@ -42,7 +44,7 @@ export default function NumberToEnglishTool() {
     <div className="card space-y-3">
       <input type="text" value={input} onChange={(e) => setInput(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
       <div className="p-4 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded text-lg break-words">{result || "—"}</div>
-      <button onClick={() => navigator.clipboard.writeText(result)} disabled={!result} className="btn btn-primary disabled:opacity-50">복사</button>
+      <button onClick={() => navigator.clipboard.writeText(result)} disabled={!result} className="btn btn-primary disabled:opacity-50">{t("copy")}</button>
     </div>
   );
 }

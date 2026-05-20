@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import JSZip from "jszip";
 import { downloadBlob, fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
 
 type Format = "png" | "jpeg";
 
 export default function PdfToImagesTool() {
+  const t = useTranslations("toolUI.pdf-to-images");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [format, setFormat] = useState<Format>("png");
@@ -17,7 +19,7 @@ export default function PdfToImagesTool() {
 
   const handleFile = (f: File) => {
     if (!isPdfFile(f)) {
-      setError("PDF 파일만 지원합니다.");
+      setError(t("errPdfOnly"));
       return;
     }
     setError("");
@@ -53,7 +55,7 @@ export default function PdfToImagesTool() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await page.render({ canvasContext: ctx as any, viewport, canvas } as any).promise;
         const blob = await new Promise<Blob>((resolve, reject) =>
-          canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("canvas.toBlob 실패"))), `image/${format}`, format === "jpeg" ? 0.92 : undefined)
+          canvas.toBlob((b) => (b ? resolve(b) : reject(new Error(t("errCanvasFailed")))), `image/${format}`, format === "jpeg" ? 0.92 : undefined)
         );
         const padded = String(i).padStart(String(total).length, "0");
         zip.file(`${baseName}_p${padded}.${format === "jpeg" ? "jpg" : "png"}`, blob);
@@ -63,7 +65,7 @@ export default function PdfToImagesTool() {
       const zipBlob = await zip.generateAsync({ type: "blob" });
       downloadBlob(zipBlob, `${baseName}_images.zip`);
     } catch (e) {
-      setError("변환 실패: " + (e as Error).message);
+      setError(t("errConvert") + ": " + (e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -82,7 +84,7 @@ export default function PdfToImagesTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🏞️</div>
-          <div className="font-medium">PDF 파일을 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input
             ref={inputRef}
             type="file"
@@ -104,34 +106,34 @@ export default function PdfToImagesTool() {
           <div className="text-xs text-muted">{fmtBytes(file.size)}</div>
         </div>
         <button onClick={() => setFile(null)} className="text-sm text-brand-600 hover:underline">
-          다른 파일
+          {t("otherFile")}
         </button>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="label">포맷</label>
+          <label className="label">{t("format")}</label>
           <div className="flex gap-2">
             <button onClick={() => setFormat("png")} className={`btn ${format === "png" ? "btn-primary" : "btn-secondary"}`}>PNG</button>
             <button onClick={() => setFormat("jpeg")} className={`btn ${format === "jpeg" ? "btn-primary" : "btn-secondary"}`}>JPG</button>
           </div>
         </div>
         <div>
-          <label className="label">배율 ({scale}x)</label>
+          <label className="label">{t("scale")} ({scale}x)</label>
           <input type="range" min="1" max="3" step="0.5" value={scale} onChange={(e) => setScale(parseFloat(e.target.value))} className="w-full" />
         </div>
       </div>
 
       {busy ? (
         <div className="py-4 text-center text-muted text-sm">
-          렌더링 중... ({progress.done} / {progress.total})
+          {t("rendering")} ({progress.done} / {progress.total})
         </div>
       ) : null}
 
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <button onClick={convert} disabled={busy} className="btn btn-primary disabled:opacity-50">
-        {busy ? "변환 중..." : "🏞️ 이미지로 변환 (ZIP)"}
+        {busy ? t("converting") : `🏞️ ${t("convertToImages")}`}
       </button>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Change = { path: string; type: "added" | "removed" | "changed"; before?: unknown; after?: unknown };
 
@@ -37,6 +38,7 @@ function diff(a: unknown, b: unknown, path = "$"): Change[] {
 }
 
 export default function JsonDiffTool() {
+  const t = useTranslations("toolUI.json-diff");
   const [a, setA] = useState(`{"name":"Alice","age":30,"city":"Seoul"}`);
   const [b, setB] = useState(`{"name":"Alice","age":31,"city":"Busan","new":true}`);
 
@@ -56,7 +58,7 @@ export default function JsonDiffTool() {
       </div>
       {error ? <div className="text-sm text-red-600">{error}</div> : (
         <div className="space-y-1 max-h-72 overflow-y-auto">
-          {changes.length === 0 ? <div className="text-sm text-muted">차이 없음</div> : changes.map((c, i) => (
+          {changes.length === 0 ? <div className="text-sm text-muted">{t("noDiff")}</div> : changes.map((c, i) => (
             <div key={i} className={`p-2 rounded text-sm font-mono ${c.type === "added" ? "bg-green-100 dark:bg-green-900/30" : c.type === "removed" ? "bg-red-100 dark:bg-red-900/30" : "bg-yellow-100 dark:bg-yellow-900/30"}`}>
               <span className="font-bold">{c.type === "added" ? "+" : c.type === "removed" ? "-" : "~"}</span>{" "}
               <span>{c.path}</span>{": "}

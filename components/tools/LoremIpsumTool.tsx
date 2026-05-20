@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Style = "latin" | "korean";
 type Unit = "paragraphs" | "sentences" | "words";
@@ -35,6 +36,7 @@ function generate(style: Style, unit: Unit, count: number): string {
 }
 
 export default function LoremIpsumTool() {
+  const t = useTranslations("toolUI.lorem-ipsum");
   const [style, setStyle] = useState<Style>("latin");
   const [unit, setUnit] = useState<Unit>("paragraphs");
   const [count, setCount] = useState(3);
@@ -53,18 +55,18 @@ export default function LoremIpsumTool() {
     <div className="card space-y-3">
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <div className="flex gap-2">
-          <button onClick={() => setStyle("latin")} className={`btn ${style === "latin" ? "btn-primary" : "btn-secondary"}`}>라틴</button>
-          <button onClick={() => setStyle("korean")} className={`btn ${style === "korean" ? "btn-primary" : "btn-secondary"}`}>한글</button>
+          <button onClick={() => setStyle("latin")} className={`btn ${style === "latin" ? "btn-primary" : "btn-secondary"}`}>{t("latin")}</button>
+          <button onClick={() => setStyle("korean")} className={`btn ${style === "korean" ? "btn-primary" : "btn-secondary"}`}>{t("korean")}</button>
         </div>
         <div className="flex gap-2">
           {(["paragraphs", "sentences", "words"] as Unit[]).map((u) => (
             <button key={u} onClick={() => setUnit(u)} className={`btn ${unit === u ? "btn-primary" : "btn-secondary"}`}>
-              {u === "paragraphs" ? "단락" : u === "sentences" ? "문장" : "단어"}
+              {u === "paragraphs" ? t("paragraphs") : u === "sentences" ? t("sentences") : t("words")}
             </button>
           ))}
         </div>
         <label className="flex items-center gap-1">
-          개수
+          {t("count")}
           <input
             type="number"
             min="1"
@@ -74,8 +76,8 @@ export default function LoremIpsumTool() {
             className="w-16 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
           />
         </label>
-        <button onClick={() => setSeed((s) => s + 1)} className="btn btn-secondary">🎲 다시 생성</button>
-        <button onClick={copy} className="btn btn-secondary">{copied ? "✓ 복사됨" : "복사"}</button>
+        <button onClick={() => setSeed((s) => s + 1)} className="btn btn-secondary">🎲 {t("regenerate")}</button>
+        <button onClick={copy} className="btn btn-secondary">{copied ? `✓ ${t("copied")}` : t("copy")}</button>
       </div>
       <textarea
         readOnly

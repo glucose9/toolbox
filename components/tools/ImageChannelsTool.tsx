@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ImageChannelsTool() {
+  const t = useTranslations("toolUI.image-channels");
   const inputRef = useRef<HTMLInputElement>(null);
   const rRef = useRef<HTMLCanvasElement>(null);
   const gRef = useRef<HTMLCanvasElement>(null);
@@ -40,7 +42,7 @@ export default function ImageChannelsTool() {
     <div className="card">
       <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
         <div className="text-5xl">🎚️</div>
-        <div className="font-medium mt-2">이미지 업로드</div>
+        <div className="font-medium mt-2">{t("upload")}</div>
         <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
       </div>
     </div>
@@ -49,14 +51,14 @@ export default function ImageChannelsTool() {
   return (
     <div className="card space-y-3">
       <div className="grid grid-cols-3 gap-2">
-        {[{ ref: rRef, label: "빨강 R" }, { ref: gRef, label: "녹색 G" }, { ref: bRef, label: "파랑 B" }].map((x, i) => (
+        {[{ ref: rRef, label: t("red") }, { ref: gRef, label: t("green") }, { ref: bRef, label: t("blue") }].map((x, i) => (
           <div key={i} className="text-center">
             <div className="text-xs text-muted mb-1">{x.label}</div>
             <canvas ref={x.ref} className="max-w-full border border-gray-200 dark:border-gray-700 rounded" />
           </div>
         ))}
       </div>
-      <button onClick={() => { setFile(null); setImg(null); }} className="btn btn-secondary">다른 파일</button>
+      <button onClick={() => { setFile(null); setImg(null); }} className="btn btn-secondary">{t("otherFile")}</button>
     </div>
   );
 }

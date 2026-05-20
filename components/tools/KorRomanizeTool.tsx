@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const CHO_ROM = ["g", "kk", "n", "d", "tt", "r", "m", "b", "pp", "s", "ss", "", "j", "jj", "ch", "k", "t", "p", "h"];
 const JUNG_ROM = ["a", "ae", "ya", "yae", "eo", "e", "yeo", "ye", "o", "wa", "wae", "oe", "yo", "u", "wo", "we", "wi", "yu", "eu", "ui", "i"];
@@ -72,6 +73,7 @@ function capitalize(s: string): string {
 }
 
 export default function KorRomanizeTool() {
+  const t = useTranslations("toolUI.kor-romanize");
   const [input, setInput] = useState("안녕하세요. 김민준입니다. 서울특별시.");
   const [cap, setCap] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -92,20 +94,20 @@ export default function KorRomanizeTool() {
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="한글 입력"
+        placeholder={t("placeholder")}
         className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-base resize-y"
       />
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={cap} onChange={(e) => setCap(e.target.checked)} />
-        고유명사 첫 글자 대문자
+        {t("capitalize")}
       </label>
       <textarea
         readOnly
         value={output}
         className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-base resize-y font-mono"
       />
-      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
-      <div className="text-xs text-muted">국립국어원 '국어의 로마자 표기법'(2000년 고시) 단순 구현입니다. 인명/지명의 관용적 표기와 다를 수 있습니다.</div>
+      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
+      <div className="text-xs text-muted">{t("note")}</div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
@@ -11,6 +12,7 @@ function fmtBytes(n: number) {
 type Rotation = 90 | 180 | 270;
 
 export default function VideoRotateTool() {
+  const t = useTranslations("toolUI.video-rotate");
   const inputRef = useRef<HTMLInputElement>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -43,7 +45,7 @@ export default function VideoRotateTool() {
 
   const handleFile = (f: File) => {
     if (!f.type.startsWith("video/")) {
-      setError("동영상 파일만 지원합니다.");
+      setError(t("errVideoOnly"));
       return;
     }
     setError("");
@@ -102,7 +104,7 @@ export default function VideoRotateTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🔃</div>
-          <div className="font-medium">동영상을 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="video/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -114,7 +116,7 @@ export default function VideoRotateTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setSrcUrl(""); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setSrcUrl(""); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <video src={srcUrl} controls className="w-full max-h-72 rounded border border-gray-200 dark:border-gray-700" />
@@ -123,22 +125,22 @@ export default function VideoRotateTool() {
         <div className="flex gap-2 flex-wrap">
           {([90, 180, 270] as Rotation[]).map((r) => (
             <button key={r} onClick={() => setRotation(r)} className={`btn ${rotation === r ? "btn-primary" : "btn-secondary"}`}>
-              {r}° 회전
+              {t("rotateBy", { deg: r })}
             </button>
           ))}
-          <button onClick={() => setFlipH((v) => !v)} className={`btn ${flipH ? "btn-primary" : "btn-secondary"}`}>좌우반전</button>
-          <button onClick={() => setFlipV((v) => !v)} className={`btn ${flipV ? "btn-primary" : "btn-secondary"}`}>상하반전</button>
+          <button onClick={() => setFlipH((v) => !v)} className={`btn ${flipH ? "btn-primary" : "btn-secondary"}`}>{t("flipH")}</button>
+          <button onClick={() => setFlipV((v) => !v)} className={`btn ${flipV ? "btn-primary" : "btn-secondary"}`}>{t("flipV")}</button>
         </div>
       </div>
 
-      {loadingFf && <div className="text-sm text-muted">ffmpeg.wasm 로딩 중...</div>}
+      {loadingFf && <div className="text-sm text-muted">{t("loadingFfmpeg")}</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <div className="flex gap-2">
         <button onClick={apply} disabled={busy} className="btn btn-primary disabled:opacity-50">
-          {busy ? "처리 중..." : "🔃 변환"}
+          {busy ? t("processing") : `🔃 ${t("convert")}`}
         </button>
-        {outUrl && <button onClick={download} className="btn btn-secondary">📥 다운로드 ({fmtBytes(outSize)})</button>}
+        {outUrl && <button onClick={download} className="btn btn-secondary">📥 {t("download")} ({fmtBytes(outSize)})</button>}
       </div>
 
       {outUrl && <video src={outUrl} controls className="w-full max-h-72 rounded border border-gray-200 dark:border-gray-700" />}

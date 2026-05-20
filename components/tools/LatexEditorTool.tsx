@@ -1,22 +1,24 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
-const PRESETS: { label: string; code: string }[] = [
-  { label: "분수", code: "\\frac{a}{b}" },
-  { label: "근호", code: "\\sqrt{x^2 + y^2}" },
-  { label: "적분", code: "\\int_{0}^{\\infty} e^{-x^2}\\, dx" },
-  { label: "합계", code: "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}" },
-  { label: "극한", code: "\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1" },
-  { label: "행렬", code: "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}" },
-  { label: "지수/로그", code: "\\log_a b = \\frac{\\ln b}{\\ln a}" },
-  { label: "함수", code: "f(x) = ax^2 + bx + c" },
-  { label: "이차방정식", code: "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}" },
+const PRESET_KEYS = [
+  { key: "fraction", code: "\\frac{a}{b}" },
+  { key: "sqrt", code: "\\sqrt{x^2 + y^2}" },
+  { key: "integral", code: "\\int_{0}^{\\infty} e^{-x^2}\\, dx" },
+  { key: "sum", code: "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}" },
+  { key: "limit", code: "\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1" },
+  { key: "matrix", code: "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}" },
+  { key: "log", code: "\\log_a b = \\frac{\\ln b}{\\ln a}" },
+  { key: "function", code: "f(x) = ax^2 + bx + c" },
+  { key: "quadratic", code: "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}" },
 ];
 
 export default function LatexEditorTool() {
+  const t = useTranslations("toolUI.latex-editor");
   const [code, setCode] = useState("E = mc^2");
   const [displayMode, setDisplayMode] = useState(true);
   const [copied, setCopied] = useState("");
@@ -65,15 +67,15 @@ export default function LatexEditorTool() {
   return (
     <div className="card space-y-3">
       <div className="flex flex-wrap gap-1.5 text-xs">
-        {PRESETS.map((p) => (
-          <button key={p.label} onClick={() => setCode(p.code)} className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700">
-            {p.label}
+        {PRESET_KEYS.map((p) => (
+          <button key={p.key} onClick={() => setCode(p.code)} className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700">
+            {t(`preset_${p.key}`)}
           </button>
         ))}
       </div>
 
       <div>
-        <label className="label">LaTeX 코드</label>
+        <label className="label">{t("latexCode")}</label>
         <textarea
           value={code}
           onChange={(e) => setCode(e.target.value)}
@@ -83,7 +85,7 @@ export default function LatexEditorTool() {
 
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={displayMode} onChange={(e) => setDisplayMode(e.target.checked)} />
-        Display 모드 (블록 수식, 크게 표시)
+        {t("displayMode")}
       </label>
 
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-6 min-h-32 flex items-center justify-center overflow-x-auto">
@@ -95,9 +97,9 @@ export default function LatexEditorTool() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <button onClick={() => copy("latex", code)} className="btn btn-primary">{copied === "latex" ? "✓ LaTeX 복사됨" : "LaTeX 복사"}</button>
-        <button onClick={() => copy("mathml", mathml)} disabled={!mathml} className="btn btn-secondary disabled:opacity-50">{copied === "mathml" ? "✓ MathML 복사됨" : "MathML 복사"}</button>
-        <button onClick={downloadSvg} disabled={!html} className="btn btn-secondary disabled:opacity-50">📥 SVG 다운로드</button>
+        <button onClick={() => copy("latex", code)} className="btn btn-primary">{copied === "latex" ? t("latexCopied") : t("copyLatex")}</button>
+        <button onClick={() => copy("mathml", mathml)} disabled={!mathml} className="btn btn-secondary disabled:opacity-50">{copied === "mathml" ? t("mathmlCopied") : t("copyMathml")}</button>
+        <button onClick={downloadSvg} disabled={!html} className="btn btn-secondary disabled:opacity-50">{t("downloadSvg")}</button>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function toBinary(s: string): string {
   const bytes = new TextEncoder().encode(s);
@@ -18,6 +19,7 @@ function fromBinary(s: string): string {
 }
 
 export default function TextBinaryTool() {
+  const t = useTranslations("toolUI.text-binary");
   const [input, setInput] = useState("Hello 안녕");
   const isBin = /^[\s01]+$/.test(input.trim()) && input.trim().length >= 8;
   const output = useMemo(() => (isBin ? fromBinary(input) : toBinary(input)), [input, isBin]);
@@ -27,9 +29,9 @@ export default function TextBinaryTool() {
   return (
     <div className="card space-y-3">
       <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
-      <div className="text-xs text-muted">자동 감지: {isBin ? "2진수 → 텍스트" : "텍스트 → 2진수 (UTF-8)"}</div>
+      <div className="text-xs text-muted">{t("autoDetect")}: {isBin ? t("binToText") : t("textToBin")}</div>
       <textarea readOnly value={output} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

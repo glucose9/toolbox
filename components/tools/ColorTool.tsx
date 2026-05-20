@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const m = hex.replace(/^#/, "").match(/^([0-9a-f]{6}|[0-9a-f]{3})$/i);
@@ -37,6 +38,7 @@ function rgbToHsl(r: number, g: number, b: number) {
 }
 
 function CopyField({ label, value }: { label: string; value: string }) {
+  const t = useTranslations("toolUI.color-converter");
   const [copied, setCopied] = useState(false);
   return (
     <div>
@@ -51,7 +53,7 @@ function CopyField({ label, value }: { label: string; value: string }) {
           }}
           className="btn btn-secondary text-sm whitespace-nowrap"
         >
-          {copied ? "복사됨" : "복사"}
+          {copied ? t("copied") : t("copy")}
         </button>
       </div>
     </div>
@@ -59,6 +61,7 @@ function CopyField({ label, value }: { label: string; value: string }) {
 }
 
 export default function ColorTool() {
+  const t = useTranslations("toolUI.color-converter");
   const [hex, setHex] = useState("#3b82f6");
   const rgb = hexToRgb(hex);
   const hsl = rgb ? rgbToHsl(rgb.r, rgb.g, rgb.b) : null;
@@ -68,7 +71,7 @@ export default function ColorTool() {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div>
-            <label className="label">색상 선택</label>
+            <label className="label">{t("pickColor")}</label>
             <div className="flex gap-2">
               <input
                 type="color"
@@ -92,7 +95,7 @@ export default function ColorTool() {
               <CopyField label="HSL" value={`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`} />
             </>
           ) : (
-            <div className="text-sm text-red-600">올바른 HEX 색상 코드를 입력하세요 (예: #3b82f6)</div>
+            <div className="text-sm text-red-600">{t("invalidHex")}</div>
           )}
         </div>
 

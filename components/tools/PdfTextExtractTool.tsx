@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
 import { downloadText } from "@/lib/markdown-io";
 
 export default function PdfTextExtractTool() {
+  const t = useTranslations("toolUI.pdf-text-extract");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState("");
@@ -45,7 +47,7 @@ export default function PdfTextExtractTool() {
 
   const handleFile = (f: File) => {
     if (!isPdfFile(f)) {
-      setError("PDF 파일만 지원합니다.");
+      setError(t("errPdfOnly"));
       return;
     }
     setError("");
@@ -69,8 +71,8 @@ export default function PdfTextExtractTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">📋</div>
-          <div className="font-medium">PDF 파일을 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">본문 텍스트만 추출 (스캔본 PDF는 결과 없음)</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("hint")}</div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -85,14 +87,14 @@ export default function PdfTextExtractTool() {
           <div className="truncate font-medium">{file.name}</div>
           <div className="text-xs text-muted">
             {fmtBytes(file.size)}
-            {text && ` · ${text.length.toLocaleString()}자 추출됨`}
+            {text && ` · ${t("charsExtracted", { count: text.length.toLocaleString() })}`}
           </div>
         </div>
-        <button onClick={() => { setFile(null); setText(""); setProgress({ done: 0, total: 0 }); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setText(""); setProgress({ done: 0, total: 0 }); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       {busy ? (
-        <div className="py-8 text-center text-muted">추출 중... ({progress.done} / {progress.total})</div>
+        <div className="py-8 text-center text-muted">{t("extracting")} ({progress.done} / {progress.total})</div>
       ) : error ? (
         <div className="text-sm text-red-600">{error}</div>
       ) : (
@@ -100,13 +102,13 @@ export default function PdfTextExtractTool() {
           <textarea
             readOnly
             value={text}
-            placeholder="추출된 텍스트가 없습니다. 스캔본 PDF일 수 있습니다."
+            placeholder={t("emptyText")}
             className="w-full h-96 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y"
           />
           <div className="flex flex-wrap gap-2">
-            <button onClick={copy} disabled={!text} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "전체 복사"}</button>
+            <button onClick={copy} disabled={!text} className="btn btn-primary disabled:opacity-50">{copied ? `✓ ${t("copied")}` : t("copyAll")}</button>
             <button onClick={() => downloadText(text, file.name.replace(/\.pdf$/i, "") + ".txt", "text/plain;charset=utf-8")} disabled={!text} className="btn btn-secondary disabled:opacity-50">
-              .txt 다운로드
+              {t("downloadTxt")}
             </button>
           </div>
         </>

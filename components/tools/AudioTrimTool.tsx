@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
@@ -16,6 +17,7 @@ function fmtBytes(n: number) {
 }
 
 export default function AudioTrimTool() {
+  const t = useTranslations("toolUI.audio-trim");
   const inputRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
@@ -126,8 +128,8 @@ export default function AudioTrimTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🎚️</div>
-          <div className="font-medium">오디오 파일을 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">처음 한 번 ffmpeg.wasm 엔진(~25MB) 로드됨</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("ffmpegHint")}</div>
           <input ref={inputRef} type="file" accept="audio/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
       </div>
@@ -141,7 +143,7 @@ export default function AudioTrimTool() {
           <div className="truncate font-medium">{file.name}</div>
           <div className="text-xs text-muted">{fmtBytes(file.size)}{duration > 0 && ` · ${fmtTime(duration)}`}</div>
         </div>
-        <button onClick={() => { setFile(null); setSrcUrl(""); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setSrcUrl(""); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <audio ref={audioRef} src={srcUrl} controls onLoadedMetadata={onMeta} className="w-full" />
@@ -150,31 +152,31 @@ export default function AudioTrimTool() {
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-3 text-xs">
             <label>
-              시작 ({fmtTime(start)})
+              {t("start")} ({fmtTime(start)})
               <input type="range" min="0" max={duration} step="0.1" value={start} onChange={(e) => setStart(Math.min(+e.target.value, end - 0.1))} className="w-full" />
             </label>
             <label>
-              끝 ({fmtTime(end)})
+              {t("end")} ({fmtTime(end)})
               <input type="range" min="0" max={duration} step="0.1" value={end} onChange={(e) => setEnd(Math.max(+e.target.value, start + 0.1))} className="w-full" />
             </label>
           </div>
-          <div className="text-sm">길이: <strong>{fmtTime(end - start)}</strong></div>
+          <div className="text-sm">{t("length")}: <strong>{fmtTime(end - start)}</strong></div>
         </div>
       )}
 
-      {loadingFfmpeg && <div className="text-sm text-muted">ffmpeg.wasm 로딩 중 (~25MB)...</div>}
+      {loadingFfmpeg && <div className="text-sm text-muted">{t("loadingFfmpeg")}</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <div className="flex gap-2">
         <button onClick={trim} disabled={busy || duration === 0 || end - start <= 0} className="btn btn-primary disabled:opacity-50">
-          {busy ? "처리 중..." : "✂️ 자르기"}
+          {busy ? t("processing") : `✂️ ${t("trim")}`}
         </button>
-        {outUrl && <button onClick={download} className="btn btn-secondary">📥 다운로드 ({fmtBytes(outSize)})</button>}
+        {outUrl && <button onClick={download} className="btn btn-secondary">📥 {t("download")} ({fmtBytes(outSize)})</button>}
       </div>
 
       {outUrl && (
         <div>
-          <label className="label">결과 미리듣기</label>
+          <label className="label">{t("preview")}</label>
           <audio src={outUrl} controls className="w-full" />
         </div>
       )}

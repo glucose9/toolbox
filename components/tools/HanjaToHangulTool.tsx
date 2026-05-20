@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 // Common Hanja → Hangul (deduplicated)
 const ENTRIES: [string, string][] = [
@@ -48,6 +49,7 @@ function convert(text: string): string {
 }
 
 export default function HanjaToHangulTool() {
+  const t = useTranslations("toolUI.hanja-to-hangul");
   const [text, setText] = useState("韓國 (한國) 文字: 漢字 → 한글");
   const [showOriginal, setShowOriginal] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -61,11 +63,11 @@ export default function HanjaToHangulTool() {
       <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-base resize-y" />
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={showOriginal} onChange={(e) => setShowOriginal(e.target.checked)} />
-        한자 옆에 한글 병기 (한자(한글))
+        {t("annotate")}
       </label>
       <textarea readOnly value={showOriginal ? annotated : output} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-base resize-y" />
-      <button onClick={copy} className="btn btn-primary">{copied ? "✓ 복사됨" : "복사"}</button>
-      <div className="text-xs text-muted">자주 쓰는 한자 ~250자 사전 기반. 사전에 없는 한자는 그대로 표시됩니다.</div>
+      <button onClick={copy} className="btn btn-primary">{copied ? `✓ ${t("copied")}` : t("copy")}</button>
+      <div className="text-xs text-muted">{t("note")}</div>
     </div>
   );
 }

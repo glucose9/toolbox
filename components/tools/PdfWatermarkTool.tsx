@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { PDFDocument, StandardFonts, degrees, rgb } from "pdf-lib";
 import { downloadBlob, fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
 
@@ -12,6 +13,7 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 export default function PdfWatermarkTool() {
+  const t = useTranslations("toolUI.pdf-watermark");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
@@ -25,7 +27,7 @@ export default function PdfWatermarkTool() {
 
   const handleFile = async (f: File) => {
     if (!isPdfFile(f)) {
-      setError("PDF 파일만 지원합니다.");
+      setError(t("errPdfOnly"));
       return;
     }
     setError("");
@@ -77,7 +79,7 @@ export default function PdfWatermarkTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">💧</div>
-          <div className="font-medium">PDF 파일을 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -90,21 +92,21 @@ export default function PdfWatermarkTool() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm min-w-0">
           <div className="truncate font-medium">{file.name}</div>
-          <div className="text-xs text-muted">{fmtBytes(file.size)} · {pageCount}페이지</div>
+          <div className="text-xs text-muted">{fmtBytes(file.size)} · {t("pages", { count: pageCount })}</div>
         </div>
-        <button onClick={() => { setFile(null); setPageCount(0); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setPageCount(0); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <div>
-        <label className="label">워터마크 텍스트 (영문 권장 — 한글은 StandardFonts에서 깨질 수 있음)</label>
+        <label className="label">{t("watermarkText")}</label>
         <input type="text" value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
       </div>
 
       <div className="grid grid-cols-2 gap-3 text-sm">
-        <label>크기 ({size}pt)<input type="range" min="20" max="150" value={size} onChange={(e) => setSize(+e.target.value)} className="w-full" /></label>
-        <label>투명도 ({opacity.toFixed(2)})<input type="range" min="0.05" max="1" step="0.05" value={opacity} onChange={(e) => setOpacity(+e.target.value)} className="w-full" /></label>
-        <label>각도 ({angle}°)<input type="range" min="-90" max="90" value={angle} onChange={(e) => setAngle(+e.target.value)} className="w-full" /></label>
-        <label>색상<input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-full h-8" /></label>
+        <label>{t("size")} ({size}pt)<input type="range" min="20" max="150" value={size} onChange={(e) => setSize(+e.target.value)} className="w-full" /></label>
+        <label>{t("opacity")} ({opacity.toFixed(2)})<input type="range" min="0.05" max="1" step="0.05" value={opacity} onChange={(e) => setOpacity(+e.target.value)} className="w-full" /></label>
+        <label>{t("angle")} ({angle}°)<input type="range" min="-90" max="90" value={angle} onChange={(e) => setAngle(+e.target.value)} className="w-full" /></label>
+        <label>{t("color")}<input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-full h-8" /></label>
       </div>
 
       <div className="bg-gray-50 dark:bg-gray-900 rounded p-4 text-center" style={{ height: 160, position: "relative", overflow: "hidden" }}>
@@ -115,7 +117,7 @@ export default function PdfWatermarkTool() {
 
       {error && <div className="text-sm text-red-600">{error}</div>}
       <button onClick={apply} disabled={busy} className="btn btn-primary disabled:opacity-50">
-        {busy ? "적용 중..." : "💧 워터마크 적용 + 다운로드"}
+        {busy ? t("applying") : `💧 ${t("applyAndDownload")}`}
       </button>
     </div>
   );

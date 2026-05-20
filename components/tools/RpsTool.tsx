@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const CHOICES = [
-  { name: "rock", emoji: "✊", label: "바위" },
-  { name: "paper", emoji: "🖐️", label: "보" },
-  { name: "scissors", emoji: "✌️", label: "가위" },
+  { name: "rock", emoji: "✊" },
+  { name: "paper", emoji: "🖐️" },
+  { name: "scissors", emoji: "✌️" },
 ];
 
 type Result = "win" | "lose" | "draw";
@@ -17,6 +18,7 @@ function decide(p: string, c: string): Result {
 }
 
 export default function RpsTool() {
+  const t = useTranslations("toolUI.rps");
   const [stats, setStats] = useState({ win: 0, lose: 0, draw: 0 });
   const [lastP, setLastP] = useState<string | null>(null);
   const [lastC, setLastC] = useState<string | null>(null);
@@ -42,21 +44,21 @@ export default function RpsTool() {
       {lastP && lastC && lastResult && (
         <div className="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded p-4 text-center">
           <div className="flex justify-around items-center">
-            <div><div className="text-xs text-muted">나</div><div className="text-5xl">{findEmoji(lastP)}</div></div>
+            <div><div className="text-xs text-muted">{t("you")}</div><div className="text-5xl">{findEmoji(lastP)}</div></div>
             <div className="text-3xl">vs</div>
-            <div><div className="text-xs text-muted">컴퓨터</div><div className="text-5xl">{findEmoji(lastC)}</div></div>
+            <div><div className="text-xs text-muted">{t("computer")}</div><div className="text-5xl">{findEmoji(lastC)}</div></div>
           </div>
           <div className={`mt-3 text-xl font-bold ${lastResult === "win" ? "text-green-600" : lastResult === "lose" ? "text-red-600" : "text-muted"}`}>
-            {lastResult === "win" ? "🎉 승리!" : lastResult === "lose" ? "😢 패배" : "🤝 무승부"}
+            {lastResult === "win" ? `🎉 ${t("win")}` : lastResult === "lose" ? `😢 ${t("lose")}` : `🤝 ${t("draw")}`}
           </div>
         </div>
       )}
       <div className="grid grid-cols-3 gap-2 text-sm text-center">
-        <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded"><div className="text-xs text-muted">승</div><div className="font-bold">{stats.win}</div></div>
-        <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded"><div className="text-xs text-muted">패</div><div className="font-bold">{stats.lose}</div></div>
-        <div className="p-2 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">무</div><div className="font-bold">{stats.draw}</div></div>
+        <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded"><div className="text-xs text-muted">{t("wins")}</div><div className="font-bold">{stats.win}</div></div>
+        <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded"><div className="text-xs text-muted">{t("losses")}</div><div className="font-bold">{stats.lose}</div></div>
+        <div className="p-2 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("draws")}</div><div className="font-bold">{stats.draw}</div></div>
       </div>
-      <button onClick={() => setStats({ win: 0, lose: 0, draw: 0 })} className="text-sm text-brand-600 hover:underline">통계 초기화</button>
+      <button onClick={() => setStats({ win: 0, lose: 0, draw: 0 })} className="text-sm text-brand-600 hover:underline">{t("resetStats")}</button>
     </div>
   );
 }

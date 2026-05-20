@@ -1,11 +1,13 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import JSZip from "jszip";
 
 function fmt(n: number) { return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`; }
 
 export default function ImageZipTool() {
+  const t = useTranslations("toolUI.image-zip");
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
@@ -43,12 +45,12 @@ export default function ImageZipTool() {
     <div className="card space-y-3">
       <div onClick={() => inputRef.current?.click()} onDrop={(e) => { e.preventDefault(); add(e.dataTransfer.files); }} onDragOver={(e) => e.preventDefault()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-8 text-center cursor-pointer hover:border-brand-500">
         <div className="text-3xl mb-2">🗜️</div>
-        <div className="text-sm">이미지 추가 (여러 장)</div>
+        <div className="text-sm">{t("addImages")}</div>
         <input ref={inputRef} type="file" accept="image/*" multiple onChange={(e) => e.target.files && add(e.target.files)} className="hidden" />
       </div>
       {files.length > 0 && (
         <>
-          <div className="text-sm text-muted">{files.length}장 · 총 {fmt(total)}</div>
+          <div className="text-sm text-muted">{t("countAndTotal", { count: files.length, total: fmt(total) })}</div>
           <div className="max-h-72 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded divide-y divide-gray-200 dark:divide-gray-700">
             {files.map((f, i) => (
               <div key={i} className="flex items-center gap-2 p-2 text-sm">
@@ -59,7 +61,7 @@ export default function ImageZipTool() {
               </div>
             ))}
           </div>
-          <button onClick={zipAll} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? "압축 중..." : "📦 ZIP 다운로드"}</button>
+          <button onClick={zipAll} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? t("compressing") : t("downloadZip")}</button>
         </>
       )}
     </div>

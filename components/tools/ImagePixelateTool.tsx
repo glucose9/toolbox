@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Sel = { x: number; y: number; w: number; h: number };
 
 export default function ImagePixelateTool() {
+  const t = useTranslations("toolUI.image-pixelate");
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -133,7 +135,7 @@ export default function ImagePixelateTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🔲</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
       </div>
@@ -144,7 +146,7 @@ export default function ImagePixelateTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setImg(null); setSels([]); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setImg(null); setSels([]); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <div className="bg-checker rounded p-2 inline-block">
@@ -157,18 +159,18 @@ export default function ImagePixelateTool() {
           className="max-w-full cursor-crosshair"
         />
       </div>
-      <div className="text-xs text-muted">{wholeImage ? "전체 이미지에 모자이크 적용 중" : "이미지 위에서 마우스로 드래그해 영역을 선택하세요"}</div>
+      <div className="text-xs text-muted">{wholeImage ? t("wholeImageHint") : t("dragHint")}</div>
 
       <div className="grid grid-cols-3 gap-3 text-sm items-center">
-        <label>픽셀 크기 ({pixelSize}px)<input type="range" min="5" max="60" value={pixelSize} onChange={(e) => setPixelSize(+e.target.value)} className="w-full" /></label>
+        <label>{t("pixelSize")} ({pixelSize}px)<input type="range" min="5" max="60" value={pixelSize} onChange={(e) => setPixelSize(+e.target.value)} className="w-full" /></label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={wholeImage} onChange={(e) => setWholeImage(e.target.checked)} />
-          전체 이미지
+          {t("wholeImage")}
         </label>
-        {!wholeImage && <button onClick={() => setSels([])} className="btn btn-secondary text-xs">영역 초기화</button>}
+        {!wholeImage && <button onClick={() => setSels([])} className="btn btn-secondary text-xs">{t("resetSelection")}</button>}
       </div>
 
-      <button onClick={download} className="btn btn-primary">📥 다운로드</button>
+      <button onClick={download} className="btn btn-primary">{t("download")}</button>
     </div>
   );
 }

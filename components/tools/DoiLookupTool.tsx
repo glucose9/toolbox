@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Meta = {
   authors: string[];
@@ -16,6 +17,7 @@ type Meta = {
 };
 
 export default function DoiLookupTool() {
+  const t = useTranslations("toolUI.doi-lookup");
   const [query, setQuery] = useState("10.1038/nature12373");
   const [meta, setMeta] = useState<Meta | null>(null);
   const [loading, setLoading] = useState(false);
@@ -33,7 +35,7 @@ export default function DoiLookupTool() {
         const r = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
         const j = await r.json();
         const data = j[`ISBN:${isbn}`];
-        if (!data) throw new Error("ISBN 정보를 찾을 수 없습니다.");
+        if (!data) throw new Error(t("errorIsbnNotFound"));
         setMeta({
           authors: (data.authors || []).map((a: { name: string }) => a.name),
           year: (data.publish_date || "").match(/\d{4}/)?.[0] || "",
@@ -48,7 +50,7 @@ export default function DoiLookupTool() {
         });
       } else {
         const r = await fetch(`https://api.crossref.org/works/${encodeURIComponent(q)}`);
-        if (!r.ok) throw new Error("CrossRef 조회 실패");
+        if (!r.ok) throw new Error(t("errorCrossref"));
         const j = await r.json();
         const m = j.message;
         setMeta({
@@ -65,7 +67,7 @@ export default function DoiLookupTool() {
         });
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "조회 실패");
+      setError(e instanceof Error ? e.message : t("errorLookup"));
     } finally {
       setLoading(false);
     }
@@ -95,16 +97,16 @@ export default function DoiLookupTool() {
   return (
     <div className="card space-y-3">
       <div className="space-y-2">
-        <label className="label">DOI 또는 ISBN</label>
+        <label className="label">{t("queryLabel")}</label>
         <div className="flex gap-2">
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="10.1038/nature12373 또는 9780262033848"
+            placeholder={t("queryPlaceholder")}
             className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm"
             onKeyDown={(e) => e.key === "Enter" && lookup()}
           />
-          <button onClick={lookup} disabled={loading} className="btn btn-primary">{loading ? "조회 중..." : "조회"}</button>
+          <button onClick={lookup} disabled={loading} className="btn btn-primary">{loading ? t("looking") : t("lookup")}</button>
         </div>
       </div>
 
@@ -114,11 +116,11 @@ export default function DoiLookupTool() {
         <div className="space-y-3">
           <div className="card-section">
             <div className="text-sm space-y-1">
-              <div><strong>저자:</strong> {meta.authors.join("; ")}</div>
-              <div><strong>제목:</strong> {meta.title}</div>
-              {meta.container && <div><strong>저널/출판사:</strong> {meta.container || meta.publisher}</div>}
-              {meta.year && <div><strong>연도:</strong> {meta.year}</div>}
-              {meta.volume && <div><strong>권/호/쪽:</strong> {meta.volume}{meta.issue && `(${meta.issue})`}, {meta.pages}</div>}
+              <div><strong>{t("authors")}:</strong> {meta.authors.join("; ")}</div>
+              <div><strong>{t("title")}:</strong> {meta.title}</div>
+              {meta.container && <div><strong>{t("journalPublisher")}:</strong> {meta.container || meta.publisher}</div>}
+              {meta.year && <div><strong>{t("year")}:</strong> {meta.year}</div>}
+              {meta.volume && <div><strong>{t("volIssuePage")}:</strong> {meta.volume}{meta.issue && `(${meta.issue})`}, {meta.pages}</div>}
               {meta.doi && <div><strong>DOI:</strong> {meta.doi}</div>}
             </div>
           </div>
@@ -131,7 +133,7 @@ export default function DoiLookupTool() {
             <div key={s.label} className="border border-gray-200 dark:border-gray-700 rounded p-3">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{s.label}</span>
-                <button onClick={() => copy(s.value)} className="text-xs text-gray-500 hover:text-blue-600">📋 복사</button>
+                <button onClick={() => copy(s.value)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
               </div>
               <div className="text-sm leading-relaxed break-words">{s.value}</div>
             </div>
@@ -139,9 +141,7 @@ export default function DoiLookupTool() {
         </div>
       )}
 
-      <div className="text-xs text-muted leading-relaxed">
-        DOI는 <code>api.crossref.org</code>, ISBN은 <code>openlibrary.org</code>의 무료 API를 직접 호출합니다. 입력값 외에는 서버로 전송되지 않습니다.
-      </div>
+      <div className="text-xs text-muted leading-relaxed" dangerouslySetInnerHTML={{ __html: t("footer") }} />
     </div>
   );
 }

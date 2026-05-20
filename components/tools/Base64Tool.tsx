@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 function encode(text: string, urlSafe: boolean) {
   try {
@@ -30,6 +31,7 @@ function decode(b64: string, urlSafe: boolean) {
 }
 
 export default function Base64Tool() {
+  const t = useTranslations("toolUI.base64");
   const [mode, setMode] = useState<"encode" | "decode">("encode");
   const [urlSafe, setUrlSafe] = useState(false);
   const [text, setText] = useState("");
@@ -44,13 +46,13 @@ export default function Base64Tool() {
             onClick={() => setMode("encode")}
             className={`px-4 py-1.5 rounded-md text-sm font-medium ${mode === "encode" ? "bg-white shadow-sm" : "text-gray-600"}`}
           >
-            인코딩
+            {t("encode")}
           </button>
           <button
             onClick={() => setMode("decode")}
             className={`px-4 py-1.5 rounded-md text-sm font-medium ${mode === "decode" ? "bg-white shadow-sm" : "text-gray-600"}`}
           >
-            디코딩
+            {t("decode")}
           </button>
         </div>
         <label className="flex items-center gap-2 text-sm">
@@ -61,23 +63,23 @@ export default function Base64Tool() {
 
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="label">{mode === "encode" ? "원본 텍스트" : "Base64"}</label>
+          <label className="label">{mode === "encode" ? t("sourceText") : "Base64"}</label>
           <textarea
             className="input min-h-[200px] font-mono text-sm"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder={mode === "encode" ? "변환할 텍스트 입력" : "Base64 문자열 입력"}
+            placeholder={mode === "encode" ? t("placeholderEncode") : t("placeholderDecode")}
           />
         </div>
         <div>
           <label className="label flex items-center justify-between">
-            <span>{mode === "encode" ? "Base64 결과" : "디코딩 결과"}</span>
+            <span>{mode === "encode" ? t("base64Result") : t("decodeResult")}</span>
             <button
               onClick={() => navigator.clipboard.writeText(result)}
               disabled={!result}
               className="text-xs text-brand-600 hover:underline disabled:opacity-30"
             >
-              복사
+              {t("copy")}
             </button>
           </label>
           <textarea

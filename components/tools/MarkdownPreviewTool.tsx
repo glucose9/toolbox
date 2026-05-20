@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { marked } from "marked";
 import { printHtmlAsPdf } from "@/lib/print";
 import { downloadText, imageToMarkdown, insertAtCursor, readMdFile } from "@/lib/markdown-io";
@@ -30,6 +31,7 @@ console.log("hello");
 `;
 
 export default function MarkdownPreviewTool() {
+  const t = useTranslations("toolUI.markdown-preview");
   const [md, setMd] = useState(SAMPLE);
   const [showHtml, setShowHtml] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -57,8 +59,8 @@ export default function MarkdownPreviewTool() {
   };
 
   const printPdf = () => {
-    const ok = printHtmlAsPdf(html, { title: extractTitle(md) || "마크다운" });
-    if (!ok) setPrintError("팝업 차단을 해제해주세요.");
+    const ok = printHtmlAsPdf(html, { title: extractTitle(md) || t("defaultTitle") });
+    if (!ok) setPrintError(t("popupBlocked"));
     else setPrintError("");
   };
 
@@ -87,11 +89,11 @@ export default function MarkdownPreviewTool() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="label !mb-0">마크다운</label>
+            <label className="label !mb-0">{t("markdownLabel")}</label>
             <div className="flex gap-2 text-xs">
-              <button onClick={() => mdFileRef.current?.click()} className="text-brand-600 hover:underline">📄 .md 불러오기</button>
-              <button onClick={() => imgFileRef.current?.click()} className="text-brand-600 hover:underline">🖼️ 이미지 삽입</button>
-              <button onClick={() => downloadText(md, (extractTitle(md) || "markdown") + ".md")} className="text-brand-600 hover:underline">💾 .md 저장</button>
+              <button onClick={() => mdFileRef.current?.click()} className="text-brand-600 hover:underline">{t("loadMd")}</button>
+              <button onClick={() => imgFileRef.current?.click()} className="text-brand-600 hover:underline">{t("insertImage")}</button>
+              <button onClick={() => downloadText(md, (extractTitle(md) || "markdown") + ".md")} className="text-brand-600 hover:underline">{t("saveMd")}</button>
             </div>
           </div>
           <input ref={mdFileRef} type="file" accept=".md,.markdown,text/markdown" onChange={(e) => e.target.files?.[0] && loadMd(e.target.files[0])} className="hidden" />
@@ -112,7 +114,7 @@ export default function MarkdownPreviewTool() {
           />
         </div>
         <div>
-          <label className="label">미리보기</label>
+          <label className="label">{t("preview")}</label>
           {showHtml ? (
             <textarea
               readOnly
@@ -129,10 +131,10 @@ export default function MarkdownPreviewTool() {
       </div>
       <div className="flex flex-wrap gap-2">
         <button onClick={() => setShowHtml((v) => !v)} className="btn btn-secondary">
-          {showHtml ? "👁️ 렌더링 보기" : "📄 HTML 코드 보기"}
+          {showHtml ? t("viewRender") : t("viewHtml")}
         </button>
-        <button onClick={copy} className="btn btn-secondary">{copied ? "✓ HTML 복사됨" : "HTML 복사"}</button>
-        <button onClick={printPdf} className="btn btn-primary">📕 PDF로 저장</button>
+        <button onClick={copy} className="btn btn-secondary">{copied ? t("htmlCopied") : t("copyHtml")}</button>
+        <button onClick={printPdf} className="btn btn-primary">{t("savePdf")}</button>
       </div>
       {printError && <div className="text-sm text-red-600">{printError}</div>}
     </div>

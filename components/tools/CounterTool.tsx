@@ -1,12 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function getByteLength(s: string) {
   return new Blob([s]).size;
 }
 
 export default function CounterTool() {
+  const t = useTranslations("toolUI.character-counter");
   const [text, setText] = useState("");
 
   const stats = useMemo(() => {
@@ -20,34 +22,34 @@ export default function CounterTool() {
   }, [text]);
 
   const cards = [
-    { label: "글자수 (공백 포함)", value: stats.withSpaces },
-    { label: "글자수 (공백 제외)", value: stats.withoutSpaces },
-    { label: "단어수", value: stats.words },
-    { label: "줄 수", value: stats.lines },
-    { label: "문단수", value: stats.paragraphs },
-    { label: "바이트", value: stats.bytes },
+    { label: t("withSpaces"), value: stats.withSpaces },
+    { label: t("withoutSpaces"), value: stats.withoutSpaces },
+    { label: t("words"), value: stats.words },
+    { label: t("lines"), value: stats.lines },
+    { label: t("paragraphs"), value: stats.paragraphs },
+    { label: t("bytes"), value: stats.bytes },
   ];
 
   return (
     <div className="card">
       <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <label className="label">텍스트 입력</label>
+          <label className="label">{t("inputLabel")}</label>
           <textarea
             className="input min-h-[300px] font-mono text-sm"
-            placeholder="여기에 텍스트를 붙여넣으세요"
+            placeholder={t("placeholder")}
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
           <div className="mt-2 flex gap-2">
             <button onClick={() => setText("")} className="btn btn-secondary text-sm">
-              지우기
+              {t("clear")}
             </button>
             <button
               onClick={() => navigator.clipboard.readText().then(setText).catch(() => {})}
               className="btn btn-secondary text-sm"
             >
-              붙여넣기
+              {t("paste")}
             </button>
           </div>
         </div>

@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
-const SAMPLES: { name: string; code: string }[] = [
+const SAMPLES = [
   {
-    name: "순서도 (Flowchart)",
+    key: "flowchart",
     code: `flowchart TD
     A[시작] --> B{조건?}
     B -->|예| C[A 작업]
@@ -13,7 +14,7 @@ const SAMPLES: { name: string; code: string }[] = [
     D --> E`,
   },
   {
-    name: "시퀀스 (Sequence)",
+    key: "sequence",
     code: `sequenceDiagram
     participant 사용자
     participant 브라우저
@@ -24,7 +25,7 @@ const SAMPLES: { name: string; code: string }[] = [
     브라우저-->>사용자: 결과 표시`,
   },
   {
-    name: "간트차트 (Gantt)",
+    key: "gantt",
     code: `gantt
     title 프로젝트 일정
     dateFormat YYYY-MM-DD
@@ -36,7 +37,7 @@ const SAMPLES: { name: string; code: string }[] = [
     테스트       :b2, after b1, 5d`,
   },
   {
-    name: "클래스 다이어그램",
+    key: "class",
     code: `classDiagram
     class Animal {
       +String name
@@ -54,7 +55,7 @@ const SAMPLES: { name: string; code: string }[] = [
     Animal <|-- Cat`,
   },
   {
-    name: "파이 차트 (Pie)",
+    key: "pie",
     code: `pie title 시장 점유율
     "Chrome" : 65
     "Safari" : 18
@@ -64,6 +65,7 @@ const SAMPLES: { name: string; code: string }[] = [
 ];
 
 export default function MermaidTool() {
+  const t = useTranslations("toolUI.mermaid");
   const [code, setCode] = useState(SAMPLES[0].code);
   const [error, setError] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -82,13 +84,13 @@ export default function MermaidTool() {
         setError(null);
       } catch (e) {
         if (cancelled) return;
-        setError(e instanceof Error ? e.message : "렌더링 실패");
+        setError(e instanceof Error ? e.message : t("renderFailed"));
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, [code]);
+  }, [code, t]);
 
   const downloadSvg = () => {
     const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
@@ -107,7 +109,7 @@ export default function MermaidTool() {
     const img = new Image();
     await new Promise<void>((resolve, reject) => {
       img.onload = () => resolve();
-      img.onerror = () => reject(new Error("이미지 로드 실패"));
+      img.onerror = () => reject(new Error(t("imageLoadFailed")));
       img.src = url;
     });
     const c = document.createElement("canvas");
@@ -136,18 +138,18 @@ export default function MermaidTool() {
       <div className="flex flex-wrap gap-1">
         {SAMPLES.map((s) => (
           <button
-            key={s.name}
+            key={s.key}
             onClick={() => setCode(s.code)}
             className="px-2 py-1 text-xs rounded bg-gray-100 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/30"
           >
-            {s.name}
+            {t(`sample.${s.key}`)}
           </button>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div>
-          <label className="label">Mermaid 코드</label>
+          <label className="label">{t("mermaidCode")}</label>
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -157,7 +159,7 @@ export default function MermaidTool() {
           {error && <div className="text-xs text-red-600 mt-1">⚠️ {error}</div>}
         </div>
         <div>
-          <label className="label">미리보기</label>
+          <label className="label">{t("preview")}</label>
           <div
             ref={previewRef}
             className="w-full min-h-[20rem] p-3 border border-gray-200 dark:border-gray-700 rounded bg-white text-center overflow-auto"
@@ -166,13 +168,17 @@ export default function MermaidTool() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <button onClick={downloadSvg} disabled={!svgString} className="btn btn-secondary">📥 SVG 다운로드</button>
-        <button onClick={downloadPng} disabled={!svgString} className="btn btn-primary">📥 PNG 다운로드 (2x)</button>
-        <button onClick={() => navigator.clipboard.writeText(code)} className="btn">📋 코드 복사</button>
+        <button onClick={downloadSvg} disabled={!svgString} className="btn btn-secondary">📥 {t("downloadSvg")}</button>
+        <button onClick={downloadPng} disabled={!svgString} className="btn btn-primary">📥 {t("downloadPng")}</button>
+        <button onClick={() => navigator.clipboard.writeText(code)} className="btn">📋 {t("copyCode")}</button>
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 Mermaid 표기법으로 순서도·시퀀스·간트차트·클래스 다이어그램·파이차트 등을 코드로 그립니다. GitHub README, 노션, Obsidian, 옵시디언, 기술 블로그에 그대로 임베드 가능. 자세한 문법은 <a href="https://mermaid.js.org/intro/" target="_blank" rel="noreferrer" className="underline">mermaid.js.org</a>를 참고.
+        💡 {t.rich("description", {
+          a: (chunks) => (
+            <a href="https://mermaid.js.org/intro/" target="_blank" rel="noreferrer" className="underline">{chunks}</a>
+          ),
+        })}
       </div>
     </div>
   );

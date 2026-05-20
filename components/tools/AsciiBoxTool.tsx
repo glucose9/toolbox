@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Style = "ascii" | "single" | "double" | "rounded" | "thick";
 
@@ -24,6 +25,7 @@ function box(text: string, style: Style, padding: number): string {
 }
 
 export default function AsciiBoxTool() {
+  const t = useTranslations("toolUI.ascii-box");
   const [text, setText] = useState("Hello\n안녕하세요\nWorld");
   const [style, setStyle] = useState<Style>("single");
   const [padding, setPadding] = useState(1);
@@ -39,10 +41,10 @@ export default function AsciiBoxTool() {
         {(Object.keys(STYLES) as Style[]).map((s) => (
           <button key={s} onClick={() => setStyle(s)} className={`btn ${style === s ? "btn-primary" : "btn-secondary"}`}>{s}</button>
         ))}
-        <label>여백 ({padding})<input type="range" min="0" max="5" value={padding} onChange={(e) => setPadding(+e.target.value)} className="ml-2" /></label>
+        <label>{t("padding")} ({padding})<input type="range" min="0" max="5" value={padding} onChange={(e) => setPadding(+e.target.value)} className="ml-2" /></label>
       </div>
       <pre className="p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono overflow-x-auto whitespace-pre">{output}</pre>
-      <button onClick={copy} className="btn btn-primary">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} className="btn btn-primary">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

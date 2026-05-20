@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Style = "kpa" | "kera" | "kss" | "korea-univ";
 
 export default function KoreanCiteTool() {
+  const t = useTranslations("toolUI.korean-cite");
   const [style, setStyle] = useState<Style>("kpa");
   const [authors, setAuthors] = useState("김민지, 이서연, 박지훈");
   const [year, setYear] = useState("2024");
@@ -24,40 +26,40 @@ export default function KoreanCiteTool() {
 
   const refList = splitAuthors.join(", ");
 
-  const formats = {
+  const formats: Record<Style, { label: string; reference: string; intext: string; note: string }> = {
     kpa: {
-      label: "한국심리학회 (KPA)",
+      label: t("labelKpa"),
       reference: `${refList} (${year}). ${title}. *${journal}*, ${volume}(${issue}), ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`,
       intext: `(${intextAuthors}, ${year})`,
-      note: "한국심리학회는 APA 형식을 한국어로 번안. 저자명 사이 쉼표, 연도는 괄호.",
+      note: t("noteKpa"),
     },
     kera: {
-      label: "한국교육학회 (KERA)",
+      label: t("labelKera"),
       reference: `${refList} (${year}). ${title}. *${journal}*, ${volume}(${issue}), ${pages}.`,
       intext: `(${intextAuthors}, ${year}, p. ${pages.split("-")[0]})`,
-      note: "한국교육학회 표준. 직접 인용 시 페이지 번호 명시.",
+      note: t("noteKera"),
     },
     kss: {
-      label: "한국사회학회 (KSS)",
+      label: t("labelKss"),
       reference: `${refList}. ${year}. "${title}." 《${journal}》 ${volume}(${issue}): ${pages}.`,
       intext: `(${intextAuthors} ${year}: ${pages.split("-")[0]})`,
-      note: "한국사회학회 양식. 제목은 큰따옴표, 저널은 겹화살괄호.",
+      note: t("noteKss"),
     },
     "korea-univ": {
-      label: "고려대 인문대 / 일반대학원",
+      label: t("labelKoreaU"),
       reference: `${refList}, 「${title}」, 《${journal}》, ${volume}권 ${issue}호 (${year}), ${pages}쪽.`,
       intext: `(${intextAuthors}, ${year}, ${pages.split("-")[0]}쪽)`,
-      note: "국문 논문 가장 흔한 형식. 제목은 낫표, 저널은 겹화살괄호.",
+      note: t("noteKoreaU"),
     },
   };
 
   const cur = formats[style];
-  const copy = (t: string) => navigator.clipboard.writeText(t);
+  const copy = (txt: string) => navigator.clipboard.writeText(txt);
 
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">양식 선택</label>
+        <label className="label">{t("selectStyle")}</label>
         <div className="flex flex-wrap gap-2">
           {(Object.keys(formats) as Style[]).map((s) => (
             <button
@@ -72,28 +74,28 @@ export default function KoreanCiteTool() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-        <label className="sm:col-span-2">저자 (쉼표로 구분)
+        <label className="sm:col-span-2">{t("authorsCommaSep")}
           <input value={authors} onChange={(e) => setAuthors(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
-        <label>연도
+        <label>{t("year")}
           <input value={year} onChange={(e) => setYear(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
-        <label>권(호)
+        <label>{t("volIssue")}
           <div className="flex gap-1">
-            <input value={volume} onChange={(e) => setVolume(e.target.value)} placeholder="권" className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
-            <input value={issue} onChange={(e) => setIssue(e.target.value)} placeholder="호" className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
+            <input value={volume} onChange={(e) => setVolume(e.target.value)} placeholder={t("volumePh")} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
+            <input value={issue} onChange={(e) => setIssue(e.target.value)} placeholder={t("issuePh")} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
           </div>
         </label>
-        <label className="sm:col-span-2">논문 제목
+        <label className="sm:col-span-2">{t("articleTitle")}
           <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
-        <label>학술지명
+        <label>{t("journalName")}
           <input value={journal} onChange={(e) => setJournal(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
-        <label>페이지
+        <label>{t("pages")}
           <input value={pages} onChange={(e) => setPages(e.target.value)} placeholder="123-145" className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
-        <label className="sm:col-span-2">DOI (선택)
+        <label className="sm:col-span-2">{t("doiOpt")}
           <input value={doi} onChange={(e) => setDoi(e.target.value)} placeholder="10.xxxx/xxxx" className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
       </div>
@@ -101,8 +103,8 @@ export default function KoreanCiteTool() {
       <div className="space-y-2 mt-2">
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
           <div className="flex justify-between items-center mb-1">
-            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">참고문헌 항목</span>
-            <button onClick={() => copy(cur.reference.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">📋 복사</button>
+            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("referenceItem")}</span>
+            <button onClick={() => copy(cur.reference.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
           </div>
           <div className="text-sm leading-relaxed break-words">{cur.reference.split(/(\*[^*]+\*)/).map((p, i) =>
             p.startsWith("*") ? <em key={i}>{p.slice(1, -1)}</em> : <span key={i}>{p}</span>
@@ -110,8 +112,8 @@ export default function KoreanCiteTool() {
         </div>
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
           <div className="flex justify-between items-center mb-1">
-            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">본문 내 인용 (in-text)</span>
-            <button onClick={() => copy(cur.intext)} className="text-xs text-gray-500 hover:text-blue-600">📋 복사</button>
+            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("intextLabel")}</span>
+            <button onClick={() => copy(cur.intext)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
           </div>
           <div className="text-sm leading-relaxed">{cur.intext}</div>
         </div>

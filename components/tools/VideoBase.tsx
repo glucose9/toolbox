@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 
 export function VideoDropzone({
   onFile,
   accept = "video/*",
-  label = "동영상을 드래그하거나 클릭",
+  label,
   hint = "MP4 · MOV · WebM · MKV · AVI",
 }: {
   onFile: (file: File) => void;
@@ -13,6 +14,7 @@ export function VideoDropzone({
   label?: string;
   hint?: string;
 }) {
+  const t = useTranslations("toolUI.video-base");
   const ref = useRef<HTMLInputElement>(null);
   return (
     <div
@@ -26,10 +28,10 @@ export function VideoDropzone({
       className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 transition-colors"
     >
       <div className="text-5xl mb-3">🎬</div>
-      <div className="font-medium">{label}</div>
+      <div className="font-medium">{label ?? t("defaultLabel")}</div>
       <div className="mt-1 text-sm text-gray-500">{hint}</div>
       <div className="mt-3 text-xs text-gray-400">
-        ※ 첫 실행 시 ffmpeg.wasm(~25MB)이 한 번 다운로드됩니다. 이후엔 즉시 처리.
+        {t("ffmpegNotice")}
       </div>
       <input
         ref={ref}

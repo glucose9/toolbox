@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
 export default function VideoMuteTool() {
+  const t = useTranslations("toolUI.video-mute");
   const inputRef = useRef<HTMLInputElement>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -43,21 +45,21 @@ export default function VideoMuteTool() {
       {!file ? (
         <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
           <div className="text-5xl">🔇</div>
-          <div className="font-medium mt-2">동영상 업로드</div>
+          <div className="font-medium mt-2">{t("uploadVideo")}</div>
           <input ref={inputRef} type="file" accept="video/*" onChange={(e) => e.target.files?.[0] && setFile(e.target.files[0])} className="hidden" />
         </div>
       ) : (
         <>
           <div className="text-sm font-medium truncate">{file.name}</div>
-          <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? "처리 중..." : "🔇 무음으로 만들기"}</button>
+          <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? t("processing") : t("mute")}</button>
           {error && <div className="text-sm text-red-600">{error}</div>}
           {outUrl && (
             <>
               <video src={outUrl} controls className="w-full max-h-72 rounded" />
-              <button onClick={() => { const a = document.createElement("a"); a.href = outUrl; a.download = "muted.mp4"; a.click(); }} className="btn btn-secondary">📥 다운로드</button>
+              <button onClick={() => { const a = document.createElement("a"); a.href = outUrl; a.download = "muted.mp4"; a.click(); }} className="btn btn-secondary">{t("download")}</button>
             </>
           )}
-          <button onClick={() => { setFile(null); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+          <button onClick={() => { setFile(null); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
         </>
       )}
     </div>

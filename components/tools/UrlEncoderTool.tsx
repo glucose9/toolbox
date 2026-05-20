@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Mode = "component" | "uri";
 
 export default function UrlEncoderTool() {
+  const t = useTranslations("toolUI.url-encoder");
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [mode, setMode] = useState<Mode>("component");
@@ -16,7 +18,7 @@ export default function UrlEncoderTool() {
     try {
       setOutput(mode === "component" ? encodeURIComponent(input) : encodeURI(input));
     } catch (e) {
-      setError("인코딩 실패: " + (e as Error).message);
+      setError(t("encodeFailed") + ": " + (e as Error).message);
     }
   };
 
@@ -25,7 +27,7 @@ export default function UrlEncoderTool() {
     try {
       setOutput(mode === "component" ? decodeURIComponent(input) : decodeURI(input));
     } catch (e) {
-      setError("디코딩 실패: " + (e as Error).message);
+      setError(t("decodeFailed") + ": " + (e as Error).message);
     }
   };
 
@@ -55,13 +57,13 @@ export default function UrlEncoderTool() {
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="인코딩/디코딩할 텍스트"
+        placeholder={t("placeholder")}
         className="w-full h-28 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y font-mono"
       />
       <div className="flex flex-wrap gap-2">
-        <button onClick={encode} className="btn btn-primary">인코딩 →</button>
-        <button onClick={decode} className="btn btn-primary">← 디코딩</button>
-        <button onClick={swap} className="btn btn-secondary">⇅ 위아래 바꿈</button>
+        <button onClick={encode} className="btn btn-primary">{t("encode")}</button>
+        <button onClick={decode} className="btn btn-primary">{t("decode")}</button>
+        <button onClick={swap} className="btn btn-secondary">{t("swap")}</button>
       </div>
       <textarea
         readOnly
@@ -70,7 +72,7 @@ export default function UrlEncoderTool() {
       />
       {error && <div className="text-sm text-red-600">{error}</div>}
       <button onClick={copy} disabled={!output} className="btn btn-secondary disabled:opacity-50">
-        {copied ? "✓ 복사됨" : "복사"}
+        {copied ? t("copied") : t("copy")}
       </button>
     </div>
   );

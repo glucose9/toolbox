@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function parseEnv(text: string): Record<string, string> {
   const out: Record<string, string> = {};
@@ -18,13 +19,14 @@ function parseEnv(text: string): Record<string, string> {
 }
 
 export default function EnvParserTool() {
+  const t = useTranslations("toolUI.env-parser");
   const [text, setText] = useState(`# Database\nDB_HOST=localhost\nDB_PORT=5432\nDB_USER="admin"\nAPI_KEY='secret123'\n\n# App\nDEBUG=true\nPORT=3000`);
   const json = useMemo(() => JSON.stringify(parseEnv(text), null, 2), [text]);
   return (
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-44 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
       <textarea readOnly value={json} className="w-full h-44 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-      <button onClick={() => navigator.clipboard.writeText(json)} className="btn btn-primary">JSON 복사</button>
+      <button onClick={() => navigator.clipboard.writeText(json)} className="btn btn-primary">{t("copyJson")}</button>
     </div>
   );
 }

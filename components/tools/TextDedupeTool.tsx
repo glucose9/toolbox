@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function TextDedupeTool() {
+  const t = useTranslations("toolUI.text-dedupe");
   const [text, setText] = useState("");
   const [ignoreCase, setIgnoreCase] = useState(false);
   const [ignoreSpace, setIgnoreSpace] = useState(false);
@@ -39,21 +41,21 @@ export default function TextDedupeTool() {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="한 줄에 하나씩 입력하세요"
+        placeholder={t("placeholder")}
         className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y font-mono"
       />
       <div className="flex flex-wrap gap-4 text-sm">
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={ignoreCase} onChange={(e) => setIgnoreCase(e.target.checked)} />
-          대소문자 무시
+          {t("ignoreCase")}
         </label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={ignoreSpace} onChange={(e) => setIgnoreSpace(e.target.checked)} />
-          공백 무시
+          {t("ignoreSpace")}
         </label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={removeEmpty} onChange={(e) => setRemoveEmpty(e.target.checked)} />
-          빈 줄 제거
+          {t("removeEmpty")}
         </label>
       </div>
       <textarea
@@ -62,10 +64,10 @@ export default function TextDedupeTool() {
         className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono"
       />
       <div className="text-xs text-muted">
-        원본 {lines.length}줄 → 고유 {lines.length - removed}줄 ({removed}줄 제거됨)
+        {t("stats", { total: lines.length, unique: lines.length - removed, removed })}
       </div>
       <button onClick={copy} disabled={!result} className="btn btn-primary disabled:opacity-50">
-        {copied ? "✓ 복사됨" : "복사"}
+        {copied ? t("copied") : t("copy")}
       </button>
     </div>
   );

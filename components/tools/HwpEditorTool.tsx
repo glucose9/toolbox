@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { buildHwpx } from "@/lib/hwpx-builder";
 
 const FONT_PRESETS = [
@@ -36,6 +37,7 @@ const SAMPLE_TEXT = `안녕하세요.
 글꼴과 글자 크기를 자유롭게 선택해 저장하세요. 한컴오피스 2018 이상에서 열 수 있습니다.`;
 
 export default function HwpEditorTool() {
+  const t = useTranslations("toolUI.hwp-editor");
   const [text, setText] = useState(SAMPLE_TEXT);
   const [fontName, setFontName] = useState("함초롬바탕");
   const [fontSize, setFontSize] = useState(11);
@@ -60,9 +62,9 @@ export default function HwpEditorTool() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      setStatus("✓ 다운로드 완료. 한컴오피스 2018+에서 열어보세요.");
+      setStatus(`✓ ${t("statusDone")}`);
     } catch (e) {
-      setStatus(`⚠️ 오류: ${e instanceof Error ? e.message : "알 수 없는 오류"}`);
+      setStatus(`⚠️ ${t("statusError", { message: e instanceof Error ? e.message : t("unknownError") })}`);
     } finally {
       setBusy(false);
     }
@@ -75,7 +77,7 @@ export default function HwpEditorTool() {
     <div className="card space-y-3">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
         <label>
-          글꼴
+          {t("font")}
           <select
             value={fontName}
             onChange={(e) => setFontName(e.target.value)}
@@ -91,13 +93,13 @@ export default function HwpEditorTool() {
             type="text"
             value={fontName}
             onChange={(e) => setFontName(e.target.value)}
-            placeholder="직접 입력도 가능"
+            placeholder={t("fontCustomPh")}
             className="w-full px-2 py-1 mt-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs"
           />
         </label>
 
         <label>
-          글자 크기 (pt)
+          {t("fontSize")}
           <select
             value={fontSize}
             onChange={(e) => setFontSize(Number(e.target.value))}
@@ -120,7 +122,7 @@ export default function HwpEditorTool() {
         </label>
 
         <label>
-          파일명
+          {t("filename")}
           <input
             type="text"
             value={filename}
@@ -132,9 +134,9 @@ export default function HwpEditorTool() {
 
       <div>
         <div className="flex justify-between items-center mb-1">
-          <label className="label !mb-0">본문</label>
+          <label className="label !mb-0">{t("body")}</label>
           <span className="text-xs text-muted">
-            {charCount}자 · {lineCount}줄
+            {t("counts", { chars: charCount, lines: lineCount })}
           </span>
         </div>
         <textarea
@@ -145,13 +147,13 @@ export default function HwpEditorTool() {
           className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 resize-y"
         />
         <div className="text-xs text-muted mt-1">
-          💡 위 미리보기는 브라우저의 폰트 렌더링입니다. 실제 HWPX는 한컴오피스가 선택한 글꼴로 표시합니다.
+          💡 {t("previewNote")}
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2 items-center">
         <button onClick={save} disabled={busy} className="btn btn-primary">
-          {busy ? "생성 중..." : "📥 .hwpx 다운로드"}
+          {busy ? t("generating") : `📥 ${t("download")}`}
         </button>
         <button
           onClick={() => {
@@ -160,19 +162,19 @@ export default function HwpEditorTool() {
           }}
           className="btn"
         >
-          🗑️ 초기화
+          🗑️ {t("reset")}
         </button>
         {status && <span className="text-sm">{status}</span>}
       </div>
 
       <div className="text-xs text-muted bg-blue-50 dark:bg-blue-900/20 p-3 rounded border border-blue-200 dark:border-blue-800 leading-relaxed">
-        <strong>💡 HWPX 파일 안내</strong>
+        <strong>💡 {t("infoTitle")}</strong>
         <ul className="list-disc list-inside mt-1 space-y-0.5">
-          <li>HWPX는 한국 정부 표준 한글 문서 포맷(KS X 6101)입니다.</li>
-          <li><strong>한컴오피스 2018(NEO+) 이상</strong>에서 열 수 있습니다. 2014 이하는 미지원.</li>
-          <li>이 도구는 <strong>본문 + 글꼴 + 크기</strong>만 지정 가능한 미니멀 생성기입니다. 표·이미지·복잡한 서식이 필요하면 한컴오피스에서 직접 편집하세요.</li>
-          <li>지정한 글꼴이 실제 PC에 설치돼 있어야 한컴오피스에서 그대로 표시됩니다. 없으면 비슷한 폰트로 대체됩니다.</li>
-          <li>파일은 브라우저 안에서 만들어지며 외부로 전송되지 않습니다.</li>
+          <li>{t("info1")}</li>
+          <li>{t.rich("info2", { b: (chunks) => <strong>{chunks}</strong> })}</li>
+          <li>{t.rich("info3", { b: (chunks) => <strong>{chunks}</strong> })}</li>
+          <li>{t("info4")}</li>
+          <li>{t("info5")}</li>
         </ul>
       </div>
     </div>

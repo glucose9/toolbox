@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { XMLBuilder, XMLParser } from "fast-xml-parser";
 
 type Dir = "json-to-xml" | "xml-to-json";
@@ -23,6 +24,7 @@ const SAMPLE_XML = `<?xml version="1.0" encoding="UTF-8"?>
 </user>`;
 
 export default function JsonXmlTool() {
+  const t = useTranslations("toolUI.json-xml");
   const [dir, setDir] = useState<Dir>("json-to-xml");
   const [input, setInput] = useState(SAMPLE_JSON);
   const [copied, setCopied] = useState(false);
@@ -64,8 +66,8 @@ export default function JsonXmlTool() {
       <div className="flex flex-wrap gap-2 text-sm">
         <button onClick={() => { setDir("json-to-xml"); setInput(SAMPLE_JSON); }} className={`btn ${dir === "json-to-xml" ? "btn-primary" : "btn-secondary"}`}>JSON → XML</button>
         <button onClick={() => { setDir("xml-to-json"); setInput(SAMPLE_XML); }} className={`btn ${dir === "xml-to-json" ? "btn-primary" : "btn-secondary"}`}>XML → JSON</button>
-        <button onClick={swap} disabled={!output} className="btn btn-secondary disabled:opacity-50">⇄ 결과로 시작</button>
-        <button onClick={loadSample} className="btn btn-secondary">샘플</button>
+        <button onClick={swap} disabled={!output} className="btn btn-secondary disabled:opacity-50">{t("swap")}</button>
+        <button onClick={loadSample} className="btn btn-secondary">{t("sample")}</button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -88,7 +90,7 @@ export default function JsonXmlTool() {
       </div>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
-      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

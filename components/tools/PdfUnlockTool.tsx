@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function PdfUnlockTool() {
+  const t = useTranslations("toolUI.pdf-unlock");
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -27,13 +29,13 @@ export default function PdfUnlockTool() {
       const blob = new Blob([bytes as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       setResultUrl(url);
-      setStatus("✓ 처리 완료. 편집/인쇄/복사 제한이 걸린 PDF였다면 제한이 해제됩니다. 다운로드 버튼으로 받으세요.");
+      setStatus(t("statusSuccess"));
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "알 수 없는 오류";
+      const msg = e instanceof Error ? e.message : t("unknownError");
       if (msg.toLowerCase().includes("password") || msg.toLowerCase().includes("encrypt")) {
-        setStatus("❌ 사용자 열기 암호가 설정된 PDF입니다. 이 도구는 본문 자체를 잠근 PDF는 해제할 수 없습니다. 한컴오피스·Adobe Acrobat 같은 정식 도구에서 본래 암호로 열어 저장하세요.");
+        setStatus(t("statusUserPassword"));
       } else {
-        setStatus(`❌ 처리 실패: ${msg}`);
+        setStatus(t("statusFailed", { msg }));
       }
     } finally {
       setBusy(false);
@@ -51,7 +53,7 @@ export default function PdfUnlockTool() {
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">잠긴 PDF 파일</label>
+        <label className="label">{t("lockedPdf")}</label>
         <input
           type="file"
           accept="application/pdf"
@@ -62,23 +64,23 @@ export default function PdfUnlockTool() {
       </div>
 
       <button onClick={unlock} disabled={!file || busy} className="btn btn-primary">
-        {busy ? "처리 중..." : "🔓 잠금 해제 시도"}
+        {busy ? t("processing") : t("unlockButton")}
       </button>
 
       {status && <div className="text-sm">{status}</div>}
 
       {resultUrl && (
-        <button onClick={download} className="btn">📥 잠금 해제된 PDF 다운로드</button>
+        <button onClick={download} className="btn">{t("downloadUnlocked")}</button>
       )}
 
       <div className="text-xs text-muted leading-relaxed bg-amber-50 dark:bg-amber-900/20 p-3 rounded border border-amber-200 dark:border-amber-800">
-        <strong>⚖️ 사용 안내</strong>
+        <strong>{t("noticeTitle")}</strong>
         <ul className="list-disc list-inside mt-1 space-y-0.5">
-          <li>본인이 소유하거나 정당하게 접근 권한이 있는 PDF만 사용하세요. <strong>저작권·보안 정책 위반의 책임은 사용자에게 있습니다.</strong></li>
-          <li>이 도구는 <strong>편집·인쇄·복사 권한만 제한된 PDF</strong>의 제한을 해제합니다. 본문 자체에 열기 암호가 걸린 PDF는 해제 불가.</li>
-          <li>강력한 사용자 열기 암호(AES-256 등)는 본래 비밀번호로 한컴오피스·Adobe Acrobat에서 직접 열어 저장해야 합니다.</li>
-          <li><strong>이 도구는 암호 무차별 대입(크래킹) 기능을 제공하지 않습니다.</strong></li>
-          <li>모든 처리가 브라우저 안에서 일어나며 외부로 전송되지 않습니다.</li>
+          <li dangerouslySetInnerHTML={{ __html: t("notice1") }} />
+          <li dangerouslySetInnerHTML={{ __html: t("notice2") }} />
+          <li>{t("notice3")}</li>
+          <li dangerouslySetInnerHTML={{ __html: t("notice4") }} />
+          <li>{t("notice5")}</li>
         </ul>
       </div>
     </div>

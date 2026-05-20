@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Entry = {
   type: string;
@@ -78,6 +79,7 @@ function toChicago(e: Entry): string {
 }
 
 export default function BibtexConvertTool() {
+  const t = useTranslations("toolUI.bibtex-convert");
   const [input, setInput] = useState(`@article{einstein1905,
   author = {Einstein, Albert},
   title = {Zur Elektrodynamik bewegter Körper},
@@ -98,7 +100,7 @@ export default function BibtexConvertTool() {
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">BibTeX 입력 (여러 개 가능)</label>
+        <label className="label">{t("bibtexInput")}</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -117,13 +119,13 @@ export default function BibtexConvertTool() {
             {s.toUpperCase()}
           </button>
         ))}
-        <span className="text-xs text-muted self-center ml-2">{entries.length}개 항목 파싱됨</span>
+        <span className="text-xs text-muted self-center ml-2">{t("entriesParsed", { count: entries.length })}</span>
       </div>
 
       <div>
         <div className="flex justify-between items-center mb-1">
-          <label className="label">변환 결과</label>
-          <button onClick={copy} className="text-xs text-gray-500 hover:text-blue-600">📋 전체 복사</button>
+          <label className="label">{t("result")}</label>
+          <button onClick={copy} className="text-xs text-gray-500 hover:text-blue-600">{t("copyAll")}</button>
         </div>
         <textarea
           value={output}
@@ -134,7 +136,7 @@ export default function BibtexConvertTool() {
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        @article, @book, @inproceedings 등 일반적인 BibTeX 항목을 지원합니다. 복잡한 LaTeX 매크로는 일부 변환되지 않을 수 있습니다.
+        {t("note")}
       </div>
     </div>
   );

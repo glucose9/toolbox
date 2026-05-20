@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
 
 type Person = { id: number; name: string };
 type Expense = { id: number; description: string; amount: number; paidBy: number; sharedBy: number[] };
 
 export default function TripSplitTool() {
+  const t = useTranslations("toolUI.trip-split");
+  const locale = useLocale();
   const [people, setPeople] = useState<Person[]>([
     { id: 1, name: "민지" },
     { id: 2, name: "지훈" },
@@ -15,6 +18,8 @@ export default function TripSplitTool() {
     { id: 1, description: "숙소 1박", amount: 240_000, paidBy: 1, sharedBy: [1, 2, 3] },
     { id: 2, description: "저녁 식사", amount: 60_000, paidBy: 2, sharedBy: [1, 2, 3] },
   ]);
+
+  const numLocale = locale === "ko" ? "ko-KR" : locale === "ja" ? "ja-JP" : locale === "zh" ? "zh-CN" : "en-US";
 
   const addPerson = () => {
     const id = Date.now();
@@ -39,7 +44,6 @@ export default function TripSplitTool() {
     setExpenses(expenses.map((e) => (e.id === id ? { ...e, ...patch } : e)));
   };
 
-  // Calculate balances
   const balances = useMemo(() => {
     const b: Record<number, number> = {};
     people.forEach((p) => (b[p.id] = 0));
@@ -54,7 +58,6 @@ export default function TripSplitTool() {
     return b;
   }, [people, expenses]);
 
-  // Simplify settlements (greedy)
   const settlements = useMemo(() => {
     const debtors: { id: number; amount: number }[] = [];
     const creditors: { id: number; amount: number }[] = [];
@@ -80,16 +83,15 @@ export default function TripSplitTool() {
   }, [balances]);
 
   const nameOf = (id: number) => people.find((p) => p.id === id)?.name || "?";
-  const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
+  const fmt = (n: number) => Math.round(n).toLocaleString(numLocale);
   const total = expenses.reduce((s, e) => s + e.amount, 0);
 
   return (
     <div className="card space-y-4">
-      {/* People */}
       <div>
         <div className="flex justify-between items-center mb-2">
-          <label className="label !mb-0">참여자</label>
-          <button onClick={addPerson} className="text-xs text-blue-600 hover:underline">+ 추가</button>
+          <label className="label !mb-0">{t("participants")}</label>
+          <button onClick={addPerson} className="text-xs text-blue-600 hover:underline">{t("add")}</button>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {people.map((p) => (
@@ -97,7 +99,7 @@ export default function TripSplitTool() {
               <input
                 value={p.name}
                 onChange={(e) => updatePerson(p.id, e.target.value)}
-                placeholder="이름"
+                placeholder={t("namePh")}
                 className="flex-1 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm"
               />
               <button onClick={() => removePerson(p.id)} className="text-red-500 px-2">×</button>
@@ -106,11 +108,10 @@ export default function TripSplitTool() {
         </div>
       </div>
 
-      {/* Expenses */}
       <div>
         <div className="flex justify-between items-center mb-2">
-          <label className="label !mb-0">비용 내역</label>
-          <button onClick={addExpense} className="text-xs text-blue-600 hover:underline">+ 추가</button>
+          <label className="label !mb-0">{t("expenses")}</label>
+          <button onClick={addExpense} className="text-xs text-blue-600 hover:underline">{t("add")}</button>
         </div>
         <div className="space-y-2">
           {expenses.map((e) => (
@@ -119,14 +120,14 @@ export default function TripSplitTool() {
                 <input
                   value={e.description}
                   onChange={(ev) => updateExpense(e.id, { description: ev.target.value })}
-                  placeholder="내역 (예: 저녁)"
+                  placeholder={t("descPh")}
                   className="px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
                 />
                 <input
                   type="number"
                   value={e.amount}
                   onChange={(ev) => updateExpense(e.id, { amount: +ev.target.value })}
-                  placeholder="금액"
+                  placeholder={t("amountPh")}
                   className="px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
                 />
                 <select
@@ -135,12 +136,12 @@ export default function TripSplitTool() {
                   className="px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
                 >
                   {people.map((p) => (
-                    <option key={p.id} value={p.id}>{p.name || "?"} 결제</option>
+                    <option key={p.id} value={p.id}>{t("paidByOpt", { name: p.name || "?" })}</option>
                   ))}
                 </select>
               </div>
               <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="text-muted">나눠 부담:</span>
+                <span className="text-muted">{t("sharedBy")}</span>
                 {people.map((p) => (
                   <label key={p.id} className="flex items-center gap-1">
                     <input
@@ -157,29 +158,28 @@ export default function TripSplitTool() {
                     {p.name || "?"}
                   </label>
                 ))}
-                <button onClick={() => removeExpense(e.id)} className="text-red-500 ml-auto">삭제</button>
+                <button onClick={() => removeExpense(e.id)} className="text-red-500 ml-auto">{t("delete")}</button>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Summary */}
       <div className="card-section">
         <div className="text-sm space-y-1">
           <div className="flex justify-between font-semibold">
-            <span>총 지출</span>
-            <span>{fmt(total)}원</span>
+            <span>{t("totalSpent")}</span>
+            <span>{t("won", { v: fmt(total) })}</span>
           </div>
           <div className="flex justify-between text-muted">
-            <span>1인당 평균</span>
-            <span>{fmt(total / Math.max(1, people.length))}원</span>
+            <span>{t("perPerson")}</span>
+            <span>{t("won", { v: fmt(total / Math.max(1, people.length)) })}</span>
           </div>
         </div>
         <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
-        <div className="text-sm font-semibold mb-1">정산 결과 (최소 송금)</div>
+        <div className="text-sm font-semibold mb-1">{t("settlementTitle")}</div>
         {settlements.length === 0 ? (
-          <div className="text-sm text-muted">정산할 금액이 없습니다 (이미 균등하거나 비용 없음)</div>
+          <div className="text-sm text-muted">{t("noSettlement")}</div>
         ) : (
           <ul className="text-sm space-y-1">
             {settlements.map((s, i) => (
@@ -187,7 +187,7 @@ export default function TripSplitTool() {
                 <span className="font-medium">{nameOf(s.from)}</span>
                 <span className="text-muted">→</span>
                 <span className="font-medium">{nameOf(s.to)}</span>
-                <span className="ml-auto text-blue-600 font-semibold">{fmt(s.amount)}원</span>
+                <span className="ml-auto text-blue-600 font-semibold">{t("won", { v: fmt(s.amount) })}</span>
               </li>
             ))}
           </ul>
@@ -195,7 +195,7 @@ export default function TripSplitTool() {
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 그리디 알고리즘으로 송금 횟수를 최소화합니다. 각 지출마다 "나눠 부담"으로 일부만 분담하는 것도 가능 (예: 술 안 마신 사람 제외). 모든 처리는 브라우저 안에서 일어나며 데이터가 외부로 전송되지 않습니다.
+        {t("tipNote")}
       </div>
     </div>
   );

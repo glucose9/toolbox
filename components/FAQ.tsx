@@ -1,10 +1,12 @@
+import { useTranslations } from "next-intl";
 import type { FAQItem } from "@/lib/tools";
 
 export default function FAQ({ items }: { items: FAQItem[] }) {
+  const t = useTranslations();
   if (!items?.length) return null;
   return (
     <section className="mt-10">
-      <h2 className="text-xl font-bold mb-4">자주 묻는 질문</h2>
+      <h2 className="text-xl font-bold mb-4">{t("tool.faqTitle")}</h2>
       <div className="space-y-3">
         {items.map((item, i) => (
           <details key={i} className="card open:shadow-sm">

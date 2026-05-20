@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 // minimal Hangul → Roman for slugs (uses simple romanization)
 const CHO_ROM = ["g","kk","n","d","tt","r","m","b","pp","s","ss","","j","jj","ch","k","t","p","h"];
@@ -20,6 +21,7 @@ function romanize(s: string): string {
 }
 
 export default function SlugGeneratorTool() {
+  const t = useTranslations("toolUI.slug-generator");
   const [input, setInput] = useState("안녕! 첫 번째 글");
   const [doRomanize, setDoRomanize] = useState(true);
   const [lower, setLower] = useState(true);
@@ -39,12 +41,12 @@ export default function SlugGeneratorTool() {
     <div className="card space-y-3">
       <input type="text" value={input} onChange={(e) => setInput(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
       <div className="flex flex-wrap gap-3 text-sm">
-        <label className="flex items-center gap-1"><input type="checkbox" checked={doRomanize} onChange={(e) => setDoRomanize(e.target.checked)} /> 한글 → 로마자</label>
-        <label className="flex items-center gap-1"><input type="checkbox" checked={lower} onChange={(e) => setLower(e.target.checked)} /> 소문자</label>
-        <label className="flex items-center gap-1">구분자 <select value={sep} onChange={(e) => setSep(e.target.value)} className="ml-1 px-2 py-0.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"><option value="-">-</option><option value="_">_</option></select></label>
+        <label className="flex items-center gap-1"><input type="checkbox" checked={doRomanize} onChange={(e) => setDoRomanize(e.target.checked)} /> {t("romanize")}</label>
+        <label className="flex items-center gap-1"><input type="checkbox" checked={lower} onChange={(e) => setLower(e.target.checked)} /> {t("lowercase")}</label>
+        <label className="flex items-center gap-1">{t("separator")} <select value={sep} onChange={(e) => setSep(e.target.value)} className="ml-1 px-2 py-0.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"><option value="-">-</option><option value="_">_</option></select></label>
       </div>
       <div className="p-3 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded font-mono text-lg break-all">{slug || "—"}</div>
-      <button onClick={copy} disabled={!slug} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} disabled={!slug} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

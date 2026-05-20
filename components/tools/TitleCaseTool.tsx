@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const SMALL_WORDS = new Set([
   "a", "an", "and", "as", "at", "but", "by", "for", "if", "in",
@@ -63,23 +64,24 @@ function cap(w: string): string {
 }
 
 export default function TitleCaseTool() {
+  const t = useTranslations("toolUI.title-case");
   const [input, setInput] = useState("the role of attention in working memory: a cognitive perspective");
 
   const variants = [
-    { label: "APA 7th (제목·헤더용)", value: apaTitleCase(input) },
-    { label: "Chicago / MLA", value: chicagoTitleCase(input) },
+    { label: t("apa"), value: apaTitleCase(input) },
+    { label: t("chicago"), value: chicagoTitleCase(input) },
     { label: "MLA", value: mlaTitleCase(input) },
-    { label: "Sentence case (문장형)", value: sentenceCase(input) },
+    { label: t("sentence"), value: sentenceCase(input) },
     { label: "UPPER CASE", value: input.toUpperCase() },
     { label: "lower case", value: input.toLowerCase() },
   ];
 
-  const copy = (t: string) => navigator.clipboard.writeText(t);
+  const copy = (s: string) => navigator.clipboard.writeText(s);
 
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">영문 제목 입력</label>
+        <label className="label">{t("inputLabel")}</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -93,7 +95,7 @@ export default function TitleCaseTool() {
           <div key={v.label} className="border border-gray-200 dark:border-gray-700 rounded p-3">
             <div className="flex justify-between items-center mb-1">
               <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{v.label}</span>
-              <button onClick={() => copy(v.value)} className="text-xs text-gray-500 hover:text-blue-600">📋 복사</button>
+              <button onClick={() => copy(v.value)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
             </div>
             <div className="text-base font-serif">{v.value}</div>
           </div>
@@ -101,7 +103,7 @@ export default function TitleCaseTool() {
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        APA는 4자 이상 단어와 첫 단어를 대문자로, Chicago/MLA는 모든 주요 단어를 대문자로 처리합니다. 짧은 전치사·접속사·관사(a, the, and, of, in 등)는 소문자 유지.
+        {t("note")}
       </div>
     </div>
   );

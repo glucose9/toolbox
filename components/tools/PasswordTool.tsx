@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 const LOWER = "abcdefghijklmnopqrstuvwxyz";
 const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -21,21 +22,8 @@ function generate(length: number, options: { lower: boolean; upper: boolean; dig
   return out;
 }
 
-function strength(password: string) {
-  let score = 0;
-  if (password.length >= 8) score++;
-  if (password.length >= 12) score++;
-  if (password.length >= 16) score++;
-  if (/[a-z]/.test(password)) score++;
-  if (/[A-Z]/.test(password)) score++;
-  if (/[0-9]/.test(password)) score++;
-  if (/[^A-Za-z0-9]/.test(password)) score++;
-  if (score <= 3) return { label: "약함", color: "bg-red-500", w: "33%" };
-  if (score <= 5) return { label: "보통", color: "bg-yellow-500", w: "66%" };
-  return { label: "강력", color: "bg-green-500", w: "100%" };
-}
-
 export default function PasswordTool() {
+  const t = useTranslations("toolUI.password-generator");
   const [length, setLength] = useState(16);
   const [lower, setLower] = useState(true);
   const [upper, setUpper] = useState(true);
@@ -53,6 +41,20 @@ export default function PasswordTool() {
     refresh();
   }, [refresh]);
 
+  const strength = (password: string) => {
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+    if (password.length >= 16) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+    if (score <= 3) return { label: t("weak"), color: "bg-red-500", w: "33%" };
+    if (score <= 5) return { label: t("medium"), color: "bg-yellow-500", w: "66%" };
+    return { label: t("strong"), color: "bg-green-500", w: "100%" };
+  };
+
   const s = strength(password);
 
   return (
@@ -63,7 +65,7 @@ export default function PasswordTool() {
           readOnly
           value={password}
         />
-        <button onClick={refresh} className="btn btn-secondary whitespace-nowrap">새로 생성</button>
+        <button onClick={refresh} className="btn btn-secondary whitespace-nowrap">{t("regenerate")}</button>
         <button
           onClick={() => {
             navigator.clipboard.writeText(password);
@@ -72,13 +74,13 @@ export default function PasswordTool() {
           }}
           className="btn btn-primary whitespace-nowrap"
         >
-          {copied ? "복사됨" : "복사"}
+          {copied ? t("copied") : t("copy")}
         </button>
       </div>
 
       <div>
         <div className="flex justify-between text-sm">
-          <span>강도: {s.label}</span>
+          <span>{t("strength")}: {s.label}</span>
         </div>
         <div className="mt-1 w-full h-2 bg-gray-200 rounded-full overflow-hidden">
           <div className={`h-full ${s.color} transition-all`} style={{ width: s.w }} />
@@ -86,7 +88,7 @@ export default function PasswordTool() {
       </div>
 
       <div>
-        <label className="label">길이: {length}자</label>
+        <label className="label">{t("length", { n: length })}</label>
         <input
           type="range"
           min="4"
@@ -100,19 +102,19 @@ export default function PasswordTool() {
       <div className="grid grid-cols-2 gap-2 text-sm">
         <label className="flex items-center gap-2">
           <input type="checkbox" checked={lower} onChange={(e) => setLower(e.target.checked)} />
-          소문자 (a-z)
+          {t("lowercase")}
         </label>
         <label className="flex items-center gap-2">
           <input type="checkbox" checked={upper} onChange={(e) => setUpper(e.target.checked)} />
-          대문자 (A-Z)
+          {t("uppercase")}
         </label>
         <label className="flex items-center gap-2">
           <input type="checkbox" checked={digits} onChange={(e) => setDigits(e.target.checked)} />
-          숫자 (0-9)
+          {t("digits")}
         </label>
         <label className="flex items-center gap-2">
           <input type="checkbox" checked={symbols} onChange={(e) => setSymbols(e.target.checked)} />
-          특수문자 (!@#...)
+          {t("symbols")}
         </label>
       </div>
     </div>

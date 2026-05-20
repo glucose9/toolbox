@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const MORSE_EN: Record<string, string> = {
   A: ".-", B: "-...", C: "-.-.", D: "-..", E: ".", F: "..-.", G: "--.", H: "....", I: "..", J: ".---",
@@ -79,6 +80,7 @@ function isMorse(s: string): boolean {
 }
 
 export default function MorseTool() {
+  const t = useTranslations("toolUI.morse");
   const [text, setText] = useState("Hello World");
   const [playing, setPlaying] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -133,10 +135,10 @@ export default function MorseTool() {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="텍스트 또는 모스 부호 입력"
+        placeholder={t("placeholder")}
         className="w-full h-28 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y font-mono"
       />
-      <div className="text-xs text-muted">방향 자동 감지: {isMorseInput ? "모스 → 텍스트" : "텍스트 → 모스"}</div>
+      <div className="text-xs text-muted">{t("autoDetect")}: {isMorseInput ? t("morseToText") : t("textToMorse")}</div>
       <textarea
         readOnly
         value={output}
@@ -144,11 +146,11 @@ export default function MorseTool() {
       />
       <div className="flex flex-wrap gap-2">
         <button onClick={play} disabled={playing} className="btn btn-primary disabled:opacity-50">
-          {playing ? "재생 중..." : "🔊 소리 재생"}
+          {playing ? t("playing") : t("playSound")}
         </button>
-        <button onClick={copy} disabled={!output} className="btn btn-secondary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+        <button onClick={copy} disabled={!output} className="btn btn-secondary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
       </div>
-      <div className="text-xs text-muted">한국어 자모와 영문/숫자 모스 부호 모두 지원. 단어 구분: <code>/</code>, 글자 구분: 공백.</div>
+      <div className="text-xs text-muted">{t("note")}</div>
     </div>
   );
 }

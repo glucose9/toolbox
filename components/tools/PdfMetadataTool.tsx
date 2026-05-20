@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { PDFDocument } from "pdf-lib";
 import { downloadBlob, fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
 
 type Meta = { title: string; author: string; subject: string; keywords: string; creator: string; producer: string };
 
 export default function PdfMetadataTool() {
+  const t = useTranslations("toolUI.pdf-metadata");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [meta, setMeta] = useState<Meta>({ title: "", author: "", subject: "", keywords: "", creator: "", producer: "" });
@@ -49,7 +51,7 @@ export default function PdfMetadataTool() {
       <div className="card">
         <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
           <div className="text-5xl">📋</div>
-          <div className="font-medium mt-2">PDF 업로드</div>
+          <div className="font-medium mt-2">{t("uploadPdf")}</div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
       </div>
@@ -57,9 +59,9 @@ export default function PdfMetadataTool() {
   }
 
   const fields: { key: keyof Meta; label: string }[] = [
-    { key: "title", label: "제목" }, { key: "author", label: "저자" },
-    { key: "subject", label: "주제" }, { key: "keywords", label: "키워드 (쉼표 구분)" },
-    { key: "creator", label: "작성 프로그램" }, { key: "producer", label: "PDF 변환 프로그램" },
+    { key: "title", label: t("title") }, { key: "author", label: t("author") },
+    { key: "subject", label: t("subject") }, { key: "keywords", label: t("keywords") },
+    { key: "creator", label: t("creator") }, { key: "producer", label: t("producer") },
   ];
 
   return (
@@ -75,8 +77,8 @@ export default function PdfMetadataTool() {
       </div>
       {error && <div className="text-sm text-red-600">{error}</div>}
       <div className="flex gap-2">
-        <button onClick={save} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? "저장 중..." : "💾 저장"}</button>
-        <button onClick={() => setFile(null)} className="btn btn-secondary">다른 파일</button>
+        <button onClick={save} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? t("saving") : t("save")}</button>
+        <button onClick={() => setFile(null)} className="btn btn-secondary">{t("otherFile")}</button>
       </div>
     </div>
   );

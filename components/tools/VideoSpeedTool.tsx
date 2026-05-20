@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
@@ -27,6 +28,7 @@ function audioFilter(speed: number): string {
 }
 
 export default function VideoSpeedTool() {
+  const t = useTranslations("toolUI.video-speed");
   const inputRef = useRef<HTMLInputElement>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -57,7 +59,7 @@ export default function VideoSpeedTool() {
 
   const handleFile = (f: File) => {
     if (!f.type.startsWith("video/")) {
-      setError("동영상 파일만 지원합니다.");
+      setError(t("errVideoOnly"));
       return;
     }
     setError("");
@@ -117,8 +119,8 @@ export default function VideoSpeedTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">⏩</div>
-          <div className="font-medium">동영상을 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">처음 한 번 ffmpeg.wasm(~25MB) 로드됨</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("ffmpegHint")}</div>
           <input ref={inputRef} type="file" accept="video/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -131,15 +133,15 @@ export default function VideoSpeedTool() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm min-w-0">
           <div className="truncate font-medium">{file.name}</div>
-          {outSize > 0 && <div className="text-xs text-muted">결과: {fmtBytes(outSize)}</div>}
+          {outSize > 0 && <div className="text-xs text-muted">{t("result")}: {fmtBytes(outSize)}</div>}
         </div>
-        <button onClick={() => { setFile(null); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <video src={srcUrl} controls className="w-full max-h-72 rounded border border-gray-200 dark:border-gray-700" />
 
       <div>
-        <label className="label">속도 배율</label>
+        <label className="label">{t("speedMultiplier")}</label>
         <div className="flex flex-wrap gap-2">
           {SPEEDS.map((s) => (
             <button key={s} onClick={() => setSpeed(s)} className={`btn ${speed === s ? "btn-primary" : "btn-secondary"}`}>
@@ -149,14 +151,14 @@ export default function VideoSpeedTool() {
         </div>
       </div>
 
-      {loadingFf && <div className="text-sm text-muted">ffmpeg.wasm 로딩 중...</div>}
+      {loadingFf && <div className="text-sm text-muted">{t("loadingFfmpeg")}</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <div className="flex gap-2">
         <button onClick={apply} disabled={busy} className="btn btn-primary disabled:opacity-50">
-          {busy ? "처리 중... (긴 영상은 몇 분)" : `⏩ ${speed}x로 변환`}
+          {busy ? t("processing") : `⏩ ${t("convertTo", { speed })}`}
         </button>
-        {outUrl && <button onClick={download} className="btn btn-secondary">📥 다운로드</button>}
+        {outUrl && <button onClick={download} className="btn btn-secondary">📥 {t("download")}</button>}
       </div>
 
       {outUrl && <video src={outUrl} controls className="w-full max-h-72 rounded border border-gray-200 dark:border-gray-700" />}

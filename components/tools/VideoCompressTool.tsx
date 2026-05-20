@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { getFFmpeg, ffmpegFetchFile } from "@/lib/ffmpeg";
 import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
 
-const PRESETS = [
-  { key: "high", label: "고화질 (CRF 23)", crf: 23 },
-  { key: "medium", label: "중간 (CRF 28) 추천", crf: 28 },
-  { key: "low", label: "용량 우선 (CRF 33)", crf: 33 },
-];
-
 export default function VideoCompressTool() {
+  const t = useTranslations("toolUI.video-compress");
+  const PRESETS = [
+    { key: "high", label: t("presetHigh"), crf: 23 },
+    { key: "medium", label: t("presetMedium"), crf: 28 },
+    { key: "low", label: t("presetLow"), crf: 33 },
+  ];
+
   const [file, setFile] = useState<File | null>(null);
   const [preset, setPreset] = useState("medium");
   const [busy, setBusy] = useState(false);
@@ -29,9 +31,9 @@ export default function VideoCompressTool() {
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
       const inputName = `input.${ext}`;
       const crf = PRESETS.find((p) => p.key === preset)?.crf ?? 28;
-      setStatus("파일 로드 중...");
+      setStatus(t("statusLoading"));
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
-      setStatus(`압축 중 (CRF ${crf})... 동영상 길이에 따라 시간이 걸립니다`);
+      setStatus(t("statusCompressing", { crf }));
       await ff.exec([
         "-i", inputName,
         "-vcodec", "libx264",
@@ -44,9 +46,9 @@ export default function VideoCompressTool() {
       const data = (await ff.readFile("out.mp4")) as Uint8Array;
       const blob = new Blob([data as BlobPart], { type: "video/mp4" });
       setOutput({ url: URL.createObjectURL(blob), size: blob.size });
-      setStatus("완료");
+      setStatus(t("statusDone"));
     } catch (e) {
-      setStatus("실패: " + (e as Error).message);
+      setStatus(t("statusFailed", { msg: (e as Error).message }));
     } finally {
       setBusy(false);
     }
@@ -68,32 +70,32 @@ export default function VideoCompressTool() {
         <div className="space-y-4">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <div className="text-sm font-medium mb-2">원본 ({fmtBytes(file.size)})</div>
+              <div className="text-sm font-medium mb-2">{t("originalSize", { size: fmtBytes(file.size) })}</div>
               <video src={URL.createObjectURL(file)} controls className="w-full max-h-60 rounded border border-gray-200" />
               <button onClick={() => { setFile(null); setOutput(null); }} className="mt-2 text-sm text-brand-600 hover:underline">
-                다른 파일 선택
+                {t("chooseOther")}
               </button>
             </div>
             <div>
-              <div className="text-sm font-medium mb-2">압축됨 {output && `(${fmtBytes(output.size)})`}</div>
+              <div className="text-sm font-medium mb-2">{t("compressedSize")} {output && `(${fmtBytes(output.size)})`}</div>
               {output ? (
                 <>
                   <video src={output.url} controls className="w-full max-h-60 rounded border border-gray-200" />
                   <div className="mt-2 text-sm font-medium text-green-600">
-                    {Math.round((1 - output.size / file.size) * 100)}% 절감
+                    {t("savedPct", { pct: Math.round((1 - output.size / file.size) * 100) })}
                   </div>
-                  <button onClick={download} className="btn btn-primary mt-3">MP4 다운로드</button>
+                  <button onClick={download} className="btn btn-primary mt-3">{t("downloadMp4")}</button>
                 </>
               ) : (
                 <div className="h-60 flex items-center justify-center bg-gray-50 rounded text-gray-400 text-sm">
-                  품질 선택 후 압축 시작
+                  {t("placeholder")}
                 </div>
               )}
             </div>
           </div>
 
           <div>
-            <label className="label">압축 수준</label>
+            <label className="label">{t("compressionLevel")}</label>
             <div className="grid grid-cols-3 gap-2">
               {PRESETS.map((p) => (
                 <button
@@ -110,7 +112,7 @@ export default function VideoCompressTool() {
           </div>
 
           <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">
-            {busy ? "압축 중..." : "압축 시작"}
+            {busy ? t("compressing") : t("startCompress")}
           </button>
 
           <StatusBar status={status} busy={busy} progress={progress} />

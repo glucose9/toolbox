@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { PDFDocument } from "pdf-lib";
 import { downloadBlob, fmtBytes, isPdfFile, parsePageRanges, readBytes } from "@/lib/pdf";
 
 export default function PdfExtractTool() {
+  const t = useTranslations("toolUI.pdf-extract");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
@@ -14,7 +16,7 @@ export default function PdfExtractTool() {
 
   const handleFile = async (f: File) => {
     if (!isPdfFile(f)) {
-      setError("PDF 파일만 지원합니다.");
+      setError(t("errPdfOnly"));
       return;
     }
     setError("");
@@ -34,7 +36,7 @@ export default function PdfExtractTool() {
       const total = src.getPageCount();
       const targets = parsePageRanges(pages, total);
       if (targets.length === 0) {
-        setError("추출할 페이지를 입력하세요.");
+        setError(t("errEnterPages"));
         setBusy(false);
         return;
       }
@@ -61,7 +63,7 @@ export default function PdfExtractTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">📑</div>
-          <div className="font-medium">PDF 파일을 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -74,19 +76,19 @@ export default function PdfExtractTool() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm min-w-0">
           <div className="truncate font-medium">{file.name}</div>
-          <div className="text-xs text-muted">{fmtBytes(file.size)} · {pageCount}페이지</div>
+          <div className="text-xs text-muted">{fmtBytes(file.size)} · {t("pages", { count: pageCount })}</div>
         </div>
-        <button onClick={() => { setFile(null); setPageCount(0); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setPageCount(0); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <div>
-        <label className="label">추출할 페이지 (총 {pageCount}페이지 중)</label>
-        <input type="text" value={pages} onChange={(e) => setPages(e.target.value)} placeholder="예: 1-3, 5, 7-9" className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
+        <label className="label">{t("pagesToExtract", { count: pageCount })}</label>
+        <input type="text" value={pages} onChange={(e) => setPages(e.target.value)} placeholder={t("pagesPlaceholder")} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
       </div>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
       <button onClick={run} disabled={busy || !pages.trim()} className="btn btn-primary disabled:opacity-50">
-        {busy ? "처리 중..." : "📑 선택 페이지만 추출"}
+        {busy ? t("processing") : `📑 ${t("extractPages")}`}
       </button>
     </div>
   );

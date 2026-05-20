@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Info = { key: string; code: string; keyCode: number; which: number; modifiers: string[]; location: number };
 
 export default function KeycodeTool() {
+  const t = useTranslations("toolUI.keycode");
   const [last, setLast] = useState<Info | null>(null);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function KeycodeTool() {
   return (
     <div className="card space-y-3">
       <div className="bg-gray-100 dark:bg-gray-900 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded p-12 text-center">
-        <div className="text-sm text-muted">아무 키나 눌러보세요</div>
+        <div className="text-sm text-muted">{t("pressAnyKey")}</div>
         {last ? (
           <div className="mt-4 text-5xl font-bold font-mono">{last.key === " " ? "Space" : last.key}</div>
         ) : (
@@ -39,7 +41,7 @@ export default function KeycodeTool() {
             <tr><td className="py-2 pr-3 text-muted">keyCode (deprecated)</td><td className="font-mono">{last.keyCode}</td></tr>
             <tr><td className="py-2 pr-3 text-muted">which (deprecated)</td><td className="font-mono">{last.which}</td></tr>
             <tr><td className="py-2 pr-3 text-muted">modifiers</td><td className="font-mono">{last.modifiers.join(" + ") || "—"}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">location</td><td className="font-mono">{last.location} (0=일반, 1=왼쪽, 2=오른쪽, 3=숫자패드)</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">location</td><td className="font-mono">{last.location} {t("locationHint")}</td></tr>
           </tbody>
         </table>
       )}

@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function levenshtein(a: string, b: string): number {
   const m = a.length, n = b.length;
@@ -18,6 +19,7 @@ function levenshtein(a: string, b: string): number {
 }
 
 export default function TextSimilarityTool() {
+  const t = useTranslations("toolUI.text-similarity");
   const [a, setA] = useState("hello world");
   const [b, setB] = useState("hallo word");
   const { dist, sim } = useMemo(() => {
@@ -32,8 +34,8 @@ export default function TextSimilarityTool() {
         <textarea value={b} onChange={(e) => setB(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded text-center"><div className="text-xs text-muted">편집 거리</div><div className="text-2xl font-bold">{dist}</div></div>
-        <div className="p-3 bg-brand-50 dark:bg-brand-900/20 border border-brand-500 rounded text-center"><div className="text-xs text-muted">유사도</div><div className="text-2xl font-bold">{sim}%</div></div>
+        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded text-center"><div className="text-xs text-muted">{t("editDistance")}</div><div className="text-2xl font-bold">{dist}</div></div>
+        <div className="p-3 bg-brand-50 dark:bg-brand-900/20 border border-brand-500 rounded text-center"><div className="text-xs text-muted">{t("similarity")}</div><div className="text-2xl font-bold">{sim}%</div></div>
       </div>
     </div>
   );

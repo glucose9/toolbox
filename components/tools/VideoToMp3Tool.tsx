@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { getFFmpeg, ffmpegFetchFile } from "@/lib/ffmpeg";
 import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
 
 export default function VideoToMp3Tool() {
+  const t = useTranslations("toolUI.video-to-mp3");
   const [file, setFile] = useState<File | null>(null);
   const [bitrate, setBitrate] = useState(192);
   const [busy, setBusy] = useState(false);
@@ -22,9 +24,9 @@ export default function VideoToMp3Tool() {
       ff.on("progress", ({ progress }) => setProgress(progress * 100));
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
       const inputName = `input.${ext}`;
-      setStatus("파일 로드 중...");
+      setStatus(t("statusLoading"));
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
-      setStatus("MP3 추출 중...");
+      setStatus(t("statusExtracting"));
       await ff.exec([
         "-i", inputName,
         "-vn",
@@ -35,9 +37,9 @@ export default function VideoToMp3Tool() {
       const data = (await ff.readFile("out.mp3")) as Uint8Array;
       const blob = new Blob([data as BlobPart], { type: "audio/mp3" });
       setOutput({ url: URL.createObjectURL(blob), size: blob.size });
-      setStatus("완료");
+      setStatus(t("statusDone"));
     } catch (e) {
-      setStatus("실패: " + (e as Error).message);
+      setStatus(t("statusFailed") + ": " + (e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -59,36 +61,36 @@ export default function VideoToMp3Tool() {
         <div className="space-y-4">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <div className="text-sm font-medium mb-2">원본 ({fmtBytes(file.size)})</div>
+              <div className="text-sm font-medium mb-2">{t("original")} ({fmtBytes(file.size)})</div>
               <video src={URL.createObjectURL(file)} controls className="w-full max-h-60 rounded border border-gray-200" />
               <div className="mt-2 text-sm text-gray-600 truncate">{file.name}</div>
               <button onClick={() => { setFile(null); setOutput(null); }} className="mt-2 text-sm text-brand-600 hover:underline">
-                다른 파일 선택
+                {t("otherFile")}
               </button>
             </div>
             <div>
-              <div className="text-sm font-medium mb-2">MP3 결과 {output && `(${fmtBytes(output.size)})`}</div>
+              <div className="text-sm font-medium mb-2">{t("mp3Result")} {output && `(${fmtBytes(output.size)})`}</div>
               {output ? (
                 <>
                   <audio src={output.url} controls className="w-full" />
-                  <button onClick={download} className="btn btn-primary mt-3">MP3 다운로드</button>
+                  <button onClick={download} className="btn btn-primary mt-3">{t("downloadMp3")}</button>
                 </>
               ) : (
                 <div className="h-32 flex items-center justify-center bg-gray-50 rounded text-gray-400 text-sm">
-                  변환 시작 후 표시됩니다
+                  {t("emptyState")}
                 </div>
               )}
             </div>
           </div>
 
           <div>
-            <label className="label">음질 (kbps): {bitrate}</label>
+            <label className="label">{t("bitrateLabel", { n: bitrate })}</label>
             <input type="range" min="64" max="320" step="32" value={bitrate} onChange={(e) => setBitrate(parseInt(e.target.value))} className="w-full" />
-            <div className="text-xs text-gray-500 mt-1">128kbps = 일반, 192kbps = 좋음, 320kbps = 최고</div>
+            <div className="text-xs text-gray-500 mt-1">{t("bitrateHint")}</div>
           </div>
 
           <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">
-            {busy ? "추출 중..." : "MP3로 추출"}
+            {busy ? t("extracting") : t("extract")}
           </button>
 
           <StatusBar status={status} busy={busy} progress={progress} />

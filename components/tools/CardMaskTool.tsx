@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function mask(text: string): string {
   return text
@@ -11,6 +12,7 @@ function mask(text: string): string {
 }
 
 export default function CardMaskTool() {
+  const t = useTranslations("toolUI.card-mask");
   const [text, setText] = useState("카드 1234-5678-9012-3456\n주민 990101-1234567\n전화 010-1234-5678\n이메일 alice@example.com");
   const [copied, setCopied] = useState(false);
   const out = useMemo(() => mask(text), [text]);
@@ -19,7 +21,7 @@ export default function CardMaskTool() {
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
       <textarea readOnly value={out} className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-      <button onClick={copy} className="btn btn-primary">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} className="btn btn-primary">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

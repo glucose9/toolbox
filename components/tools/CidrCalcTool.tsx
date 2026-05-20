@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function ipToInt(ip: string): number | null {
   const parts = ip.split(".");
@@ -19,14 +20,15 @@ function intToIp(n: number): string {
 }
 
 export default function CidrCalcTool() {
+  const t = useTranslations("toolUI.cidr-calc");
   const [input, setInput] = useState("192.168.0.0/24");
 
   const result = useMemo(() => {
     const m = input.trim().match(/^(\d+\.\d+\.\d+\.\d+)\/(\d+)$/);
-    if (!m) return { error: "예: 192.168.0.0/24 형식으로 입력" };
+    if (!m) return { error: t("errorFormat") };
     const ip = ipToInt(m[1]);
     const prefix = parseInt(m[2], 10);
-    if (ip === null || prefix < 0 || prefix > 32) return { error: "잘못된 IP 또는 prefix" };
+    if (ip === null || prefix < 0 || prefix > 32) return { error: t("errorInvalid") };
 
     const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
     const network = (ip & mask) >>> 0;
@@ -48,7 +50,7 @@ export default function CidrCalcTool() {
       binary: mask.toString(2).padStart(32, "0").match(/.{8}/g)!.join("."),
       error: "",
     };
-  }, [input]);
+  }, [input, t]);
 
   return (
     <div className="card space-y-3">
@@ -67,15 +69,15 @@ export default function CidrCalcTool() {
       ) : (
         <table className="w-full text-sm">
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            <tr><td className="py-2 pr-3 text-muted">네트워크</td><td className="font-mono">{result.network}/{result.prefix}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">브로드캐스트</td><td className="font-mono">{result.broadcast}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">서브넷 마스크</td><td className="font-mono">{result.mask}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">와일드카드</td><td className="font-mono">{result.wildcard}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">마스크 (2진)</td><td className="font-mono text-xs">{result.binary}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">첫 호스트</td><td className="font-mono">{result.firstHost}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">마지막 호스트</td><td className="font-mono">{result.lastHost}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">총 주소 수</td><td className="font-mono">{result.total!.toLocaleString()}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">사용 가능 호스트</td><td className="font-mono">{result.usable!.toLocaleString()}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("network")}</td><td className="font-mono">{result.network}/{result.prefix}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("broadcast")}</td><td className="font-mono">{result.broadcast}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("subnetMask")}</td><td className="font-mono">{result.mask}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("wildcard")}</td><td className="font-mono">{result.wildcard}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("maskBinary")}</td><td className="font-mono text-xs">{result.binary}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("firstHost")}</td><td className="font-mono">{result.firstHost}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("lastHost")}</td><td className="font-mono">{result.lastHost}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("totalAddresses")}</td><td className="font-mono">{result.total!.toLocaleString()}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("usableHosts")}</td><td className="font-mono">{result.usable!.toLocaleString()}</td></tr>
           </tbody>
         </table>
       )}

@@ -1,19 +1,21 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 type RecognizeResult = { data: { text: string; confidence: number } };
 
-const LANGS = [
-  { code: "kor", label: "한국어" },
-  { code: "eng", label: "영어" },
-  { code: "kor+eng", label: "한국어 + 영어" },
-  { code: "jpn", label: "일본어" },
-  { code: "chi_sim", label: "중국어 (간체)" },
-  { code: "chi_tra", label: "중국어 (번체)" },
-];
-
 export default function OcrTool() {
+  const t = useTranslations("toolUI.ocr");
+  const LANGS = [
+    { code: "kor", label: t("langKo") },
+    { code: "eng", label: t("langEn") },
+    { code: "kor+eng", label: t("langKoEn") },
+    { code: "jpn", label: t("langJa") },
+    { code: "chi_sim", label: t("langZhSim") },
+    { code: "chi_tra", label: t("langZhTra") },
+  ];
+
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [lang, setLang] = useState("kor+eng");
   const [text, setText] = useState("");
@@ -49,7 +51,7 @@ export default function OcrTool() {
       setText(result.data.text);
       setConfidence(result.data.confidence);
     } catch (e) {
-      setError(`OCR 실패: ${e instanceof Error ? e.message : "알 수 없는 오류"}`);
+      setError(t("errorPrefix", { msg: e instanceof Error ? e.message : t("unknownError") }));
     } finally {
       setBusy(false);
     }
@@ -70,7 +72,7 @@ export default function OcrTool() {
     <div className="card space-y-3">
       <div className="flex flex-wrap gap-2 items-end">
         <label className="flex-1 min-w-[200px] text-sm">
-          언어
+          {t("language")}
           <select
             value={lang}
             onChange={(e) => setLang(e.target.value)}
@@ -82,7 +84,7 @@ export default function OcrTool() {
             ))}
           </select>
         </label>
-        <button onClick={() => fileRef.current?.click()} className="btn">📷 이미지 선택</button>
+        <button onClick={() => fileRef.current?.click()} className="btn">{t("selectImage")}</button>
         <input
           ref={fileRef}
           type="file"
@@ -101,10 +103,10 @@ export default function OcrTool() {
 
       <div className="flex gap-2">
         <button onClick={recognize} disabled={!imgUrl || busy} className="btn btn-primary">
-          {busy ? `🔍 인식 중... ${progress}%` : "🔍 OCR 시작"}
+          {busy ? t("recognizing", { progress }) : t("startOcr")}
         </button>
         {imgUrl && !busy && (
-          <button onClick={() => { setImgUrl(null); setText(""); }} className="btn">🗑️ 초기화</button>
+          <button onClick={() => { setImgUrl(null); setText(""); }} className="btn">{t("reset")}</button>
         )}
       </div>
 
@@ -120,8 +122,8 @@ export default function OcrTool() {
         <>
           <div>
             <div className="flex justify-between items-center mb-1">
-              <label className="label !mb-0">인식된 텍스트</label>
-              <span className="text-xs text-muted">신뢰도: {confidence.toFixed(0)}%</span>
+              <label className="label !mb-0">{t("recognizedText")}</label>
+              <span className="text-xs text-muted">{t("confidence", { value: confidence.toFixed(0) })}</span>
             </div>
             <textarea
               value={text}
@@ -131,14 +133,14 @@ export default function OcrTool() {
             />
           </div>
           <div className="flex gap-2">
-            <button onClick={copy} className="btn">📋 복사</button>
-            <button onClick={download} className="btn">💾 .txt 다운로드</button>
+            <button onClick={copy} className="btn">{t("copy")}</button>
+            <button onClick={download} className="btn">{t("downloadTxt")}</button>
           </div>
         </>
       )}
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 Tesseract.js 엔진 사용. 첫 사용 시 한국어 학습 데이터(~10MB)를 다운로드하며, 이후엔 캐시됩니다. 인식 정확도는 (1) 이미지 해상도, (2) 글자 크기, (3) 배경 대비, (4) 폰트 종류에 따라 크게 달라집니다. 손글씨·기울어진 사진은 정확도가 떨어집니다. 모든 처리는 브라우저 안에서 일어나며 외부 전송 없음.
+        {t("tipNote")}
       </div>
     </div>
   );

@@ -1,9 +1,11 @@
 "use client";
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import JSZip from "jszip";
 import { fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
 
 export default function PdfImagesExtractTool() {
+  const t = useTranslations("toolUI.pdf-images-extract");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [scale, setScale] = useState(2);
@@ -45,7 +47,7 @@ export default function PdfImagesExtractTool() {
     <div className="card">
       <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
         <div className="text-5xl">🖼️</div>
-        <div className="font-medium mt-2">PDF 업로드</div>
+        <div className="font-medium mt-2">{t("uploadPdf")}</div>
         <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && isPdfFile(e.target.files[0]) && setFile(e.target.files[0])} className="hidden" />
       </div>
     </div>
@@ -54,10 +56,10 @@ export default function PdfImagesExtractTool() {
   return (
     <div className="card space-y-3">
       <div className="text-sm"><div className="font-medium truncate">{file.name}</div><div className="text-xs text-muted">{fmtBytes(file.size)}</div></div>
-      <label className="text-sm">배율 ({scale}x)<input type="range" min="1" max="3" step="0.5" value={scale} onChange={(e) => setScale(+e.target.value)} className="w-full" /></label>
-      {busy && <div className="text-sm text-muted">렌더링 중... ({progress.done}/{progress.total})</div>}
+      <label className="text-sm">{t("scale")} ({scale}x)<input type="range" min="1" max="3" step="0.5" value={scale} onChange={(e) => setScale(+e.target.value)} className="w-full" /></label>
+      {busy && <div className="text-sm text-muted">{t("rendering")} ({progress.done}/{progress.total})</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}
-      <button onClick={extract} disabled={busy} className="btn btn-primary disabled:opacity-50">📦 ZIP 다운로드</button>
+      <button onClick={extract} disabled={busy} className="btn btn-primary disabled:opacity-50">{t("downloadZip")}</button>
     </div>
   );
 }

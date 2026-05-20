@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import YAML from "yaml";
 
 type Dir = "yaml-to-json" | "json-to-yaml";
@@ -17,6 +18,7 @@ nested:
 `;
 
 export default function YamlJsonTool() {
+  const t = useTranslations("toolUI.yaml-json");
   const [dir, setDir] = useState<Dir>("yaml-to-json");
   const [input, setInput] = useState(SAMPLE_YAML);
   const [copied, setCopied] = useState(false);
@@ -52,7 +54,7 @@ export default function YamlJsonTool() {
       <div className="flex flex-wrap gap-2 text-sm">
         <button onClick={() => setDir("yaml-to-json")} className={`btn ${dir === "yaml-to-json" ? "btn-primary" : "btn-secondary"}`}>YAML → JSON</button>
         <button onClick={() => setDir("json-to-yaml")} className={`btn ${dir === "json-to-yaml" ? "btn-primary" : "btn-secondary"}`}>JSON → YAML</button>
-        <button onClick={swap} disabled={!output} className="btn btn-secondary disabled:opacity-50">⇄ 결과로 시작</button>
+        <button onClick={swap} disabled={!output} className="btn btn-secondary disabled:opacity-50">{t("swap")}</button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -75,7 +77,7 @@ export default function YamlJsonTool() {
       </div>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
-      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

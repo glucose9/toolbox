@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function parse(ua: string) {
   const browsers = [
@@ -29,6 +30,7 @@ function parse(ua: string) {
 }
 
 export default function UserAgentTool() {
+  const t = useTranslations("toolUI.user-agent");
   const [ua, setUa] = useState("");
   useEffect(() => { setUa(navigator.userAgent); }, []);
   const info = parse(ua);
@@ -37,9 +39,9 @@ export default function UserAgentTool() {
       <textarea value={ua} onChange={(e) => setUa(e.target.value)} className="w-full h-24 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono resize-y" />
       <table className="w-full text-sm">
         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-          <tr><td className="py-2 pr-3 text-muted">브라우저</td><td className="font-mono">{info.browser}</td></tr>
-          <tr><td className="py-2 pr-3 text-muted">운영체제</td><td className="font-mono">{info.os}</td></tr>
-          <tr><td className="py-2 pr-3 text-muted">기기 종류</td><td className="font-mono">{info.device}</td></tr>
+          <tr><td className="py-2 pr-3 text-muted">{t("browser")}</td><td className="font-mono">{info.browser}</td></tr>
+          <tr><td className="py-2 pr-3 text-muted">{t("os")}</td><td className="font-mono">{info.os}</td></tr>
+          <tr><td className="py-2 pr-3 text-muted">{t("device")}</td><td className="font-mono">{info.device}</td></tr>
         </tbody>
       </table>
     </div>

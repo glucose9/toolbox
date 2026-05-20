@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function beautify(code: string): string {
   let depth = 0;
@@ -36,13 +37,14 @@ function beautify(code: string): string {
 }
 
 export default function JsBeautifierTool() {
+  const t = useTranslations("toolUI.js-beautifier");
   const [input, setInput] = useState("function add(a,b){return a+b;}const r=add(1,2);console.log(r);");
   const output = useMemo(() => beautify(input), [input]);
   return (
     <div className="card space-y-3">
       <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
       <textarea readOnly value={output} className="w-full h-48 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-      <button onClick={() => navigator.clipboard.writeText(output)} className="btn btn-primary">복사</button>
+      <button onClick={() => navigator.clipboard.writeText(output)} className="btn btn-primary">{t("copy")}</button>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Align = "left" | "center" | "right";
 
@@ -23,6 +24,7 @@ function buildMd(headers: string[], rows: string[][], aligns: Align[]): string {
 }
 
 export default function MarkdownTableTool() {
+  const t = useTranslations("toolUI.markdown-table");
   const [headers, setHeaders] = useState<string[]>(["이름", "나이", "도시"]);
   const [rows, setRows] = useState<string[][]>([
     ["김민준", "30", "서울"],
@@ -37,7 +39,7 @@ export default function MarkdownTableTool() {
   const removeRow = (i: number) => setRows((r) => r.filter((_, idx) => idx !== i));
 
   const addCol = () => {
-    setHeaders((h) => [...h, `열 ${h.length + 1}`]);
+    setHeaders((h) => [...h, t("columnN", { n: h.length + 1 })]);
     setRows((r) => r.map((row) => [...row, ""]));
     setAligns((a) => [...a, "left"]);
   };
@@ -84,7 +86,7 @@ export default function MarkdownTableTool() {
                 </th>
               ))}
               <th className="p-1">
-                <button onClick={addCol} className="px-2 py-1 text-xs text-brand-600 hover:underline">+ 열</button>
+                <button onClick={addCol} className="px-2 py-1 text-xs text-brand-600 hover:underline">{t("addColumn")}</button>
               </th>
             </tr>
           </thead>
@@ -103,24 +105,24 @@ export default function MarkdownTableTool() {
                   </td>
                 ))}
                 <td className="p-1">
-                  <button onClick={() => removeRow(i)} className="text-red-600 hover:underline text-xs">삭제</button>
+                  <button onClick={() => removeRow(i)} className="text-red-600 hover:underline text-xs">{t("delete")}</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <button onClick={addRow} className="mt-2 text-sm text-brand-600 hover:underline">+ 행 추가</button>
+        <button onClick={addRow} className="mt-2 text-sm text-brand-600 hover:underline">{t("addRow")}</button>
       </div>
 
       <div>
-        <label className="label">마크다운 결과</label>
+        <label className="label">{t("markdownResult")}</label>
         <textarea
           readOnly
           value={md}
           className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-xs resize-y font-mono"
         />
       </div>
-      <button onClick={copy} className="btn btn-primary">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} className="btn btn-primary">{copied ? `✓ ${t("copied")}` : t("copy")}</button>
     </div>
   );
 }

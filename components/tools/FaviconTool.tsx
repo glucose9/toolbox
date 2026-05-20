@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import JSZip from "jszip";
 
 const SIZES = [16, 32, 48, 64, 128, 256];
@@ -33,6 +34,7 @@ function buildIco(pngs: { size: number; bytes: Uint8Array }[]): Uint8Array {
 }
 
 export default function FaviconTool() {
+  const t = useTranslations("toolUI.favicon-generator");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previews, setPreviews] = useState<{ size: number; url: string; blob: Blob }[]>([]);
@@ -45,7 +47,7 @@ export default function FaviconTool() {
     setFile(f);
     setPreviews([]);
     try {
-      const img = await loadImage(f);
+      const img = await loadImage(f, t("errImageLoad"));
       const results: { size: number; url: string; blob: Blob }[] = [];
       for (const size of SIZES) {
         const c = document.createElement("canvas");
@@ -60,7 +62,7 @@ export default function FaviconTool() {
         const h = img.naturalHeight * ratio;
         ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
         const blob = await new Promise<Blob>((resolve, reject) =>
-          c.toBlob((b) => (b ? resolve(b) : reject(new Error("PNG 변환 실패"))), "image/png")
+          c.toBlob((b) => (b ? resolve(b) : reject(new Error(t("errPngFailed")))), "image/png")
         );
         results.push({ size, url: URL.createObjectURL(blob), blob });
       }
@@ -74,7 +76,7 @@ export default function FaviconTool() {
 
   const handleFile = (f: File) => {
     if (!f.type.startsWith("image/")) {
-      setError("이미지 파일만 지원합니다.");
+      setError(t("errImageOnly"));
       return;
     }
     generate(f);
@@ -94,7 +96,7 @@ export default function FaviconTool() {
     zip.file("favicon.ico", ico);
     zip.file(
       "README.txt",
-      "사용 방법\n\n1. favicon.ico를 사이트 루트(public/)에 둡니다.\n2. <head>에 다음 한 줄을 넣습니다:\n   <link rel=\"icon\" href=\"/favicon.ico\">\n3. 고해상도 디스플레이를 위해 PNG도 함께 두려면:\n   <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/favicon-32.png\">\n"
+      t("readmeContent")
     );
     const blob = await zip.generateAsync({ type: "blob" });
     const url = URL.createObjectURL(blob);
@@ -118,8 +120,8 @@ export default function FaviconTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🌐</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">정사각형 비율 권장. 16/32/48/64/128/256 PNG + ICO 생성</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("hint")}</div>
           <input
             ref={inputRef}
             type="file"
@@ -137,10 +139,10 @@ export default function FaviconTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setPreviews([]); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setPreviews([]); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
-      {busy && <div className="text-sm text-muted">생성 중...</div>}
+      {busy && <div className="text-sm text-muted">{t("generating")}</div>}
 
       <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
         {previews.map((p) => (
@@ -156,13 +158,13 @@ export default function FaviconTool() {
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <button onClick={downloadZip} disabled={previews.length === 0} className="btn btn-primary disabled:opacity-50">
-        📦 ZIP 다운로드 (PNG ×6 + ICO + README)
+        📦 {t("downloadZip")}
       </button>
     </div>
   );
 }
 
-function loadImage(f: File): Promise<HTMLImageElement> {
+function loadImage(f: File, errMsg: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(f);
@@ -172,7 +174,7 @@ function loadImage(f: File): Promise<HTMLImageElement> {
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error("이미지 로드 실패"));
+      reject(new Error(errMsg));
     };
     img.src = url;
   });

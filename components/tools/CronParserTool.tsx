@@ -1,34 +1,36 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { CronExpressionParser } from "cron-parser";
 
-const PRESETS = [
-  { label: "매분", expr: "* * * * *" },
-  { label: "매시 정각", expr: "0 * * * *" },
-  { label: "매일 자정", expr: "0 0 * * *" },
-  { label: "매주 월 9시", expr: "0 9 * * 1" },
-  { label: "매월 1일 자정", expr: "0 0 1 * *" },
-  { label: "평일 9시", expr: "0 9 * * 1-5" },
-  { label: "15분마다", expr: "*/15 * * * *" },
-];
-
-function describe(expr: string): string {
-  const parts = expr.trim().split(/\s+/);
-  if (parts.length !== 5 && parts.length !== 6) return "5필드 또는 6필드(초 포함) 형식이어야 합니다.";
-  const [...rest] = parts.length === 6 ? parts : ["0", ...parts];
-  const [sec, min, hour, dom, mon, dow] = rest;
-  const desc: string[] = [];
-  desc.push(min === "*" ? "매분" : `분: ${min}`);
-  desc.push(hour === "*" ? "매시" : `시: ${hour}`);
-  if (dom !== "*") desc.push(`매월 ${dom}일`);
-  if (mon !== "*") desc.push(`${mon}월`);
-  if (dow !== "*") desc.push(`요일: ${dow} (0=일)`);
-  if (parts.length === 6 && sec !== "0") desc.push(`초: ${sec}`);
-  return desc.join(", ");
-}
-
 export default function CronParserTool() {
+  const t = useTranslations("toolUI.cron-parser");
+  const PRESETS = [
+    { label: t("presetEveryMinute"), expr: "* * * * *" },
+    { label: t("presetHourly"), expr: "0 * * * *" },
+    { label: t("presetDailyMidnight"), expr: "0 0 * * *" },
+    { label: t("presetMonday9"), expr: "0 9 * * 1" },
+    { label: t("presetMonthly1"), expr: "0 0 1 * *" },
+    { label: t("presetWeekday9"), expr: "0 9 * * 1-5" },
+    { label: t("preset15Min"), expr: "*/15 * * * *" },
+  ];
+
+  function describe(expr: string): string {
+    const parts = expr.trim().split(/\s+/);
+    if (parts.length !== 5 && parts.length !== 6) return t("formatError");
+    const [...rest] = parts.length === 6 ? parts : ["0", ...parts];
+    const [sec, min, hour, dom, mon, dow] = rest;
+    const desc: string[] = [];
+    desc.push(min === "*" ? t("everyMinute") : t("minute", { val: min }));
+    desc.push(hour === "*" ? t("everyHour") : t("hour", { val: hour }));
+    if (dom !== "*") desc.push(t("dayOfMonth", { val: dom }));
+    if (mon !== "*") desc.push(t("month", { val: mon }));
+    if (dow !== "*") desc.push(t("dayOfWeek", { val: dow }));
+    if (parts.length === 6 && sec !== "0") desc.push(t("second", { val: sec }));
+    return desc.join(", ");
+  }
+
   const [expr, setExpr] = useState("0 9 * * 1-5");
 
   const { description, next, error } = useMemo(() => {
@@ -42,17 +44,18 @@ export default function CronParserTool() {
     } catch (e) {
       return { description: "", next: [], error: (e as Error).message };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expr]);
 
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">Cron 표현식 (분 시 일 월 요일)</label>
+        <label className="label">{t("expressionLabel")}</label>
         <input
           type="text"
           value={expr}
           onChange={(e) => setExpr(e.target.value)}
-          placeholder="예: 0 9 * * 1"
+          placeholder={t("expressionPlaceholder")}
           className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono"
         />
       </div>
@@ -70,16 +73,16 @@ export default function CronParserTool() {
       ) : (
         <>
           <div className="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded p-3 text-sm">
-            <div className="text-xs text-muted">의미</div>
+            <div className="text-xs text-muted">{t("meaning")}</div>
             <div className="font-medium">{description}</div>
           </div>
 
           <div>
-            <div className="text-sm font-medium mb-1">다음 10회 실행 시각</div>
+            <div className="text-sm font-medium mb-1">{t("nextRuns")}</div>
             <ol className="text-sm font-mono space-y-0.5 bg-gray-50 dark:bg-gray-900 p-3 rounded">
-              {next.map((t, i) => (
+              {next.map((tm, i) => (
                 <li key={i}>
-                  <span className="text-muted">{i + 1}.</span> {t}
+                  <span className="text-muted">{i + 1}.</span> {tm}
                 </li>
               ))}
             </ol>

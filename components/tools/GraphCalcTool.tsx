@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { evaluate, parse } from "mathjs";
 
 type FnEntry = { id: number; expr: string; color: string; visible: boolean; error?: string };
@@ -8,6 +9,7 @@ type FnEntry = { id: number; expr: string; color: string; visible: boolean; erro
 const COLORS = ["#2563eb", "#dc2626", "#16a34a", "#ea580c", "#9333ea", "#0891b2", "#db2777", "#ca8a04"];
 
 export default function GraphCalcTool() {
+  const t = useTranslations("toolUI.graph-calc");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [fns, setFns] = useState<FnEntry[]>([
@@ -231,13 +233,13 @@ export default function GraphCalcTool() {
               onClick={() => updateFn(f.id, { visible: !f.visible })}
               className="w-6 h-6 rounded border-2 flex-shrink-0"
               style={{ backgroundColor: f.visible ? f.color : "transparent", borderColor: f.color }}
-              title={f.visible ? "숨기기" : "보이기"}
+              title={f.visible ? t("hide") : t("show")}
             />
             <span className="text-sm font-mono text-muted shrink-0">y =</span>
             <input
               value={fns[i].expr}
               onChange={(e) => updateFn(f.id, { expr: e.target.value })}
-              placeholder="예: x^2, sin(x), 2x+1"
+              placeholder={t("placeholder")}
               className={`flex-1 px-2 py-1 border rounded bg-white dark:bg-gray-900 text-sm font-mono ${f.error ? "border-red-500" : "border-gray-200 dark:border-gray-700"}`}
             />
             <button onClick={() => removeFn(f.id)} className="text-red-500 hover:text-red-700 text-lg w-6">×</button>
@@ -248,7 +250,7 @@ export default function GraphCalcTool() {
             {compiled.filter((f) => f.error).map((f) => `y = ${f.expr}: ${f.error}`).join(" / ")}
           </div>
         )}
-        <button onClick={addFn} className="btn text-sm">+ 함수 추가</button>
+        <button onClick={addFn} className="btn text-sm">{t("addFunction")}</button>
       </div>
 
       <div ref={wrapRef} className="relative">
@@ -277,17 +279,17 @@ export default function GraphCalcTool() {
       </div>
 
       <div className="flex flex-wrap gap-2 text-sm">
-        <button onClick={() => zoomBtn(1 / 1.5)} className="btn">🔍 확대</button>
-        <button onClick={() => zoomBtn(1.5)} className="btn">🔍 축소</button>
-        <button onClick={resetView} className="btn">↺ 기본 화면</button>
+        <button onClick={() => zoomBtn(1 / 1.5)} className="btn">🔍 {t("zoomIn")}</button>
+        <button onClick={() => zoomBtn(1.5)} className="btn">🔍 {t("zoomOut")}</button>
+        <button onClick={resetView} className="btn">↺ {t("resetView")}</button>
         <span className="ml-auto text-xs text-muted self-center">
-          드래그: 이동 · 휠: 확대/축소
+          {t("controls")}
         </span>
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 지원: <code>+ - * / ^</code>, <code>sin cos tan asin acos atan</code>, <code>log log10 exp sqrt abs</code>, <code>pi e</code>. 예: <code>sin(x)/x</code>, <code>e^(-x^2)</code>, <code>x^3 - 3x</code>.
-        조각함수는 <code>x^2 * (x &gt; 0)</code> 처럼 곱하기로.
+        💡 {t("supportPrefix")}: <code>+ - * / ^</code>, <code>sin cos tan asin acos atan</code>, <code>log log10 exp sqrt abs</code>, <code>pi e</code>. {t("examplesPrefix")}: <code>sin(x)/x</code>, <code>e^(-x^2)</code>, <code>x^3 - 3x</code>.
+        {" "}{t("piecewiseHint")}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Ratio = "free" | "1:1" | "4:3" | "16:9" | "3:4" | "9:16";
 
@@ -16,6 +17,7 @@ const RATIOS: Record<Ratio, number | null> = {
 type Sel = { x: number; y: number; w: number; h: number };
 
 export default function ImageCropTool() {
+  const t = useTranslations("toolUI.image-crop");
   const inputRef = useRef<HTMLInputElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -28,7 +30,7 @@ export default function ImageCropTool() {
 
   const handleFile = async (f: File) => {
     if (!f.type.startsWith("image/")) {
-      setError("이미지 파일만 지원합니다.");
+      setError(t("errImageOnly"));
       return;
     }
     setError("");
@@ -95,7 +97,7 @@ export default function ImageCropTool() {
 
   const crop = () => {
     if (!img || !sel || sel.w < 5 || sel.h < 5) {
-      setError("자를 영역을 마우스로 드래그해서 선택하세요.");
+      setError(t("errSelectArea"));
       return;
     }
     setError("");
@@ -137,7 +139,7 @@ export default function ImageCropTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">✂️</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -149,7 +151,7 @@ export default function ImageCropTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setImg(null); setSel(null); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setImg(null); setSel(null); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <div className="flex flex-wrap gap-2 text-sm">
@@ -159,7 +161,7 @@ export default function ImageCropTool() {
             onClick={() => setRatio(r)}
             className={`px-3 py-1.5 rounded ${ratio === r ? "bg-brand-600 text-white" : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"}`}
           >
-            {r === "free" ? "자유" : r}
+            {r === "free" ? t("free") : r}
           </button>
         ))}
       </div>
@@ -193,12 +195,12 @@ export default function ImageCropTool() {
 
       <div className="text-xs text-muted">
         {sel && img
-          ? `선택: ${Math.round(sel.w / containerSize().scale)} × ${Math.round(sel.h / containerSize().scale)} px`
-          : "마우스로 자를 영역을 드래그하세요"}
+          ? `${t("selection")}: ${Math.round(sel.w / containerSize().scale)} × ${Math.round(sel.h / containerSize().scale)} px`
+          : t("dragHint")}
       </div>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
-      <button onClick={crop} disabled={!sel || sel.w < 5} className="btn btn-primary disabled:opacity-50">✂️ 자르기 + 다운로드</button>
+      <button onClick={crop} disabled={!sel || sel.w < 5} className="btn btn-primary disabled:opacity-50">{t("cropAndDownload")}</button>
     </div>
   );
 }

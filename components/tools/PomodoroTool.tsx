@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Phase = "work" | "break" | "longBreak" | "idle";
 
 export default function PomodoroTool() {
+  const t = useTranslations("toolUI.pomodoro");
   const [workMin, setWorkMin] = useState(25);
   const [breakMin, setBreakMin] = useState(5);
   const [longBreakMin, setLongBreakMin] = useState(15);
@@ -26,7 +28,6 @@ export default function PomodoroTool() {
       setRemaining((r) => {
         if (r <= 1) {
           if (intervalRef.current) clearInterval(intervalRef.current);
-          // Transition
           if (phase === "work") {
             const newCount = cyclesDone + 1;
             setCyclesDone(newCount);
@@ -68,8 +69,8 @@ export default function PomodoroTool() {
       /* ignore */
     }
     if ("Notification" in window && Notification.permission === "granted") {
-      new Notification("🍅 포모도로", {
-        body: phase === "work" ? "수고하셨어요! 휴식 시간입니다." : "휴식 끝! 다시 집중 시작.",
+      new Notification(t("notifTitle"), {
+        body: phase === "work" ? t("notifBreakBody") : t("notifWorkBody"),
       });
     }
   };
@@ -115,10 +116,10 @@ export default function PomodoroTool() {
   const progressPct = phase === "idle" ? 0 : ((totalSec - remaining) / totalSec) * 100;
 
   const phaseLabel = {
-    idle: "대기 중",
-    work: "🍅 집중",
-    break: "☕ 짧은 휴식",
-    longBreak: "🛋️ 긴 휴식",
+    idle: t("phaseIdle"),
+    work: t("phaseWork"),
+    break: t("phaseBreak"),
+    longBreak: t("phaseLongBreak"),
   }[phase];
 
   const phaseColor = {
@@ -142,41 +143,41 @@ export default function PomodoroTool() {
           ></div>
         </div>
         <div className="text-sm text-muted mt-2">
-          완료한 사이클: <strong>{cyclesDone}</strong> / 긴 휴식까지 {cyclesUntilLong - (cyclesDone % cyclesUntilLong)}개
+          {t("cyclesInfo", { done: cyclesDone, until: cyclesUntilLong - (cyclesDone % cyclesUntilLong) })}
         </div>
       </div>
 
       <div className="flex justify-center gap-2">
         {!running ? (
-          <button onClick={start} className="btn btn-primary">▶ 시작</button>
+          <button onClick={start} className="btn btn-primary">{t("start")}</button>
         ) : (
-          <button onClick={pause} className="btn btn-secondary">⏸ 일시정지</button>
+          <button onClick={pause} className="btn btn-secondary">{t("pause")}</button>
         )}
-        <button onClick={skip} className="btn">⏭ 건너뛰기</button>
-        <button onClick={reset} className="btn">🔄 초기화</button>
+        <button onClick={skip} className="btn">{t("skip")}</button>
+        <button onClick={reset} className="btn">{t("reset")}</button>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm pt-4 border-t border-gray-200 dark:border-gray-700">
         <label>
-          집중 (분)
+          {t("workMin")}
           <input type="number" min={1} max={120} value={workMin} onChange={(e) => setWorkMin(+e.target.value || 25)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
         <label>
-          짧은 휴식
+          {t("shortBreak")}
           <input type="number" min={1} max={60} value={breakMin} onChange={(e) => setBreakMin(+e.target.value || 5)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
         <label>
-          긴 휴식
+          {t("longBreak")}
           <input type="number" min={1} max={120} value={longBreakMin} onChange={(e) => setLongBreakMin(+e.target.value || 15)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
         <label>
-          긴 휴식 주기
+          {t("longBreakCycle")}
           <input type="number" min={2} max={10} value={cyclesUntilLong} onChange={(e) => setCyclesUntilLong(+e.target.value || 4)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 포모도로 기법: 25분 집중 + 5분 휴식을 한 사이클로, 4사이클 후 15분 긴 휴식. 알림은 브라우저 알림 권한 + 사운드. 탭을 닫지 않아야 작동합니다 (백그라운드 탭은 브라우저 정책상 1초 미만 정밀도 보장 안 됨).
+        {t("tipNote")}
       </div>
     </div>
   );

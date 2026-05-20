@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Size = "1080" | "1080x1350" | "1200x630";
 const SIZES: Record<Size, [number, number]> = { "1080": [1080, 1080], "1080x1350": [1080, 1350], "1200x630": [1200, 630] };
@@ -11,6 +12,7 @@ const BGS = [
 ];
 
 export default function TextCardTool() {
+  const t = useTranslations("toolUI.text-card");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [text, setText] = useState("코드 한 줄이 세상을 바꾼다");
   const [author, setAuthor] = useState("— barokit.com");
@@ -52,10 +54,10 @@ export default function TextCardTool() {
   return (
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-20 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />
-      <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="저자/출처" className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
+      <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} placeholder={t("authorPlaceholder")} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
       <div className="grid grid-cols-3 gap-2 text-sm items-end">
-        <label>크기<select value={size} onChange={(e) => setSize(e.target.value as Size)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1"><option value="1080">정사각 1080</option><option value="1080x1350">세로 1080×1350</option><option value="1200x630">가로 1200×630</option></select></label>
-        <label>글자 크기 ({fontSize})<input type="range" min="40" max="160" value={fontSize} onChange={(e) => setFontSize(+e.target.value)} className="w-full" /></label>
+        <label>{t("sizeLabel")}<select value={size} onChange={(e) => setSize(e.target.value as Size)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1"><option value="1080">{t("sizeSquare")}</option><option value="1080x1350">{t("sizePortrait")}</option><option value="1200x630">{t("sizeLandscape")}</option></select></label>
+        <label>{t("fontSize")} ({fontSize})<input type="range" min="40" max="160" value={fontSize} onChange={(e) => setFontSize(+e.target.value)} className="w-full" /></label>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {BGS.map((bg, i) => (
@@ -63,7 +65,7 @@ export default function TextCardTool() {
         ))}
       </div>
       <canvas ref={canvasRef} className="max-w-full border border-gray-200 dark:border-gray-700 rounded" style={{ maxHeight: 400 }} />
-      <button onClick={download} className="btn btn-primary">📥 PNG 다운로드</button>
+      <button onClick={download} className="btn btn-primary">{t("downloadPng")}</button>
     </div>
   );
 }

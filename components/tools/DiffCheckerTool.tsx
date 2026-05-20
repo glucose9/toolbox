@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { diffLines, diffWordsWithSpace } from "diff";
 
 type Mode = "lines" | "words";
 
 export default function DiffCheckerTool() {
+  const t = useTranslations("toolUI.diff-checker");
   const [a, setA] = useState("Hello world\n좋아하는 색은 파랑\n공통 줄");
   const [b, setB] = useState("Hello there\n좋아하는 색은 빨강\n공통 줄\n추가 줄");
   const [mode, setMode] = useState<Mode>("lines");
@@ -21,7 +23,7 @@ export default function DiffCheckerTool() {
     <div className="card space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label className="label">원본 (A)</label>
+          <label className="label">{t("original")}</label>
           <textarea
             value={a}
             onChange={(e) => setA(e.target.value)}
@@ -29,7 +31,7 @@ export default function DiffCheckerTool() {
           />
         </div>
         <div>
-          <label className="label">변경본 (B)</label>
+          <label className="label">{t("modified")}</label>
           <textarea
             value={b}
             onChange={(e) => setB(e.target.value)}
@@ -39,15 +41,15 @@ export default function DiffCheckerTool() {
       </div>
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <div className="flex gap-2">
-          <button onClick={() => setMode("lines")} className={`btn ${mode === "lines" ? "btn-primary" : "btn-secondary"}`}>줄 단위</button>
-          <button onClick={() => setMode("words")} className={`btn ${mode === "words" ? "btn-primary" : "btn-secondary"}`}>단어 단위</button>
+          <button onClick={() => setMode("lines")} className={`btn ${mode === "lines" ? "btn-primary" : "btn-secondary"}`}>{t("byLines")}</button>
+          <button onClick={() => setMode("words")} className={`btn ${mode === "words" ? "btn-primary" : "btn-secondary"}`}>{t("byWords")}</button>
         </div>
         <div className="text-muted">
           <span className="text-green-600">+{added}</span> · <span className="text-red-600">−{removed}</span>
         </div>
       </div>
       <div>
-        <label className="label">차이</label>
+        <label className="label">{t("diff")}</label>
         <pre className="w-full max-h-[28rem] overflow-auto p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono whitespace-pre-wrap">
           {parts.map((p, i) => (
             <span

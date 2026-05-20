@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { isFavorite, toggleFavorite, trackUse, getUsage } from "@/lib/tracking";
 
 export default function FavoriteButton({ slug }: { slug: string }) {
+  const t = useTranslations();
   const [fav, setFav] = useState(false);
   const [count, setCount] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -32,10 +34,10 @@ export default function FavoriteButton({ slug }: { slug: string }) {
             : "border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
         }`}
       >
-        {fav ? "⭐" : "☆"} {fav ? "즐겨찾기 해제" : "즐겨찾기"}
+        {fav ? "⭐" : "☆"} {fav ? t("tool.removeFavorite") : t("tool.addFavorite")}
       </button>
       {count > 1 && (
-        <span className="text-muted">이 도구 {count}번째 사용</span>
+        <span className="text-muted">{t("tool.usageCount", { count })}</span>
       )}
     </div>
   );

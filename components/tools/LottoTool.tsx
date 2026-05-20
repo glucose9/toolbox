@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 function pickSix(exclude: Set<number>): number[] {
   const pool: number[] = [];
@@ -24,6 +25,7 @@ function ballColor(n: number): string {
 }
 
 export default function LottoTool() {
+  const t = useTranslations("toolUI.lotto");
   const [games, setGames] = useState(5);
   const [excludeStr, setExcludeStr] = useState("");
   const [results, setResults] = useState<number[][]>(() =>
@@ -50,7 +52,7 @@ export default function LottoTool() {
     <div className="card space-y-3">
       <div className="flex flex-wrap items-end gap-3 text-sm">
         <label>
-          게임 수
+          {t("gameCount")}
           <input
             type="number"
             min="1"
@@ -61,16 +63,16 @@ export default function LottoTool() {
           />
         </label>
         <label className="flex-1 min-w-40">
-          제외할 번호 (선택)
+          {t("excludeNumbers")}
           <input
             type="text"
             value={excludeStr}
             onChange={(e) => setExcludeStr(e.target.value)}
-            placeholder="예: 7, 13, 23"
+            placeholder={t("excludePlaceholder")}
             className="ml-2 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 w-full mt-1"
           />
         </label>
-        <button onClick={generate} className="btn btn-primary">🎲 추첨</button>
+        <button onClick={generate} className="btn btn-primary">{t("draw")}</button>
       </div>
 
       <div className="space-y-2">
@@ -92,7 +94,7 @@ export default function LottoTool() {
       </div>
 
       <div className="text-xs text-muted">
-        Web Crypto의 안전한 난수로 추첨합니다. 어떤 조합이든 당첨 확률은 동일합니다 — 재미로만 쓰세요.
+        {t("note")}
       </div>
     </div>
   );

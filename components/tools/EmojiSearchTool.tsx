@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const EMOJIS: { emoji: string; keywords: string[] }[] = [
   { emoji: "😀", keywords: ["smile", "happy", "웃음", "행복"] },
@@ -56,6 +57,7 @@ const EMOJIS: { emoji: string; keywords: string[] }[] = [
 ];
 
 export default function EmojiSearchTool() {
+  const t = useTranslations("toolUI.emoji-search");
   const [q, setQ] = useState("");
   const [copied, setCopied] = useState("");
   const filtered = useMemo(() => {
@@ -66,7 +68,7 @@ export default function EmojiSearchTool() {
   const copy = async (e: string) => { await navigator.clipboard.writeText(e); setCopied(e); setTimeout(() => setCopied(""), 1500); };
   return (
     <div className="card space-y-3">
-      <input type="text" value={q} onChange={(e) => setQ(e.target.value)} placeholder="이모지 검색 (예: 사랑, smile, 강아지)" className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
+      <input type="text" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("searchPlaceholder")} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
       <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
         {filtered.map((e) => (
           <button key={e.emoji} onClick={() => copy(e.emoji)} className="p-2 text-3xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition" title={e.keywords.join(", ")}>

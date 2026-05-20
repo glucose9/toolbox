@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { ELEMENTS, CATEGORY_LABELS, type Element, type Category } from "@/lib/periodic-elements";
 
 export default function PeriodicTableTool() {
+  const t = useTranslations("toolUI.periodic-table");
   const [selected, setSelected] = useState<Element | null>(ELEMENTS[0]);
   const [search, setSearch] = useState("");
   const [hoverCat, setHoverCat] = useState<Category | null>(null);
@@ -72,11 +74,11 @@ export default function PeriodicTableTool() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="🔍 원소 검색 (예: Fe, 철, 26, Iron)"
+          placeholder={t("searchPlaceholder")}
           className="flex-1 min-w-[200px] px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm"
         />
         {search && (
-          <button onClick={() => setSearch("")} className="text-xs text-gray-500 hover:text-blue-600">✕ 지우기</button>
+          <button onClick={() => setSearch("")} className="text-xs text-gray-500 hover:text-blue-600">{t("clear")}</button>
         )}
       </div>
 
@@ -131,21 +133,21 @@ export default function PeriodicTableTool() {
               <div className="text-xs text-muted">{selected.name}</div>
             </div>
             <div className="flex-1 grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
-              <Stat label="분류" value={CATEGORY_LABELS[selected.cat].ko} />
-              <Stat label="원자량" value={selected.mass.toString()} />
-              {selected.config && <Stat label="전자 배치" value={selected.config} mono />}
-              {selected.en !== undefined && <Stat label="전기음성도" value={selected.en.toString()} />}
-              {selected.mp !== undefined && <Stat label="녹는점" value={`${selected.mp} K (${(selected.mp - 273.15).toFixed(0)} °C)`} />}
-              {selected.bp !== undefined && <Stat label="끓는점" value={`${selected.bp} K (${(selected.bp - 273.15).toFixed(0)} °C)`} />}
-              {selected.density !== undefined && <Stat label="밀도" value={`${selected.density} g/cm³`} />}
-              <Stat label="주기 · 족" value={selected.cat === "lanthanide" || selected.cat === "actinide" ? `${selected.cat === "lanthanide" ? 6 : 7}주기 (f-블록)` : `${selected.row}주기 · ${selected.col}족`} />
+              <Stat label={t("category")} value={CATEGORY_LABELS[selected.cat].ko} />
+              <Stat label={t("atomicMass")} value={selected.mass.toString()} />
+              {selected.config && <Stat label={t("electronConfig")} value={selected.config} mono />}
+              {selected.en !== undefined && <Stat label={t("electronegativity")} value={selected.en.toString()} />}
+              {selected.mp !== undefined && <Stat label={t("meltingPoint")} value={`${selected.mp} K (${(selected.mp - 273.15).toFixed(0)} °C)`} />}
+              {selected.bp !== undefined && <Stat label={t("boilingPoint")} value={`${selected.bp} K (${(selected.bp - 273.15).toFixed(0)} °C)`} />}
+              {selected.density !== undefined && <Stat label={t("density")} value={`${selected.density} g/cm³`} />}
+              <Stat label={t("periodGroup")} value={selected.cat === "lanthanide" || selected.cat === "actinide" ? t("fBlockPeriod", { p: selected.cat === "lanthanide" ? 6 : 7 }) : t("periodGroupValue", { p: selected.row, g: selected.col })} />
             </div>
           </div>
         </div>
       )}
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 클릭하면 상세 정보, 검색창에 한글·영문·기호·원자번호 모두 가능합니다. 분류 태그 위에 마우스를 올리면 해당 그룹이 강조됩니다.
+        {t("hint")}
       </div>
     </div>
   );

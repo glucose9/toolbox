@@ -1,10 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Mode = "char-to-code" | "code-to-char";
 
 export default function UnicodeLookupTool() {
+  const t = useTranslations("toolUI.unicode-lookup");
   const [mode, setMode] = useState<Mode>("char-to-code");
   const [input, setInput] = useState(mode === "char-to-code" ? "안녕 😀" : "U+C548 U+B155 U+0020 U+1F600");
 
@@ -28,13 +30,13 @@ export default function UnicodeLookupTool() {
   return (
     <div className="card space-y-3">
       <div className="flex gap-2 text-sm">
-        <button onClick={() => { setMode("char-to-code"); setInput("안녕 😀"); }} className={`btn ${mode === "char-to-code" ? "btn-primary" : "btn-secondary"}`}>글자 → 코드포인트</button>
-        <button onClick={() => { setMode("code-to-char"); setInput("U+C548 U+B155 U+0020 U+1F600"); }} className={`btn ${mode === "code-to-char" ? "btn-primary" : "btn-secondary"}`}>코드포인트 → 글자</button>
+        <button onClick={() => { setMode("char-to-code"); setInput("안녕 😀"); }} className={`btn ${mode === "char-to-code" ? "btn-primary" : "btn-secondary"}`}>{t("charToCode")}</button>
+        <button onClick={() => { setMode("code-to-char"); setInput("U+C548 U+B155 U+0020 U+1F600"); }} className={`btn ${mode === "code-to-char" ? "btn-primary" : "btn-secondary"}`}>{t("codeToChar")}</button>
       </div>
       <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-24 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-base resize-y" />
       <div className="max-h-72 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-900 sticky top-0"><tr><th className="px-3 py-2 text-left">글자</th><th className="px-3 py-2 text-left">코드포인트</th><th className="px-3 py-2 text-left">10진수</th></tr></thead>
+          <thead className="bg-gray-50 dark:bg-gray-900 sticky top-0"><tr><th className="px-3 py-2 text-left">{t("character")}</th><th className="px-3 py-2 text-left">{t("codePoint")}</th><th className="px-3 py-2 text-left">{t("decimal")}</th></tr></thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {result.map((r, i) => (
               <tr key={i}>

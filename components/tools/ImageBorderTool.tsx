@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ImageBorderTool() {
+  const t = useTranslations("toolUI.image-border");
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -94,7 +96,7 @@ export default function ImageBorderTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🖼️</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
       </div>
@@ -105,7 +107,7 @@ export default function ImageBorderTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setImg(null); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setImg(null); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <div className="bg-checker rounded p-3 overflow-auto text-center">
@@ -113,16 +115,16 @@ export default function ImageBorderTool() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 text-sm">
-        <label>두께 ({thickness}px)<input type="range" min="0" max="100" value={thickness} onChange={(e) => setThickness(+e.target.value)} className="w-full" /></label>
-        <label>색상<input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-full h-7" /></label>
-        <label>둥근 모서리 ({radius}px)<input type="range" min="0" max="100" value={radius} onChange={(e) => setRadius(+e.target.value)} className="w-full" /></label>
+        <label>{t("thickness")} ({thickness}px)<input type="range" min="0" max="100" value={thickness} onChange={(e) => setThickness(+e.target.value)} className="w-full" /></label>
+        <label>{t("color")}<input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-full h-7" /></label>
+        <label>{t("cornerRadius")} ({radius}px)<input type="range" min="0" max="100" value={radius} onChange={(e) => setRadius(+e.target.value)} className="w-full" /></label>
         <label className="flex items-end gap-1 pb-1">
           <input type="checkbox" checked={shadow} onChange={(e) => setShadow(e.target.checked)} />
-          그림자
+          {t("shadow")}
         </label>
       </div>
 
-      <button onClick={download} className="btn btn-primary">📥 PNG 다운로드</button>
+      <button onClick={download} className="btn btn-primary">{t("downloadPng")}</button>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function minifySvg(svg: string): string {
   return svg
@@ -19,6 +20,7 @@ function minifySvg(svg: string): string {
 }
 
 export default function SvgMinifierTool() {
+  const t = useTranslations("toolUI.svg-minifier");
   const [input, setInput] = useState(`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">\n  <!-- a circle -->\n  <circle cx="50" cy="50" r="40" fill="blue" />\n</svg>`);
   const [copied, setCopied] = useState(false);
 
@@ -33,8 +35,8 @@ export default function SvgMinifierTool() {
       <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-44 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono resize-y" />
       <textarea readOnly value={output} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-xs font-mono resize-y" />
       <div className="flex justify-between text-sm">
-        <span className="text-muted">{input.length} → {output.length} ({pct}% 절감)</span>
-        <button onClick={copy} className="btn btn-primary">{copied ? "✓ 복사됨" : "복사"}</button>
+        <span className="text-muted">{input.length} → {output.length} ({pct}% {t("saved")})</span>
+        <button onClick={copy} className="btn btn-primary">{copied ? t("copied") : t("copy")}</button>
       </div>
     </div>
   );

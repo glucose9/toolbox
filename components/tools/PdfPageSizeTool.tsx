@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { PDFDocument } from "pdf-lib";
+import { useTranslations } from "next-intl";
 import { downloadBlob, isPdfFile, readBytes } from "@/lib/pdf";
 
 const SIZES: Record<string, [number, number]> = {
@@ -8,6 +9,7 @@ const SIZES: Record<string, [number, number]> = {
 };
 
 export default function PdfPageSizeTool() {
+  const t = useTranslations("toolUI.pdf-page-size");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [size, setSize] = useState("A4");
@@ -39,7 +41,7 @@ export default function PdfPageSizeTool() {
     <div className="card">
       <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
         <div className="text-5xl">📐</div>
-        <div className="font-medium mt-2">PDF 업로드</div>
+        <div className="font-medium mt-2">{t("uploadPdf")}</div>
         <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && isPdfFile(e.target.files[0]) && setFile(e.target.files[0])} className="hidden" />
       </div>
     </div>
@@ -52,7 +54,7 @@ export default function PdfPageSizeTool() {
         {Object.keys(SIZES).map((k) => <option key={k}>{k}</option>)}
       </select>
       {error && <div className="text-sm text-red-600">{error}</div>}
-      <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? "처리 중..." : "변환"}</button>
+      <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? t("processing") : t("convert")}</button>
     </div>
   );
 }

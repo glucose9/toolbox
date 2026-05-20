@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function TextToSpeechTool() {
+  const t = useTranslations("toolUI.text-to-speech");
   const [text, setText] = useState("안녕하세요. 텍스트를 음성으로 읽어줍니다. Hello, this is text-to-speech.");
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceURI, setVoiceURI] = useState("");
@@ -56,7 +58,7 @@ export default function TextToSpeechTool() {
   if (!supported) {
     return (
       <div className="card">
-        <div className="text-sm text-red-600">이 브라우저는 Web Speech API를 지원하지 않습니다. 크롬·엣지·사파리 최신 버전을 권장합니다.</div>
+        <div className="text-sm text-red-600">{t("notSupported")}</div>
       </div>
     );
   }
@@ -70,7 +72,7 @@ export default function TextToSpeechTool() {
       />
 
       <div>
-        <label className="label">음성 ({voices.length}개 사용 가능)</label>
+        <label className="label">{t("voice", { count: voices.length })}</label>
         <select value={voiceURI} onChange={(e) => setVoiceURI(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm">
           {voices.map((v) => (
             <option key={v.voiceURI} value={v.voiceURI}>
@@ -81,18 +83,18 @@ export default function TextToSpeechTool() {
       </div>
 
       <div className="grid grid-cols-3 gap-3 text-sm">
-        <label>속도 ({rate.toFixed(1)}x)<input type="range" min="0.5" max="2" step="0.1" value={rate} onChange={(e) => setRate(+e.target.value)} className="w-full" /></label>
-        <label>음높이 ({pitch.toFixed(1)})<input type="range" min="0" max="2" step="0.1" value={pitch} onChange={(e) => setPitch(+e.target.value)} className="w-full" /></label>
-        <label>음량 ({Math.round(vol * 100)}%)<input type="range" min="0" max="1" step="0.05" value={vol} onChange={(e) => setVol(+e.target.value)} className="w-full" /></label>
+        <label>{t("rate")} ({rate.toFixed(1)}x)<input type="range" min="0.5" max="2" step="0.1" value={rate} onChange={(e) => setRate(+e.target.value)} className="w-full" /></label>
+        <label>{t("pitch")} ({pitch.toFixed(1)})<input type="range" min="0" max="2" step="0.1" value={pitch} onChange={(e) => setPitch(+e.target.value)} className="w-full" /></label>
+        <label>{t("volume")} ({Math.round(vol * 100)}%)<input type="range" min="0" max="1" step="0.05" value={vol} onChange={(e) => setVol(+e.target.value)} className="w-full" /></label>
       </div>
 
       <div className="flex gap-2">
-        <button onClick={play} disabled={playing || !text.trim()} className="btn btn-primary disabled:opacity-50">▶ 재생</button>
-        <button onClick={stop} disabled={!playing} className="btn btn-secondary disabled:opacity-50">⏹ 정지</button>
+        <button onClick={play} disabled={playing || !text.trim()} className="btn btn-primary disabled:opacity-50">▶ {t("play")}</button>
+        <button onClick={stop} disabled={!playing} className="btn btn-secondary disabled:opacity-50">⏹ {t("stop")}</button>
       </div>
 
       <div className="text-xs text-muted">
-        OS에 설치된 음성을 사용합니다. 다른 언어 음성을 추가하려면 OS 설정에서 음성 팩을 다운로드하세요.
+        {t("osVoiceNote")}
       </div>
     </div>
   );

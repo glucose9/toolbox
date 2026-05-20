@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import KoreanLunarCalendar from "korean-lunar-calendar";
 
 type Holiday = { name: string; date: string; type: "fixed" | "lunar"; lunarMonth?: number; lunarDay?: number };
@@ -39,10 +40,11 @@ function lunarToSolar(year: number, m: number, d: number): string {
   return "";
 }
 
-const KO_WEEKDAY = ["일","월","화","수","목","금","토"];
-
 export default function KoreaHolidaysTool() {
+  const t = useTranslations("toolUI.korea-holidays");
   const [year, setYear] = useState(new Date().getFullYear());
+
+  const KO_WEEKDAY = [t("sun"), t("mon"), t("tue"), t("wed"), t("thu"), t("fri"), t("sat")];
 
   const holidays = useMemo(() => {
     const list: { name: string; date: string }[] = [];
@@ -58,23 +60,24 @@ export default function KoreaHolidaysTool() {
   return (
     <div className="card space-y-3">
       <div className="flex items-center gap-2">
-        <label className="text-sm">연도</label>
+        <label className="text-sm">{t("year")}</label>
         <input type="number" min="1900" max="2100" value={year} onChange={(e) => setYear(+e.target.value)} className="w-28 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
       </div>
       <div className="border border-gray-200 dark:border-gray-700 rounded divide-y divide-gray-200 dark:divide-gray-700">
         {holidays.map((h, i) => {
           const d = new Date(h.date + "T00:00:00");
-          const wd = isNaN(d.getTime()) ? "" : KO_WEEKDAY[d.getDay()];
-          const isWeekend = wd === "토" || wd === "일";
+          const dayIdx = isNaN(d.getTime()) ? -1 : d.getDay();
+          const wd = dayIdx >= 0 ? KO_WEEKDAY[dayIdx] : "";
+          const isWeekend = dayIdx === 0 || dayIdx === 6;
           return (
             <div key={i} className={`flex items-center justify-between p-3 ${isWeekend ? "bg-red-50 dark:bg-red-900/20" : ""}`}>
               <span className="font-medium">{h.name}</span>
-              <span className={`text-sm font-mono ${wd === "일" ? "text-red-600" : wd === "토" ? "text-blue-600" : ""}`}>{h.date} ({wd})</span>
+              <span className={`text-sm font-mono ${dayIdx === 0 ? "text-red-600" : dayIdx === 6 ? "text-blue-600" : ""}`}>{h.date} ({wd})</span>
             </div>
           );
         })}
       </div>
-      <div className="text-xs text-muted">대체공휴일·임시공휴일은 정부 발표에 따라 별도 반영됩니다.</div>
+      <div className="text-xs text-muted">{t("note")}</div>
     </div>
   );
 }

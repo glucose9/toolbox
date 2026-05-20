@@ -1,9 +1,10 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
-function validate(input: string): { valid: boolean; formatted: string; birth?: string; gender?: string; foreigner?: boolean } {
+function validate(input: string, labels: { male: string; female: string }): { valid: boolean; formatted: string; birth?: string; gender?: string; foreigner?: boolean } {
   const d = input.replace(/\D/g, "");
-  if (d.length !== 13) return { valid: false, formatted: "13자리 필요" };
+  if (d.length !== 13) return { valid: false, formatted: "" };
   const weights = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5];
   let sum = 0;
   for (let i = 0; i < 12; i++) sum += parseInt(d[i], 10) * weights[i];
@@ -14,32 +15,33 @@ function validate(input: string): { valid: boolean; formatted: string; birth?: s
   const year = century + parseInt(d.slice(0, 2), 10);
   const month = d.slice(2, 4);
   const day = d.slice(4, 6);
-  const gender = g % 2 === 1 ? "남자" : "여자";
+  const gender = g % 2 === 1 ? labels.male : labels.female;
   const foreigner = g >= 5;
   return { valid, formatted: `${d.slice(0, 6)}-${d.slice(6)}`, birth: `${year}-${month}-${day}`, gender, foreigner };
 }
 
 export default function KoreanRrnTool() {
+  const t = useTranslations("toolUI.korean-rrn");
   const [input, setInput] = useState("");
-  const result = useMemo(() => input ? validate(input) : null, [input]);
+  const result = useMemo(() => input ? validate(input, { male: t("male"), female: t("female") }) : null, [input, t]);
   return (
     <div className="card space-y-3">
-      <input type="password" value={input} onChange={(e) => setInput(e.target.value)} placeholder="13자리 입력 (브라우저 안에서만 처리)" className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
+      <input type="password" value={input} onChange={(e) => setInput(e.target.value)} placeholder={t("placeholder")} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
       {result && (
         <div className={`p-4 rounded ${result.valid ? "bg-green-50 dark:bg-green-900/20 border border-green-500" : "bg-red-50 dark:bg-red-900/20 border border-red-500"}`}>
-          <div className="text-center text-2xl">{result.valid ? "✓ 유효" : "✗ 무효"}</div>
+          <div className="text-center text-2xl">{result.valid ? `✓ ${t("valid")}` : `✗ ${t("invalid")}`}</div>
           {result.birth && (
             <table className="w-full text-sm mt-3">
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                <tr><td className="py-2 pr-3 text-muted">생년월일</td><td className="font-mono">{result.birth}</td></tr>
-                <tr><td className="py-2 pr-3 text-muted">성별</td><td>{result.gender}</td></tr>
-                <tr><td className="py-2 pr-3 text-muted">외국인 여부</td><td>{result.foreigner ? "외국인" : "내국인"}</td></tr>
+                <tr><td className="py-2 pr-3 text-muted">{t("birthDate")}</td><td className="font-mono">{result.birth}</td></tr>
+                <tr><td className="py-2 pr-3 text-muted">{t("gender")}</td><td>{result.gender}</td></tr>
+                <tr><td className="py-2 pr-3 text-muted">{t("foreigner")}</td><td>{result.foreigner ? t("foreignerYes") : t("foreignerNo")}</td></tr>
               </tbody>
             </table>
           )}
         </div>
       )}
-      <div className="text-xs text-muted bg-amber-50 dark:bg-amber-900/20 p-2 rounded border border-amber-200 dark:border-amber-800">⚠️ 입력값은 브라우저 안에서만 처리되며 외부로 전송되지 않습니다.</div>
+      <div className="text-xs text-muted bg-amber-50 dark:bg-amber-900/20 p-2 rounded border border-amber-200 dark:border-amber-800">{t("privacyNotice")}</div>
     </div>
   );
 }

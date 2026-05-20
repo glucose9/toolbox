@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type RGB = [number, number, number];
 
@@ -62,6 +63,7 @@ function rgbToHex([r, g, b]: RGB): string {
 }
 
 export default function ColorExtractTool() {
+  const t = useTranslations("toolUI.color-extract");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
@@ -109,7 +111,7 @@ export default function ColorExtractTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🎨</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
       </div>
@@ -120,13 +122,13 @@ export default function ColorExtractTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setPalette([]); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setPalette([]); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <img src={preview} alt="" className="max-w-full max-h-64 rounded border border-gray-200 dark:border-gray-700 mx-auto" />
 
       <div className="text-sm">
-        <label>색상 개수 ({count})<input type="range" min="3" max="16" value={count} onChange={(e) => setCount(+e.target.value)} className="w-full" /></label>
+        <label>{t("colorCount")} ({count})<input type="range" min="3" max="16" value={count} onChange={(e) => setCount(+e.target.value)} className="w-full" /></label>
       </div>
 
       <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
@@ -144,7 +146,7 @@ export default function ColorExtractTool() {
           );
         })}
       </div>
-      <div className="text-xs text-muted text-center">클릭해서 HEX 코드 복사</div>
+      <div className="text-xs text-muted text-center">{t("clickToCopy")}</div>
     </div>
   );
 }

@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ImageFreeRotateTool() {
+  const t = useTranslations("toolUI.image-free-rotate");
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -47,7 +49,7 @@ export default function ImageFreeRotateTool() {
     <div className="card">
       <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
         <div className="text-5xl">↻</div>
-        <div className="font-medium mt-2">이미지 업로드</div>
+        <div className="font-medium mt-2">{t("upload")}</div>
         <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
       </div>
     </div>
@@ -55,13 +57,13 @@ export default function ImageFreeRotateTool() {
 
   return (
     <div className="card space-y-3">
-      <label className="text-sm">각도 ({angle}°)<input type="range" min="0" max="360" value={angle} onChange={(e) => setAngle(+e.target.value)} className="w-full" /></label>
+      <label className="text-sm">{t("angle")} ({angle}°)<input type="range" min="0" max="360" value={angle} onChange={(e) => setAngle(+e.target.value)} className="w-full" /></label>
       <div className="flex items-center gap-3 text-sm">
-        <label className="flex items-center gap-1"><input type="checkbox" checked={transparent} onChange={(e) => setTransparent(e.target.checked)} /> 투명 배경</label>
-        {!transparent && <label>여백색<input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="ml-1 h-7 w-12" /></label>}
+        <label className="flex items-center gap-1"><input type="checkbox" checked={transparent} onChange={(e) => setTransparent(e.target.checked)} /> {t("transparentBg")}</label>
+        {!transparent && <label>{t("paddingColor")}<input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="ml-1 h-7 w-12" /></label>}
       </div>
       <div className="bg-checker rounded p-2"><canvas ref={canvasRef} className="max-w-full mx-auto" /></div>
-      <button onClick={download} className="btn btn-primary">📥 다운로드</button>
+      <button onClick={download} className="btn btn-primary">{t("download")}</button>
     </div>
   );
 }

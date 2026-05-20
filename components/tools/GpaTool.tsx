@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Course = { id: number; name: string; grade: string; credit: number };
 
@@ -29,6 +30,7 @@ const GRADE_40: Record<string, number> = {
 };
 
 export default function GpaTool() {
+  const t = useTranslations("toolUI.gpa");
   const [scale, setScale] = useState<"4.3" | "4.5" | "4.0">("4.5");
   const [courses, setCourses] = useState<Course[]>([
     { id: 1, name: "선형대수", grade: "A+", credit: 3 },
@@ -46,7 +48,6 @@ export default function GpaTool() {
   }, 0);
   const gpa = totalCredits > 0 ? totalPoints / totalCredits : 0;
 
-  // Convert to other scales
   const ratio = gpa / max;
   const gpa45 = ratio * 4.5;
   const gpa43 = ratio * 4.3;
@@ -59,10 +60,12 @@ export default function GpaTool() {
     setCourses(courses.map((c) => (c.id === id ? { ...c, [key]: value } : c)));
   };
 
+  const scaleNote = scale === "4.5" ? t("note45") : scale === "4.3" ? t("note43") : t("note40");
+
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">학교 척도</label>
+        <label className="label">{t("scaleLabel")}</label>
         <div className="flex gap-2">
           {(["4.5", "4.3", "4.0"] as const).map((s) => (
             <button
@@ -70,12 +73,12 @@ export default function GpaTool() {
               onClick={() => setScale(s)}
               className={`px-3 py-1.5 rounded text-sm ${scale === s ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800"}`}
             >
-              {s}점 척도
+              {t("scalePointFormat", { scale: s })}
             </button>
           ))}
         </div>
         <div className="text-xs text-muted mt-1">
-          {scale === "4.5" ? "서울대·한양대·이대 등 한국 다수 대학" : scale === "4.3" ? "연세대·고려대 일부 등" : "미국식 (US college)"}
+          {scaleNote}
         </div>
       </div>
 
@@ -83,9 +86,9 @@ export default function GpaTool() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-700">
-              <th className="text-left p-1">과목명</th>
-              <th className="text-left p-1 w-20">등급</th>
-              <th className="text-left p-1 w-16">학점</th>
+              <th className="text-left p-1">{t("courseName")}</th>
+              <th className="text-left p-1 w-20">{t("grade")}</th>
+              <th className="text-left p-1 w-16">{t("credit")}</th>
               <th className="w-10"></th>
             </tr>
           </thead>
@@ -111,37 +114,37 @@ export default function GpaTool() {
           </tbody>
         </table>
       </div>
-      <button onClick={addCourse} className="btn">+ 과목 추가</button>
+      <button onClick={addCourse} className="btn">{t("addCourse")}</button>
 
       <div className="card-section">
         <div className="text-center">
-          <div className="text-xs text-muted">{scale}점 기준 GPA</div>
+          <div className="text-xs text-muted">{t("gpaOn", { scale })}</div>
           <div className="text-4xl font-bold text-blue-600">{gpa.toFixed(3)}</div>
-          <div className="text-xs text-muted mt-1">총 {totalCredits}학점</div>
+          <div className="text-xs text-muted mt-1">{t("totalCredits", { credits: totalCredits })}</div>
         </div>
         <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
         <div className="grid grid-cols-3 gap-2 text-sm text-center">
           <div>
-            <div className="text-xs text-muted">4.5 환산</div>
+            <div className="text-xs text-muted">{t("convert45")}</div>
             <div className="font-semibold">{gpa45.toFixed(2)}</div>
           </div>
           <div>
-            <div className="text-xs text-muted">4.3 환산</div>
+            <div className="text-xs text-muted">{t("convert43")}</div>
             <div className="font-semibold">{gpa43.toFixed(2)}</div>
           </div>
           <div>
-            <div className="text-xs text-muted">4.0 환산 (미국)</div>
+            <div className="text-xs text-muted">{t("convert40")}</div>
             <div className="font-semibold">{gpa40.toFixed(2)}</div>
           </div>
           <div className="col-span-3 mt-2">
-            <div className="text-xs text-muted">100점 환산 (백분율)</div>
-            <div className="font-semibold">{gpa100.toFixed(1)}점</div>
+            <div className="text-xs text-muted">{t("convert100")}</div>
+            <div className="font-semibold">{t("scoreFmt", { value: gpa100.toFixed(1) })}</div>
           </div>
         </div>
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 학교마다 환산표가 다릅니다. 미국 대학원 지원 시 WES·ECE 같은 학점 환산 기관을 거치는 경우가 많으니 참고용으로만 사용하세요. P/NP는 GPA 계산에서 제외됩니다.
+        {t("tipNote")}
       </div>
     </div>
   );

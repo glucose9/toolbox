@@ -1,16 +1,10 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import QRCode from "qrcode";
 
 type TabKey = "url" | "wifi" | "vcard" | "text";
-
-const tabs: { key: TabKey; label: string }[] = [
-  { key: "url", label: "URL" },
-  { key: "wifi", label: "와이파이" },
-  { key: "vcard", label: "명함" },
-  { key: "text", label: "텍스트" },
-];
 
 function escapeVcard(s: string) {
   return s.replace(/[\\,;]/g, (m) => "\\" + m);
@@ -21,6 +15,7 @@ function escapeWifi(s: string) {
 }
 
 export default function QRTool({ config }: { config: Record<string, unknown> }) {
+  const t = useTranslations("toolUI.qr");
   const initialTab = (config.defaultTab as TabKey) || "url";
   const [tab, setTab] = useState<TabKey>(initialTab);
   const [values, setValues] = useState<Record<string, string>>({
@@ -40,6 +35,13 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
   const [svg, setSvg] = useState("");
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#ffffff");
+
+  const tabs: { key: TabKey; label: string }[] = [
+    { key: "url", label: "URL" },
+    { key: "wifi", label: t("tabWifi") },
+    { key: "vcard", label: t("tabVcard") },
+    { key: "text", label: t("tabText") },
+  ];
 
   const qrText = useMemo(() => {
     switch (tab) {
@@ -111,17 +113,17 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
   return (
     <div className="card">
       <div className="flex flex-wrap gap-1 border-b border-gray-200 mb-4">
-        {tabs.map((t) => (
+        {tabs.map((tb) => (
           <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
+            key={tb.key}
+            onClick={() => setTab(tb.key)}
             className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${
-              tab === t.key
+              tab === tb.key
                 ? "border-brand-600 text-brand-600"
                 : "border-transparent text-gray-600 hover:text-gray-900"
             }`}
           >
-            {t.label}
+            {tb.label}
           </button>
         ))}
       </div>
@@ -130,7 +132,7 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
         <div className="space-y-3">
           {tab === "url" && (
             <div>
-              <label className="label">URL 주소</label>
+              <label className="label">{t("urlAddress")}</label>
               <input
                 className="input"
                 type="url"
@@ -143,10 +145,10 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
 
           {tab === "text" && (
             <div>
-              <label className="label">텍스트 내용</label>
+              <label className="label">{t("textContent")}</label>
               <textarea
                 className="input min-h-[120px]"
-                placeholder="QR로 만들 텍스트"
+                placeholder={t("textPlaceholder")}
                 value={values.text}
                 onChange={update("text")}
               />
@@ -156,19 +158,19 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
           {tab === "wifi" && (
             <>
               <div>
-                <label className="label">와이파이 이름 (SSID)</label>
+                <label className="label">{t("wifiSsid")}</label>
                 <input className="input" value={values.ssid} onChange={update("ssid")} placeholder="MyWiFi" />
               </div>
               <div>
-                <label className="label">비밀번호</label>
+                <label className="label">{t("password")}</label>
                 <input className="input" value={values.password} onChange={update("password")} />
               </div>
               <div>
-                <label className="label">암호화 방식</label>
+                <label className="label">{t("encryption")}</label>
                 <select className="input" value={values.encryption} onChange={update("encryption")}>
                   <option value="WPA">WPA / WPA2 / WPA3</option>
                   <option value="WEP">WEP</option>
-                  <option value="nopass">암호 없음</option>
+                  <option value="nopass">{t("noPassword")}</option>
                 </select>
               </div>
             </>
@@ -177,27 +179,27 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
           {tab === "vcard" && (
             <>
               <div>
-                <label className="label">이름 *</label>
+                <label className="label">{t("name")}</label>
                 <input className="input" value={values.name} onChange={update("name")} />
               </div>
               <div>
-                <label className="label">회사 / 소속</label>
+                <label className="label">{t("company")}</label>
                 <input className="input" value={values.org} onChange={update("org")} />
               </div>
               <div>
-                <label className="label">직책</label>
+                <label className="label">{t("jobTitle")}</label>
                 <input className="input" value={values.title} onChange={update("title")} />
               </div>
               <div>
-                <label className="label">전화번호</label>
+                <label className="label">{t("phone")}</label>
                 <input className="input" type="tel" value={values.phone} onChange={update("phone")} />
               </div>
               <div>
-                <label className="label">이메일</label>
+                <label className="label">{t("email")}</label>
                 <input className="input" type="email" value={values.email} onChange={update("email")} />
               </div>
               <div>
-                <label className="label">웹사이트</label>
+                <label className="label">{t("website")}</label>
                 <input className="input" type="url" value={values.website} onChange={update("website")} />
               </div>
             </>
@@ -209,12 +211,12 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
             <>
               <img src={dataUrl} alt="QR Code" className="w-60 h-60 rounded" />
               <div className="mt-4 flex gap-2">
-                <button onClick={downloadPng} className="btn btn-primary">PNG 다운로드</button>
-                <button onClick={downloadSvg} className="btn btn-secondary">SVG 다운로드</button>
+                <button onClick={downloadPng} className="btn btn-primary">{t("downloadPng")}</button>
+                <button onClick={downloadSvg} className="btn btn-secondary">{t("downloadSvg")}</button>
               </div>
               <div className="mt-4 flex items-center gap-3 text-xs">
                 <label className="flex items-center gap-1.5">
-                  <span>전경:</span>
+                  <span>{t("foreground")}</span>
                   <input
                     type="color"
                     value={fgColor}
@@ -223,7 +225,7 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
                   />
                 </label>
                 <label className="flex items-center gap-1.5">
-                  <span>배경:</span>
+                  <span>{t("background")}</span>
                   <input
                     type="color"
                     value={bgColor}
@@ -238,13 +240,13 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
                   }}
                   className="text-brand-600 hover:underline"
                 >
-                  초기화
+                  {t("reset")}
                 </button>
               </div>
             </>
           ) : (
             <div className="text-gray-400 text-center text-sm">
-              왼쪽에 내용을 입력하면<br />QR코드가 여기에 표시됩니다
+              {t("emptyState1")}<br />{t("emptyState2")}
             </div>
           )}
         </div>

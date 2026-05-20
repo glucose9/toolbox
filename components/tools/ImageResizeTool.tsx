@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ImageResizeTool() {
+  const t = useTranslations("toolUI.image-resize");
   const [input, setInput] = useState<{ name: string; url: string; type: string; w: number; h: number } | null>(null);
   const [output, setOutput] = useState<string | null>(null);
   const [width, setWidth] = useState(0);
@@ -77,7 +79,7 @@ export default function ImageResizeTool() {
           className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 transition-colors"
         >
           <div className="text-5xl mb-3">📐</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input
             ref={inputRef}
             type="file"
@@ -94,17 +96,17 @@ export default function ImageResizeTool() {
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <div className="text-sm font-medium mb-2">
-                원본: {input.w} × {input.h} px
+                {t("original")}: {input.w} × {input.h} px
               </div>
-              <img src={input.url} className="max-w-full max-h-60 rounded border border-gray-200" alt="원본" />
+              <img src={input.url} className="max-w-full max-h-60 rounded border border-gray-200" alt={t("original")} />
             </div>
             <div>
-              <div className="text-sm font-medium mb-2">미리보기</div>
+              <div className="text-sm font-medium mb-2">{t("preview")}</div>
               {output ? (
-                <img src={output} className="max-w-full max-h-60 rounded border border-gray-200" alt="결과" />
+                <img src={output} className="max-w-full max-h-60 rounded border border-gray-200" alt={t("result")} />
               ) : (
                 <div className="h-60 flex items-center justify-center text-gray-400 text-sm">
-                  크기 입력 후 적용 버튼을 누르세요
+                  {t("emptyPreview")}
                 </div>
               )}
             </div>
@@ -112,7 +114,7 @@ export default function ImageResizeTool() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="label">가로 (px)</label>
+              <label className="label">{t("widthPx")}</label>
               <input
                 className="input"
                 type="number"
@@ -121,7 +123,7 @@ export default function ImageResizeTool() {
               />
             </div>
             <div>
-              <label className="label">세로 (px)</label>
+              <label className="label">{t("heightPx")}</label>
               <input
                 className="input"
                 type="number"
@@ -133,15 +135,15 @@ export default function ImageResizeTool() {
 
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={keepRatio} onChange={(e) => setKeepRatio(e.target.checked)} />
-            비율 유지
+            {t("keepRatio")}
           </label>
 
           <div className="flex gap-2">
-            <button onClick={resize} className="btn btn-primary">적용</button>
+            <button onClick={resize} className="btn btn-primary">{t("apply")}</button>
             <button onClick={download} disabled={!output} className="btn btn-secondary disabled:opacity-50">
-              다운로드
+              {t("download")}
             </button>
-            <button onClick={() => setInput(null)} className="btn btn-secondary">다른 파일</button>
+            <button onClick={() => setInput(null)} className="btn btn-secondary">{t("otherFile")}</button>
           </div>
         </div>
       )}

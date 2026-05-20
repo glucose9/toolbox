@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ImageInvertTool() {
+  const t = useTranslations("toolUI.image-invert");
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -44,7 +46,7 @@ export default function ImageInvertTool() {
     <div className="card">
       <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
         <div className="text-5xl">◐</div>
-        <div className="font-medium mt-2">이미지 업로드</div>
+        <div className="font-medium mt-2">{t("upload")}</div>
         <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
       </div>
     </div>
@@ -54,8 +56,8 @@ export default function ImageInvertTool() {
     <div className="card space-y-3">
       <canvas ref={canvasRef} className="max-w-full mx-auto border border-gray-200 dark:border-gray-700 rounded" />
       <div className="flex gap-2">
-        <button onClick={download} className="btn btn-primary">📥 다운로드</button>
-        <button onClick={() => { setFile(null); setImg(null); }} className="btn btn-secondary">다른 파일</button>
+        <button onClick={download} className="btn btn-primary">{t("download")}</button>
+        <button onClick={() => { setFile(null); setImg(null); }} className="btn btn-secondary">{t("otherFile")}</button>
       </div>
     </div>
   );

@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
 }
 
 export default function HeicToJpgTool() {
+  const t = useTranslations("toolUI.heic-to-jpg");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [outUrl, setOutUrl] = useState("");
@@ -26,7 +28,7 @@ export default function HeicToJpgTool() {
       setOutUrl(URL.createObjectURL(blob));
       setOutSize(blob.size);
     } catch (e) {
-      setError("변환 실패: " + (e as Error).message + " (HEIC 파일이 맞는지 확인)");
+      setError(t("errConvert") + ": " + (e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -35,7 +37,7 @@ export default function HeicToJpgTool() {
   const handleFile = (f: File) => {
     const ok = /\.(heic|heif)$/i.test(f.name) || /heic|heif/.test(f.type);
     if (!ok) {
-      setError("HEIC/HEIF 파일만 지원합니다.");
+      setError(t("errHeicOnly"));
       return;
     }
     setError("");
@@ -61,8 +63,8 @@ export default function HeicToJpgTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">📱</div>
-          <div className="font-medium">HEIC 파일을 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">아이폰에서 찍은 .heic / .heif</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("subtitle")}</div>
           <input ref={inputRef} type="file" accept=".heic,.heif,image/heic,image/heif" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -80,22 +82,22 @@ export default function HeicToJpgTool() {
             {outSize > 0 && ` → ${fmt(outSize)} (JPG)`}
           </div>
         </div>
-        <button onClick={() => { setFile(null); setOutUrl(""); setOutSize(0); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setOutUrl(""); setOutSize(0); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <div>
-        <label className="label">화질 ({Math.round(quality * 100)}%)</label>
+        <label className="label">{t("quality")} ({Math.round(quality * 100)}%)</label>
         <input type="range" min="0.4" max="1" step="0.05" value={quality} onChange={(e) => { const q = +e.target.value; setQuality(q); convert(file, q); }} className="w-full" />
       </div>
 
       {busy ? (
-        <div className="py-8 text-center text-muted">변환 중...</div>
+        <div className="py-8 text-center text-muted">{t("converting")}</div>
       ) : error ? (
         <div className="text-sm text-red-600">{error}</div>
       ) : outUrl ? (
         <>
           <img src={outUrl} alt="" className="max-w-full max-h-96 rounded border border-gray-200 dark:border-gray-700" />
-          <button onClick={download} className="btn btn-primary">📥 JPG 다운로드</button>
+          <button onClick={download} className="btn btn-primary">{t("downloadJpg")}</button>
         </>
       ) : null}
     </div>

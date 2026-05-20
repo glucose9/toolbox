@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Mode = "deg" | "rad";
 
@@ -43,14 +44,14 @@ function evaluate(input: string, mode: Mode): { value: number | null; error: str
     .replace(/\bround\(/g, "Math.round(")
     .replace(/(\d+)!/g, (_, n) => `__fact(${n})`);
 
-  if (!/^[\d+\-*/().,\s%a-zA-Z_*\\]+$/.test(expr)) return { value: null, error: "잘못된 문자가 있어요" };
+  if (!/^[\d+\-*/().,\s%a-zA-Z_*\\]+$/.test(expr)) return { value: null, error: "__ERR_INVALID_CHAR__" };
   if (/[a-zA-Z_]/.test(expr.replace(/Math\.[A-Za-z]+|__fact/g, ""))) {
-    return { value: null, error: "알 수 없는 함수/변수" };
+    return { value: null, error: "__ERR_UNKNOWN__" };
   }
   try {
     const fact = (n: number): number => (n <= 1 ? 1 : n * fact(n - 1));
     const v = Function("Math", "__fact", `"use strict"; return (${expr})`)(Math, fact);
-    if (typeof v !== "number" || !isFinite(v)) return { value: null, error: "계산 불가" };
+    if (typeof v !== "number" || !isFinite(v)) return { value: null, error: "__ERR_CANNOT__" };
     return { value: v, error: "" };
   } catch (e) {
     return { value: null, error: (e as Error).message };
@@ -58,11 +59,16 @@ function evaluate(input: string, mode: Mode): { value: number | null; error: str
 }
 
 export default function SciCalcTool() {
+  const t = useTranslations("toolUI.sci-calc");
   const [input, setInput] = useState("sin(30) + cos(60)");
   const [mode, setMode] = useState<Mode>("deg");
   const [history, setHistory] = useState<{ expr: string; result: number }[]>([]);
 
-  const { value, error } = useMemo(() => evaluate(input, mode), [input, mode]);
+  const { value, error: rawError } = useMemo(() => evaluate(input, mode), [input, mode]);
+  const error = rawError === "__ERR_INVALID_CHAR__" ? t("errInvalidChar")
+    : rawError === "__ERR_UNKNOWN__" ? t("errUnknown")
+    : rawError === "__ERR_CANNOT__" ? t("errCannot")
+    : rawError;
 
   const insert = (s: string) => setInput((i) => i + s);
   const clear = () => setInput("");
@@ -78,7 +84,7 @@ export default function SciCalcTool() {
       { label: "cos", ins: "cos(" },
       { label: "tan", ins: "tan(" },
       { label: "π", ins: "π" },
-      { label: "AC", act: clear, cls: "bg-red-100 dark:bg-red-900/30" },
+      { label: t("ac"), act: clear, cls: "bg-red-100 dark:bg-red-900/30" },
     ],
     [
       { label: "log", ins: "log(" },
@@ -139,7 +145,7 @@ export default function SciCalcTool() {
 
       {history.length > 0 && (
         <div>
-          <div className="text-xs text-muted mb-1">기록</div>
+          <div className="text-xs text-muted mb-1">{t("history")}</div>
           <div className="max-h-32 overflow-y-auto text-xs space-y-1">
             {history.map((h, i) => (
               <button key={i} onClick={() => setInput(String(h.result))} className="block w-full text-left p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 font-mono">

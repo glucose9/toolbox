@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function rot(t: string, s: number): string {
   return Array.from(t).map((c) => {
@@ -10,6 +11,7 @@ function rot(t: string, s: number): string {
 }
 
 export default function RotAllTool() {
+  const t = useTranslations("toolUI.rot-all");
   const [text, setText] = useState("Khoor Zruog");
   const results = useMemo(() => Array.from({ length: 25 }, (_, i) => ({ shift: i + 1, result: rot(text, i + 1) })), [text]);
   return (
@@ -20,7 +22,7 @@ export default function RotAllTool() {
           <div key={r.shift} className="flex items-center gap-3 px-3 py-1.5 text-sm">
             <span className="text-xs text-muted w-12">ROT{r.shift}</span>
             <span className="font-mono flex-1 break-all">{r.result}</span>
-            <button onClick={() => navigator.clipboard.writeText(r.result)} className="text-xs text-brand-600 hover:underline">복사</button>
+            <button onClick={() => navigator.clipboard.writeText(r.result)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
           </div>
         ))}
       </div>

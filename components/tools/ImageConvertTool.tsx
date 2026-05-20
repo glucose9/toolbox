@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 import JSZip from "jszip";
 
 const MIME: Record<string, string> = {
@@ -55,6 +56,7 @@ async function convertOne(file: { src: string }, to: string, quality: number): P
 }
 
 export default function ImageConvertTool({ config }: { config: Record<string, unknown> }) {
+  const t = useTranslations("toolUI.image-convert");
   const to = (config.to as string) || "jpeg";
   const defaultQuality = (config.defaultQuality as number) || 0.92;
 
@@ -155,7 +157,7 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">📁</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭 (여러 파일 가능)</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <div className="mt-1 text-sm text-muted">JPG · PNG · WebP · GIF · BMP</div>
           <input
             ref={inputRef}
@@ -170,11 +172,11 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
         <div className="space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="text-sm text-muted">
-              {files.length}개 파일 ({fmt(totalIn)})
-              {doneCount > 0 && ` → ${doneCount}개 변환됨 (${fmt(totalOut)})`}
+              {t("filesCount", { n: files.length, size: fmt(totalIn) })}
+              {doneCount > 0 && ` ${t("doneSuffix", { n: doneCount, size: fmt(totalOut) })}`}
             </div>
             <button onClick={() => inputRef.current?.click()} className="text-sm text-brand-600 hover:underline">
-              + 파일 추가
+              {t("addFiles")}
             </button>
             <input
               ref={inputRef}
@@ -194,23 +196,23 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
                   <div className="text-sm truncate">{f.name}</div>
                   <div className="text-xs text-muted">
                     {fmt(f.size)}
-                    {f.outBlob && ` → ${fmt(f.outBlob.size)} (${Math.round((1 - f.outBlob.size / f.size) * 100)}% 절감)`}
+                    {f.outBlob && ` → ${fmt(f.outBlob.size)} (${t("savedPercent", { pct: Math.round((1 - f.outBlob.size / f.size) * 100) })})`}
                   </div>
                 </div>
                 <div className="text-xs whitespace-nowrap">
-                  {f.status === "pending" && <span className="text-muted">대기</span>}
-                  {f.status === "processing" && <span className="text-brand-600">변환 중...</span>}
+                  {f.status === "pending" && <span className="text-muted">{t("pending")}</span>}
+                  {f.status === "processing" && <span className="text-brand-600">{t("converting")}</span>}
                   {f.status === "done" && (
                     <button onClick={() => downloadOne(f)} className="text-green-600 hover:underline">
-                      ✓ 다운로드
+                      {t("download")}
                     </button>
                   )}
-                  {f.status === "error" && <span className="text-red-600">실패</span>}
+                  {f.status === "error" && <span className="text-red-600">{t("failed")}</span>}
                 </div>
                 <button
                   onClick={() => removeFile(f.id)}
                   className="text-gray-400 hover:text-red-600 text-lg leading-none px-1"
-                  aria-label="삭제"
+                  aria-label={t("remove")}
                 >
                   ×
                 </button>
@@ -220,7 +222,7 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
 
           {to !== "png" && (
             <div>
-              <label className="label">화질 ({Math.round(quality * 100)}%)</label>
+              <label className="label">{t("quality", { pct: Math.round(quality * 100) })}</label>
               <input
                 type="range"
                 min="0.1"
@@ -235,15 +237,15 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
 
           <div className="flex flex-wrap gap-2">
             <button onClick={processAll} disabled={busy} className="btn btn-primary disabled:opacity-50">
-              {busy ? "변환 중..." : doneCount === files.length ? "다시 변환" : `${EXT[to].toUpperCase()}로 변환 (${files.length}개)`}
+              {busy ? t("convertingShort") : doneCount === files.length ? t("convertAgain") : t("convertButton", { fmt: EXT[to].toUpperCase(), n: files.length })}
             </button>
             {doneCount > 1 && (
               <button onClick={downloadAllZip} className="btn btn-secondary">
-                📦 ZIP 다운로드 ({doneCount}개)
+                {t("downloadZip", { n: doneCount })}
               </button>
             )}
             <button onClick={clearAll} className="btn btn-secondary">
-              전체 삭제
+              {t("clearAll")}
             </button>
           </div>
         </div>

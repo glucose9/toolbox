@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 function score(pw: string): number {
   if (!pw) return 0;
@@ -21,6 +22,7 @@ function color(s: number): string {
 }
 
 export default function PasswordComparatorTool() {
+  const t = useTranslations("toolUI.password-comparator");
   const [a, setA] = useState("");
   const [b, setB] = useState("");
   const sa = score(a), sb = score(b);
@@ -29,7 +31,7 @@ export default function PasswordComparatorTool() {
       <div className="grid grid-cols-2 gap-3">
         {[{ v: a, set: setA, s: sa, n: "A" }, { v: b, set: setB, s: sb, n: "B" }].map((x) => (
           <div key={x.n} className="space-y-2">
-            <label className="label">비밀번호 {x.n}</label>
+            <label className="label">{t("password")} {x.n}</label>
             <input type="text" value={x.v} onChange={(e) => x.set(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
             <div className="h-2 bg-gray-200 dark:bg-gray-800 rounded overflow-hidden"><div className={`h-full ${color(x.s)}`} style={{ width: `${x.s}%` }} /></div>
             <div className="text-sm text-center">{x.s}/100</div>
@@ -38,7 +40,7 @@ export default function PasswordComparatorTool() {
       </div>
       {a && b && (
         <div className="text-center bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded p-3">
-          <strong>{sa === sb ? "동등" : sa > sb ? "A" : "B"}</strong>{sa !== sb ? "가 더 안전합니다" : "한 강도"}
+          <strong>{sa === sb ? t("equal") : sa > sb ? "A" : "B"}</strong>{sa !== sb ? t("safer") : t("sameStrength")}
         </div>
       )}
     </div>

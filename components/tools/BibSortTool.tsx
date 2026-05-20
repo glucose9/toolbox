@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 export default function BibSortTool() {
+  const t = useTranslations("toolUI.bib-sort");
   const [input, setInput] = useState(`Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.
 
 Kim, S. (2019). 학습 동기 연구. 교육심리학 연구, 33(2), 11-25.
@@ -31,7 +33,7 @@ Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">참고문헌 (한 항목당 빈 줄로 구분)</label>
+        <label className="label">{t("inputLabel")}</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -42,24 +44,24 @@ Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
 
       <div className="flex flex-wrap gap-3 text-sm">
         <label className="flex items-center gap-1">
-          <input type="radio" checked={order === "asc"} onChange={() => setOrder("asc")} /> 가나다·A→Z
+          <input type="radio" checked={order === "asc"} onChange={() => setOrder("asc")} /> {t("ascending")}
         </label>
         <label className="flex items-center gap-1">
-          <input type="radio" checked={order === "desc"} onChange={() => setOrder("desc")} /> 역순
+          <input type="radio" checked={order === "desc"} onChange={() => setOrder("desc")} /> {t("descending")}
         </label>
         <label className="flex items-center gap-1">
-          <input type="checkbox" checked={dedupe} onChange={(e) => setDedupe(e.target.checked)} /> 중복 제거
+          <input type="checkbox" checked={dedupe} onChange={(e) => setDedupe(e.target.checked)} /> {t("dedupe")}
         </label>
         <label className="flex items-center gap-1">
-          <input type="checkbox" checked={hanging} onChange={(e) => setHanging(e.target.checked)} /> Hanging indent 미리보기
+          <input type="checkbox" checked={hanging} onChange={(e) => setHanging(e.target.checked)} /> {t("hangingIndent")}
         </label>
-        <span className="text-xs text-muted self-center ml-auto">{sorted.length}개 항목</span>
+        <span className="text-xs text-muted self-center ml-auto">{t("entries", { count: sorted.length })}</span>
       </div>
 
       <div>
         <div className="flex justify-between items-center mb-1">
-          <label className="label">정렬 결과</label>
-          <button onClick={copy} className="text-xs text-gray-500 hover:text-blue-600">📋 복사</button>
+          <label className="label">{t("sortedResult")}</label>
+          <button onClick={copy} className="text-xs text-gray-500 hover:text-blue-600">📋 {t("copy")}</button>
         </div>
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3 bg-gray-50 dark:bg-gray-950 text-sm space-y-2 max-h-96 overflow-y-auto">
           {sorted.map((line, i) => (
@@ -71,7 +73,7 @@ Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        한글은 가나다 순, 영문은 알파벳 순으로 자연 정렬됩니다 (Intl.Collator 기반). Hanging indent는 워드/한글에서 2em 들여쓰기로 적용하면 됩니다.
+        {t("note")}
       </div>
     </div>
   );

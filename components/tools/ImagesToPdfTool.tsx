@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { PDFDocument } from "pdf-lib";
 import { downloadBlob, fmtBytes } from "@/lib/pdf";
 
@@ -13,6 +14,7 @@ const PAGE_DIMS: Record<Exclude<PageSize, "auto">, [number, number]> = {
 };
 
 export default function ImagesToPdfTool() {
+  const t = useTranslations("toolUI.images-to-pdf");
   const inputRef = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [pageSize, setPageSize] = useState<PageSize>("auto");
@@ -31,7 +33,7 @@ export default function ImagesToPdfTool() {
         });
       }
     }
-    if (!next.length) setError("이미지 파일을 선택해주세요.");
+    if (!next.length) setError(t("errorSelectImage"));
     else setError("");
     setItems((prev) => [...prev, ...next]);
   };
@@ -55,6 +57,24 @@ export default function ImagesToPdfTool() {
       return prev.filter((p) => p.id !== id);
     });
   };
+
+  const convertToPngBytes = (src: string): Promise<Uint8Array> =>
+    new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement("canvas");
+        c.width = img.naturalWidth;
+        c.height = img.naturalHeight;
+        c.getContext("2d")!.drawImage(img, 0, 0);
+        c.toBlob(async (blob) => {
+          if (!blob) return reject(new Error(t("errorPngConvert")));
+          const ab = await blob.arrayBuffer();
+          resolve(new Uint8Array(ab));
+        }, "image/png");
+      };
+      img.onerror = () => reject(new Error(t("errorImageLoad")));
+      img.src = src;
+    });
 
   const convert = async () => {
     if (items.length === 0) return;
@@ -95,7 +115,7 @@ export default function ImagesToPdfTool() {
       const out = await doc.save();
       downloadBlob(new Blob([out.buffer as ArrayBuffer], { type: "application/pdf" }), `images-${Date.now()}.pdf`);
     } catch (e) {
-      setError("변환 실패: " + (e as Error).message);
+      setError(t("errorConvert") + ": " + (e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -114,7 +134,7 @@ export default function ImagesToPdfTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🖼️</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭 (여러 장 가능)</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <div className="mt-1 text-sm text-muted">JPG · PNG · WebP</div>
           <input
             ref={inputRef}
@@ -133,9 +153,9 @@ export default function ImagesToPdfTool() {
   return (
     <div className="card space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="text-sm text-muted">{items.length}장</div>
+        <div className="text-sm text-muted">{t("count", { n: items.length })}</div>
         <button onClick={() => inputRef.current?.click()} className="text-sm text-brand-600 hover:underline">
-          + 추가
+          + {t("add")}
         </button>
         <input
           ref={inputRef}
@@ -165,19 +185,19 @@ export default function ImagesToPdfTool() {
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="label">페이지 크기</label>
+          <label className="label">{t("pageSize")}</label>
           <select
             value={pageSize}
             onChange={(e) => setPageSize(e.target.value as PageSize)}
             className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded text-sm bg-white dark:bg-gray-900"
           >
-            <option value="auto">이미지 크기에 맞춤</option>
+            <option value="auto">{t("pageAuto")}</option>
             <option value="a4">A4 (595×842pt)</option>
             <option value="letter">Letter (612×792pt)</option>
           </select>
         </div>
         <div>
-          <label className="label">여백 ({margin}pt)</label>
+          <label className="label">{t("margin", { n: margin })}</label>
           <input type="range" min="0" max="80" value={margin} onChange={(e) => setMargin(parseInt(e.target.value))} className="w-full" />
         </div>
       </div>
@@ -185,27 +205,8 @@ export default function ImagesToPdfTool() {
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <button onClick={convert} disabled={busy} className="btn btn-primary disabled:opacity-50">
-        {busy ? "변환 중..." : `📄 ${items.length}장 → PDF`}
+        {busy ? t("converting") : t("convertButton", { n: items.length })}
       </button>
     </div>
   );
-}
-
-async function convertToPngBytes(src: string): Promise<Uint8Array> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      const c = document.createElement("canvas");
-      c.width = img.naturalWidth;
-      c.height = img.naturalHeight;
-      c.getContext("2d")!.drawImage(img, 0, 0);
-      c.toBlob(async (blob) => {
-        if (!blob) return reject(new Error("PNG 변환 실패"));
-        const ab = await blob.arrayBuffer();
-        resolve(new Uint8Array(ab));
-      }, "image/png");
-    };
-    img.onerror = () => reject(new Error("이미지 로드 실패"));
-    img.src = src;
-  });
 }

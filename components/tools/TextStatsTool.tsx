@@ -1,7 +1,9 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function TextStatsTool() {
+  const t = useTranslations("toolUI.text-stats");
   const [text, setText] = useState("");
   const stats = useMemo(() => {
     const chars = text.length;
@@ -17,16 +19,16 @@ export default function TextStatsTool() {
   }, [text]);
   return (
     <div className="card space-y-3">
-      <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="텍스트를 입력하세요" className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />
+      <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder={t("placeholder")} className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-center">
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">글자</div><div className="text-xl font-bold">{stats.chars.toLocaleString()}</div></div>
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">공백 제외</div><div className="text-xl font-bold">{stats.noSpace.toLocaleString()}</div></div>
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">단어</div><div className="text-xl font-bold">{stats.words.toLocaleString()}</div></div>
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">문장</div><div className="text-xl font-bold">{stats.sentences}</div></div>
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">단락</div><div className="text-xl font-bold">{stats.paragraphs}</div></div>
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">평균 단어 길이</div><div className="text-xl font-bold">{stats.avgWordLen.toFixed(1)}</div></div>
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">평균 문장 길이</div><div className="text-xl font-bold">{stats.avgSentenceLen.toFixed(1)}</div></div>
-        <div className="p-3 bg-brand-50 dark:bg-brand-900/20 rounded"><div className="text-xs text-muted">가독성 (영어)</div><div className="text-xl font-bold">{stats.flesch.toFixed(0)}</div></div>
+        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("characters")}</div><div className="text-xl font-bold">{stats.chars.toLocaleString()}</div></div>
+        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("noSpace")}</div><div className="text-xl font-bold">{stats.noSpace.toLocaleString()}</div></div>
+        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("words")}</div><div className="text-xl font-bold">{stats.words.toLocaleString()}</div></div>
+        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("sentences")}</div><div className="text-xl font-bold">{stats.sentences}</div></div>
+        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("paragraphs")}</div><div className="text-xl font-bold">{stats.paragraphs}</div></div>
+        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("avgWordLen")}</div><div className="text-xl font-bold">{stats.avgWordLen.toFixed(1)}</div></div>
+        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("avgSentenceLen")}</div><div className="text-xl font-bold">{stats.avgSentenceLen.toFixed(1)}</div></div>
+        <div className="p-3 bg-brand-50 dark:bg-brand-900/20 rounded"><div className="text-xs text-muted">{t("readability")}</div><div className="text-xl font-bold">{stats.flesch.toFixed(0)}</div></div>
       </div>
     </div>
   );

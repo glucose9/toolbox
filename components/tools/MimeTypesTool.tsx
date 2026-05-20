@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const MIMES: { ext: string; mime: string }[] = [
   { ext: "html", mime: "text/html" }, { ext: "css", mime: "text/css" }, { ext: "js", mime: "application/javascript" },
@@ -23,6 +24,7 @@ const MIMES: { ext: string; mime: string }[] = [
 ];
 
 export default function MimeTypesTool() {
+  const t = useTranslations("toolUI.mime-types");
   const [q, setQ] = useState("");
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -31,13 +33,13 @@ export default function MimeTypesTool() {
   }, [q]);
   return (
     <div className="card space-y-3">
-      <input type="text" value={q} onChange={(e) => setQ(e.target.value)} placeholder="확장자 또는 MIME 검색" className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
+      <input type="text" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("searchPlaceholder")} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
       <div className="max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded divide-y divide-gray-200 dark:divide-gray-700">
         {filtered.map((m) => (
           <div key={m.ext + m.mime} className="flex justify-between p-2 text-sm">
             <span className="font-mono">.{m.ext}</span>
             <span className="font-mono text-muted">{m.mime}</span>
-            <button onClick={() => navigator.clipboard.writeText(m.mime)} className="text-xs text-brand-600 hover:underline">복사</button>
+            <button onClick={() => navigator.clipboard.writeText(m.mime)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
           </div>
         ))}
       </div>

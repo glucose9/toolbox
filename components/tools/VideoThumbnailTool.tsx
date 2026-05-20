@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function fmtTime(s: number): string {
   if (!isFinite(s)) return "0:00";
@@ -14,6 +15,7 @@ function fmtBytes(n: number) {
 }
 
 export default function VideoThumbnailTool() {
+  const t = useTranslations("toolUI.video-thumbnail");
   const inputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -61,7 +63,7 @@ export default function VideoThumbnailTool() {
     c.getContext("2d")!.drawImage(v, 0, 0);
     const mime = format === "png" ? "image/png" : "image/jpeg";
     const blob = await new Promise<Blob>((resolve, reject) =>
-      c.toBlob((b) => (b ? resolve(b) : reject(new Error("캡처 실패"))), mime, 0.92)
+      c.toBlob((b) => (b ? resolve(b) : reject(new Error(t("errCaptureFailed")))), mime, 0.92)
     );
     setShots((s) => [...s, { t: time, url: URL.createObjectURL(blob), blob }]);
   };
@@ -86,7 +88,7 @@ export default function VideoThumbnailTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🖼️</div>
-          <div className="font-medium">동영상을 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="video/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
       </div>
@@ -97,18 +99,18 @@ export default function VideoThumbnailTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setShots([]); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setShots([]); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <video ref={videoRef} src={srcUrl} controls onLoadedMetadata={onMeta} onTimeUpdate={() => setTime(videoRef.current?.currentTime ?? 0)} className="w-full max-h-96 rounded border border-gray-200 dark:border-gray-700" />
 
       <div className="grid grid-cols-3 gap-3 text-sm items-end">
         <label className="col-span-2">
-          시점 ({fmtTime(time)} / {fmtTime(duration)})
+          {t("timePoint")} ({fmtTime(time)} / {fmtTime(duration)})
           <input type="range" min="0" max={duration} step="0.1" value={time} onChange={(e) => { const t = +e.target.value; setTime(t); if (videoRef.current) videoRef.current.currentTime = t; }} className="w-full" />
         </label>
         <div>
-          <label className="label">포맷</label>
+          <label className="label">{t("format")}</label>
           <div className="flex gap-1">
             <button onClick={() => setFormat("png")} className={`btn ${format === "png" ? "btn-primary" : "btn-secondary"}`}>PNG</button>
             <button onClick={() => setFormat("jpeg")} className={`btn ${format === "jpeg" ? "btn-primary" : "btn-secondary"}`}>JPG</button>
@@ -116,18 +118,18 @@ export default function VideoThumbnailTool() {
         </div>
       </div>
 
-      <button onClick={capture} disabled={duration === 0} className="btn btn-primary disabled:opacity-50">📸 현재 시점 캡처</button>
+      <button onClick={capture} disabled={duration === 0} className="btn btn-primary disabled:opacity-50">📸 {t("captureCurrent")}</button>
 
       {shots.length > 0 && (
         <div>
-          <div className="text-sm font-medium mb-2">캡처 ({shots.length})</div>
+          <div className="text-sm font-medium mb-2">{t("captures")} ({shots.length})</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {shots.map((s, i) => (
               <div key={i} className="space-y-1">
                 <img src={s.url} alt="" className="w-full rounded border border-gray-200 dark:border-gray-700" />
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted">{fmtTime(s.t)} · {fmtBytes(s.blob.size)}</span>
-                  <button onClick={() => download(s)} className="text-brand-600 hover:underline">다운로드</button>
+                  <button onClick={() => download(s)} className="text-brand-600 hover:underline">{t("download")}</button>
                 </div>
               </div>
             ))}

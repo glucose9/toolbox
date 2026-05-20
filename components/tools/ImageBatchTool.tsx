@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import JSZip from "jszip";
 
 type Item = {
@@ -18,10 +19,11 @@ type Item = {
 type Format = "" | "image/jpeg" | "image/png" | "image/webp";
 
 export default function ImageBatchTool() {
+  const t = useTranslations("toolUI.image-batch");
   const [items, setItems] = useState<Item[]>([]);
-  const [maxWidth, setMaxWidth] = useState(0); // 0 = no resize
+  const [maxWidth, setMaxWidth] = useState(0);
   const [quality, setQuality] = useState(0.85);
-  const [format, setFormat] = useState<Format>(""); // "" = keep original
+  const [format, setFormat] = useState<Format>("");
   const [busy, setBusy] = useState(false);
 
   const onFiles = (files: FileList | null) => {
@@ -50,10 +52,9 @@ export default function ImageBatchTool() {
         canvas.height = height;
         const ctx = canvas.getContext("2d");
         if (!ctx) {
-          resolve({ ...item, status: "error", error: "Canvas 생성 실패" });
+          resolve({ ...item, status: "error", error: t("errCanvas") });
           return;
         }
-        // White background for transparent → JPG
         const outType = format || (item.file.type.startsWith("image/") ? item.file.type : "image/jpeg");
         if (outType === "image/jpeg") {
           ctx.fillStyle = "#ffffff";
@@ -63,7 +64,7 @@ export default function ImageBatchTool() {
         canvas.toBlob(
           (blob) => {
             if (!blob) {
-              resolve({ ...item, status: "error", error: "변환 실패" });
+              resolve({ ...item, status: "error", error: t("errConvert") });
               return;
             }
             const url = URL.createObjectURL(blob);
@@ -73,7 +74,7 @@ export default function ImageBatchTool() {
           quality
         );
       };
-      img.onerror = () => resolve({ ...item, status: "error", error: "이미지 로드 실패" });
+      img.onerror = () => resolve({ ...item, status: "error", error: t("errLoad") });
       img.src = item.url;
     });
   };
@@ -142,7 +143,7 @@ export default function ImageBatchTool() {
     <div className="card space-y-3">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
         <label>
-          최대 가로 (px, 0=원본 유지)
+          {t("maxWidth")}
           <input
             type="number"
             min={0}
@@ -150,19 +151,19 @@ export default function ImageBatchTool() {
             onChange={(e) => setMaxWidth(+e.target.value)}
             className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
           />
-          <div className="text-xs text-muted mt-1">예: 1920(FHD), 1080(소셜), 800(웹)</div>
+          <div className="text-xs text-muted mt-1">{t("maxWidthHint")}</div>
         </label>
         <label>
-          화질 ({Math.round(quality * 100)}%)
+          {t("quality", { pct: Math.round(quality * 100) })}
           <input type="range" min="0.3" max="1" step="0.05" value={quality} onChange={(e) => setQuality(+e.target.value)} className="w-full" />
         </label>
         <label>
-          출력 포맷
+          {t("outputFormat")}
           <select value={format} onChange={(e) => setFormat(e.target.value as Format)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value="">원본 유지</option>
-            <option value="image/jpeg">JPG로 통일</option>
-            <option value="image/png">PNG로 통일</option>
-            <option value="image/webp">WebP로 통일</option>
+            <option value="">{t("keepOriginal")}</option>
+            <option value="image/jpeg">{t("toJpg")}</option>
+            <option value="image/png">{t("toPng")}</option>
+            <option value="image/webp">{t("toWebp")}</option>
           </select>
         </label>
       </div>
@@ -170,7 +171,7 @@ export default function ImageBatchTool() {
       <div>
         <label className="block border-2 border-dashed border-gray-300 dark:border-gray-700 rounded p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900">
           <div className="text-4xl mb-2">📷</div>
-          <div className="text-sm">여러 이미지 선택 또는 드래그</div>
+          <div className="text-sm">{t("dropPrompt")}</div>
           <input
             type="file"
             multiple
@@ -184,11 +185,11 @@ export default function ImageBatchTool() {
       {items.length > 0 && (
         <>
           <div className="card-section text-sm flex flex-wrap gap-4">
-            <span>총 {items.length}장 · 완료 {doneCount}장</span>
-            <span>원본 합계 {fmt(totalOriginal)}</span>
+            <span>{t("totalDone", { total: items.length, done: doneCount })}</span>
+            <span>{t("originalSum", { size: fmt(totalOriginal) })}</span>
             {totalNew !== totalOriginal && (
               <span className="text-green-600">
-                변환 후 {fmt(totalNew)}{" "}
+                {t("afterSize", { size: fmt(totalNew) })}{" "}
                 ({totalNew < totalOriginal ? `−${Math.round((1 - totalNew / totalOriginal) * 100)}%` : `+${Math.round((totalNew / totalOriginal - 1) * 100)}%`})
               </span>
             )}
@@ -204,7 +205,7 @@ export default function ImageBatchTool() {
                   {fmt(it.originalSize)}
                   {it.newSize && ` → ${fmt(it.newSize)}`}
                 </div>
-                {it.status === "processing" && <div className="text-xs text-blue-600">처리 중...</div>}
+                {it.status === "processing" && <div className="text-xs text-blue-600">{t("processingItem")}</div>}
                 {it.status === "error" && <div className="text-xs text-red-600">⚠️ {it.error}</div>}
                 <div className="flex gap-1 mt-1">
                   {it.status === "done" && (
@@ -218,18 +219,18 @@ export default function ImageBatchTool() {
 
           <div className="flex flex-wrap gap-2">
             <button onClick={processAll} disabled={busy} className="btn btn-primary">
-              {busy ? "처리 중..." : "✨ 일괄 변환"}
+              {busy ? t("processing") : t("batchConvert")}
             </button>
             {doneCount > 0 && (
-              <button onClick={downloadAll} className="btn btn-secondary">📦 ZIP으로 모두 다운로드</button>
+              <button onClick={downloadAll} className="btn btn-secondary">{t("downloadZip")}</button>
             )}
-            <button onClick={clear} className="btn">🗑️ 모두 지우기</button>
+            <button onClick={clear} className="btn">{t("clearAll")}</button>
           </div>
         </>
       )}
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 여러 이미지를 한 번에 압축·리사이즈·포맷 변환합니다. 블로그·쇼핑몰·앨범 백업 등 대량 처리에 적합. 모든 변환이 브라우저 안에서 일어나며 외부 전송 없음. 한 번에 100장 이내, 합쳐서 500MB 이하 권장.
+        {t("tipNote")}
       </div>
     </div>
   );

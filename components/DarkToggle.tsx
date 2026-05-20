@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function DarkToggle() {
+  const t = useTranslations();
   const [mounted, setMounted] = useState(false);
   const [dark, setDark] = useState(false);
 
@@ -28,7 +30,7 @@ export default function DarkToggle() {
   return (
     <button
       onClick={toggle}
-      aria-label="다크모드 전환"
+      aria-label={t("nav.darkMode")}
       className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-lg"
     >
       {dark ? "☀️" : "🌙"}

@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const FLAGS = ["g", "i", "m", "s", "u", "y"] as const;
 type Flag = (typeof FLAGS)[number];
 
 export default function RegexTesterTool() {
+  const t = useTranslations("toolUI.regex-tester");
   const [pattern, setPattern] = useState("\\b\\w+\\b");
   const [flags, setFlags] = useState<Flag[]>(["g"]);
   const [input, setInput] = useState("Hello, world! Hello, Claude.");
@@ -72,7 +74,7 @@ export default function RegexTesterTool() {
       {error && <div className="text-sm text-red-600">❌ {error}</div>}
 
       <div>
-        <label className="label">테스트 문자열</label>
+        <label className="label">{t("testString")}</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -81,17 +83,17 @@ export default function RegexTesterTool() {
       </div>
 
       <div>
-        <label className="label">하이라이트</label>
+        <label className="label">{t("highlight")}</label>
         <div
           className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono whitespace-pre-wrap break-words"
           dangerouslySetInnerHTML={{ __html: highlighted }}
         />
       </div>
 
-      <div className="text-sm text-muted">매칭: {matches.length}개</div>
+      <div className="text-sm text-muted">{t("matches")}: {matches.length}</div>
       {matches.length > 0 && matches[0].groups.length > 0 && (
         <details className="text-sm">
-          <summary className="cursor-pointer">캡처 그룹 보기</summary>
+          <summary className="cursor-pointer">{t("viewGroups")}</summary>
           <ul className="mt-2 space-y-1 font-mono text-xs">
             {matches.slice(0, 20).map((m, i) => (
               <li key={i}>
@@ -106,7 +108,7 @@ export default function RegexTesterTool() {
       )}
 
       <div>
-        <label className="label">치환 미리보기 (replacement)</label>
+        <label className="label">{t("replacementPreview")}</label>
         <input
           type="text"
           value={replacement}

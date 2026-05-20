@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { HwpDocument } from "@rhwp/core";
 import { openHwp, readFileBytes, isHwpFile } from "@/lib/hwp";
 
@@ -9,6 +10,7 @@ function fmt(n: number) {
 }
 
 export default function HwpViewerTool() {
+  const t = useTranslations("toolUI.hwp-viewer");
   const inputRef = useRef<HTMLInputElement>(null);
   const docRef = useRef<HwpDocument | null>(null);
   const [fileName, setFileName] = useState("");
@@ -28,7 +30,7 @@ export default function HwpViewerTool() {
 
   const handleFile = async (file: File) => {
     if (!isHwpFile(file)) {
-      setError(".hwp 또는 .hwpx 파일만 지원합니다.");
+      setError(t("errHwpOnly"));
       return;
     }
     setError("");
@@ -45,7 +47,7 @@ export default function HwpViewerTool() {
       setPage(0);
       setSvg(total > 0 ? doc.renderPageSvg(0) : "");
     } catch (e) {
-      setError("파일을 여는 데 실패했습니다: " + (e as Error).message);
+      setError(t("errOpenFile") + ": " + (e as Error).message);
       docRef.current = null;
       setPageCount(0);
       setSvg("");
@@ -84,8 +86,8 @@ export default function HwpViewerTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">📄</div>
-          <div className="font-medium">.hwp / .hwpx 파일을 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">처음 한 번 WebAssembly 엔진(~5MB)이 로드됩니다</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("wasmHint")}</div>
           <input
             ref={inputRef}
             type="file"
@@ -105,16 +107,16 @@ export default function HwpViewerTool() {
         <div className="text-sm min-w-0">
           <div className="truncate font-medium">{fileName}</div>
           <div className="text-xs text-muted">
-            {fmt(fileSize)} · {pageCount}페이지
+            {fmt(fileSize)} · {t("pageCount", { count: pageCount })}
           </div>
         </div>
         <button onClick={reset} className="text-sm text-brand-600 hover:underline">
-          다른 파일 열기
+          {t("openOtherFile")}
         </button>
       </div>
 
       {loading ? (
-        <div className="py-16 text-center text-muted">파일을 분석하는 중...</div>
+        <div className="py-16 text-center text-muted">{t("analyzing")}</div>
       ) : error ? (
         <div className="py-8 text-center text-red-600">{error}</div>
       ) : (

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const BASES = [
-  { name: "10진수", base: 10 },
-  { name: "2진수", base: 2 },
-  { name: "8진수", base: 8 },
-  { name: "16진수", base: 16 },
+  { key: "dec", base: 10 },
+  { key: "bin", base: 2 },
+  { key: "oct", base: 8 },
+  { key: "hex", base: 16 },
 ] as const;
 
 function toBase(n: number, base: number): string {
@@ -43,6 +44,7 @@ function fromBase(s: string, base: number): number | null {
 }
 
 export default function BaseConverterTool() {
+  const t = useTranslations("toolUI.base-converter");
   const [values, setValues] = useState<Record<number, string>>({ 10: "255", 2: "11111111", 8: "377", 16: "FF" });
   const [error, setError] = useState<Record<number, string>>({});
 
@@ -56,7 +58,7 @@ export default function BaseConverterTool() {
     }
     const num = fromBase(raw, fromBaseN);
     if (num === null) {
-      setError({ [fromBaseN]: "잘못된 형식" });
+      setError({ [fromBaseN]: t("invalidFormat") });
       return;
     }
     const next: Record<number, string> = { ...values, [fromBaseN]: raw };
@@ -69,9 +71,9 @@ export default function BaseConverterTool() {
   return (
     <div className="card space-y-3">
       <div className="space-y-2">
-        {BASES.map(({ name, base }) => (
+        {BASES.map(({ key, base }) => (
           <div key={base}>
-            <label className="label">{name} (base {base})</label>
+            <label className="label">{t(key)} (base {base})</label>
             <input
               type="text"
               value={values[base] ?? ""}
@@ -82,7 +84,7 @@ export default function BaseConverterTool() {
           </div>
         ))}
       </div>
-      <div className="text-xs text-muted">힌트: 16진수는 A~F, 2진수는 0/1만 사용. 소수도 가능 (예: 10진 0.5 = 2진 0.1).</div>
+      <div className="text-xs text-muted">{t("hint")}</div>
     </div>
   );
 }

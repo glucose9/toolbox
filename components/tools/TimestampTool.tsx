@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function detectUnit(s: string): "s" | "ms" {
   return s.length >= 13 ? "ms" : "s";
 }
 
 export default function TimestampTool() {
+  const t = useTranslations("toolUI.timestamp-converter");
   const [tsInput, setTsInput] = useState(() => Math.floor(Date.now() / 1000).toString());
   const [dateInput, setDateInput] = useState(() => new Date().toISOString().slice(0, 16));
   const [now, setNow] = useState(Date.now());
@@ -36,15 +38,15 @@ export default function TimestampTool() {
   return (
     <div className="card space-y-5">
       <div className="rounded p-3 bg-gray-50 dark:bg-gray-900 text-sm">
-        <div className="text-muted text-xs mb-1">현재 시각</div>
+        <div className="text-muted text-xs mb-1">{t("currentTime")}</div>
         <div className="font-mono">
-          {Math.floor(now / 1000)} (초) · {now} (ms)
+          {Math.floor(now / 1000)} ({t("seconds")}) · {now} (ms)
         </div>
         <div className="font-mono text-xs text-muted mt-1">{new Date(now).toLocaleString()}</div>
       </div>
 
       <div>
-        <label className="label">타임스탬프 → 날짜</label>
+        <label className="label">{t("timestampToDate")}</label>
         <input
           type="text"
           value={tsInput}
@@ -54,16 +56,16 @@ export default function TimestampTool() {
         />
         {valid && date && (
           <div className="mt-2 space-y-1 text-sm">
-            <div><span className="text-muted">로컬:</span> {date.toLocaleString()}</div>
+            <div><span className="text-muted">{t("local")}:</span> {date.toLocaleString()}</div>
             <div><span className="text-muted">UTC:</span> {date.toUTCString()}</div>
             <div><span className="text-muted">ISO:</span> <span className="font-mono">{date.toISOString()}</span></div>
-            <div className="text-xs text-muted">감지된 단위: {detectUnit(tsInput.replace(/\D/g, "")) === "s" ? "초" : "밀리초"}</div>
+            <div className="text-xs text-muted">{t("detectedUnit")}: {detectUnit(tsInput.replace(/\D/g, "")) === "s" ? t("seconds") : t("milliseconds")}</div>
           </div>
         )}
       </div>
 
       <div>
-        <label className="label">날짜 → 타임스탬프</label>
+        <label className="label">{t("dateToTimestamp")}</label>
         <input
           type="datetime-local"
           value={dateInput}
@@ -72,8 +74,8 @@ export default function TimestampTool() {
         />
         {dateFromInput && (
           <div className="mt-2 space-y-1 text-sm">
-            <div><span className="text-muted">초:</span> <span className="font-mono">{Math.floor(dateFromInput.getTime() / 1000)}</span></div>
-            <div><span className="text-muted">밀리초:</span> <span className="font-mono">{dateFromInput.getTime()}</span></div>
+            <div><span className="text-muted">{t("seconds")}:</span> <span className="font-mono">{Math.floor(dateFromInput.getTime() / 1000)}</span></div>
+            <div><span className="text-muted">{t("milliseconds")}:</span> <span className="font-mono">{dateFromInput.getTime()}</span></div>
           </div>
         )}
       </div>

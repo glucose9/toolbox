@@ -1,8 +1,11 @@
+import { useTranslations } from "next-intl";
+
 export default function HowTo({ steps }: { steps: string[] }) {
+  const t = useTranslations();
   if (!steps?.length) return null;
   return (
     <section className="mt-10">
-      <h2 className="text-xl font-bold mb-4">사용 방법</h2>
+      <h2 className="text-xl font-bold mb-4">{t("tool.howToTitle")}</h2>
       <ol className="space-y-3">
         {steps.map((step, i) => (
           <li key={i} className="flex gap-3">

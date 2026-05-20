@@ -570,6 +570,6 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "JsBeautifierTool": return <JsBeautifierTool />;
     case "TextStatsTool": return <TextStatsTool />;
     default:
-      return <div>도구를 찾을 수 없습니다.</div>;
+      return <div>Tool not found.</div>;
   }
 }

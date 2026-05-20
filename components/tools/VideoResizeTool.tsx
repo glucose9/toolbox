@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
@@ -12,6 +13,7 @@ const PRESETS = [
 ];
 
 export default function VideoResizeTool() {
+  const t = useTranslations("toolUI.video-resize");
   const inputRef = useRef<HTMLInputElement>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -51,7 +53,7 @@ export default function VideoResizeTool() {
     <div className="card">
       <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
         <div className="text-5xl">📐</div>
-        <div className="font-medium mt-2">동영상 업로드</div>
+        <div className="font-medium mt-2">{t("uploadVideo")}</div>
         <input ref={inputRef} type="file" accept="video/*" onChange={(e) => e.target.files?.[0] && setFile(e.target.files[0])} className="hidden" />
       </div>
     </div>
@@ -64,11 +66,11 @@ export default function VideoResizeTool() {
         {PRESETS.map((p, i) => <option key={i} value={i}>{p.label}</option>)}
       </select>
       {error && <div className="text-sm text-red-600">{error}</div>}
-      <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? "처리 중..." : "리사이즈"}</button>
+      <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? t("processing") : t("resize")}</button>
       {outUrl && (
         <>
           <video src={outUrl} controls className="w-full max-h-72 rounded" />
-          <button onClick={() => { const a = document.createElement("a"); a.href = outUrl; a.download = "resized.mp4"; a.click(); }} className="btn btn-secondary">📥 다운로드</button>
+          <button onClick={() => { const a = document.createElement("a"); a.href = outUrl; a.download = "resized.mp4"; a.click(); }} className="btn btn-secondary">{t("download")}</button>
         </>
       )}
     </div>

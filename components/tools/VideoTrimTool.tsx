@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { getFFmpeg, ffmpegFetchFile } from "@/lib/ffmpeg";
 import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
 
@@ -12,6 +13,7 @@ function fmtTime(s: number) {
 }
 
 export default function VideoTrimTool() {
+  const t = useTranslations("toolUI.video-trim");
   const [file, setFile] = useState<File | null>(null);
   const [duration, setDuration] = useState(0);
   const [start, setStart] = useState(0);
@@ -45,9 +47,9 @@ export default function VideoTrimTool() {
       ff.on("progress", ({ progress }) => setProgress(progress * 100));
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
       const inputName = `input.${ext}`;
-      setStatus("파일 로드 중...");
+      setStatus(t("statusLoading"));
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
-      setStatus(`자르는 중 (${fmtTime(start)} ~ ${fmtTime(end)})...`);
+      setStatus(t("statusTrimming", { start: fmtTime(start), end: fmtTime(end) }));
       await ff.exec([
         "-ss", String(start),
         "-to", String(end),
@@ -58,9 +60,9 @@ export default function VideoTrimTool() {
       const data = (await ff.readFile("out.mp4")) as Uint8Array;
       const blob = new Blob([data as BlobPart], { type: "video/mp4" });
       setOutput({ url: URL.createObjectURL(blob), size: blob.size });
-      setStatus("완료");
+      setStatus(t("statusDone"));
     } catch (e) {
-      setStatus("실패: " + (e as Error).message);
+      setStatus(t("statusFailed") + ": " + (e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -85,7 +87,7 @@ export default function VideoTrimTool() {
       ) : (
         <div className="space-y-4">
           <div>
-            <div className="text-sm font-medium mb-2">원본 ({fmtBytes(file.size)})</div>
+            <div className="text-sm font-medium mb-2">{t("original")} ({fmtBytes(file.size)})</div>
             <video
               ref={videoRef}
               src={URL.createObjectURL(file)}
@@ -99,8 +101,8 @@ export default function VideoTrimTool() {
             <>
               <div>
                 <div className="flex justify-between text-sm mb-1">
-                  <span>시작: {fmtTime(start)}</span>
-                  <button onClick={() => seekTo(start)} className="text-brand-600 hover:underline">시작 지점 미리보기</button>
+                  <span>{t("start")}: {fmtTime(start)}</span>
+                  <button onClick={() => seekTo(start)} className="text-brand-600 hover:underline">{t("previewStart")}</button>
                 </div>
                 <input
                   type="range"
@@ -117,8 +119,8 @@ export default function VideoTrimTool() {
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-1">
-                  <span>끝: {fmtTime(end)}</span>
-                  <button onClick={() => seekTo(end)} className="text-brand-600 hover:underline">끝 지점 미리보기</button>
+                  <span>{t("end")}: {fmtTime(end)}</span>
+                  <button onClick={() => seekTo(end)} className="text-brand-600 hover:underline">{t("previewEnd")}</button>
                 </div>
                 <input
                   type="range"
@@ -133,18 +135,16 @@ export default function VideoTrimTool() {
                   className="w-full"
                 />
               </div>
-              <div className="text-sm text-gray-600">
-                자를 길이: <strong>{fmtTime(end - start)}</strong> / 전체 {fmtTime(duration)}
-              </div>
+              <div className="text-sm text-gray-600" dangerouslySetInnerHTML={{ __html: t("trimLength", { trim: fmtTime(end - start), total: fmtTime(duration) }) }} />
             </>
           )}
 
           <div className="flex gap-2">
             <button onClick={run} disabled={busy || end <= start} className="btn btn-primary disabled:opacity-50">
-              {busy ? "처리 중..." : "자르기"}
+              {busy ? t("processing") : t("trimButton")}
             </button>
             <button onClick={() => { setFile(null); setOutput(null); }} className="btn btn-secondary">
-              다른 파일
+              {t("otherFile")}
             </button>
           </div>
 
@@ -152,9 +152,9 @@ export default function VideoTrimTool() {
 
           {output && (
             <div>
-              <div className="text-sm font-medium mb-2">결과 ({fmtBytes(output.size)})</div>
+              <div className="text-sm font-medium mb-2">{t("result")} ({fmtBytes(output.size)})</div>
               <video src={output.url} controls className="w-full max-h-60 rounded border border-gray-200" />
-              <button onClick={download} className="btn btn-primary mt-3">MP4 다운로드</button>
+              <button onClick={download} className="btn btn-primary mt-3">{t("downloadMp4")}</button>
             </div>
           )}
         </div>

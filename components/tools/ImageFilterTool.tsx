@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Filters = {
-  grayscale: number; // 0-100
-  sepia: number;     // 0-100
-  blur: number;      // 0-20 px
-  brightness: number; // 0-200, 100 = normal
-  contrast: number;   // 0-200, 100 = normal
-  saturate: number;   // 0-200, 100 = normal
-  hueRotate: number;  // 0-360
-  invert: number;     // 0-100
+  grayscale: number;
+  sepia: number;
+  blur: number;
+  brightness: number;
+  contrast: number;
+  saturate: number;
+  hueRotate: number;
+  invert: number;
 };
 
 const DEFAULTS: Filters = {
@@ -38,6 +39,7 @@ function toCss(f: Filters): string {
 }
 
 export default function ImageFilterTool() {
+  const t = useTranslations("toolUI.image-filter");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState("");
@@ -47,7 +49,7 @@ export default function ImageFilterTool() {
 
   const handleFile = (f: File) => {
     if (!f.type.startsWith("image/")) {
-      setError("이미지 파일만 지원합니다.");
+      setError(t("errorOnlyImage"));
       return;
     }
     setError("");
@@ -70,7 +72,7 @@ export default function ImageFilterTool() {
       const img = await new Promise<HTMLImageElement>((resolve, reject) => {
         const i = new Image();
         i.onload = () => resolve(i);
-        i.onerror = () => reject(new Error("이미지 로드 실패"));
+        i.onerror = () => reject(new Error(t("errorLoad")));
         i.src = imgUrl;
       });
       const c = document.createElement("canvas");
@@ -81,7 +83,7 @@ export default function ImageFilterTool() {
       ctx.drawImage(img, 0, 0);
       const mime = file.type === "image/png" ? "image/png" : "image/jpeg";
       const blob = await new Promise<Blob>((resolve, reject) =>
-        c.toBlob((b) => (b ? resolve(b) : reject(new Error("저장 실패"))), mime, 0.92)
+        c.toBlob((b) => (b ? resolve(b) : reject(new Error(t("errorSave")))), mime, 0.92)
       );
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -109,7 +111,7 @@ export default function ImageFilterTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🎨</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropPrompt")}</div>
           <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -122,8 +124,8 @@ export default function ImageFilterTool() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
         <div className="flex gap-2">
-          <button onClick={() => setFilters(DEFAULTS)} className="text-sm text-brand-600 hover:underline">초기화</button>
-          <button onClick={() => { setFile(null); setImgUrl(""); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+          <button onClick={() => setFilters(DEFAULTS)} className="text-sm text-brand-600 hover:underline">{t("reset")}</button>
+          <button onClick={() => { setFile(null); setImgUrl(""); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
         </div>
       </div>
 
@@ -134,14 +136,14 @@ export default function ImageFilterTool() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
         {(
           [
-            ["grayscale", "흑백", 0, 100, "%"],
-            ["sepia", "세피아", 0, 100, "%"],
-            ["blur", "블러", 0, 20, "px"],
-            ["brightness", "밝기", 0, 200, "%"],
-            ["contrast", "대비", 0, 200, "%"],
-            ["saturate", "채도", 0, 200, "%"],
-            ["hueRotate", "색조", 0, 360, "°"],
-            ["invert", "반전", 0, 100, "%"],
+            ["grayscale", t("grayscale"), 0, 100, "%"],
+            ["sepia", t("sepia"), 0, 100, "%"],
+            ["blur", t("blur"), 0, 20, "px"],
+            ["brightness", t("brightness"), 0, 200, "%"],
+            ["contrast", t("contrast"), 0, 200, "%"],
+            ["saturate", t("saturate"), 0, 200, "%"],
+            ["hueRotate", t("hueRotate"), 0, 360, "°"],
+            ["invert", t("invert"), 0, 100, "%"],
           ] as [keyof Filters, string, number, number, string][]
         ).map(([key, label, min, max, unit]) => (
           <label key={key} className="text-xs">
@@ -161,7 +163,7 @@ export default function ImageFilterTool() {
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <button onClick={download} disabled={busy} className="btn btn-primary disabled:opacity-50">
-        {busy ? "처리 중..." : "📥 필터 적용 이미지 다운로드"}
+        {busy ? t("processing") : t("downloadFiltered")}
       </button>
     </div>
   );

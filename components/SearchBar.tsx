@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { tools, categoryLabels } from "@/lib/tools";
 
 export default function SearchBar() {
+  const t = useTranslations();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -48,7 +50,7 @@ export default function SearchBar() {
     <div ref={wrapperRef} className="relative w-full max-w-sm">
       <input
         type="text"
-        placeholder="도구 검색 (Ctrl+K)"
+        placeholder={t("nav.search")}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => setOpen(true)}
@@ -57,22 +59,22 @@ export default function SearchBar() {
       {open && (
         <div className="absolute top-full mt-1 left-0 right-0 max-h-80 overflow-y-auto rounded-lg border bg-white dark:bg-gray-800 dark:border-gray-700 shadow-lg z-50">
           {results.length === 0 ? (
-            <div className="p-4 text-sm text-muted text-center">검색 결과 없음</div>
+            <div className="p-4 text-sm text-muted text-center">{t("common.noResults")}</div>
           ) : (
-            results.map((t) => (
+            results.map((tool) => (
               <Link
-                key={t.slug}
-                href={`/tools/${t.slug}`}
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
                 onClick={() => {
                   setOpen(false);
                   setQuery("");
                 }}
                 className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                <span className="text-xl">{t.icon}</span>
+                <span className="text-xl">{tool.icon}</span>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{t.navTitle}</div>
-                  <div className="text-xs text-muted truncate">{categoryLabels[t.category] || t.category}</div>
+                  <div className="text-sm font-medium truncate">{t(`tools.${tool.slug}`, {}, { fallback: tool.navTitle } as never)}</div>
+                  <div className="text-xs text-muted truncate">{t(`categories.${tool.category}`, {}, { fallback: categoryLabels[tool.category] || tool.category } as never)}</div>
                 </div>
               </Link>
             ))

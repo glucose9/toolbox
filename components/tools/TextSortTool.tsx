@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type SortMode = "asc" | "desc" | "len-asc" | "len-desc" | "random";
 
 export default function TextSortTool() {
+  const t = useTranslations("toolUI.text-sort");
   const [text, setText] = useState("");
   const [mode, setMode] = useState<SortMode>("asc");
   const [caseInsensitive, setCaseInsensitive] = useState(true);
@@ -64,7 +66,7 @@ export default function TextSortTool() {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="한 줄에 하나씩 입력하세요"
+        placeholder={t("inputPlaceholder")}
         className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y font-mono"
       />
       <div className="flex flex-wrap gap-2 text-sm">
@@ -72,9 +74,9 @@ export default function TextSortTool() {
           [
             ["asc", "A→Z"],
             ["desc", "Z→A"],
-            ["len-asc", "짧은 줄 먼저"],
-            ["len-desc", "긴 줄 먼저"],
-            ["random", "랜덤"],
+            ["len-asc", t("shortFirst")],
+            ["len-desc", t("longFirst")],
+            ["random", t("random")],
           ] as [SortMode, string][]
         ).map(([m, label]) => (
           <button
@@ -89,15 +91,15 @@ export default function TextSortTool() {
       <div className="flex flex-wrap gap-4 text-sm">
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={caseInsensitive} onChange={(e) => setCaseInsensitive(e.target.checked)} />
-          대소문자 무시
+          {t("caseInsensitive")}
         </label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={natural} onChange={(e) => setNatural(e.target.checked)} />
-          자연 정렬(1, 2, 10)
+          {t("naturalSort")}
         </label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={dedupe} onChange={(e) => setDedupe(e.target.checked)} />
-          중복 제거
+          {t("dedupe")}
         </label>
       </div>
       <textarea
@@ -106,7 +108,7 @@ export default function TextSortTool() {
         className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono"
       />
       <button onClick={copy} disabled={!result} className="btn btn-primary disabled:opacity-50">
-        {copied ? "✓ 복사됨" : "복사"}
+        {copied ? `✓ ${t("copied")}` : t("copy")}
       </button>
     </div>
   );

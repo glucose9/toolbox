@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type CiteType = "journal" | "book" | "web";
 
 export default function CiteFormatTool() {
+  const t = useTranslations("toolUI.cite-format");
   const [type, setType] = useState<CiteType>("journal");
   const [authors, setAuthors] = useState("Kim, J., Lee, S., & Park, H.");
   const [year, setYear] = useState("2024");
@@ -19,19 +21,8 @@ export default function CiteFormatTool() {
   const [accessed, setAccessed] = useState("");
   const [doi, setDoi] = useState("10.1234/abcd.2024.567");
 
-  // Helpers
   const splitAuthors = (s: string) =>
     s.split(/[,&]|\band\b/).map((a) => a.trim()).filter(Boolean);
-
-  const lastFirstToInitials = (name: string) => {
-    // "Kim, John" -> "Kim, J."
-    const parts = name.split(",").map((p) => p.trim());
-    if (parts.length === 2) {
-      const initials = parts[1].split(/\s+/).map((w) => w[0]?.toUpperCase() + ".").join(" ");
-      return `${parts[0]}, ${initials}`;
-    }
-    return name;
-  };
 
   const mlaAuthors = (raw: string) => {
     const list = raw.split(/,\s*(?=[A-ZÀ-Ý])|,\s*&\s*|\s+&\s+|\sand\s/);
@@ -85,7 +76,6 @@ export default function CiteFormatTool() {
   })();
 
   const ieee = (() => {
-    // IEEE uses initials first
     const list = splitAuthors(authors).map((n) => {
       if (n.includes(",")) {
         const [last, first] = n.split(",").map((s) => s.trim());
@@ -119,65 +109,68 @@ export default function CiteFormatTool() {
       part.startsWith("*") && part.endsWith("*") ? <em key={i}>{part.slice(1, -1)}</em> : <span key={i}>{part}</span>
     );
 
+  const typeLabel = (typ: CiteType) =>
+    typ === "journal" ? t("typeJournal") : typ === "book" ? t("typeBook") : t("typeWeb");
+
   return (
     <div className="card space-y-3">
       <div className="flex gap-2 flex-wrap">
-        {(["journal", "book", "web"] as const).map((t) => (
+        {(["journal", "book", "web"] as const).map((tt) => (
           <button
-            key={t}
-            onClick={() => setType(t)}
-            className={`px-3 py-1.5 rounded text-sm ${type === t ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800"}`}
+            key={tt}
+            onClick={() => setType(tt)}
+            className={`px-3 py-1.5 rounded text-sm ${type === tt ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800"}`}
           >
-            {t === "journal" ? "📄 학술지" : t === "book" ? "📚 단행본" : "🌐 웹사이트"}
+            {typeLabel(tt)}
           </button>
         ))}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-        <label>저자 (예: Kim, J., Lee, S.)
+        <label>{t("authors")}
           <input value={authors} onChange={(e) => setAuthors(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
-        <label>연도
+        <label>{t("year")}
           <input value={year} onChange={(e) => setYear(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
-        <label className="sm:col-span-2">제목
+        <label className="sm:col-span-2">{t("title")}
           <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </label>
         {type === "journal" && (
           <>
-            <label>저널명
+            <label>{t("journalName")}
               <input value={container} onChange={(e) => setContainer(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
             </label>
-            <label>권 (vol)
+            <label>{t("volume")}
               <input value={volume} onChange={(e) => setVolume(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
             </label>
-            <label>호 (issue)
+            <label>{t("issue")}
               <input value={issue} onChange={(e) => setIssue(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
             </label>
-            <label>페이지
+            <label>{t("pages")}
               <input value={pages} onChange={(e) => setPages(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
             </label>
-            <label className="sm:col-span-2">DOI (선택)
+            <label className="sm:col-span-2">{t("doiOptional")}
               <input value={doi} onChange={(e) => setDoi(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" placeholder="10.xxxx/xxxxx" />
             </label>
           </>
         )}
         {type === "book" && (
           <>
-            <label>출판사
+            <label>{t("publisher")}
               <input value={publisher} onChange={(e) => setPublisher(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
             </label>
-            <label>출판도시
+            <label>{t("city")}
               <input value={city} onChange={(e) => setCity(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
             </label>
           </>
         )}
         {type === "web" && (
           <>
-            <label>사이트명 (선택)
+            <label>{t("siteOptional")}
               <input value={container} onChange={(e) => setContainer(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
             </label>
-            <label>접속일
+            <label>{t("accessed")}
               <input value={accessed} onChange={(e) => setAccessed(e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" placeholder="2025-05-16" />
             </label>
             <label className="sm:col-span-2">URL
@@ -192,7 +185,7 @@ export default function CiteFormatTool() {
           <div key={s.label} className="border border-gray-200 dark:border-gray-700 rounded p-3">
             <div className="flex justify-between items-center mb-1">
               <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{s.label}</span>
-              <button onClick={() => copy(s.value.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">📋 복사</button>
+              <button onClick={() => copy(s.value.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
             </div>
             <div className="text-sm leading-relaxed break-words">{renderMd(s.value)}</div>
           </div>
@@ -200,7 +193,7 @@ export default function CiteFormatTool() {
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 *기울임* 표시는 실제로는 이탤릭으로 변환됩니다. 복사 시 별표(*)는 제거되니 워드/한글에서 직접 이탤릭 처리해주세요.
+        {t("tipNote")}
       </div>
     </div>
   );

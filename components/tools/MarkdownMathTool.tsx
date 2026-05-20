@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { marked } from "marked";
 import katex from "katex";
 import "katex/dist/katex.min.css";
@@ -76,13 +77,11 @@ const blockMathExt = {
   },
 };
 
-// Register extensions at module level so the first useMemo() render
-// already has KaTeX support. useEffect runs *after* render, which made
-// the initial preview show raw $...$ text until the user typed.
 marked.use({ extensions: [blockMathExt, inlineMathExt] });
 marked.setOptions({ gfm: true, breaks: true });
 
 export default function MarkdownMathTool() {
+  const t = useTranslations("toolUI.markdown-math");
   const [md, setMd] = useState(SAMPLE);
   const [printError, setPrintError] = useState("");
   const [copied, setCopied] = useState(false);
@@ -124,10 +123,10 @@ export default function MarkdownMathTool() {
     const katexCss = await loadKatexCssText();
     const extraStyles = `${katexCss}\n.katex-display-block { text-align: center; margin: 0.8em 0; }`;
     const ok = printHtmlAsPdf(html, {
-      title: extractTitle(md) || "마크다운+수식",
+      title: extractTitle(md) || t("defaultTitle"),
       styles: extraStyles,
     });
-    if (!ok) setPrintError("팝업 차단을 해제해주세요.");
+    if (!ok) setPrintError(t("popupBlocked"));
     else setPrintError("");
   };
 
@@ -136,11 +135,11 @@ export default function MarkdownMathTool() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="label !mb-0">마크다운 (수식: $...$, $$...$$)</label>
+            <label className="label !mb-0">{t("markdownLabel")}</label>
             <div className="flex gap-2 text-xs">
-              <button onClick={() => mdFileRef.current?.click()} className="text-brand-600 hover:underline">📄 .md 불러오기</button>
-              <button onClick={() => imgFileRef.current?.click()} className="text-brand-600 hover:underline">🖼️ 이미지 삽입</button>
-              <button onClick={() => downloadText(md, (extractTitle(md) || "markdown-math") + ".md")} className="text-brand-600 hover:underline">💾 .md 저장</button>
+              <button onClick={() => mdFileRef.current?.click()} className="text-brand-600 hover:underline">{t("loadMd")}</button>
+              <button onClick={() => imgFileRef.current?.click()} className="text-brand-600 hover:underline">{t("insertImage")}</button>
+              <button onClick={() => downloadText(md, (extractTitle(md) || "markdown-math") + ".md")} className="text-brand-600 hover:underline">{t("saveMd")}</button>
             </div>
           </div>
           <input ref={mdFileRef} type="file" accept=".md,.markdown,text/markdown" onChange={(e) => e.target.files?.[0] && loadMd(e.target.files[0])} className="hidden" />
@@ -161,7 +160,7 @@ export default function MarkdownMathTool() {
           />
         </div>
         <div>
-          <label className="label">미리보기</label>
+          <label className="label">{t("preview")}</label>
           <div
             className="w-full h-[28rem] p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm overflow-y-auto"
             dangerouslySetInnerHTML={{ __html: html }}
@@ -170,13 +169,13 @@ export default function MarkdownMathTool() {
       </div>
       <style>{`.katex-display-block { text-align: center; margin: 0.8em 0; }`}</style>
       <div className="flex flex-wrap gap-2">
-        <button onClick={copy} className="btn btn-secondary">{copied ? "✓ HTML 복사됨" : "HTML 복사"}</button>
-        <button onClick={printPdf} className="btn btn-primary">📕 PDF로 저장</button>
+        <button onClick={copy} className="btn btn-secondary">{copied ? t("htmlCopied") : t("copyHtml")}</button>
+        <button onClick={printPdf} className="btn btn-primary">{t("savePdf")}</button>
       </div>
       {printError && <div className="text-sm text-red-600">{printError}</div>}
       <div className="text-xs text-muted bg-blue-50 dark:bg-blue-900/20 p-3 rounded border border-blue-200 dark:border-blue-800">
-        <strong>💡 수식 입력:</strong> 인라인 <code>$E=mc^2$</code>, 블록 <code>$$...$$</code>. KaTeX 지원 명령어는{" "}
-        <a href="https://katex.org/docs/supported.html" target="_blank" rel="noreferrer" className="underline">공식 문서</a>를 참고하세요.
+        <strong>{t("tipLabel")}</strong> {t("tipInline")} <code>$E=mc^2$</code>, {t("tipBlock")} <code>$$...$$</code>. {t("tipDocs")}{" "}
+        <a href="https://katex.org/docs/supported.html" target="_blank" rel="noreferrer" className="underline">{t("officialDocs")}</a>{t("tipDocsSuffix")}
       </div>
     </div>
   );
@@ -208,9 +207,9 @@ async function loadKatexCssText(): Promise<string> {
         try {
           const res = await fetch(href);
           if (res.ok) {
-            const t = await res.text();
-            cachedKatexCss = t;
-            return t;
+            const tt = await res.text();
+            cachedKatexCss = tt;
+            return tt;
           }
         } catch {
           /* ignore */

@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function normalize(input: string): { national: string; international: string; raw: string } {
   const digits = input.replace(/\D/g, "");
@@ -16,6 +17,7 @@ function normalize(input: string): { national: string; international: string; ra
 }
 
 export default function KoreanPhoneTool() {
+  const t = useTranslations("toolUI.korean-phone");
   const [input, setInput] = useState("01012345678");
   const result = useMemo(() => normalize(input), [input]);
   return (
@@ -23,9 +25,9 @@ export default function KoreanPhoneTool() {
       <input type="text" value={input} onChange={(e) => setInput(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono text-lg" />
       <table className="w-full text-sm">
         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-          <tr><td className="py-2 pr-3 text-muted">국내 표준</td><td className="font-mono">{result.national}</td><td className="text-right"><button onClick={() => navigator.clipboard.writeText(result.national)} className="text-xs text-brand-600 hover:underline">복사</button></td></tr>
-          <tr><td className="py-2 pr-3 text-muted">국제 형식</td><td className="font-mono">{result.international || "—"}</td><td className="text-right">{result.international && <button onClick={() => navigator.clipboard.writeText(result.international)} className="text-xs text-brand-600 hover:underline">복사</button>}</td></tr>
-          <tr><td className="py-2 pr-3 text-muted">숫자만</td><td className="font-mono">{result.raw}</td><td className="text-right"><button onClick={() => navigator.clipboard.writeText(result.raw)} className="text-xs text-brand-600 hover:underline">복사</button></td></tr>
+          <tr><td className="py-2 pr-3 text-muted">{t("national")}</td><td className="font-mono">{result.national}</td><td className="text-right"><button onClick={() => navigator.clipboard.writeText(result.national)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button></td></tr>
+          <tr><td className="py-2 pr-3 text-muted">{t("international")}</td><td className="font-mono">{result.international || "—"}</td><td className="text-right">{result.international && <button onClick={() => navigator.clipboard.writeText(result.international)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>}</td></tr>
+          <tr><td className="py-2 pr-3 text-muted">{t("digitsOnly")}</td><td className="font-mono">{result.raw}</td><td className="text-right"><button onClick={() => navigator.clipboard.writeText(result.raw)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button></td></tr>
         </tbody>
       </table>
     </div>

@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
 }
 
 export default function ImageRotateTool() {
+  const t = useTranslations("toolUI.image-rotate");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [src, setSrc] = useState<HTMLImageElement | null>(null);
@@ -19,7 +21,7 @@ export default function ImageRotateTool() {
 
   const handleFile = async (f: File) => {
     if (!f.type.startsWith("image/")) {
-      setError("이미지 파일만 지원합니다.");
+      setError(t("errImageOnly"));
       return;
     }
     setError("");
@@ -81,7 +83,7 @@ export default function ImageRotateTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🔄</div>
-          <div className="font-medium">이미지를 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -93,17 +95,17 @@ export default function ImageRotateTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setSrc(null); setOutBlob(null); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setSrc(null); setOutBlob(null); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        <span>회전</span>
+        <span>{t("rotate")}</span>
         <button onClick={() => setAngle((a) => a - 90)} className="btn btn-secondary">← 90°</button>
         <span className="font-mono w-12 text-center">{((angle % 360) + 360) % 360}°</span>
         <button onClick={() => setAngle((a) => a + 90)} className="btn btn-secondary">90° →</button>
         <button onClick={() => setAngle((a) => a + 180)} className="btn btn-secondary">180°</button>
-        <button onClick={() => setFlipH((v) => !v)} className={`btn ${flipH ? "btn-primary" : "btn-secondary"}`}>좌우반전</button>
-        <button onClick={() => setFlipV((v) => !v)} className={`btn ${flipV ? "btn-primary" : "btn-secondary"}`}>상하반전</button>
+        <button onClick={() => setFlipH((v) => !v)} className={`btn ${flipH ? "btn-primary" : "btn-secondary"}`}>{t("flipH")}</button>
+        <button onClick={() => setFlipV((v) => !v)} className={`btn ${flipV ? "btn-primary" : "btn-secondary"}`}>{t("flipV")}</button>
       </div>
 
       {outUrl && (
@@ -111,9 +113,9 @@ export default function ImageRotateTool() {
           <img src={outUrl} alt="" className="max-w-full max-h-96 mx-auto" />
         </div>
       )}
-      {outBlob && <div className="text-xs text-muted">결과 크기: {fmt(outBlob.size)}</div>}
+      {outBlob && <div className="text-xs text-muted">{t("resultSize")}: {fmt(outBlob.size)}</div>}
 
-      <button onClick={download} disabled={!outBlob} className="btn btn-primary disabled:opacity-50">📥 다운로드</button>
+      <button onClick={download} disabled={!outBlob} className="btn btn-primary disabled:opacity-50">📥 {t("download")}</button>
     </div>
   );
 }

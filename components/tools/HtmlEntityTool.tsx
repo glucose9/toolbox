@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const NAMED: Record<string, string> = {
   "&": "&amp;",
@@ -37,6 +38,7 @@ function decode(s: string): string {
 type Mode = "encode-basic" | "encode-all" | "decode";
 
 export default function HtmlEntityTool() {
+  const t = useTranslations("toolUI.html-entity");
   const [input, setInput] = useState('<p class="hi">안녕 & "world"</p>');
   const [mode, setMode] = useState<Mode>("encode-basic");
   const [copied, setCopied] = useState(false);
@@ -56,9 +58,9 @@ export default function HtmlEntityTool() {
   return (
     <div className="card space-y-3">
       <div className="flex flex-wrap gap-2 text-sm">
-        <button onClick={() => setMode("encode-basic")} className={`btn ${mode === "encode-basic" ? "btn-primary" : "btn-secondary"}`}>인코딩 (& &lt; &gt;만)</button>
-        <button onClick={() => setMode("encode-all")} className={`btn ${mode === "encode-all" ? "btn-primary" : "btn-secondary"}`}>전체 인코딩 (한글 포함)</button>
-        <button onClick={() => setMode("decode")} className={`btn ${mode === "decode" ? "btn-primary" : "btn-secondary"}`}>디코딩</button>
+        <button onClick={() => setMode("encode-basic")} className={`btn ${mode === "encode-basic" ? "btn-primary" : "btn-secondary"}`}>{t("encodeBasic")}</button>
+        <button onClick={() => setMode("encode-all")} className={`btn ${mode === "encode-all" ? "btn-primary" : "btn-secondary"}`}>{t("encodeAll")}</button>
+        <button onClick={() => setMode("decode")} className={`btn ${mode === "decode" ? "btn-primary" : "btn-secondary"}`}>{t("decode")}</button>
       </div>
       <textarea
         value={input}
@@ -70,7 +72,7 @@ export default function HtmlEntityTool() {
         value={output}
         className="w-full h-36 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono"
       />
-      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

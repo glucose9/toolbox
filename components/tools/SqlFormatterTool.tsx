@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { format } from "sql-formatter";
 
 const DIALECTS = [
@@ -13,6 +14,7 @@ type Dialect = (typeof DIALECTS)[number];
 const SAMPLE = `select u.id, u.name, count(o.id) as cnt from users u left join orders o on u.id = o.user_id where u.created_at > '2024-01-01' group by u.id, u.name having count(o.id) > 5 order by cnt desc limit 10;`;
 
 export default function SqlFormatterTool() {
+  const t = useTranslations("toolUI.sql-formatter");
   const [input, setInput] = useState(SAMPLE);
   const [dialect, setDialect] = useState<Dialect>("sql");
   const [tabWidth, setTabWidth] = useState(2);
@@ -46,25 +48,25 @@ export default function SqlFormatterTool() {
           </select>
         </label>
         <label>
-          들여쓰기
+          {t("indent")}
           <select value={tabWidth} onChange={(e) => setTabWidth(+e.target.value)} className="ml-2 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value="2">2칸</option>
-            <option value="4">4칸</option>
+            <option value="2">{t("twoSpaces")}</option>
+            <option value="4">{t("fourSpaces")}</option>
           </select>
         </label>
         <label>
-          키워드
+          {t("keywords")}
           <select value={keywordCase} onChange={(e) => setKeywordCase(e.target.value as "upper" | "lower" | "preserve")} className="ml-2 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value="upper">대문자</option>
-            <option value="lower">소문자</option>
-            <option value="preserve">그대로</option>
+            <option value="upper">{t("upper")}</option>
+            <option value="lower">{t("lower")}</option>
+            <option value="preserve">{t("preserve")}</option>
           </select>
         </label>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label className="label">입력</label>
+          <label className="label">{t("input")}</label>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -72,7 +74,7 @@ export default function SqlFormatterTool() {
           />
         </div>
         <div>
-          <label className="label">포맷 결과</label>
+          <label className="label">{t("formatted")}</label>
           <textarea
             readOnly
             value={output}
@@ -82,7 +84,7 @@ export default function SqlFormatterTool() {
       </div>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
-      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? `✓ ${t("copied")}` : t("copy")}</button>
     </div>
   );
 }

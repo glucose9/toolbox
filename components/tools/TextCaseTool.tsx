@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Mode = "upper" | "lower" | "title" | "sentence" | "camel" | "pascal" | "snake" | "kebab" | "constant";
 
@@ -50,6 +51,7 @@ function transform(text: string, mode: Mode): string {
 }
 
 export default function TextCaseTool() {
+  const t = useTranslations("toolUI.text-case");
   const [text, setText] = useState("");
   const [mode, setMode] = useState<Mode>("upper");
   const [copied, setCopied] = useState(false);
@@ -68,7 +70,7 @@ export default function TextCaseTool() {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="여기에 텍스트를 입력하세요"
+        placeholder={t("inputPlaceholder")}
         className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y"
       />
       <div className="flex flex-wrap gap-1.5">
@@ -88,7 +90,7 @@ export default function TextCaseTool() {
         className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono"
       />
       <button onClick={copy} disabled={!result} className="btn btn-primary disabled:opacity-50">
-        {copied ? "✓ 복사됨" : "복사"}
+        {copied ? t("copied") : t("copy")}
       </button>
     </div>
   );

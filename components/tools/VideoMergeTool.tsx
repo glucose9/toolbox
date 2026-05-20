@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
 export default function VideoMergeTool() {
+  const t = useTranslations("toolUI.video-merge");
   const inputRef = useRef<HTMLInputElement>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -56,7 +58,7 @@ export default function VideoMergeTool() {
       const blob = new Blob([ab], { type: "video/mp4" });
       if (outUrl) URL.revokeObjectURL(outUrl);
       setOutUrl(URL.createObjectURL(blob));
-    } catch (e) { setError((e as Error).message + " (영상 코덱·해상도가 다르면 재인코딩이 필요할 수 있습니다)"); }
+    } catch (e) { setError((e as Error).message + " " + t("codecHint")); }
     finally { setBusy(false); }
   };
 
@@ -70,7 +72,7 @@ export default function VideoMergeTool() {
     <div className="card space-y-3">
       <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center cursor-pointer hover:border-brand-500">
         <div className="text-3xl">🎞️</div>
-        <div className="text-sm mt-1">동영상 추가 (여러 개)</div>
+        <div className="text-sm mt-1">{t("addVideos")}</div>
         <input ref={inputRef} type="file" accept="video/*" multiple onChange={(e) => e.target.files && add(e.target.files)} className="hidden" />
       </div>
       {files.length > 0 && (
@@ -86,11 +88,11 @@ export default function VideoMergeTool() {
           ))}
         </div>
       )}
-      {loadingFf && <div className="text-sm text-muted">ffmpeg.wasm 로딩 중...</div>}
+      {loadingFf && <div className="text-sm text-muted">{t("loadingFfmpeg")}</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}
       <div className="flex gap-2">
-        <button onClick={merge} disabled={busy || files.length < 2} className="btn btn-primary disabled:opacity-50">{busy ? "합치는 중..." : "🎞️ 합치기"}</button>
-        {outUrl && <button onClick={download} className="btn btn-secondary">📥 다운로드</button>}
+        <button onClick={merge} disabled={busy || files.length < 2} className="btn btn-primary disabled:opacity-50">{busy ? t("merging") : t("merge")}</button>
+        {outUrl && <button onClick={download} className="btn btn-secondary">{t("download")}</button>}
       </div>
       {outUrl && <video src={outUrl} controls className="w-full max-h-72 rounded" />}
     </div>

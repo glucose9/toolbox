@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const fmt = (n: number) => isFinite(n) ? n.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "—";
 
 export default function ExchangeRateTool() {
+  const t = useTranslations("toolUI.exchange-rate");
   const [rate, setRate] = useState(1380); // 1 USD = ? KRW
   const [usd, setUsd] = useState(100);
   const [krw, setKrw] = useState(138000);
@@ -16,9 +18,9 @@ export default function ExchangeRateTool() {
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">환율: 1 USD = ? KRW</label>
+        <label className="label">{t("rateLabel")}</label>
         <input type="number" step="0.01" value={rate} onChange={(e) => updateRate(+e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
-        <div className="text-xs text-muted mt-1">네이버·구글에서 실시간 환율을 확인하고 입력하세요.</div>
+        <div className="text-xs text-muted mt-1">{t("rateHint")}</div>
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div><label className="label">USD</label><input type="number" value={usd} onChange={(e) => { setActive("usd"); updateUsd(+e.target.value); }} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" /></div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function slugify(text: string): string {
   return text
@@ -45,6 +46,7 @@ const SAMPLE = `# 프로젝트 소개
 ## 라이선스`;
 
 export default function MarkdownTocTool() {
+  const t = useTranslations("toolUI.markdown-toc");
   const [md, setMd] = useState(SAMPLE);
   const [maxLevel, setMaxLevel] = useState(3);
   const [copied, setCopied] = useState(false);
@@ -61,7 +63,7 @@ export default function MarkdownTocTool() {
     <div className="card space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label className="label">마크다운</label>
+          <label className="label">{t("markdown")}</label>
           <textarea
             value={md}
             onChange={(e) => setMd(e.target.value)}
@@ -69,21 +71,21 @@ export default function MarkdownTocTool() {
           />
         </div>
         <div>
-          <label className="label">생성된 목차</label>
+          <label className="label">{t("toc")}</label>
           <textarea
             readOnly
             value={toc}
-            placeholder="헤딩(#, ##, ###)이 발견되면 목차가 표시됩니다"
+            placeholder={t("placeholder")}
             className="w-full h-72 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono"
           />
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <label className="flex items-center gap-1">
-          최대 레벨 (H1 ~ H{maxLevel})
+          {t("maxLevel", { n: maxLevel })}
           <input type="range" min="1" max="6" value={maxLevel} onChange={(e) => setMaxLevel(+e.target.value)} className="ml-2 w-32" />
         </label>
-        <button onClick={copy} disabled={!toc} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+        <button onClick={copy} disabled={!toc} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
       </div>
     </div>
   );

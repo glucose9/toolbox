@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
@@ -9,6 +10,7 @@ function fmt(n: number) {
 }
 
 export default function GifToMp4Tool() {
+  const t = useTranslations("toolUI.gif-to-mp4");
   const inputRef = useRef<HTMLInputElement>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -38,7 +40,7 @@ export default function GifToMp4Tool() {
 
   const handleFile = (f: File) => {
     if (!/\.gif$/i.test(f.name) && f.type !== "image/gif") {
-      setError("GIF 파일만 지원합니다.");
+      setError(t("errGifOnly"));
       return;
     }
     setError("");
@@ -95,8 +97,8 @@ export default function GifToMp4Tool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🎬</div>
-          <div className="font-medium">GIF 파일을 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">처음 한 번 ffmpeg.wasm(~25MB) 로드됨</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("ffmpegHint")}</div>
           <input ref={inputRef} type="file" accept=".gif,image/gif" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -111,19 +113,19 @@ export default function GifToMp4Tool() {
           <div className="truncate font-medium">{file.name}</div>
           <div className="text-xs text-muted">{fmt(file.size)}{outSize > 0 && ` → ${fmt(outSize)} (MP4)`}</div>
         </div>
-        <button onClick={() => { setFile(null); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       {srcUrl && <img src={srcUrl} alt="" className="max-w-full max-h-72 mx-auto rounded border border-gray-200 dark:border-gray-700" />}
 
-      {loadingFf && <div className="text-sm text-muted">ffmpeg.wasm 로딩 중...</div>}
+      {loadingFf && <div className="text-sm text-muted">{t("loadingFfmpeg")}</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <div className="flex gap-2">
         <button onClick={convert} disabled={busy} className="btn btn-primary disabled:opacity-50">
-          {busy ? "변환 중..." : "🎬 MP4로 변환"}
+          {busy ? t("converting") : t("convertToMp4")}
         </button>
-        {outUrl && <button onClick={download} className="btn btn-secondary">📥 다운로드</button>}
+        {outUrl && <button onClick={download} className="btn btn-secondary">{t("download")}</button>}
       </div>
 
       {outUrl && (

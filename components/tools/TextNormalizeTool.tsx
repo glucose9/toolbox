@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 
-const SPECIAL_SPACES = /[   -   　﻿​-‍]/g;
+const SPECIAL_SPACES = /[   -   　﻿​-‍]/g;
 const SMART_DOUBLE_QUOTES = /[“”„‟]/g;
 const SMART_SINGLE_QUOTES = /[‘’‚‛]/g;
 const FULLWIDTH_ASCII = /[！-～]/g;
@@ -11,6 +12,7 @@ const FULLWIDTH_PUNCT_COMMA = /[，、]/g;
 const STRIP_PUNCT = /[.,!?;:'"·…—–\-()\[\]{}<>《》「」『』]/g;
 
 export default function TextNormalizeTool() {
+  const t = useTranslations("toolUI.text-normalize");
   const [input, setInput] = useState(
     '“안녕하세요”라고  하셨다.\n\n\n다음 문장입니다 .\n그리고  ‘인용문’ 입니다。'
   );
@@ -59,21 +61,21 @@ export default function TextNormalizeTool() {
   }, [input, result]);
 
   const optDefs: { key: keyof typeof opts; label: string }[] = [
-    { key: "nfc", label: "유니코드 정규화 (NFC)" },
-    { key: "quotes", label: "따옴표 통일 (“” ‘’ → \" ')" },
-    { key: "fullwidth", label: "전각 → 반각 (！＝ → !=)" },
-    { key: "nbsp", label: "특수 공백 → 일반 공백" },
-    { key: "spaces", label: "연속 공백 → 1개" },
-    { key: "blankLines", label: "연속 빈 줄 → 1개" },
-    { key: "punctSpacing", label: "문장부호 앞 공백 제거, 뒤 공백 추가" },
-    { key: "lowercase", label: "모두 소문자" },
-    { key: "stripPunct", label: "문장부호 완전 제거 (어휘 분석용)" },
+    { key: "nfc", label: t("optNfc") },
+    { key: "quotes", label: t("optQuotes") },
+    { key: "fullwidth", label: t("optFullwidth") },
+    { key: "nbsp", label: t("optNbsp") },
+    { key: "spaces", label: t("optSpaces") },
+    { key: "blankLines", label: t("optBlankLines") },
+    { key: "punctSpacing", label: t("optPunctSpacing") },
+    { key: "lowercase", label: t("optLowercase") },
+    { key: "stripPunct", label: t("optStripPunct") },
   ];
 
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">원본 텍스트</label>
+        <label className="label">{t("source")}</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -97,13 +99,13 @@ export default function TextNormalizeTool() {
 
       <div>
         <div className="flex justify-between items-center mb-1">
-          <label className="label">정규화 결과</label>
+          <label className="label">{t("resultLabel")}</label>
           <div className="flex gap-2 items-center">
             <span className="text-xs text-muted">
-              {stats.before} → {stats.after}자 ({stats.diff >= 0 ? `-${stats.diff}` : `+${-stats.diff}`})
+              {t("stats", { before: stats.before, after: stats.after, diff: stats.diff >= 0 ? `-${stats.diff}` : `+${-stats.diff}` })}
             </span>
             <button onClick={() => navigator.clipboard.writeText(result)} className="text-xs text-gray-500 hover:text-blue-600">
-              📋 복사
+              {t("copy")}
             </button>
           </div>
         </div>
@@ -116,7 +118,7 @@ export default function TextNormalizeTool() {
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 카피킬러·턴잇인 등 표절검사 도구는 따옴표 종류와 공백 차이도 별개로 인식할 수 있어 정규화 후 검사하면 정확도가 올라갑니다. NFC 정규화는 한글 조합형/완성형을 통일합니다.
+        {t("tipNote")}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const DIGITS = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
 const PLACES = ["", "십", "백", "천"];
@@ -43,7 +44,7 @@ function groupToKor(g: string, useFormal: boolean): string {
     if (d === 0) continue;
     const place = PLACES[3 - i];
     if (!useFormal && d === 1 && place && (3 - i) < 4) {
-      // 일십 → 십, 일백 → 백, 일천 → 천 (일반 형식)
+      // 일십 → 십 etc. (regular form)
       s += place;
     } else {
       s += DIGITS[d] + place;
@@ -57,6 +58,7 @@ function fracToKor(s: string): string {
 }
 
 export default function NumToKoreanTool() {
+  const t = useTranslations("toolUI.num-to-korean");
   const [input, setInput] = useState("12345");
   const [formal, setFormal] = useState(false);
   const [contract, setContract] = useState(false);
@@ -79,12 +81,12 @@ export default function NumToKoreanTool() {
   return (
     <div className="card space-y-3">
       <div>
-        <label className="label">숫자 (쉼표 사용 가능)</label>
+        <label className="label">{t("numberLabel")}</label>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="예: 12,345 또는 12345.67"
+          placeholder={t("numberPlaceholder")}
           className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-base font-mono"
         />
       </div>
@@ -92,20 +94,20 @@ export default function NumToKoreanTool() {
       <div className="flex flex-wrap gap-3 text-sm">
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={formal} onChange={(e) => setFormal(e.target.checked)} />
-          공식 표기 (일십, 일백, 일천)
+          {t("formalOption")}
         </label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={contract} onChange={(e) => setContract(e.target.checked)} />
-          계약서 형식 (일금 ~ 원정)
+          {t("contractOption")}
         </label>
       </div>
 
       <div className="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded p-4">
-        <div className="text-xs text-muted">한글 표기</div>
+        <div className="text-xs text-muted">{t("hangulResult")}</div>
         <div className="text-xl font-bold mt-1 break-all">{result || "—"}</div>
       </div>
 
-      <button onClick={copy} disabled={!result} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} disabled={!result} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 function sortKeys(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(sortKeys);
@@ -17,6 +18,7 @@ function sortKeys(value: unknown): unknown {
 }
 
 export default function JsonFormatterTool() {
+  const t = useTranslations("toolUI.json-formatter");
   const [text, setText] = useState("");
   const [indent, setIndent] = useState<"2" | "4" | "tab">("2");
   const [doSort, setDoSort] = useState(false);
@@ -65,28 +67,28 @@ export default function JsonFormatterTool() {
       />
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <label className="flex items-center gap-1">
-          들여쓰기:
+          {t("indent")}:
           <select value={indent} onChange={(e) => setIndent(e.target.value as "2" | "4" | "tab")} className="px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value="2">2칸</option>
-            <option value="4">4칸</option>
-            <option value="tab">탭</option>
+            <option value="2">{t("twoSpaces")}</option>
+            <option value="4">{t("fourSpaces")}</option>
+            <option value="tab">{t("tab")}</option>
           </select>
         </label>
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={doSort} onChange={(e) => setDoSort(e.target.checked)} />
-          키 정렬
+          {t("sortKeys")}
         </label>
       </div>
       <div className="flex flex-wrap gap-2">
-        <button onClick={() => format(false)} className="btn btn-primary">정렬</button>
-        <button onClick={() => format(true)} className="btn btn-secondary">한 줄로 압축</button>
-        <button onClick={validate} className="btn btn-secondary">검증만</button>
-        <button onClick={copy} className="btn btn-secondary">복사{copied ? " ✓" : ""}</button>
+        <button onClick={() => format(false)} className="btn btn-primary">{t("format")}</button>
+        <button onClick={() => format(true)} className="btn btn-secondary">{t("minify")}</button>
+        <button onClick={validate} className="btn btn-secondary">{t("validateOnly")}</button>
+        <button onClick={copy} className="btn btn-secondary">{t("copy")}{copied ? " ✓" : ""}</button>
       </div>
       {error ? (
         <div className="text-sm text-red-600">❌ {error}</div>
       ) : text ? (
-        <div className="text-sm text-green-600">✓ 유효한 JSON</div>
+        <div className="text-sm text-green-600">✓ {t("validJson")}</div>
       ) : null}
     </div>
   );

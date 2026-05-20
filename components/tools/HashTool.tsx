@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Algorithm = "MD5" | "SHA-1" | "SHA-256" | "SHA-512";
 const ALGOS: Algorithm[] = ["MD5", "SHA-1", "SHA-256", "SHA-512"];
@@ -92,6 +93,7 @@ async function digest(algo: Algorithm, data: Uint8Array): Promise<string> {
 }
 
 export default function HashTool() {
+  const t = useTranslations("toolUI.hash-generator");
   const [mode, setMode] = useState<"text" | "file">("text");
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -138,15 +140,15 @@ export default function HashTool() {
   return (
     <div className="card space-y-3">
       <div className="flex gap-2">
-        <button onClick={() => { setMode("text"); setHashes({}); }} className={`btn ${mode === "text" ? "btn-primary" : "btn-secondary"}`}>텍스트</button>
-        <button onClick={() => { setMode("file"); setHashes({}); }} className={`btn ${mode === "file" ? "btn-primary" : "btn-secondary"}`}>파일</button>
+        <button onClick={() => { setMode("text"); setHashes({}); }} className={`btn ${mode === "text" ? "btn-primary" : "btn-secondary"}`}>{t("text")}</button>
+        <button onClick={() => { setMode("file"); setHashes({}); }} className={`btn ${mode === "file" ? "btn-primary" : "btn-secondary"}`}>{t("file")}</button>
       </div>
 
       {mode === "text" ? (
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="해시할 텍스트"
+          placeholder={t("textPlaceholder")}
           className="w-full h-28 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y font-mono"
         />
       ) : (
@@ -163,7 +165,7 @@ export default function HashTool() {
             className="w-full"
           />
           {file && <div className="text-xs text-muted mt-1">{file.name}</div>}
-          {busy && <div className="text-sm text-muted mt-2">계산 중...</div>}
+          {busy && <div className="text-sm text-muted mt-2">{t("calculating")}</div>}
         </div>
       )}
 
@@ -181,7 +183,7 @@ export default function HashTool() {
               disabled={!hashes[a]}
               className="text-sm text-brand-600 hover:underline disabled:opacity-30 shrink-0"
             >
-              {copied === a ? "✓" : "복사"}
+              {copied === a ? "✓" : t("copy")}
             </button>
           </div>
         ))}

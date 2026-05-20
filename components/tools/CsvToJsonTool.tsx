@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Dir = "csv-to-json" | "json-to-csv";
 
@@ -54,6 +55,7 @@ function escapeCsv(v: string, delim: string): string {
 }
 
 export default function CsvToJsonTool() {
+  const t = useTranslations("toolUI.csv-to-json");
   const [dir, setDir] = useState<Dir>("csv-to-json");
   const [input, setInput] = useState("name,age,city\nAlice,30,Seoul\nBob,25,Busan");
   const [delim, setDelim] = useState(",");
@@ -74,7 +76,7 @@ export default function CsvToJsonTool() {
         return { output: JSON.stringify(json, null, 2), error: "" };
       } else {
         const parsed = JSON.parse(input);
-        if (!Array.isArray(parsed)) throw new Error("JSON 배열이어야 합니다.");
+        if (!Array.isArray(parsed)) throw new Error(t("errMustBeArray"));
         if (parsed.length === 0) return { output: "", error: "" };
         const headerSet = new Set<string>();
         for (const row of parsed) {
@@ -97,7 +99,7 @@ export default function CsvToJsonTool() {
     } catch (e) {
       return { output: "", error: (e as Error).message };
     }
-  }, [dir, input, delim]);
+  }, [dir, input, delim, t]);
 
   const copy = async () => {
     await navigator.clipboard.writeText(output);
@@ -124,19 +126,19 @@ export default function CsvToJsonTool() {
           <button onClick={() => setDir("json-to-csv")} className={`btn ${dir === "json-to-csv" ? "btn-primary" : "btn-secondary"}`}>JSON → CSV</button>
         </div>
         <label className="flex items-center gap-1">
-          구분자
+          {t("delimiter")}
           <select value={delim} onChange={(e) => setDelim(e.target.value)} className="px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value=",">쉼표(,)</option>
-            <option value=";">세미콜론(;)</option>
-            <option value={"\t"}>탭(\t)</option>
-            <option value="|">파이프(|)</option>
+            <option value=",">{t("comma")}</option>
+            <option value=";">{t("semicolon")}</option>
+            <option value={"\t"}>{t("tab")}</option>
+            <option value="|">{t("pipe")}</option>
           </select>
         </label>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label className="label">입력</label>
+          <label className="label">{t("input")}</label>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -144,7 +146,7 @@ export default function CsvToJsonTool() {
           />
         </div>
         <div>
-          <label className="label">출력</label>
+          <label className="label">{t("output")}</label>
           <textarea
             readOnly
             value={output}
@@ -155,8 +157,8 @@ export default function CsvToJsonTool() {
 
       {error && <div className="text-sm text-red-600">{error}</div>}
       <div className="flex gap-2">
-        <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
-        <button onClick={download} disabled={!output} className="btn btn-secondary disabled:opacity-50">파일 다운로드</button>
+        <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? `✓ ${t("copied")}` : t("copy")}</button>
+        <button onClick={download} disabled={!output} className="btn btn-secondary disabled:opacity-50">{t("downloadFile")}</button>
       </div>
     </div>
   );

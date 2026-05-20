@@ -71,7 +71,9 @@ export default async function HomePage({
                         {t(`tools.${tool.slug}`, {}, { fallback: tool.navTitle } as never)}
                       </h3>
                       <p className="mt-1 text-sm text-muted line-clamp-2">
-                        {tool.description}
+                        {locale === "ko"
+                          ? tool.description
+                          : t(`toolMeta.${tool.slug}.description`, {}, { fallback: tool.description } as never)}
                       </p>
                     </div>
                   </div>

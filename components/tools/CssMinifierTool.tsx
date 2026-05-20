@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function minify(css: string): string {
   return css
@@ -12,6 +13,7 @@ function minify(css: string): string {
 }
 
 export default function CssMinifierTool() {
+  const t = useTranslations("toolUI.css-minifier");
   const [input, setInput] = useState(`/* sample */\n.btn {\n  display: inline-block;\n  padding: 8px 12px;\n  border-radius: 4px;\n  background: #3b82f6;\n  color: white;\n}\n\n.btn:hover {\n  background: #2563eb;\n}`);
   const [copied, setCopied] = useState(false);
 
@@ -26,8 +28,8 @@ export default function CssMinifierTool() {
       <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-48 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
       <textarea readOnly value={output} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
       <div className="flex items-center justify-between text-sm">
-        <span className="text-muted">{input.length} → {output.length} ({pct}% 절감)</span>
-        <button onClick={copy} className="btn btn-primary">{copied ? "✓ 복사됨" : "복사"}</button>
+        <span className="text-muted">{input.length} → {output.length} ({pct}% {t("saved")})</span>
+        <button onClick={copy} className="btn btn-primary">{copied ? t("copied") : t("copy")}</button>
       </div>
     </div>
   );

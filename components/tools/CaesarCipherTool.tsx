@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function caesar(text: string, shift: number, rot47 = false): string {
   const s = ((shift % 26) + 26) % 26;
@@ -25,6 +26,7 @@ function caesar(text: string, shift: number, rot47 = false): string {
 }
 
 export default function CaesarCipherTool() {
+  const t = useTranslations("toolUI.caesar-cipher");
   const [input, setInput] = useState("Hello World");
   const [shift, setShift] = useState(13);
   const [rot47, setRot47] = useState(false);
@@ -48,11 +50,11 @@ export default function CaesarCipherTool() {
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={rot47} onChange={(e) => setRot47(e.target.checked)} />
-          ROT47 (특수문자 포함)
+          {t("rot47")}
         </label>
         {!rot47 && (
           <label className="flex-1 min-w-40">
-            회전 ({shift})
+            {t("rotation")} ({shift})
             <input type="range" min="-25" max="25" value={shift} onChange={(e) => setShift(+e.target.value)} className="w-full" />
           </label>
         )}
@@ -61,8 +63,8 @@ export default function CaesarCipherTool() {
         {!rot47 && (
           <>
             <button onClick={() => setShift(13)} className="btn btn-secondary">ROT13</button>
-            <button onClick={() => setShift(3)} className="btn btn-secondary">ROT3 (전통 카이사르)</button>
-            <button onClick={() => setShift(-shift)} className="btn btn-secondary">↔ 부호 반전</button>
+            <button onClick={() => setShift(3)} className="btn btn-secondary">{t("rot3")}</button>
+            <button onClick={() => setShift(-shift)} className="btn btn-secondary">{t("flipSign")}</button>
           </>
         )}
       </div>
@@ -71,7 +73,7 @@ export default function CaesarCipherTool() {
         value={output}
         className="w-full h-28 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono"
       />
-      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

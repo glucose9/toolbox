@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { downloadText } from "@/lib/markdown-io";
 
 function fmt(n: number) {
@@ -8,6 +9,7 @@ function fmt(n: number) {
 }
 
 export default function DocxViewerTool() {
+  const t = useTranslations("toolUI.docx-viewer");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [html, setHtml] = useState("");
@@ -17,7 +19,7 @@ export default function DocxViewerTool() {
 
   const handleFile = async (f: File) => {
     if (!/\.docx$/i.test(f.name)) {
-      setError(".docx 파일만 지원합니다 (.doc은 미지원).");
+      setError(t("errDocxOnly"));
       return;
     }
     setError("");
@@ -49,8 +51,8 @@ export default function DocxViewerTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">📃</div>
-          <div className="font-medium">.docx 파일을 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">워드 없이 브라우저에서 바로 보기</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("subtitle")}</div>
           <input ref={inputRef} type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -63,13 +65,13 @@ export default function DocxViewerTool() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm min-w-0">
           <div className="truncate font-medium">{file.name}</div>
-          <div className="text-xs text-muted">{fmt(file.size)}{text && ` · ${text.length.toLocaleString()}자`}</div>
+          <div className="text-xs text-muted">{fmt(file.size)}{text && ` · ${t("charCount", { count: text.length })}`}</div>
         </div>
-        <button onClick={() => { setFile(null); setHtml(""); setText(""); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setHtml(""); setText(""); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       {busy ? (
-        <div className="py-8 text-center text-muted">변환 중...</div>
+        <div className="py-8 text-center text-muted">{t("converting")}</div>
       ) : error ? (
         <div className="text-sm text-red-600">{error}</div>
       ) : (
@@ -79,8 +81,8 @@ export default function DocxViewerTool() {
             dangerouslySetInnerHTML={{ __html: html }}
           />
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => downloadText(text, file.name.replace(/\.docx$/i, "") + ".txt", "text/plain;charset=utf-8")} className="btn btn-primary">📥 텍스트(.txt) 추출</button>
-            <button onClick={() => downloadText(html, file.name.replace(/\.docx$/i, "") + ".html", "text/html;charset=utf-8")} className="btn btn-secondary">HTML로 저장</button>
+            <button onClick={() => downloadText(text, file.name.replace(/\.docx$/i, "") + ".txt", "text/plain;charset=utf-8")} className="btn btn-primary">{t("extractText")}</button>
+            <button onClick={() => downloadText(html, file.name.replace(/\.docx$/i, "") + ".html", "text/html;charset=utf-8")} className="btn btn-secondary">{t("saveHtml")}</button>
           </div>
         </>
       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Stop = { id: string; color: string; pos: number };
 type Mode = "linear" | "radial";
@@ -10,6 +11,7 @@ function defaultStop(p: number, c: string): Stop {
 }
 
 export default function CssGradientTool() {
+  const t = useTranslations("toolUI.css-gradient");
   const [mode, setMode] = useState<Mode>("linear");
   const [angle, setAngle] = useState(90);
   const [shape, setShape] = useState<"circle" | "ellipse">("circle");
@@ -45,14 +47,14 @@ export default function CssGradientTool() {
         <button onClick={() => setMode("radial")} className={`btn ${mode === "radial" ? "btn-primary" : "btn-secondary"}`}>Radial</button>
         {mode === "linear" && (
           <label className="flex items-center gap-1">
-            각도 ({angle}°)
+            {t("angle")} ({angle}°)
             <input type="range" min="0" max="360" value={angle} onChange={(e) => setAngle(+e.target.value)} className="w-32" />
           </label>
         )}
         {mode === "radial" && (
           <select value={shape} onChange={(e) => setShape(e.target.value as "circle" | "ellipse")} className="px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value="circle">원형</option>
-            <option value="ellipse">타원형</option>
+            <option value="circle">{t("circle")}</option>
+            <option value="ellipse">{t("ellipse")}</option>
           </select>
         )}
       </div>
@@ -64,14 +66,14 @@ export default function CssGradientTool() {
             <input type="text" value={s.color} onChange={(e) => update(s.id, { color: e.target.value })} className="w-24 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
             <input type="range" min="0" max="100" value={s.pos} onChange={(e) => update(s.id, { pos: +e.target.value })} className="flex-1" />
             <span className="text-xs w-10 text-right">{s.pos}%</span>
-            {stops.length > 2 && <button onClick={() => remove(s.id)} className="text-red-600 hover:underline text-xs">삭제</button>}
+            {stops.length > 2 && <button onClick={() => remove(s.id)} className="text-red-600 hover:underline text-xs">{t("remove")}</button>}
           </div>
         ))}
-        <button onClick={add} className="text-sm text-brand-600 hover:underline">+ 색상 추가</button>
+        <button onClick={add} className="text-sm text-brand-600 hover:underline">{t("addStop")}</button>
       </div>
 
       <pre className="p-3 bg-gray-50 dark:bg-gray-900 rounded text-xs font-mono overflow-x-auto whitespace-pre-wrap break-all">background: {css};</pre>
-      <button onClick={copy} className="btn btn-primary">{copied ? "✓ 복사됨" : "CSS 복사"}</button>
+      <button onClick={copy} className="btn btn-primary">{copied ? t("copied") : t("copyCss")}</button>
     </div>
   );
 }

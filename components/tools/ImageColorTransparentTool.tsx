@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function hexToRgb(hex: string): [number, number, number] {
   const m = hex.match(/^#?([0-9a-f]{6})$/i);
@@ -9,6 +10,7 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 export default function ImageColorTransparentTool() {
+  const t = useTranslations("toolUI.image-color-transparent");
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -53,7 +55,7 @@ export default function ImageColorTransparentTool() {
     <div className="card">
       <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
         <div className="text-5xl">🟦</div>
-        <div className="font-medium mt-2">이미지 업로드</div>
+        <div className="font-medium mt-2">{t("upload")}</div>
         <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
       </div>
     </div>
@@ -62,11 +64,11 @@ export default function ImageColorTransparentTool() {
   return (
     <div className="card space-y-3">
       <div className="grid grid-cols-2 gap-3 text-sm">
-        <label>투명으로 만들 색<input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-full h-9 mt-1" /></label>
-        <label>허용 범위 ({tolerance})<input type="range" min="0" max="200" value={tolerance} onChange={(e) => setTolerance(+e.target.value)} className="w-full" /></label>
+        <label>{t("colorToTransparent")}<input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-full h-9 mt-1" /></label>
+        <label>{t("tolerance")} ({tolerance})<input type="range" min="0" max="200" value={tolerance} onChange={(e) => setTolerance(+e.target.value)} className="w-full" /></label>
       </div>
       <div className="bg-checker rounded p-2"><canvas ref={canvasRef} className="max-w-full mx-auto" /></div>
-      <button onClick={download} className="btn btn-primary">📥 PNG 다운로드</button>
+      <button onClick={download} className="btn btn-primary">{t("downloadPng")}</button>
     </div>
   );
 }

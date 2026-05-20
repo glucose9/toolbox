@@ -1,8 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function Base64ImageTool() {
+  const t = useTranslations("toolUI.base64-image");
   const inputRef = useRef<HTMLInputElement>(null);
   const [dataUrl, setDataUrl] = useState("");
   const [copied, setCopied] = useState(false);
@@ -10,7 +12,7 @@ export default function Base64ImageTool() {
 
   const handleFile = async (f: File) => {
     if (!f.type.startsWith("image/")) {
-      setError("이미지 파일만 지원합니다.");
+      setError(t("errImageOnly"));
       return;
     }
     setError("");
@@ -32,7 +34,7 @@ export default function Base64ImageTool() {
     <div className="card space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label className="label">이미지 업로드</label>
+          <label className="label">{t("upload")}</label>
           <div
             onDrop={(e) => {
               e.preventDefault();
@@ -43,7 +45,7 @@ export default function Base64ImageTool() {
             className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors h-44 flex flex-col items-center justify-center"
           >
             <div className="text-3xl">🖻</div>
-            <div className="text-sm mt-2">이미지 드래그/클릭</div>
+            <div className="text-sm mt-2">{t("dragOrClick")}</div>
             <input
               ref={inputRef}
               type="file"
@@ -54,12 +56,12 @@ export default function Base64ImageTool() {
           </div>
         </div>
         <div>
-          <label className="label">미리보기</label>
+          <label className="label">{t("preview")}</label>
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg h-44 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
             {valid ? (
               <img src={dataUrl} alt="" className="max-w-full max-h-full object-contain" />
             ) : (
-              <div className="text-xs text-muted">data URL을 붙여넣거나 이미지를 업로드하세요</div>
+              <div className="text-xs text-muted">{t("previewHint")}</div>
             )}
           </div>
         </div>
@@ -79,7 +81,7 @@ export default function Base64ImageTool() {
       </div>
       {error && <div className="text-sm text-red-600">{error}</div>}
       <button onClick={copy} disabled={!dataUrl} className="btn btn-primary disabled:opacity-50">
-        {copied ? "✓ 복사됨" : "data URL 복사"}
+        {copied ? t("copied") : t("copyDataUrl")}
       </button>
     </div>
   );

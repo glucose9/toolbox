@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const CHO = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
 const JUNG = ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"];
@@ -18,13 +19,14 @@ function decompose(text: string): string {
 }
 
 export default function JamoDecomposeTool() {
+  const t = useTranslations("toolUI.jamo-decompose");
   const [text, setText] = useState("안녕하세요");
   const decomposed = useMemo(() => decompose(text), [text]);
   return (
     <div className="card space-y-3">
       <input type="text" value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-base" />
       <div className="p-4 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded text-2xl font-mono break-all text-center">{decomposed}</div>
-      <div className="text-xs text-muted">한글 음절을 초성·중성·종성 자모로 분해합니다.</div>
+      <div className="text-xs text-muted">{t("hint")}</div>
     </div>
   );
 }

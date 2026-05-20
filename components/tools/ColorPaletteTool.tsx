@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Mode = "random" | "monochrome" | "analogous" | "complementary" | "triad" | "tetrad";
 
@@ -67,16 +68,16 @@ function generate(mode: Mode, baseHue?: number): { hex: string; name: string }[]
   return palette;
 }
 
-const MODE_LABELS: Record<Mode, string> = {
-  random: "🎲 랜덤",
-  monochrome: "⚫ 단색조 (Mono)",
-  analogous: "🌈 유사색 (Analogous)",
-  complementary: "🎯 보색 (Complement)",
-  triad: "▲ 삼각 (Triad)",
-  tetrad: "■ 사각 (Tetrad)",
-};
-
 export default function ColorPaletteTool() {
+  const t = useTranslations("toolUI.color-palette");
+  const MODE_LABELS: Record<Mode, string> = {
+    random: t("modeRandom"),
+    monochrome: t("modeMonochrome"),
+    analogous: t("modeAnalogous"),
+    complementary: t("modeComplementary"),
+    triad: t("modeTriad"),
+    tetrad: t("modeTetrad"),
+  };
   const [mode, setMode] = useState<Mode>("complementary");
   const [palette, setPalette] = useState(() => generate("complementary"));
   const [copied, setCopied] = useState<string | null>(null);
@@ -116,23 +117,23 @@ export default function ColorPaletteTool() {
             onClick={() => copyHex(c.hex)}
             className="aspect-square rounded relative group border border-gray-200 dark:border-gray-700 overflow-hidden"
             style={{ backgroundColor: c.hex }}
-            title={`클릭해서 ${c.hex} 복사`}
+            title={t("clickToCopy", { hex: c.hex })}
           >
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/0 hover:bg-black/50 transition text-white opacity-0 hover:opacity-100">
               <div className="font-mono text-sm font-semibold">{c.hex}</div>
-              <div className="text-xs mt-1">{copied === c.hex ? "✓ 복사됨" : c.name}</div>
+              <div className="text-xs mt-1">{copied === c.hex ? t("copied") : c.name}</div>
             </div>
           </button>
         ))}
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <button onClick={regenerate} className="btn btn-primary">🎨 새 팔레트 생성</button>
-        <button onClick={copyAll} className="btn">📋 {copied === "all" ? "✓ 모두 복사됨" : "전체 HEX 복사"}</button>
+        <button onClick={regenerate} className="btn btn-primary">{t("regenerate")}</button>
+        <button onClick={copyAll} className="btn">{copied === "all" ? t("allCopied") : t("copyAll")}</button>
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 색 조화 규칙 기반 팔레트 생성. <strong>단색조</strong>는 한 색의 명도 변화, <strong>유사색</strong>은 색상환에서 30도 이내, <strong>보색</strong>은 정반대 색, <strong>삼각</strong>은 120도 간격, <strong>사각</strong>은 90도 간격으로 만듭니다. 색상 칸을 클릭하면 HEX 코드가 복사됩니다.
+        {t("hint")}
       </div>
     </div>
   );

@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { PDFDocument } from "pdf-lib";
 import { downloadBlob, fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
 
 type Item = { id: string; file: File };
 
 export default function PdfMergeTool() {
+  const t = useTranslations("toolUI.pdf-merge");
   const inputRef = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [busy, setBusy] = useState(false);
@@ -19,7 +21,7 @@ export default function PdfMergeTool() {
         next.push({ id: `${f.name}-${f.size}-${Math.random().toString(36).slice(2, 8)}`, file: f });
       }
     }
-    if (!next.length) setError("PDF 파일을 선택해주세요.");
+    if (!next.length) setError(t("errSelectPdf"));
     else setError("");
     setItems((prev) => [...prev, ...next]);
   };
@@ -40,7 +42,7 @@ export default function PdfMergeTool() {
 
   const merge = async () => {
     if (items.length < 2) {
-      setError("PDF를 2개 이상 업로드하세요.");
+      setError(t("errNeedTwo"));
       return;
     }
     setBusy(true);
@@ -56,7 +58,7 @@ export default function PdfMergeTool() {
       const merged = await out.save();
       downloadBlob(new Blob([merged.buffer as ArrayBuffer], { type: "application/pdf" }), `merged-${Date.now()}.pdf`);
     } catch (e) {
-      setError("병합 실패: " + (e as Error).message);
+      setError(t("errMerge") + ": " + (e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -75,7 +77,7 @@ export default function PdfMergeTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">📎</div>
-          <div className="font-medium">PDF 파일들을 드래그하거나 클릭 (여러 개 가능)</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input
             ref={inputRef}
             type="file"
@@ -93,9 +95,9 @@ export default function PdfMergeTool() {
   return (
     <div className="card space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="text-sm text-muted">{items.length}개 파일</div>
+        <div className="text-sm text-muted">{t("fileCount", { count: items.length })}</div>
         <button onClick={() => inputRef.current?.click()} className="text-sm text-brand-600 hover:underline">
-          + 파일 추가
+          {t("addFiles")}
         </button>
         <input
           ref={inputRef}
@@ -119,7 +121,7 @@ export default function PdfMergeTool() {
               onClick={() => move(it.id, -1)}
               disabled={i === 0}
               className="text-gray-500 hover:text-brand-600 disabled:opacity-30 px-1"
-              aria-label="위로"
+              aria-label={t("moveUp")}
             >
               ▲
             </button>
@@ -127,7 +129,7 @@ export default function PdfMergeTool() {
               onClick={() => move(it.id, 1)}
               disabled={i === items.length - 1}
               className="text-gray-500 hover:text-brand-600 disabled:opacity-30 px-1"
-              aria-label="아래로"
+              aria-label={t("moveDown")}
             >
               ▼
             </button>
@@ -142,10 +144,10 @@ export default function PdfMergeTool() {
 
       <div className="flex gap-2">
         <button onClick={merge} disabled={busy} className="btn btn-primary disabled:opacity-50">
-          {busy ? "병합 중..." : `📎 ${items.length}개 PDF 병합`}
+          {busy ? t("merging") : `📎 ${t("mergeAction", { count: items.length })}`}
         </button>
         <button onClick={() => setItems([])} className="btn btn-secondary">
-          전체 삭제
+          {t("clearAll")}
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function toHex(s: string, spaced: boolean): string {
   const bytes = new TextEncoder().encode(s);
@@ -16,6 +17,7 @@ function fromHex(s: string): string {
 }
 
 export default function TextHexTool() {
+  const t = useTranslations("toolUI.text-hex");
   const [input, setInput] = useState("Hello 안녕");
   const [spaced, setSpaced] = useState(true);
   const isHex = /^[\s0-9a-fA-F]+$/.test(input.trim()) && input.trim().replace(/\s/g, "").length >= 2;
@@ -27,11 +29,11 @@ export default function TextHexTool() {
     <div className="card space-y-3">
       <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
       <div className="flex justify-between items-center text-xs">
-        <span className="text-muted">{isHex ? "16진수 → 텍스트" : "텍스트 → 16진수 (UTF-8)"}</span>
-        {!isHex && <label className="flex items-center gap-1"><input type="checkbox" checked={spaced} onChange={(e) => setSpaced(e.target.checked)} /> 공백 구분</label>}
+        <span className="text-muted">{isHex ? t("hexToText") : t("textToHex")}</span>
+        {!isHex && <label className="flex items-center gap-1"><input type="checkbox" checked={spaced} onChange={(e) => setSpaced(e.target.checked)} /> {t("spaced")}</label>}
       </div>
       <textarea readOnly value={output} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? "✓ 복사됨" : "복사"}</button>
+      <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
 export default function AudioMergeTool() {
+  const t = useTranslations("toolUI.audio-merge");
   const inputRef = useRef<HTMLInputElement>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -45,7 +47,7 @@ export default function AudioMergeTool() {
     <div className="card space-y-3">
       <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center cursor-pointer hover:border-brand-500">
         <div className="text-3xl">🎵</div>
-        <div className="text-sm mt-1">오디오 추가 (여러 개)</div>
+        <div className="text-sm mt-1">{t("addAudio")}</div>
         <input ref={inputRef} type="file" accept="audio/*" multiple onChange={(e) => e.target.files && setFiles((p) => [...p, ...Array.from(e.target.files!)])} className="hidden" />
       </div>
       {files.length > 0 && (
@@ -54,8 +56,8 @@ export default function AudioMergeTool() {
         </div>
       )}
       {error && <div className="text-sm text-red-600">{error}</div>}
-      <button onClick={run} disabled={busy || files.length < 2} className="btn btn-primary disabled:opacity-50">{busy ? "합치는 중..." : "🎵 합치기"}</button>
-      {outUrl && (<><audio src={outUrl} controls className="w-full" /><button onClick={() => { const a = document.createElement("a"); a.href = outUrl; a.download = "merged.mp3"; a.click(); }} className="btn btn-secondary">📥 다운로드</button></>)}
+      <button onClick={run} disabled={busy || files.length < 2} className="btn btn-primary disabled:opacity-50">{busy ? t("merging") : t("merge")}</button>
+      {outUrl && (<><audio src={outUrl} controls className="w-full" /><button onClick={() => { const a = document.createElement("a"); a.href = outUrl; a.download = "merged.mp3"; a.click(); }} className="btn btn-secondary">{t("download")}</button></>)}
     </div>
   );
 }

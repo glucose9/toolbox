@@ -1,8 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ImageCompareTool() {
+  const t = useTranslations("toolUI.image-compare");
   const refA = useRef<HTMLInputElement>(null);
   const refB = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,7 +65,7 @@ export default function ImageCompareTool() {
         <span className="absolute top-2 left-2 px-2 py-0.5 text-xs bg-black/60 text-white rounded">Before</span>
         <span className="absolute top-2 right-2 px-2 py-0.5 text-xs bg-black/60 text-white rounded">After</span>
       </div>
-      <button onClick={() => { setA(""); setB(""); }} className="text-sm text-brand-600 hover:underline">다른 이미지</button>
+      <button onClick={() => { setA(""); setB(""); }} className="text-sm text-brand-600 hover:underline">{t("otherImage")}</button>
     </div>
   );
 }

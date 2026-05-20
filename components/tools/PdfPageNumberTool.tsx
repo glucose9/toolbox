@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { downloadBlob, fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
 
@@ -15,6 +16,7 @@ const FORMATS: Record<Fmt, (n: number, N: number) => string> = {
 };
 
 export default function PdfPageNumberTool() {
+  const t = useTranslations("toolUI.pdf-page-number");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
@@ -27,7 +29,7 @@ export default function PdfPageNumberTool() {
 
   const handleFile = async (f: File) => {
     if (!isPdfFile(f)) {
-      setError("PDF 파일만 지원합니다.");
+      setError(t("errPdfOnly"));
       return;
     }
     setError("");
@@ -79,7 +81,7 @@ export default function PdfPageNumberTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🔢</div>
-          <div className="font-medium">PDF 파일을 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -92,13 +94,13 @@ export default function PdfPageNumberTool() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm min-w-0">
           <div className="truncate font-medium">{file.name}</div>
-          <div className="text-xs text-muted">{fmtBytes(file.size)} · {pageCount}페이지</div>
+          <div className="text-xs text-muted">{fmtBytes(file.size)} · {t("pages", { count: pageCount })}</div>
         </div>
-        <button onClick={() => { setFile(null); setPageCount(0); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setPageCount(0); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <div>
-        <label className="label">위치</label>
+        <label className="label">{t("position")}</label>
         <div className="grid grid-cols-3 gap-1">
           {(["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"] as Pos[]).map((p) => (
             <button key={p} onClick={() => setPos(p)} className={`px-2 py-1.5 text-xs rounded ${pos === p ? "bg-brand-600 text-white" : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"}`}>
@@ -110,7 +112,7 @@ export default function PdfPageNumberTool() {
 
       <div className="grid grid-cols-3 gap-3 text-sm">
         <div>
-          <label className="label">형식</label>
+          <label className="label">{t("format")}</label>
           <select value={fmt} onChange={(e) => setFmt(e.target.value as Fmt)} className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm">
             <option value="n">1</option>
             <option value="n_of_N">1 / N</option>
@@ -119,18 +121,18 @@ export default function PdfPageNumberTool() {
           </select>
         </div>
         <div>
-          <label className="label">시작 번호</label>
+          <label className="label">{t("startNumber")}</label>
           <input type="number" value={start} onChange={(e) => setStart(parseInt(e.target.value) || 1)} className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
         </div>
         <div>
-          <label className="label">글자 크기</label>
+          <label className="label">{t("fontSize")}</label>
           <input type="number" value={size} onChange={(e) => setSize(parseInt(e.target.value) || 10)} className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
         </div>
       </div>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
       <button onClick={apply} disabled={busy} className="btn btn-primary disabled:opacity-50">
-        {busy ? "적용 중..." : "🔢 페이지 번호 적용 + 다운로드"}
+        {busy ? t("applying") : `🔢 ${t("applyAndDownload")}`}
       </button>
     </div>
   );

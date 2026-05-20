@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { openHwp, readFileBytes, isHwpFile, extractAllText } from "@/lib/hwp";
 
 function fmt(n: number) {
@@ -8,6 +9,7 @@ function fmt(n: number) {
 }
 
 export default function HwpToTextTool() {
+  const t = useTranslations("toolUI.hwp-to-text");
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState("");
   const [fileSize, setFileSize] = useState(0);
@@ -18,7 +20,7 @@ export default function HwpToTextTool() {
 
   const handleFile = async (file: File) => {
     if (!isHwpFile(file)) {
-      setError(".hwp 또는 .hwpx 파일만 지원합니다.");
+      setError(t("errHwpOnly"));
       return;
     }
     setError("");
@@ -33,7 +35,7 @@ export default function HwpToTextTool() {
       setText(extracted);
       doc.free?.();
     } catch (e) {
-      setError("텍스트 추출에 실패했습니다: " + (e as Error).message);
+      setError(t("errExtract") + ": " + (e as Error).message);
     } finally {
       setLoading(false);
     }
@@ -82,8 +84,8 @@ export default function HwpToTextTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">📝</div>
-          <div className="font-medium">.hwp / .hwpx 파일을 드래그하거나 클릭</div>
-          <div className="mt-1 text-sm text-muted">본문 텍스트만 자동 추출됩니다</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
+          <div className="mt-1 text-sm text-muted">{t("hint")}</div>
           <input
             ref={inputRef}
             type="file"
@@ -104,16 +106,16 @@ export default function HwpToTextTool() {
           <div className="truncate font-medium">{fileName}</div>
           <div className="text-xs text-muted">
             {fmt(fileSize)}
-            {text && ` · ${charCount.toLocaleString()}자 (공백 제외 ${charCountNoSpace.toLocaleString()}자)`}
+            {text && ` · ${t("charCount", { total: charCount.toLocaleString(), noSpace: charCountNoSpace.toLocaleString() })}`}
           </div>
         </div>
         <button onClick={reset} className="text-sm text-brand-600 hover:underline">
-          다른 파일
+          {t("otherFile")}
         </button>
       </div>
 
       {loading ? (
-        <div className="py-16 text-center text-muted">텍스트 추출 중...</div>
+        <div className="py-16 text-center text-muted">{t("extracting")}</div>
       ) : error ? (
         <div className="py-8 text-center text-red-600">{error}</div>
       ) : (
@@ -125,10 +127,10 @@ export default function HwpToTextTool() {
           />
           <div className="flex flex-wrap gap-2">
             <button onClick={copy} className="btn btn-primary">
-              {copied ? "✓ 복사됨" : "전체 복사"}
+              {copied ? `✓ ${t("copied")}` : t("copyAll")}
             </button>
             <button onClick={download} className="btn btn-secondary">
-              .txt로 다운로드
+              {t("downloadTxt")}
             </button>
           </div>
         </>

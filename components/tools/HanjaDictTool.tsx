@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 // Common Korean hanja with sound + meaning + stroke count
 // Source: 한국어문회 한자능력검정시험 + 기초 한자 1800자 중 자주 쓰는 ~250자
@@ -182,6 +183,7 @@ const HANJA_DATA: { hanja: string; sound: string; meaning: string; strokes: numb
 ];
 
 export default function HanjaDictTool() {
+  const t = useTranslations("toolUI.hanja-dict");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<typeof HANJA_DATA[0] | null>(HANJA_DATA[0]);
 
@@ -204,10 +206,10 @@ export default function HanjaDictTool() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="🔍 한자·음·뜻·급수 검색 (예: 山, 산, 메, 8급)"
+          placeholder={t("searchPlaceholder")}
           className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm"
         />
-        <div className="text-xs text-muted mt-1">{filtered.length}자 (전체 {HANJA_DATA.length}자)</div>
+        <div className="text-xs text-muted mt-1">{t("count", { count: filtered.length, total: HANJA_DATA.length })}</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
@@ -231,17 +233,17 @@ export default function HanjaDictTool() {
           <div className="border border-gray-200 dark:border-gray-700 rounded p-4 bg-gray-50 dark:bg-gray-950">
             <div className="text-7xl text-center my-2">{selected.hanja}</div>
             <div className="space-y-1 text-sm">
-              <div><strong>음:</strong> {selected.sound}</div>
-              <div><strong>뜻:</strong> {selected.meaning}</div>
-              <div><strong>훈음:</strong> {selected.meaning} {selected.sound}</div>
-              <div><strong>총 획수:</strong> {selected.strokes}획</div>
-              <div><strong>한자 검정 급수:</strong> {selected.level}</div>
+              <div><strong>{t("reading")}:</strong> {selected.sound}</div>
+              <div><strong>{t("meaning")}:</strong> {selected.meaning}</div>
+              <div><strong>{t("readingMeaning")}:</strong> {selected.meaning} {selected.sound}</div>
+              <div><strong>{t("strokes")}:</strong> {t("strokesValue", { count: selected.strokes })}</div>
+              <div><strong>{t("grade")}:</strong> {selected.level}</div>
               <div className="pt-2">
                 <button
                   onClick={() => navigator.clipboard.writeText(selected.hanja)}
                   className="text-xs text-blue-600 hover:underline"
                 >
-                  📋 한자 복사
+                  {t("copyHanja")}
                 </button>
               </div>
             </div>
@@ -250,7 +252,7 @@ export default function HanjaDictTool() {
       </div>
 
       <div className="text-xs text-muted leading-relaxed">
-        💡 한국어문회 한자능력검정시험 기준 자주 쓰는 한자 약 {HANJA_DATA.length}자 사전. 한자·한국어 음·뜻·획수·급수 정보 제공. 한자 표기는 정자체 기준이며, 일부 한자는 약자·이체자가 있을 수 있습니다. 본문에 한자가 섞인 텍스트의 일괄 음 변환은 [한자 → 한글] 도구를 사용하세요.
+        {t("note", { count: HANJA_DATA.length })}
       </div>
     </div>
   );

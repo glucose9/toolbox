@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { PDFDocument, degrees } from "pdf-lib";
 import { downloadBlob, fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
 
@@ -12,6 +13,7 @@ type Page = {
 };
 
 export default function PdfReorderTool() {
+  const t = useTranslations("toolUI.pdf-reorder");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [pages, setPages] = useState<Page[]>([]);
@@ -22,7 +24,7 @@ export default function PdfReorderTool() {
 
   const handleFile = async (f: File) => {
     if (!isPdfFile(f)) {
-      setError("PDF 파일만 지원합니다.");
+      setError(t("errPdfOnly"));
       return;
     }
     setError("");
@@ -117,7 +119,7 @@ export default function PdfReorderTool() {
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="text-5xl mb-3">🔀</div>
-          <div className="font-medium">PDF 파일을 드래그하거나 클릭</div>
+          <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
@@ -130,13 +132,13 @@ export default function PdfReorderTool() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm min-w-0">
           <div className="truncate font-medium">{file.name}</div>
-          <div className="text-xs text-muted">{fmtBytes(file.size)} · {pages.length}페이지</div>
+          <div className="text-xs text-muted">{fmtBytes(file.size)} · {t("pageCount", { count: pages.length })}</div>
         </div>
-        <button onClick={() => { setFile(null); setPages([]); }} className="text-sm text-brand-600 hover:underline">다른 파일</button>
+        <button onClick={() => { setFile(null); setPages([]); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       {busy ? (
-        <div className="py-4 text-center text-muted text-sm">렌더링 중... ({progress.done} / {progress.total})</div>
+        <div className="py-4 text-center text-muted text-sm">{t("rendering")} ({progress.done} / {progress.total})</div>
       ) : null}
 
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
@@ -161,12 +163,12 @@ export default function PdfReorderTool() {
         ))}
       </div>
 
-      <div className="text-xs text-muted">드래그해서 순서 변경 · 🔃 회전 · × 삭제</div>
+      <div className="text-xs text-muted">{t("hint")}</div>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <button onClick={save} disabled={busy || pages.length === 0} className="btn btn-primary disabled:opacity-50">
-        💾 정렬된 PDF 저장
+        {t("savePdf")}
       </button>
     </div>
   );

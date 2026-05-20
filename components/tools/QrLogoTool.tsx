@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import QRCode from "qrcode";
 
 export default function QrLogoTool() {
+  const t = useTranslations("toolUI.qr-logo");
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [text, setText] = useState("https://barokit.com");
@@ -49,17 +51,17 @@ export default function QrLogoTool() {
 
   return (
     <div className="card space-y-3">
-      <input type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder="URL 또는 텍스트" className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
+      <input type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder={t("placeholder")} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
       <div className="grid grid-cols-2 gap-3 text-sm items-end">
-        <button onClick={() => inputRef.current?.click()} className="btn btn-secondary">{logo ? "로고 변경" : "로고 업로드"}</button>
+        <button onClick={() => inputRef.current?.click()} className="btn btn-secondary">{logo ? t("changeLogo") : t("uploadLogo")}</button>
         <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleLogo(e.target.files[0])} className="hidden" />
-        {logo && <button onClick={() => setLogo(null)} className="btn btn-secondary text-xs">로고 제거</button>}
-        <label>로고 크기 ({logoSize}%)<input type="range" min="10" max="30" value={logoSize} onChange={(e) => setLogoSize(+e.target.value)} className="w-full" /></label>
-        <label>QR 크기 ({size}px)<input type="range" min="200" max="800" step="50" value={size} onChange={(e) => setSize(+e.target.value)} className="w-full" /></label>
-        <label>로고 배경<input type="color" value={logoBg} onChange={(e) => setLogoBg(e.target.value)} className="w-full h-7" /></label>
+        {logo && <button onClick={() => setLogo(null)} className="btn btn-secondary text-xs">{t("removeLogo")}</button>}
+        <label>{t("logoSize")} ({logoSize}%)<input type="range" min="10" max="30" value={logoSize} onChange={(e) => setLogoSize(+e.target.value)} className="w-full" /></label>
+        <label>{t("qrSize")} ({size}px)<input type="range" min="200" max="800" step="50" value={size} onChange={(e) => setSize(+e.target.value)} className="w-full" /></label>
+        <label>{t("logoBg")}<input type="color" value={logoBg} onChange={(e) => setLogoBg(e.target.value)} className="w-full h-7" /></label>
       </div>
       <canvas ref={canvasRef} className="max-w-full mx-auto" />
-      <button onClick={download} className="btn btn-primary">📥 PNG 다운로드</button>
+      <button onClick={download} className="btn btn-primary">{t("downloadPng")}</button>
     </div>
   );
 }
