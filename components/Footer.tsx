@@ -11,8 +11,11 @@ export default async function Footer() {
             <div className="font-semibold text-gray-900 dark:text-gray-100">{t("site.name")}</div>
             <div className="mt-1">{t("footer.tagline")}</div>
           </div>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
             <Link href="/" className="hover:text-brand-600">{t("nav.home")}</Link>
+            <Link href="/about" className="hover:text-brand-600">{t("footer.about")}</Link>
+            <Link href="/privacy" className="hover:text-brand-600">{t("footer.privacy")}</Link>
+            <Link href="/terms" className="hover:text-brand-600">{t("footer.terms")}</Link>
           </div>
         </div>
         <div className="mt-6 text-xs opacity-75">
