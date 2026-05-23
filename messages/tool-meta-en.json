@@ -124,7 +124,7 @@
   },
   "qr-decoder": {
     "h1": "QR Code Decoder (Image → Text)",
-    "description": "Upload an image with a QR code and it'll be automatically decoded. Works with Wi-Fi, URL, and vCard QRs. Use on PC without a camera.",
+    "description": "Upload an image containing a QR code and it's decoded automatically. Works with Wi-Fi, URL, and vCard QRs. Use it on a PC without a camera.",
     "metaDescription": "Free QR code image decoder. Recognizes URL, Wi-Fi, and vCard QRs, safely processed in your browser.",
     "howTo": [
       "Upload an image that contains a QR code.",
@@ -1415,7 +1415,7 @@
   },
   "pdf-rotate": {
     "h1": "Rotate PDF Pages",
-    "description": "Stand up sideways or upside-down PDF pages. Rotate all pages or specific pages by 90/180/270 degrees.",
+    "description": "Straighten sideways or upside-down PDF pages. Rotate all pages or specific pages by 90/180/270 degrees.",
     "metaDescription": "Free PDF page rotator. 90/180/270 degrees, per-page selection, safe processing.",
     "howTo": [
       "Upload a PDF file.",
@@ -2187,7 +2187,7 @@
   },
   "image-rotate": {
     "h1": "Rotate / Flip Image",
-    "description": "Rotate photos 90/180/270 degrees or flip horizontally/vertically. Perfect for standing up sideways photos, matching scan orientation, or fixing badly-taken pictures. Pixels are rotated as-is without quality loss.",
+    "description": "Rotate photos 90/180/270 degrees or flip horizontally/vertically. Perfect for straightening sideways photos, matching scan orientation, or fixing badly-taken pictures. Pixels are rotated as-is without quality loss.",
     "metaDescription": "Free image rotate / flip. 90/180/270 degrees, horizontal/vertical flip, no quality loss.",
     "howTo": [
       "Upload your image.",
@@ -2222,7 +2222,7 @@
     ]
   },
   "gif-to-mp4": {
-    "h1": "GIF → MP4 Conversion",
+    "h1": "Convert GIF to MP4",
     "description": "Convert animated GIFs to MP4 video. File size typically drops 70–90% with universal platform compatibility. Useful for autoplaying MP4 instead of GIF on blogs and webpages, when GIFs won't send through KakaoTalk, and for posting light videos to Twitter/X instead of heavy GIFs.",
     "metaDescription": "Free GIF → MP4 converter. Up to 90% size reduction, processed safely in your browser.",
     "howTo": [
@@ -2255,7 +2255,7 @@
   },
   "video-rotate": {
     "h1": "Rotate / Flip Video",
-    "description": "Stand up sideways videos or flip horizontally/vertically. Based on ffmpeg.wasm, audio kept intact. Useful for fixing videos shot vertically but saved sideways, creating mirror effects, and batch-fixing videos with bad rotation metadata.",
+    "description": "Straighten sideways videos or flip them horizontally/vertically. Based on ffmpeg.wasm, with audio kept intact. Useful for fixing videos shot vertically but saved sideways, creating mirror effects, and batch-fixing videos with bad rotation metadata.",
     "metaDescription": "Free video rotate. 90/180/270, horizontal/vertical flip, ffmpeg.wasm-based.",
     "howTo": [
       "Upload your video.",
@@ -5228,7 +5228,7 @@
     "faq": [
       {
         "q": "Equal payment vs. equal principal?",
-        "a": "Equal payment: same amount each month — stable household burden. Equal principal: highest first, then declines, with less total interest."
+        "a": "Equal payment: same amount each month, keeping your budget predictable. Equal principal: highest first, then declines, with less total interest."
       },
       {
         "q": "What about early-repayment fees?",
@@ -6668,7 +6668,7 @@
     ]
   },
   "image-free-rotate": {
-    "h1": "Image 1° Rotation",
+    "h1": "Rotate Image by 1° Increments",
     "description": "Rotate images freely in 1° increments. Useful for straightening crooked photos. Great for fixing tilted phone shots, straightening skewed document scans, design effects, and rotated business card or invitation designs.",
     "metaDescription": "Free 1° image rotation. Fine angle, horizon correction.",
     "howTo": [
@@ -6741,7 +6741,7 @@
     ]
   },
   "html-to-markdown": {
-    "h1": "HTML → Markdown Conversion",
+    "h1": "Convert HTML to Markdown",
     "description": "Convert HTML to markdown. Useful for blog migrations (WordPress, Tistory, Naver Blog → GitHub, Notion), wiki conversions, moving notes to Obsidian, and cleaning email bodies.",
     "metaDescription": "Free HTML to markdown. turndown-based conversion.",
     "howTo": [
@@ -7517,7 +7517,7 @@
   },
   "rent-calc": {
     "h1": "Korean Jeonse ↔ Monthly Rent Converter",
-    "description": "Convert jeonse deposits to monthly rent and back using the conversion rate. Useful for comparing deposit burden when moving, evaluating jeonse vs monthly rent options, and partial deposit + monthly hybrid plans.",
+    "description": "Convert jeonse deposits to monthly rent and back using the conversion rate. Useful for comparing upfront deposit costs when moving, evaluating jeonse vs monthly rent options, and partial deposit + monthly hybrid plans.",
     "metaDescription": "Free jeonse/monthly rent converter. Deposit, monthly rent, both ways.",
     "howTo": [
       "Enter jeonse amount, or deposit + monthly rent.",
@@ -7623,7 +7623,7 @@
   },
   "installment": {
     "h1": "Credit Card Installment Calculator",
-    "description": "Calculate monthly payment and total fees from principal, rate, and term. Useful for checking burden before big purchases (appliances, furniture, travel), comparing interest-free installments vs lump sum, and comparing fees across cards.",
+    "description": "Calculate monthly payment and total fees from principal, rate, and term. Useful for checking affordability before big purchases (appliances, furniture, travel), comparing interest-free installments vs lump sum, and comparing fees across cards.",
     "metaDescription": "Free installment calculator. Card monthly payment, total fees.",
     "howTo": [
       "Enter principal, interest rate (annual %), and term (months).",
@@ -7658,37 +7658,37 @@
   },
   "korean-phone": {
     "h1": "US Phone Number Formatter",
-    "description": "Normalize phone numbers of any format to the standard 010-XXXX-XXXX. Useful for cleaning up Excel/CRM/contact data, handling regional numbers like 02-1234-5678, and international (+82) conversion.",
-    "metaDescription": "Free Korean phone normalizer. 010 format, +82 international, Excel batch.",
+    "description": "Normalize phone numbers of any format to a clean US standard like (XXX) XXX-XXXX. Useful for cleaning up Excel/CRM/contact data, handling area codes, and converting to international +1 format.",
+    "metaDescription": "Free US phone number formatter. (XXX) XXX-XXXX, +1 international, Excel batch cleanup.",
     "howTo": [
       "Enter one number or multiple numbers on separate lines.",
-      "They convert to standard format automatically.",
-      "Copy and use in Excel or your DB."
+      "Each is normalized to the standard format automatically.",
+      "Copy the cleaned results into Excel or your database."
     ],
     "faq": [
       {
-        "q": "Does +82 international format work?",
-        "a": "Yes. +82-10-XXXX-XXXX ↔ 010-XXXX-XXXX both ways."
+        "q": "Does +1 international format work?",
+        "a": "Yes. It converts between +1 XXX-XXX-XXXX and the national (XXX) XXX-XXXX format both ways."
       },
       {
-        "q": "Are area codes (02, 031, 051) handled?",
-        "a": "Yes. Landline numbers like 02-1234-5678 normalize to standard format."
+        "q": "Are area codes handled?",
+        "a": "Yes. 3-digit US area codes are detected and formatted correctly."
       },
       {
-        "q": "Are formats like 01012345678 (no hyphens) recognized?",
-        "a": "Yes. Hyphens, spaces, and parentheses are all cleaned up."
+        "q": "Numbers without separators?",
+        "a": "Yes — digits, spaces, dashes, dots, and parentheses are all cleaned up automatically."
       },
       {
-        "q": "Batch processing?",
-        "a": "Enter multiple numbers on separate lines and they all normalize at once."
+        "q": "Can I process many numbers at once?",
+        "a": "Yes. Enter multiple numbers separated by line breaks and they are all normalized."
       },
       {
-        "q": "Are invalid numbers flagged?",
-        "a": "If digit counts don't match Korean standards, a warning shows. Some VoIP numbers (070) are also recognized."
+        "q": "Is invalid input flagged?",
+        "a": "Numbers that do not match the standard 10-digit US length are flagged with a warning."
       },
       {
-        "q": "Privacy concerns?",
-        "a": "All processing happens in your browser — nothing leaves. Safe to use."
+        "q": "Any privacy concern?",
+        "a": "All processing happens in your browser. Nothing is uploaded."
       }
     ]
   },
@@ -8154,7 +8154,7 @@
     ]
   },
   "number-to-english": {
-    "h1": "Number → English Conversion",
+    "h1": "Convert Number to English Words",
     "description": "Convert numbers to English words. Useful for English check writing, international contracts, English invoices, writing/composition, and English exam answers.",
     "metaDescription": "Free number to English. twelve thousand for checks and contracts.",
     "howTo": [
