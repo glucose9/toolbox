@@ -47,7 +47,9 @@ export default async function HomePage({
         {Object.entries(byCategory).map(([cat, list]) => (
           <div key={cat} id={cat}>
             <h2 className="text-2xl font-bold mb-4">
-              {t(`categories.${cat}`)}{" "}
+              <IntlLink href={`/category/${cat}`} className="hover:text-brand-600">
+                {t(`categories.${cat}`)}
+              </IntlLink>{" "}
               <span className="text-muted text-base font-normal">
                 ({t("home.toolCount", { count: list.length })})
               </span>

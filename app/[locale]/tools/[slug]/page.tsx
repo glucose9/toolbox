@@ -122,13 +122,41 @@ export default async function ToolPage({
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: t("nav.home"), item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: categoryLabel, item: `${SITE_URL}/#${tool.category}` },
+      { "@type": "ListItem", position: 2, name: categoryLabel, item: `${SITE_URL}/category/${tool.category}` },
       { "@type": "ListItem", position: 3, name: navTitle, item: `${SITE_URL}/tools/${tool.slug}` },
     ],
   };
 
+  const APP_CATEGORY: Record<string, string> = {
+    qr: "UtilitiesApplication",
+    barcode: "UtilitiesApplication",
+    image: "MultimediaApplication",
+    video: "MultimediaApplication",
+    document: "BusinessApplication",
+    pdf: "BusinessApplication",
+    text: "UtilitiesApplication",
+    dev: "DeveloperApplication",
+    calc: "UtilitiesApplication",
+    academic: "EducationalApplication",
+  };
+  const toolUrl = `${SITE_URL}${locale === "ko" ? "" : "/" + locale}/tools/${tool.slug}`;
+  const appJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: localizedH1,
+    url: toolUrl,
+    applicationCategory: APP_CATEGORY[tool.category] || "UtilitiesApplication",
+    operatingSystem: "Any (web browser)",
+    browserRequirements: "Requires JavaScript. Runs entirely in the browser.",
+    inLanguage: locale,
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    description: localizedDesc,
+  };
+
   return (
     <article className="max-w-4xl mx-auto px-4 py-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
@@ -136,7 +164,7 @@ export default async function ToolPage({
       <nav className="text-sm text-gray-500 mb-4">
         <Link href="/" className="hover:text-brand-600">{t("nav.home")}</Link>
         <span className="mx-2">›</span>
-        <span>{categoryLabel}</span>
+        <Link href={`/category/${tool.category}`} className="hover:text-brand-600">{categoryLabel}</Link>
         <span className="mx-2">›</span>
         <span className="text-gray-900">{navTitle}</span>
       </nav>

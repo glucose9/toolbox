@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
 import { tools, SITE_URL } from "@/lib/tools";
 import { routing } from "@/i18n/routing";
+import { CATEGORY_INTRO } from "@/lib/category-content";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const entries: MetadataRoute.Sitemap = [];
+  const pfx = (locale: string, path: string) =>
+    locale === routing.defaultLocale ? `${SITE_URL}${path}` : `${SITE_URL}/${locale}${path}`;
 
   // Home pages
   for (const locale of routing.locales) {
@@ -23,6 +26,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
       },
     });
+  }
+
+  // Category landing pages × locales
+  for (const cat of Object.keys(CATEGORY_INTRO)) {
+    for (const locale of routing.locales) {
+      entries.push({
+        url: pfx(locale, `/category/${cat}`),
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.9,
+        alternates: {
+          languages: {
+            ko: `${SITE_URL}/category/${cat}`,
+            en: `${SITE_URL}/en/category/${cat}`,
+            ja: `${SITE_URL}/ja/category/${cat}`,
+            zh: `${SITE_URL}/zh/category/${cat}`,
+          },
+        },
+      });
+    }
   }
 
   // Tool pages × locales
