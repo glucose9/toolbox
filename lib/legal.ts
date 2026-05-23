@@ -19,7 +19,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         { h: "무엇을 하나요", p: ["일상과 업무에서 자주 필요한 작은 작업들 — QR/바코드 생성, 이미지 변환·압축, 동영상 처리, PDF 편집, 텍스트 정리, 개발 유틸리티, 각종 계산기 — 을 한곳에서 빠르게 처리할 수 있게 만듭니다."] },
         { h: "핵심 원칙", p: ["모든 처리는 사용자의 브라우저 안에서 이루어집니다. 파일은 서버로 업로드되지 않습니다.", "가입·로그인이 필요 없습니다.", "대부분의 도구에 워터마크가 없습니다.", "한국어·영어·일본어·중국어를 지원합니다."] },
         { h: "어떻게 작동하나요", p: ["이미지·동영상·PDF 같은 파일 처리는 WebAssembly와 브라우저 API(Canvas, Web Crypto 등)를 사용해 기기 안에서 직접 실행됩니다. 따라서 파일이 외부로 전송되지 않아 개인정보·보안 측면에서 안전합니다.", "일부 무거운 기능(영상 변환, 배경 제거 등)은 최초 사용 시 처리 엔진을 한 번 내려받은 뒤 브라우저에 캐시합니다."] },
-        { h: "문의", p: ["개선 제안이나 오류 제보는 contact@barokit.com 으로 연락해 주세요. 개인이 운영하는 무료 사이트입니다."] },
+        { h: "문의", p: ["개선 제안이나 오류 제보는 barokit.help@gmail.com 으로 연락해 주세요. 개인이 운영하는 무료 사이트입니다."] },
       ],
     },
     en: {
@@ -30,7 +30,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         { h: "What it does", p: ["It brings together the small everyday and work tasks you need most — generating QR/barcodes, converting and compressing images, processing video, editing PDFs, cleaning up text, developer utilities, and various calculators — so you can do them quickly in one place."] },
         { h: "Core principles", p: ["All processing happens inside your browser. Files are never uploaded to a server.", "No signup or login required.", "Most tools have no watermark.", "Available in Korean, English, Japanese, and Chinese."] },
         { h: "How it works", p: ["File processing (images, video, PDF) runs directly on your device using WebAssembly and browser APIs (Canvas, Web Crypto, etc.). Your files are not transmitted anywhere, which is safer for privacy and security.", "Some heavy features (video conversion, background removal) download a processing engine once on first use and then cache it in your browser."] },
-        { h: "Contact", p: ["For suggestions or bug reports, please contact contact@barokit.com. This is a free site run by an individual."] },
+        { h: "Contact", p: ["For suggestions or bug reports, please contact barokit.help@gmail.com. This is a free site run by an individual."] },
       ],
     },
     ja: {
@@ -41,7 +41,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         { h: "何ができる?", p: ["日常や仕事でよく必要になる小さな作業 — QR/バーコード生成、画像の変換・圧縮、動画処理、PDF編集、テキスト整理、開発ユーティリティ、各種計算機 — を一箇所で素早く処理できます。"] },
         { h: "基本原則", p: ["すべての処理はブラウザ内で行われます。ファイルはサーバーにアップロードされません。", "登録・ログイン不要。", "ほとんどのツールに透かしがありません。", "韓国語・英語・日本語・中国語に対応。"] },
         { h: "仕組み", p: ["画像・動画・PDFなどのファイル処理はWebAssemblyとブラウザAPI(Canvas、Web Cryptoなど)を使って端末内で直接実行されます。ファイルが外部に送信されないため、プライバシーとセキュリティの面で安全です。", "一部の重い機能(動画変換、背景除去など)は初回利用時に処理エンジンを一度ダウンロードし、ブラウザにキャッシュします。"] },
-        { h: "お問い合わせ", p: ["改善のご提案やバグ報告は contact@barokit.com までご連絡ください。個人が運営する無料サイトです。"] },
+        { h: "お問い合わせ", p: ["改善のご提案やバグ報告は barokit.help@gmail.com までご連絡ください。個人が運営する無料サイトです。"] },
       ],
     },
     zh: {
@@ -52,7 +52,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         { h: "能做什么", p: ["把日常和工作中最常需要的小任务 — 生成QR/条码、转换和压缩图像、处理视频、编辑PDF、整理文本、开发工具、各种计算器 — 集中在一处快速完成。"] },
         { h: "核心原则", p: ["所有处理都在您的浏览器中完成。文件不会上传到服务器。", "无需注册或登录。", "大多数工具无水印。", "支持韩语、英语、日语、中文。"] },
         { h: "工作原理", p: ["图像、视频、PDF等文件处理使用WebAssembly和浏览器API(Canvas、Web Crypto等)直接在您的设备上运行。文件不会传输到任何地方,在隐私和安全方面更安全。", "部分较重的功能(视频转换、背景去除等)在首次使用时下载一次处理引擎,然后缓存在浏览器中。"] },
-        { h: "联系", p: ["如有建议或错误报告,请联系 contact@barokit.com。本站为个人运营的免费网站。"] },
+        { h: "联系", p: ["如有建议或错误报告,请联系 barokit.help@gmail.com。本站为个人运营的免费网站。"] },
       ],
     },
   },
