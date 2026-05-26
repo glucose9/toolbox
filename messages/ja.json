@@ -27,7 +27,7 @@
     "qr": "QRコード",
     "image": "画像",
     "video": "動画",
-    "document": "韓国HWP",
+    "document": "ドキュメント・Office",
     "pdf": "PDF",
     "text": "テキスト",
     "dev": "開発者",
@@ -330,9 +330,53 @@
     "pdf-esign": "PDF電子サイン",
     "background-remover": "背景除去",
     "aspect-ratio-calculator": "アスペクト比計算",
-    "color-blindness-simulator": "色覚シミュレーター"
+    "color-blindness-simulator": "色覚シミュレーター",
+    "pptx-viewer": "PPTXビューア",
+    "pptx-to-text": "PPTXテキスト抽出",
+    "pptx-images": "PPTX画像抽出",
+    "pptx-info": "PPTX情報"
   },
   "toolUI": {
+    "pptx-to-text": {
+      "dropFile": "PPTXファイルをドラッグ＆ドロップまたはクリックして選択",
+      "includeNotes": "発表者ノートを含める",
+      "slide": "スライド",
+      "copyAll": "すべてコピー",
+      "copied": "コピーしました",
+      "downloadTxt": ".txt をダウンロード",
+      "noText": "テキストなし",
+      "processing": "処理中..."
+    },
+    "pptx-images": {
+      "dropFile": "PPTXファイルをドラッグ＆ドロップまたはクリックして選択",
+      "found": "{count} 件の画像が見つかりました",
+      "downloadAll": "すべてZIPでダウンロード",
+      "download": "ダウンロード",
+      "noImages": "画像が見つかりません",
+      "processing": "処理中..."
+    },
+    "pptx-info": {
+      "dropFile": "PPTXファイルをドラッグ＆ドロップまたはクリックして選択",
+      "slideCount": "スライド数",
+      "title": "タイトル",
+      "author": "作成者",
+      "lastModifiedBy": "最終更新者",
+      "created": "作成日時",
+      "modified": "更新日時",
+      "application": "アプリケーション",
+      "company": "会社",
+      "processing": "処理中...",
+      "notAvailable": "—"
+    },
+    "pptx-viewer": {
+      "dropFile": "PPTXファイルをドラッグ＆ドロップまたはクリックして選択",
+      "slide": "スライド",
+      "prev": "前へ",
+      "next": "次へ",
+      "processing": "処理中...",
+      "fidelityNote": "これは簡易プレビューです。複雑な書式やアニメーションは元のファイルと異なる場合があります。",
+      "renderFailed": "スライドをレンダリングできませんでした。"
+    },
     "qr": {
       "tabWifi": "Wi-Fi",
       "tabVcard": "名刺",

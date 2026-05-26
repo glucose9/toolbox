@@ -238,6 +238,10 @@ const BarcodeReaderTool = dynamic(() => import("./tools/BarcodeReaderTool"), { s
 const BackgroundRemoverTool = dynamic(() => import("./tools/BackgroundRemoverTool"), { ssr: false });
 const AspectRatioTool = dynamic(() => import("./tools/AspectRatioTool"), { ssr: false });
 const ColorBlindnessTool = dynamic(() => import("./tools/ColorBlindnessTool"), { ssr: false });
+const PptxViewerTool = dynamic(() => import("./tools/PptxViewerTool"), { ssr: false });
+const PptxToTextTool = dynamic(() => import("./tools/PptxToTextTool"), { ssr: false });
+const PptxImagesTool = dynamic(() => import("./tools/PptxImagesTool"), { ssr: false });
+const PptxInfoTool = dynamic(() => import("./tools/PptxInfoTool"), { ssr: false });
 const KakaoChatTool = dynamic(() => import("./tools/KakaoChatTool"), { ssr: false });
 const MemeGeneratorTool = dynamic(() => import("./tools/MemeGeneratorTool"), { ssr: false });
 const ImageColorPickerTool = dynamic(() => import("./tools/ImageColorPickerTool"), { ssr: false });
@@ -589,6 +593,10 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "BackgroundRemoverTool": return <BackgroundRemoverTool />;
     case "AspectRatioTool": return <AspectRatioTool />;
     case "ColorBlindnessTool": return <ColorBlindnessTool />;
+    case "PptxViewerTool": return <PptxViewerTool />;
+    case "PptxToTextTool": return <PptxToTextTool />;
+    case "PptxImagesTool": return <PptxImagesTool />;
+    case "PptxInfoTool": return <PptxInfoTool />;
     case "KakaoChatTool": return <KakaoChatTool />;
     case "MemeGeneratorTool": return <MemeGeneratorTool />;
     case "ImageColorPickerTool": return <ImageColorPickerTool />;

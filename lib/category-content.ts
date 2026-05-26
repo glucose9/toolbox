@@ -29,10 +29,10 @@ export const CATEGORY_INTRO: Record<Cat, Record<Locale, { title: string; intro: 
     zh: { title: "视频工具", intro: "剪辑、压缩、旋转、变速、转 GIF/MP3、编辑字幕 — 全部基于 ffmpeg 在浏览器内处理,大文件也无需上传。" },
   },
   document: {
-    ko: { title: "한글(HWP) 문서 도구", intro: "한컴오피스 HWP·HWPX 파일을 보고, 텍스트를 추출하고, PDF로 변환하고, 간단히 편집합니다. 별도 프로그램 설치 없이 브라우저에서." },
-    en: { title: "Korean HWP Document Tools", intro: "View Hancom Office HWP/HWPX files, extract text, convert to PDF, and do simple edits — right in your browser, no software install needed." },
-    ja: { title: "韓国HWP文書ツール", intro: "Hancom Office の HWP・HWPX ファイルを表示し、テキスト抽出、PDF変換、簡単な編集ができます。ソフトのインストール不要、ブラウザ内で。" },
-    zh: { title: "韩国HWP文档工具", intro: "查看 Hancom Office 的 HWP/HWPX 文件,提取文本、转换为 PDF、进行简单编辑 — 无需安装软件,在浏览器内完成。" },
+    ko: { title: "문서·오피스 도구", intro: "한컴오피스 HWP·HWPX, 워드(DOCX), 파워포인트(PPTX) 파일을 보고, 텍스트·이미지를 추출하고, PDF로 변환하고, 정보를 확인합니다. 별도 프로그램 설치 없이 브라우저에서, 업로드 없이." },
+    en: { title: "Document & Office Tools", intro: "View Hancom Office HWP/HWPX, Word (DOCX), and PowerPoint (PPTX) files, extract text and images, convert to PDF, and check file info — right in your browser, no software install and no upload." },
+    ja: { title: "ドキュメント・Officeツール", intro: "Hancom Office の HWP・HWPX、Word（DOCX）、PowerPoint（PPTX）ファイルを表示し、テキスト・画像を抽出、PDF変換、情報確認ができます。ソフト不要・アップロードなし、ブラウザ内で。" },
+    zh: { title: "文档·Office工具", intro: "查看 Hancom Office 的 HWP/HWPX、Word（DOCX）、PowerPoint（PPTX）文件,提取文本和图片、转换为 PDF、查看文件信息 — 无需安装软件、无需上传,在浏览器内完成。" },
   },
   pdf: {
     ko: { title: "PDF 도구", intro: "PDF 합치기·분할·회전·페이지 삭제, 워터마크·페이지번호, 텍스트 추출, 전자 서명까지. 계약서 같은 민감 문서도 업로드 없이 안전하게." },

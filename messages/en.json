@@ -27,7 +27,7 @@
     "qr": "QR Code",
     "image": "Image",
     "video": "Video",
-    "document": "Korean HWP",
+    "document": "Documents & Office",
     "pdf": "PDF",
     "text": "Text",
     "dev": "Developer",
@@ -330,9 +330,53 @@
     "pdf-esign": "PDF e-Sign",
     "background-remover": "Background Remover",
     "aspect-ratio-calculator": "Aspect Ratio Calculator",
-    "color-blindness-simulator": "Color Blindness Simulator"
+    "color-blindness-simulator": "Color Blindness Simulator",
+    "pptx-viewer": "PPTX Viewer",
+    "pptx-to-text": "PPTX to Text",
+    "pptx-images": "PPTX Image Extract",
+    "pptx-info": "PPTX Info"
   },
   "toolUI": {
+    "pptx-to-text": {
+      "dropFile": "Drag & drop a PPTX file or click to choose",
+      "includeNotes": "Include speaker notes",
+      "slide": "Slide",
+      "copyAll": "Copy all",
+      "copied": "Copied",
+      "downloadTxt": "Download .txt",
+      "noText": "No text",
+      "processing": "Processing..."
+    },
+    "pptx-images": {
+      "dropFile": "Drag & drop a PPTX file or click to choose",
+      "found": "Found {count} image(s)",
+      "downloadAll": "Download all as ZIP",
+      "download": "Download",
+      "noImages": "No images found",
+      "processing": "Processing..."
+    },
+    "pptx-info": {
+      "dropFile": "Drag & drop a PPTX file or click to choose",
+      "slideCount": "Slide count",
+      "title": "Title",
+      "author": "Author",
+      "lastModifiedBy": "Last modified by",
+      "created": "Created",
+      "modified": "Modified",
+      "application": "Application",
+      "company": "Company",
+      "processing": "Processing...",
+      "notAvailable": "—"
+    },
+    "pptx-viewer": {
+      "dropFile": "Drag & drop a PPTX file or click to choose",
+      "slide": "Slide",
+      "prev": "Previous",
+      "next": "Next",
+      "processing": "Processing...",
+      "fidelityNote": "This is a quick preview. Complex formatting and animations may differ from the original.",
+      "renderFailed": "Could not render the slides."
+    },
     "qr": {
       "tabWifi": "Wi-Fi",
       "tabVcard": "vCard",

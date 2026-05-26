@@ -9011,5 +9011,140 @@
         "a": "Don't rely on color alone — add brightness contrast, patterns, and labels. Avoid red↔green; prefer safer pairs like blue↔orange."
       }
     ]
+  },
+  "pptx-viewer": {
+    "h1": "PPTX Viewer (PowerPoint Preview)",
+    "description": "Open PowerPoint (.pptx) files right in your browser and preview the slides — no PowerPoint install needed. Files are processed on your device and never uploaded. Great for quickly checking decks you received, viewing on a PC/tablet without PowerPoint, and previewing attachments.",
+    "metaDescription": "Free PPTX viewer. Preview PowerPoint slides in your browser, no install, no upload.",
+    "howTo": [
+      "Drag or pick a .pptx file.",
+      "Slides render in order.",
+      "Scroll through to review the content."
+    ],
+    "faq": [
+      {
+        "q": "Are files uploaded anywhere?",
+        "a": "No. Everything is parsed and rendered in your browser and never uploaded. Safe for sensitive decks."
+      },
+      {
+        "q": "Does it look exactly like the original?",
+        "a": "It's a quick preview. Text, images, and basic layout show well, but complex animations, SmartArt, and some fonts may differ. Use PowerPoint for precise editing."
+      },
+      {
+        "q": "Does it support old .ppt?",
+        "a": "It supports modern .pptx (2007+). For legacy .ppt, save as .pptx in PowerPoint first."
+      },
+      {
+        "q": "I just want the slide text.",
+        "a": "Use the [PPTX to Text] tool to copy all slide text at once."
+      },
+      {
+        "q": "How do I save images from slides?",
+        "a": "Use the [PPTX Image Extract] tool to grab every image in the deck at once."
+      }
+    ]
+  },
+  "pptx-to-text": {
+    "h1": "PPTX Text Extractor",
+    "description": "Extract the text from every slide of a PowerPoint (.pptx) file at once. Text is shown grouped by slide and can be copied or downloaded. Useful for organizing talk scripts, searching/translating content, documentation, and plagiarism-check prep. Processed in your browser.",
+    "metaDescription": "Free PPTX text extractor. Copy/download text from all PowerPoint slides, no upload.",
+    "howTo": [
+      "Upload a .pptx file.",
+      "All slide text is extracted in slide order.",
+      "Copy everything or download as .txt."
+    ],
+    "faq": [
+      {
+        "q": "Is it in slide order?",
+        "a": "Yes — grouped as Slide 1, 2, 3, and so on."
+      },
+      {
+        "q": "Are speaker notes extracted?",
+        "a": "It extracts slide body text, with an option to include speaker notes."
+      },
+      {
+        "q": "Does it get text inside tables?",
+        "a": "Yes — text in text boxes, tables, and shapes is all extracted."
+      },
+      {
+        "q": "Are files uploaded?",
+        "a": "No. JSZip unzips and parses in your browser; nothing is uploaded."
+      },
+      {
+        "q": "Korean/Japanese/Chinese too?",
+        "a": "Yes — all Unicode text is extracted correctly."
+      },
+      {
+        "q": "What about text inside images?",
+        "a": "Text baked into images is not extractable here — use the [Image OCR] tool for that."
+      }
+    ]
+  },
+  "pptx-images": {
+    "h1": "PPTX Image Extractor",
+    "description": "Extract every image (photos, logos, icons) embedded in a PowerPoint (.pptx) file at original quality and download them at once. Useful for reusing images from a deck, recovering full-resolution photos, and pulling design sources. Processed in your browser.",
+    "metaDescription": "Free PPTX image extractor. Pull all photos from PowerPoint at original quality, ZIP download.",
+    "howTo": [
+      "Upload a .pptx file.",
+      "All embedded images appear as thumbnails.",
+      "Save individually or download all as a ZIP."
+    ],
+    "faq": [
+      {
+        "q": "Original quality?",
+        "a": "Yes. The original embedded image files are extracted with no quality loss."
+      },
+      {
+        "q": "Which formats?",
+        "a": "PNG, JPG, GIF, SVG, EMF, and other media embedded in the .pptx."
+      },
+      {
+        "q": "Are files uploaded?",
+        "a": "No. Unzipped in your browser with JSZip; nothing is uploaded."
+      },
+      {
+        "q": "What order?",
+        "a": "Shown in the internal media storage order, which may differ slightly from slide order."
+      },
+      {
+        "q": "Video/audio too?",
+        "a": "Embedded video and audio files are also extracted as media."
+      },
+      {
+        "q": "Background images?",
+        "a": "Yes — background images are extracted if present in the media folder."
+      }
+    ]
+  },
+  "pptx-info": {
+    "h1": "PPTX File Info",
+    "description": "Check a PowerPoint (.pptx) file's metadata: slide count, title, author, created/modified dates, and the application used. Useful for verifying file origin, checking author info before submitting, and quickly counting slides. Processed in your browser.",
+    "metaDescription": "Free PPTX info viewer. Slide count, author, created/modified metadata, no upload.",
+    "howTo": [
+      "Upload a .pptx file.",
+      "Slide count, author, dates, and more are displayed."
+    ],
+    "faq": [
+      {
+        "q": "What info is shown?",
+        "a": "Slide count, title, author, last modified by, created/modified dates, authoring application, and company (from docProps)."
+      },
+      {
+        "q": "How do I remove author info?",
+        "a": "This tool only views it. To strip metadata, use PowerPoint's Document Inspector."
+      },
+      {
+        "q": "Are files uploaded?",
+        "a": "No. docProps XML is parsed in your browser; nothing is uploaded."
+      },
+      {
+        "q": "Could the slide count differ?",
+        "a": "It may vary depending on hidden slides. By default it counts all slides."
+      },
+      {
+        "q": "Why check before submitting?",
+        "a": "Author/company fields often carry personal info or traces of earlier files — worth checking before sending externally."
+      }
+    ]
   }
 }
