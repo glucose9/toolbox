@@ -21,7 +21,8 @@
     "selectFile": "ファイル選択",
     "dragOrClick": "ドラッグまたはクリック",
     "other": "別のファイル",
-    "noResults": "結果なし"
+    "noResults": "結果なし",
+    "close": "閉じる"
   },
   "categories": {
     "qr": "QRコード",
@@ -39,7 +40,10 @@
     "home": "ホーム",
     "darkMode": "ダークモード切替",
     "search": "ツール検索 (Ctrl+K)",
-    "language": "言語"
+    "language": "言語",
+    "menu": "メニュー",
+    "allTools": "全ツール",
+    "viewCategory": "カテゴリ全体を見る"
   },
   "home": {
     "title": "無料オンラインツール {count}個",

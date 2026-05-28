@@ -21,7 +21,8 @@
     "selectFile": "选择文件",
     "dragOrClick": "拖拽或点击",
     "other": "其他文件",
-    "noResults": "无结果"
+    "noResults": "无结果",
+    "close": "关闭"
   },
   "categories": {
     "qr": "QR码",
@@ -39,7 +40,10 @@
     "home": "首页",
     "darkMode": "深色模式切换",
     "search": "搜索工具 (Ctrl+K)",
-    "language": "语言"
+    "language": "语言",
+    "menu": "菜单",
+    "allTools": "全部工具",
+    "viewCategory": "查看分类"
   },
   "home": {
     "title": "免费在线工具 {count} 个",

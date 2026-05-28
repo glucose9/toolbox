@@ -21,7 +21,8 @@
     "selectFile": "파일 선택",
     "dragOrClick": "드래그하거나 클릭",
     "other": "다른 파일",
-    "noResults": "검색 결과 없음"
+    "noResults": "검색 결과 없음",
+    "close": "닫기"
   },
   "categories": {
     "qr": "QR코드",
@@ -39,7 +40,10 @@
     "home": "홈",
     "darkMode": "다크모드 전환",
     "search": "도구 검색 (Ctrl+K)",
-    "language": "언어"
+    "language": "언어",
+    "menu": "메뉴",
+    "allTools": "모든 도구",
+    "viewCategory": "카테고리 전체 보기"
   },
   "home": {
     "title": "무료로 쓰는 온라인 도구 {count}개",

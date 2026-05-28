@@ -21,7 +21,8 @@
     "selectFile": "Select file",
     "dragOrClick": "Drag or click",
     "other": "Different file",
-    "noResults": "No results"
+    "noResults": "No results",
+    "close": "Close"
   },
   "categories": {
     "qr": "QR Code",
@@ -39,7 +40,10 @@
     "home": "Home",
     "darkMode": "Toggle dark mode",
     "search": "Search tools (Ctrl+K)",
-    "language": "Language"
+    "language": "Language",
+    "menu": "Menu",
+    "allTools": "All Tools",
+    "viewCategory": "View category"
   },
   "home": {
     "title": "{count} Free Online Tools",
