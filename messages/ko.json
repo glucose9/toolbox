@@ -334,7 +334,8 @@
     "pptx-viewer": "PPTX 뷰어",
     "pptx-to-text": "PPTX 텍스트 추출",
     "pptx-images": "PPTX 이미지 추출",
-    "pptx-info": "PPTX 정보"
+    "pptx-info": "PPTX 정보",
+    "teleprompter": "텔레프롬프터"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3340,6 +3341,17 @@
         "deuteranomaly": "녹색약",
         "achromatopsia": "전색맹"
       }
+    },
+    "teleprompter": {
+      "script": "발표 스크립트",
+      "scriptPlaceholder": "여기에 스크립트를 붙여넣으세요...",
+      "speed": "속도",
+      "fontSize": "글자 크기",
+      "lineHeight": "줄 간격",
+      "mirror": "미러 모드 (텔레프롬프터 거울용 좌우반전)",
+      "darkBg": "어두운 배경",
+      "start": "시작",
+      "hotkeysHint": "단축키: 스페이스 = 재생/일시정지, ↑↓ = 속도 조절, R = 처음으로, F = 전체화면, Esc = 종료. 중앙의 빨간 가이드 라인이 현재 읽을 위치입니다."
     }
   }
 }

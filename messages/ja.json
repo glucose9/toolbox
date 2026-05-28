@@ -334,7 +334,8 @@
     "pptx-viewer": "PPTXビューア",
     "pptx-to-text": "PPTXテキスト抽出",
     "pptx-images": "PPTX画像抽出",
-    "pptx-info": "PPTX情報"
+    "pptx-info": "PPTX情報",
+    "teleprompter": "テレプロンプター"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3340,6 +3341,17 @@
         "deuteranomaly": "2型色弱",
         "achromatopsia": "全色盲"
       }
+    },
+    "teleprompter": {
+      "script": "スクリプト",
+      "scriptPlaceholder": "ここにスクリプトを貼り付け...",
+      "speed": "速度",
+      "fontSize": "文字サイズ",
+      "lineHeight": "行間",
+      "mirror": "ミラーモード（テレプロンプターガラス用に左右反転）",
+      "darkBg": "暗い背景",
+      "start": "開始",
+      "hotkeysHint": "ショートカット: スペース = 再生/一時停止、↑↓ = 速度調整、R = 最初へ、F = 全画面、Esc = 終了。中央の赤いガイドラインが現在読む位置です。"
     }
   }
 }

@@ -334,7 +334,8 @@
     "pptx-viewer": "PPTX Viewer",
     "pptx-to-text": "PPTX to Text",
     "pptx-images": "PPTX Image Extract",
-    "pptx-info": "PPTX Info"
+    "pptx-info": "PPTX Info",
+    "teleprompter": "Teleprompter"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3340,6 +3341,17 @@
         "deuteranomaly": "Deuteranomaly",
         "achromatopsia": "Achromatopsia (mono)"
       }
+    },
+    "teleprompter": {
+      "script": "Script",
+      "scriptPlaceholder": "Paste your script here...",
+      "speed": "Speed",
+      "fontSize": "Font size",
+      "lineHeight": "Line height",
+      "mirror": "Mirror mode (flips horizontally for teleprompter glass)",
+      "darkBg": "Dark background",
+      "start": "Start",
+      "hotkeysHint": "Hotkeys: Space = play/pause, ↑↓ = adjust speed, R = restart, F = fullscreen, Esc = exit. The red guide line in the center marks the current reading position."
     }
   }
 }

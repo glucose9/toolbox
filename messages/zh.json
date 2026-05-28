@@ -334,7 +334,8 @@
     "pptx-viewer": "PPTX 查看器",
     "pptx-to-text": "PPTX 提取文本",
     "pptx-images": "PPTX 图片提取",
-    "pptx-info": "PPTX 信息"
+    "pptx-info": "PPTX 信息",
+    "teleprompter": "提词器"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3340,6 +3341,17 @@
         "deuteranomaly": "绿色弱",
         "achromatopsia": "全色盲"
       }
+    },
+    "teleprompter": {
+      "script": "演讲稿",
+      "scriptPlaceholder": "在此粘贴脚本...",
+      "speed": "速度",
+      "fontSize": "字号",
+      "lineHeight": "行高",
+      "mirror": "镜像模式（提词器玻璃用左右翻转）",
+      "darkBg": "深色背景",
+      "start": "开始",
+      "hotkeysHint": "快捷键:空格=播放/暂停,↑↓=调速,R=回到开头,F=全屏,Esc=退出。中央红色辅助线指示当前阅读位置。"
     }
   }
 }

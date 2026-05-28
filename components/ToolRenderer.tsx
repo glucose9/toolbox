@@ -242,6 +242,7 @@ const PptxViewerTool = dynamic(() => import("./tools/PptxViewerTool"), { ssr: fa
 const PptxToTextTool = dynamic(() => import("./tools/PptxToTextTool"), { ssr: false });
 const PptxImagesTool = dynamic(() => import("./tools/PptxImagesTool"), { ssr: false });
 const PptxInfoTool = dynamic(() => import("./tools/PptxInfoTool"), { ssr: false });
+const TeleprompterTool = dynamic(() => import("./tools/TeleprompterTool"), { ssr: false });
 const KakaoChatTool = dynamic(() => import("./tools/KakaoChatTool"), { ssr: false });
 const MemeGeneratorTool = dynamic(() => import("./tools/MemeGeneratorTool"), { ssr: false });
 const ImageColorPickerTool = dynamic(() => import("./tools/ImageColorPickerTool"), { ssr: false });
@@ -597,6 +598,7 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "PptxToTextTool": return <PptxToTextTool />;
     case "PptxImagesTool": return <PptxImagesTool />;
     case "PptxInfoTool": return <PptxInfoTool />;
+    case "TeleprompterTool": return <TeleprompterTool />;
     case "KakaoChatTool": return <KakaoChatTool />;
     case "MemeGeneratorTool": return <MemeGeneratorTool />;
     case "ImageColorPickerTool": return <ImageColorPickerTool />;

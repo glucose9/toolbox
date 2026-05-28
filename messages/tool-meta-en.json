@@ -9146,5 +9146,47 @@
         "a": "Author/company fields often carry personal info or traces of earlier files — worth checking before sending externally."
       }
     ]
+  },
+  "teleprompter": {
+    "h1": "Teleprompter (Auto-Scroll Presentation Script)",
+    "description": "A news-anchor-style teleprompter that scrolls your script line by line. Adjust speed, font size, color, mirror mode, and fullscreen. Space pauses, arrow keys change speed. Useful for talks, YouTube/livestream recording, interview prep, wedding speeches, keynote rehearsal, and ceremony hosting. Runs entirely in your browser.",
+    "metaDescription": "Free online teleprompter. Auto-scroll presentation script, adjustable speed, fullscreen, no upload.",
+    "howTo": [
+      "Paste your script.",
+      "Adjust font size and speed.",
+      "Press ▶ to auto-scroll the text upward.",
+      "Space pauses, ↑↓ change speed, R restarts, F goes fullscreen.",
+      "If you use a real teleprompter rig with reflective glass, turn on mirror mode."
+    ],
+    "faq": [
+      {
+        "q": "What are the hotkeys?",
+        "a": "Space = play/pause, ↑ = faster, ↓ = slower, R = restart, F = fullscreen, Esc = exit fullscreen."
+      },
+      {
+        "q": "Why does mirror mode exist?",
+        "a": "Real teleprompters use a semi-transparent piece of glass mounted in front of the camera. A screen reflects upward into it, so the text must be flipped horizontally to read correctly in the reflection. Leave it off if you're just reading from a screen."
+      },
+      {
+        "q": "How do I pick the right speed?",
+        "a": "Reading pace is usually 130–160 words/min in English, 250–300 chars/min in Korean. Use the slider to match your natural delivery."
+      },
+      {
+        "q": "Is the current line highlighted?",
+        "a": "A red guide line in the center of the screen marks the reading position. The rest stays slightly dimmer so your eyes stay focused there."
+      },
+      {
+        "q": "Fullscreen doesn't work.",
+        "a": "Browsers require a user gesture (button click) before allowing fullscreen. Click the fullscreen button or press F directly."
+      },
+      {
+        "q": "Is my script uploaded?",
+        "a": "No. Everything runs in your browser; nothing is uploaded. Safe for sensitive talks."
+      },
+      {
+        "q": "Can I save my script?",
+        "a": "Currently single-session. Keep your script in a separate note app for now. (Saved-scripts feature is planned.)"
+      }
+    ]
   }
 }
