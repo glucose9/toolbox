@@ -9188,5 +9188,47 @@
         "a": "Currently single-session. Keep your script in a separate note app for now. (Saved-scripts feature is planned.)"
       }
     ]
+  },
+  "number-tags": {
+    "h1": "Number Tag Generator (A4 PDF, Paper-Saving Layout)",
+    "description": "Enter a number range (e.g. 1–200), pick colors, and download an A4 PDF that packs N×M tags per sheet to save paper. Adjust columns, rows, margins, gap, font size, prefix/suffix, corner radius, and orientation. Great for event tickets, queue numbers, classroom IDs, booth numbers, locker labels, and raffles. Processed in your browser.",
+    "metaDescription": "Free number tag PDF. A4 paper-saving N×M layout, color and margin options.",
+    "howTo": [
+      "Enter start and end numbers (e.g. 1–200).",
+      "Choose colors and the cols × rows you want per A4 sheet.",
+      "Adjust margins and gap so you have room to cut.",
+      "Click \"Download PDF\" — you get a multi-page A4 PDF.",
+      "Print and cut along the gaps to use as tags."
+    ],
+    "faq": [
+      {
+        "q": "How much paper does it save?",
+        "a": "5×8 = 40 tags per A4, so 200 tags print on just 5 sheets. 4×10 (40) or 6×10 (60) also work. More cells = more paper saved."
+      },
+      {
+        "q": "How is the PDF made?",
+        "a": "Pages are rendered in your browser at A4 size and bundled into a PDF with jsPDF. Nothing is uploaded."
+      },
+      {
+        "q": "Max number of tags?",
+        "a": "Up to 2,000 per run. Split larger sets into batches. (More pages = longer PDF generation.)"
+      },
+      {
+        "q": "Zero-padding?",
+        "a": "Optionally pad numbers like 1 → 001, 12 → 012 so they line up neatly."
+      },
+      {
+        "q": "Can I add Korean/Japanese suffixes like \"번\" or \"号\"?",
+        "a": "Yes — prefix/suffix accepts any text (Hangul, Kana, Hanzi, Latin, symbols), e.g. \"No.001번\"."
+      },
+      {
+        "q": "Landscape A4?",
+        "a": "Toggle portrait/landscape with the orientation selector. Landscape fits more columns per row."
+      },
+      {
+        "q": "Good for raffle tickets?",
+        "a": "Yes — raffle/lottery numbers, event tickets, locker numbers, booth IDs. Print, then cut."
+      }
+    ]
   }
 }

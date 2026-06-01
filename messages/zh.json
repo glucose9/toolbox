@@ -339,7 +339,8 @@
     "pptx-to-text": "PPTX 提取文本",
     "pptx-images": "PPTX 图片提取",
     "pptx-info": "PPTX 信息",
-    "teleprompter": "提词器"
+    "teleprompter": "提词器",
+    "number-tags": "号码牌生成器"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3356,6 +3357,35 @@
       "darkBg": "深色背景",
       "start": "开始",
       "hotkeysHint": "快捷键:空格=播放/暂停,↑↓=调速,R=回到开头,F=全屏,Esc=退出。中央红色辅助线指示当前阅读位置。"
+    },
+    "number-tags": {
+      "from": "起始号",
+      "to": "结束号",
+      "prefix": "前缀",
+      "suffix": "后缀",
+      "background": "背景色",
+      "textColor": "文字颜色",
+      "orientation": "方向",
+      "portrait": "纵向 (A4)",
+      "landscape": "横向 (A4)",
+      "cols": "列数",
+      "rows": "行数",
+      "fontPct": "字号",
+      "radius": "圆角",
+      "marginMm": "页边距",
+      "gapMm": "格间距",
+      "padDigits": "数字补零位数",
+      "padNone": "关闭",
+      "perPage": "每张 A4",
+      "pages": "总页数",
+      "tagsUnit": "个",
+      "pagesUnit": "页",
+      "downloadPdf": "下载 PDF",
+      "print": "打印",
+      "preview": "预览",
+      "page": "第",
+      "generating": "生成 PDF 中...",
+      "hint": "每张 A4 上以 N×M 紧密排列以节省纸张。打印后用剪刀沿线裁剪即可。"
     }
   }
 }

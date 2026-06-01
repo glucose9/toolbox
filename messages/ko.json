@@ -339,7 +339,8 @@
     "pptx-to-text": "PPTX 텍스트 추출",
     "pptx-images": "PPTX 이미지 추출",
     "pptx-info": "PPTX 정보",
-    "teleprompter": "텔레프롬프터"
+    "teleprompter": "텔레프롬프터",
+    "number-tags": "번호표 만들기"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3356,6 +3357,35 @@
       "darkBg": "어두운 배경",
       "start": "시작",
       "hotkeysHint": "단축키: 스페이스 = 재생/일시정지, ↑↓ = 속도 조절, R = 처음으로, F = 전체화면, Esc = 종료. 중앙의 빨간 가이드 라인이 현재 읽을 위치입니다."
+    },
+    "number-tags": {
+      "from": "시작 번호",
+      "to": "끝 번호",
+      "prefix": "접두어",
+      "suffix": "접미어",
+      "background": "배경색",
+      "textColor": "글자색",
+      "orientation": "방향",
+      "portrait": "세로 (A4)",
+      "landscape": "가로 (A4)",
+      "cols": "열(가로 칸 수)",
+      "rows": "행(세로 칸 수)",
+      "fontPct": "글자 크기",
+      "radius": "모서리 둥글기",
+      "marginMm": "여백",
+      "gapMm": "칸 간격",
+      "padDigits": "자리수 맞춤 (0)",
+      "padNone": "끄기",
+      "perPage": "A4 한 장 당",
+      "pages": "총 페이지",
+      "tagsUnit": "개",
+      "pagesUnit": "장",
+      "downloadPdf": "PDF 다운로드",
+      "print": "인쇄",
+      "preview": "미리보기",
+      "page": "페이지",
+      "generating": "PDF 생성 중...",
+      "hint": "A4 종이 한 장에 N×M칸으로 빽빽이 배치돼 종이를 아낍니다. 인쇄 후 가위로 잘라 사용하세요."
     }
   }
 }

@@ -339,7 +339,8 @@
     "pptx-to-text": "PPTXテキスト抽出",
     "pptx-images": "PPTX画像抽出",
     "pptx-info": "PPTX情報",
-    "teleprompter": "テレプロンプター"
+    "teleprompter": "テレプロンプター",
+    "number-tags": "番号札メーカー"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3356,6 +3357,35 @@
       "darkBg": "暗い背景",
       "start": "開始",
       "hotkeysHint": "ショートカット: スペース = 再生/一時停止、↑↓ = 速度調整、R = 最初へ、F = 全画面、Esc = 終了。中央の赤いガイドラインが現在読む位置です。"
+    },
+    "number-tags": {
+      "from": "開始番号",
+      "to": "終了番号",
+      "prefix": "接頭辞",
+      "suffix": "接尾辞",
+      "background": "背景色",
+      "textColor": "文字色",
+      "orientation": "向き",
+      "portrait": "縦 (A4)",
+      "landscape": "横 (A4)",
+      "cols": "列数",
+      "rows": "行数",
+      "fontPct": "文字サイズ",
+      "radius": "角丸",
+      "marginMm": "余白",
+      "gapMm": "セル間隔",
+      "padDigits": "桁揃え(0埋め)",
+      "padNone": "オフ",
+      "perPage": "A4 1枚あたり",
+      "pages": "総ページ",
+      "tagsUnit": "枚",
+      "pagesUnit": "ページ",
+      "downloadPdf": "PDFダウンロード",
+      "print": "印刷",
+      "preview": "プレビュー",
+      "page": "ページ",
+      "generating": "PDF生成中...",
+      "hint": "A4 1枚にN×Mで詰めて印刷するため紙が節約できます。印刷後にハサミで切ってご利用ください。"
     }
   }
 }

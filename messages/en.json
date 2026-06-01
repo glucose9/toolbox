@@ -339,7 +339,8 @@
     "pptx-to-text": "PPTX to Text",
     "pptx-images": "PPTX Image Extract",
     "pptx-info": "PPTX Info",
-    "teleprompter": "Teleprompter"
+    "teleprompter": "Teleprompter",
+    "number-tags": "Number Tag Generator"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3356,6 +3357,35 @@
       "darkBg": "Dark background",
       "start": "Start",
       "hotkeysHint": "Hotkeys: Space = play/pause, ↑↓ = adjust speed, R = restart, F = fullscreen, Esc = exit. The red guide line in the center marks the current reading position."
+    },
+    "number-tags": {
+      "from": "Start number",
+      "to": "End number",
+      "prefix": "Prefix",
+      "suffix": "Suffix",
+      "background": "Background",
+      "textColor": "Text color",
+      "orientation": "Orientation",
+      "portrait": "Portrait (A4)",
+      "landscape": "Landscape (A4)",
+      "cols": "Columns",
+      "rows": "Rows",
+      "fontPct": "Font size",
+      "radius": "Corner radius",
+      "marginMm": "Margin",
+      "gapMm": "Cell gap",
+      "padDigits": "Zero-pad digits",
+      "padNone": "off",
+      "perPage": "Per A4 sheet",
+      "pages": "Total pages",
+      "tagsUnit": "tags",
+      "pagesUnit": "page(s)",
+      "downloadPdf": "Download PDF",
+      "print": "Print",
+      "preview": "Preview",
+      "page": "Page",
+      "generating": "Generating PDF...",
+      "hint": "Tags are packed in an N×M grid on each A4 sheet to save paper. Print and cut along the lines."
     }
   }
 }
