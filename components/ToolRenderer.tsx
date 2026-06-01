@@ -244,6 +244,12 @@ const PptxImagesTool = dynamic(() => import("./tools/PptxImagesTool"), { ssr: fa
 const PptxInfoTool = dynamic(() => import("./tools/PptxInfoTool"), { ssr: false });
 const TeleprompterTool = dynamic(() => import("./tools/TeleprompterTool"), { ssr: false });
 const NumberTagsTool = dynamic(() => import("./tools/NumberTagsTool"), { ssr: false });
+const DocxToPdfTool = dynamic(() => import("./tools/DocxToPdfTool"), { ssr: false });
+const XlsxToPdfTool = dynamic(() => import("./tools/XlsxToPdfTool"), { ssr: false });
+const PptxToPdfTool = dynamic(() => import("./tools/PptxToPdfTool"), { ssr: false });
+const HtmlToPdfTool = dynamic(() => import("./tools/HtmlToPdfTool"), { ssr: false });
+const MdToPdfTool = dynamic(() => import("./tools/MdToPdfTool"), { ssr: false });
+const TxtToPdfTool = dynamic(() => import("./tools/TxtToPdfTool"), { ssr: false });
 const KakaoChatTool = dynamic(() => import("./tools/KakaoChatTool"), { ssr: false });
 const MemeGeneratorTool = dynamic(() => import("./tools/MemeGeneratorTool"), { ssr: false });
 const ImageColorPickerTool = dynamic(() => import("./tools/ImageColorPickerTool"), { ssr: false });
@@ -601,6 +607,12 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "PptxInfoTool": return <PptxInfoTool />;
     case "TeleprompterTool": return <TeleprompterTool />;
     case "NumberTagsTool": return <NumberTagsTool />;
+    case "DocxToPdfTool": return <DocxToPdfTool />;
+    case "XlsxToPdfTool": return <XlsxToPdfTool />;
+    case "PptxToPdfTool": return <PptxToPdfTool />;
+    case "HtmlToPdfTool": return <HtmlToPdfTool />;
+    case "MdToPdfTool": return <MdToPdfTool />;
+    case "TxtToPdfTool": return <TxtToPdfTool />;
     case "KakaoChatTool": return <KakaoChatTool />;
     case "MemeGeneratorTool": return <MemeGeneratorTool />;
     case "ImageColorPickerTool": return <ImageColorPickerTool />;

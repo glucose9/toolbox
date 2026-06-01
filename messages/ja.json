@@ -3386,6 +3386,62 @@
       "page": "ページ",
       "generating": "PDF生成中...",
       "hint": "A4 1枚にN×Mで詰めて印刷するため紙が節約できます。印刷後にハサミで切ってご利用ください。"
+    },
+    "docx-to-pdf": {
+      "dropFile": ".docxファイルをドラッグするかクリックして選択してください",
+      "processing": "変換中...",
+      "downloadPdf": "PDFダウンロード",
+      "preview": "プレビュー",
+      "error": "エラー"
+    },
+    "xlsx-to-pdf": {
+      "dropFile": ".xlsx / .xls / .csvファイルをドラッグするかクリックして選択してください",
+      "processing": "変換中...",
+      "downloadPdf": "PDFダウンロード",
+      "sheetsFound": "シート{count}個",
+      "error": "エラー"
+    },
+    "pptx-to-pdf": {
+      "dropFile": ".pptxファイルをドラッグするかクリックして選択してください",
+      "processing": "変換中...",
+      "slide": "スライド",
+      "downloadPdf": "PDFダウンロード",
+      "fidelityNote": "高速変換です。複雑な書式やアニメーションは元と異なって見える場合があります。",
+      "error": "エラー"
+    },
+    "html-to-pdf": {
+      "html": "HTML",
+      "width": "幅",
+      "orientation": "向き",
+      "portrait": "縦",
+      "landscape": "横",
+      "downloadPdf": "PDFダウンロード",
+      "processing": "変換中...",
+      "sample": "サンプル読み込み",
+      "error": "エラー"
+    },
+    "md-to-pdf": {
+      "markdown": "マークダウン",
+      "preview": "プレビュー",
+      "downloadPdf": "PDFダウンロード",
+      "processing": "変換中...",
+      "uploadFile": "ファイル読み込み",
+      "sample": "サンプル読み込み",
+      "error": "エラー"
+    },
+    "txt-to-pdf": {
+      "text": "テキスト",
+      "uploadFile": "ファイル読み込み",
+      "fontSize": "文字サイズ",
+      "lineHeight": "行間",
+      "margin": "余白",
+      "monospace": "等幅フォント",
+      "orientation": "向き",
+      "portrait": "縦",
+      "landscape": "横",
+      "downloadPdf": "PDFダウンロード",
+      "processing": "変換中...",
+      "error": "エラー"
     }
   }
 }

@@ -3386,6 +3386,62 @@
       "page": "Page",
       "generating": "Generating PDF...",
       "hint": "Tags are packed in an N×M grid on each A4 sheet to save paper. Print and cut along the lines."
+    },
+    "docx-to-pdf": {
+      "dropFile": "Drop a .docx file here or click to choose",
+      "processing": "Converting...",
+      "downloadPdf": "Download PDF",
+      "preview": "Preview",
+      "error": "Error"
+    },
+    "xlsx-to-pdf": {
+      "dropFile": "Drop an .xlsx / .xls / .csv file here or click to choose",
+      "processing": "Converting...",
+      "downloadPdf": "Download PDF",
+      "sheetsFound": "{count} sheet(s)",
+      "error": "Error"
+    },
+    "pptx-to-pdf": {
+      "dropFile": "Drop a .pptx file here or click to choose",
+      "processing": "Converting...",
+      "slide": "Slide",
+      "downloadPdf": "Download PDF",
+      "fidelityNote": "Fast preview. Complex formatting or animations may render differently from the original.",
+      "error": "Error"
+    },
+    "html-to-pdf": {
+      "html": "HTML",
+      "width": "Width",
+      "orientation": "Orientation",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "downloadPdf": "Download PDF",
+      "processing": "Converting...",
+      "sample": "Load sample",
+      "error": "Error"
+    },
+    "md-to-pdf": {
+      "markdown": "Markdown",
+      "preview": "Preview",
+      "downloadPdf": "Download PDF",
+      "processing": "Converting...",
+      "uploadFile": "Upload file",
+      "sample": "Load sample",
+      "error": "Error"
+    },
+    "txt-to-pdf": {
+      "text": "Text",
+      "uploadFile": "Upload file",
+      "fontSize": "Font size",
+      "lineHeight": "Line height",
+      "margin": "Margin",
+      "monospace": "Monospace",
+      "orientation": "Orientation",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "downloadPdf": "Download PDF",
+      "processing": "Converting...",
+      "error": "Error"
     }
   }
 }

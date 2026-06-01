@@ -3386,6 +3386,62 @@
       "page": "第",
       "generating": "生成 PDF 中...",
       "hint": "每张 A4 上以 N×M 紧密排列以节省纸张。打印后用剪刀沿线裁剪即可。"
+    },
+    "docx-to-pdf": {
+      "dropFile": "将 .docx 文件拖到此处或点击选择",
+      "processing": "转换中...",
+      "downloadPdf": "下载 PDF",
+      "preview": "预览",
+      "error": "错误"
+    },
+    "xlsx-to-pdf": {
+      "dropFile": "将 .xlsx / .xls / .csv 文件拖到此处或点击选择",
+      "processing": "转换中...",
+      "downloadPdf": "下载 PDF",
+      "sheetsFound": "找到 {count} 个工作表",
+      "error": "错误"
+    },
+    "pptx-to-pdf": {
+      "dropFile": "将 .pptx 文件拖到此处或点击选择",
+      "processing": "转换中...",
+      "slide": "幻灯片",
+      "downloadPdf": "下载 PDF",
+      "fidelityNote": "快速转换。复杂格式或动画可能与原始效果不同。",
+      "error": "错误"
+    },
+    "html-to-pdf": {
+      "html": "HTML",
+      "width": "宽度",
+      "orientation": "方向",
+      "portrait": "纵向",
+      "landscape": "横向",
+      "downloadPdf": "下载 PDF",
+      "processing": "转换中...",
+      "sample": "加载示例",
+      "error": "错误"
+    },
+    "md-to-pdf": {
+      "markdown": "Markdown",
+      "preview": "预览",
+      "downloadPdf": "下载 PDF",
+      "processing": "转换中...",
+      "uploadFile": "上传文件",
+      "sample": "加载示例",
+      "error": "错误"
+    },
+    "txt-to-pdf": {
+      "text": "文本",
+      "uploadFile": "上传文件",
+      "fontSize": "字号",
+      "lineHeight": "行距",
+      "margin": "页边距",
+      "monospace": "等宽字体",
+      "orientation": "方向",
+      "portrait": "纵向",
+      "landscape": "横向",
+      "downloadPdf": "下载 PDF",
+      "processing": "转换中...",
+      "error": "错误"
     }
   }
 }

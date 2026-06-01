@@ -9230,5 +9230,221 @@
         "a": "Yes — raffle/lottery numbers, event tickets, locker numbers, booth IDs. Print, then cut."
       }
     ]
+  },
+  "docx-to-pdf": {
+    "h1": "DOCX to PDF Converter",
+    "description": "Convert Word (.docx) files to PDF in your browser. Files are processed on your device and never uploaded, so contracts, resumes, and internal documents stay private. Body text, tables, images, and basic formatting are preserved.",
+    "metaDescription": "Free DOCX to PDF. Convert Word documents to PDF in your browser, no upload.",
+    "howTo": [
+      "Drag or pick a .docx file.",
+      "The document is converted to PDF automatically.",
+      "Click Download PDF."
+    ],
+    "faq": [
+      {
+        "q": "Are files uploaded?",
+        "a": "No. Mammoth reads the .docx in your browser and jsPDF builds the PDF locally."
+      },
+      {
+        "q": "What gets preserved?",
+        "a": "Text, tables, images, and basic formatting (bold/italic/headings). Complex layouts and SmartArt may be simplified."
+      },
+      {
+        "q": "Is it pixel-perfect?",
+        "a": "It's a quick converter; precise PDF export from Word may look better. Check the output for important documents."
+      },
+      {
+        "q": "Does .doc work?",
+        "a": "Modern .docx (2007+) only. Save .doc as .docx in Word first."
+      },
+      {
+        "q": "Non-Latin scripts?",
+        "a": "Yes — Korean, Japanese, Chinese and other Unicode text are passed through."
+      },
+      {
+        "q": "Multiple files at once?",
+        "a": "One per run. Combine outputs with the PDF Merge tool."
+      }
+    ]
+  },
+  "xlsx-to-pdf": {
+    "h1": "Excel (XLSX) to PDF Converter",
+    "description": "Convert Excel files (.xlsx/.xls/.csv) to a clean table-based PDF. Each sheet becomes its own page, processed in your browser with no upload.",
+    "metaDescription": "Free Excel XLSX to PDF. Sheets become tables, no upload.",
+    "howTo": [
+      "Upload an Excel file (.xlsx, .xls, .csv).",
+      "Sheets are converted to tabular PDF pages.",
+      "Click Download PDF."
+    ],
+    "faq": [
+      {
+        "q": "Are files uploaded?",
+        "a": "No. SheetJS reads the file in your browser and converts locally."
+      },
+      {
+        "q": "Do formula results show?",
+        "a": "Yes — the final calculated values stored in the workbook are rendered."
+      },
+      {
+        "q": "One page per sheet?",
+        "a": "Yes. Empty sheets are skipped."
+      },
+      {
+        "q": "Does CSV work too?",
+        "a": "Yes — .csv is converted as a table."
+      },
+      {
+        "q": "Wide tables?",
+        "a": "Auto-switches to landscape or scales down. Very wide tables may still clip — tidy the source first."
+      },
+      {
+        "q": "Colors/styles preserved?",
+        "a": "Text and table structure are priority; some styles may be simplified."
+      }
+    ]
+  },
+  "pptx-to-pdf": {
+    "h1": "PowerPoint (PPTX) to PDF",
+    "description": "Convert each slide of a PowerPoint (.pptx) file into a PDF page. Slides are rendered in your browser and bundled into a PDF.",
+    "metaDescription": "Free PPTX to PDF. One slide per page, no upload.",
+    "howTo": [
+      "Upload a .pptx file.",
+      "Each slide is converted to a PDF page.",
+      "Click Download PDF."
+    ],
+    "faq": [
+      {
+        "q": "Are files uploaded?",
+        "a": "No. Slides are rendered locally and jsPDF builds the PDF."
+      },
+      {
+        "q": "Will it look like the original?",
+        "a": "Text, images, basic shapes transfer well; complex animations, SmartArt, and some fonts may differ. Use PowerPoint native PDF export for precise output."
+      },
+      {
+        "q": "Orientation?",
+        "a": "Landscape A4 to match typical widescreen slides."
+      },
+      {
+        "q": "Speaker notes?",
+        "a": "Only slide bodies for now. Use [PPTX to Text] for notes."
+      },
+      {
+        "q": "Does .ppt work?",
+        "a": "Modern .pptx (2007+) only."
+      },
+      {
+        "q": "Max slides?",
+        "a": "No hard limit. 50-100 slides is comfortable."
+      }
+    ]
+  },
+  "html-to-pdf": {
+    "h1": "HTML to PDF Converter",
+    "description": "Enter HTML and CSS and download the rendered result as a PDF. Width and orientation are configurable; all processing in your browser.",
+    "metaDescription": "Free HTML to PDF. Render HTML/CSS to PDF in your browser.",
+    "howTo": [
+      "Paste HTML code.",
+      "Adjust width and orientation if needed.",
+      "Click Download PDF."
+    ],
+    "faq": [
+      {
+        "q": "Which CSS is supported?",
+        "a": "Most standard CSS works. Some cutting-edge features and external fonts may be limited."
+      },
+      {
+        "q": "Is JavaScript executed?",
+        "a": "No. For security, only HTML+CSS is rendered."
+      },
+      {
+        "q": "External images?",
+        "a": "Only CORS-allowed images. Base64 inline images are safest."
+      },
+      {
+        "q": "Multi-page content?",
+        "a": "Long content is auto-split across A4 pages."
+      },
+      {
+        "q": "How is this different from HTML to Image?",
+        "a": "That outputs PNG; this outputs PDF — better for printing."
+      },
+      {
+        "q": "Are files uploaded?",
+        "a": "No. Everything is rendered in your browser."
+      }
+    ]
+  },
+  "md-to-pdf": {
+    "h1": "Markdown to PDF Converter",
+    "description": "Convert Markdown (.md) text into a clean PDF. Headings, lists, code blocks, quotes, tables, images, and links are all supported. Processed in-browser, no upload.",
+    "metaDescription": "Free Markdown to PDF. READMEs, docs, notes to PDF, no upload.",
+    "howTo": [
+      "Paste Markdown or upload a .md file.",
+      "Check the preview.",
+      "Click Download PDF."
+    ],
+    "faq": [
+      {
+        "q": "Which Markdown features?",
+        "a": "GFM standard: headings, lists, tables, code blocks, blockquotes, bold/italic, links, images."
+      },
+      {
+        "q": "Are code blocks styled?",
+        "a": "Yes — monospace font with background. Syntax highlighting included."
+      },
+      {
+        "q": "Do images render?",
+        "a": "Inline images (URL or Base64) appear in the PDF."
+      },
+      {
+        "q": "Length limit?",
+        "a": "No hard limit, though very long docs take longer."
+      },
+      {
+        "q": "LaTeX math?",
+        "a": "Not by default. Use [Markdown + Math] preview and print to PDF for math."
+      },
+      {
+        "q": "Are files uploaded?",
+        "a": "No. All in-browser."
+      }
+    ]
+  },
+  "txt-to-pdf": {
+    "h1": "Text (.txt) to PDF Converter",
+    "description": "Convert plain text (.txt) files or pasted text into a clean PDF. Adjustable font size, line height, margins, and orientation, with automatic word wrap.",
+    "metaDescription": "Free TXT to PDF. Clean text PDF with adjustable font and margins.",
+    "howTo": [
+      "Upload a .txt file or paste text.",
+      "Adjust font size and margins.",
+      "Click Download PDF."
+    ],
+    "faq": [
+      {
+        "q": "Are long lines wrapped?",
+        "a": "Yes — auto-wrapped to fit the page; long text spans multiple pages."
+      },
+      {
+        "q": "Korean/Japanese/Chinese?",
+        "a": "Yes — Unicode text is rendered as-is."
+      },
+      {
+        "q": "Monospace option?",
+        "a": "Yes, switchable for code printouts."
+      },
+      {
+        "q": "What is it good for?",
+        "a": "Memos, log archives, code snippets, presentation scripts, quoted passages."
+      },
+      {
+        "q": "Are files uploaded?",
+        "a": "No. All in your browser."
+      },
+      {
+        "q": "vs Markdown to PDF?",
+        "a": "Markdown has formatting; TXT is plain text. Use this for the simplest case."
+      }
+    ]
   }
 }

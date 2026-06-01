@@ -3386,6 +3386,62 @@
       "page": "페이지",
       "generating": "PDF 생성 중...",
       "hint": "A4 종이 한 장에 N×M칸으로 빽빽이 배치돼 종이를 아낍니다. 인쇄 후 가위로 잘라 사용하세요."
+    },
+    "docx-to-pdf": {
+      "dropFile": ".docx 파일을 끌어다 놓거나 클릭해서 선택하세요",
+      "processing": "변환 중...",
+      "downloadPdf": "PDF 다운로드",
+      "preview": "미리보기",
+      "error": "오류"
+    },
+    "xlsx-to-pdf": {
+      "dropFile": ".xlsx, .xls, .csv 파일을 끌어다 놓거나 클릭해서 선택하세요",
+      "processing": "변환 중...",
+      "downloadPdf": "PDF 다운로드",
+      "sheetsFound": "시트 {count}개",
+      "error": "오류"
+    },
+    "pptx-to-pdf": {
+      "dropFile": ".pptx 파일을 끌어다 놓거나 클릭해서 선택하세요",
+      "processing": "변환 중...",
+      "slide": "슬라이드",
+      "downloadPdf": "PDF 다운로드",
+      "fidelityNote": "빠른 변환입니다. 복잡한 서식이나 애니메이션은 실제와 다르게 표시될 수 있습니다.",
+      "error": "오류"
+    },
+    "html-to-pdf": {
+      "html": "HTML",
+      "width": "너비",
+      "orientation": "방향",
+      "portrait": "세로",
+      "landscape": "가로",
+      "downloadPdf": "PDF 다운로드",
+      "processing": "변환 중...",
+      "sample": "샘플 불러오기",
+      "error": "오류"
+    },
+    "md-to-pdf": {
+      "markdown": "마크다운",
+      "preview": "미리보기",
+      "downloadPdf": "PDF 다운로드",
+      "processing": "변환 중...",
+      "uploadFile": "파일 불러오기",
+      "sample": "샘플 불러오기",
+      "error": "오류"
+    },
+    "txt-to-pdf": {
+      "text": "텍스트",
+      "uploadFile": "파일 불러오기",
+      "fontSize": "글자 크기",
+      "lineHeight": "줄 간격",
+      "margin": "여백",
+      "monospace": "고정폭 글꼴",
+      "orientation": "방향",
+      "portrait": "세로",
+      "landscape": "가로",
+      "downloadPdf": "PDF 다운로드",
+      "processing": "변환 중...",
+      "error": "오류"
     }
   }
 }
