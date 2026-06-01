@@ -3442,6 +3442,47 @@
       "downloadPdf": "下载 PDF",
       "processing": "转换中...",
       "error": "错误"
+    },
+    "pdf-to-docx": {
+      "dropFile": "拖放 .pdf 文件或点击选择",
+      "processing": "转换中...",
+      "downloadDocx": "下载 DOCX",
+      "pageCount": "{count} 页",
+      "error": "错误",
+      "donelabel": "下载已开始"
+    },
+    "pdf-to-xlsx": {
+      "dropFile": "拖放 .pdf 文件或点击选择",
+      "processing": "转换中...",
+      "downloadXlsx": "下载 XLSX",
+      "sheetCount": "{count} 个工作表",
+      "sheetPrefix": "第",
+      "error": "错误"
+    },
+    "pdf-to-pptx": {
+      "dropFile": "拖放 .pdf 文件或点击选择",
+      "processing": "转换中...",
+      "downloadPptx": "下载 PPTX",
+      "slideCount": "{count} 张幻灯片",
+      "error": "错误"
+    },
+    "pdf-to-html": {
+      "dropFile": "拖放 .pdf 文件或点击选择",
+      "processing": "转换中...",
+      "preview": "预览",
+      "copyHtml": "复制 HTML",
+      "downloadHtml": "下载 HTML",
+      "copied": "已复制",
+      "error": "错误"
+    },
+    "pdf-to-md": {
+      "dropFile": "拖放 .pdf 文件或点击选择",
+      "processing": "转换中...",
+      "preview": "预览",
+      "copyMd": "复制 MD",
+      "downloadMd": "下载 MD",
+      "copied": "已复制",
+      "error": "错误"
     }
   }
 }

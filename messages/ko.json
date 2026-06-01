@@ -3442,6 +3442,47 @@
       "downloadPdf": "PDF 다운로드",
       "processing": "변환 중...",
       "error": "오류"
+    },
+    "pdf-to-docx": {
+      "dropFile": ".pdf 파일을 끌어다 놓거나 클릭해서 선택하세요",
+      "processing": "변환 중...",
+      "downloadDocx": "DOCX 다운로드",
+      "pageCount": "페이지 {count}쪽",
+      "error": "오류",
+      "donelabel": "다운로드가 시작되었습니다"
+    },
+    "pdf-to-xlsx": {
+      "dropFile": ".pdf 파일을 끌어다 놓거나 클릭해서 선택하세요",
+      "processing": "변환 중...",
+      "downloadXlsx": "XLSX 다운로드",
+      "sheetCount": "시트 {count}개",
+      "sheetPrefix": "페이지",
+      "error": "오류"
+    },
+    "pdf-to-pptx": {
+      "dropFile": ".pdf 파일을 끌어다 놓거나 클릭해서 선택하세요",
+      "processing": "변환 중...",
+      "downloadPptx": "PPTX 다운로드",
+      "slideCount": "슬라이드 {count}장",
+      "error": "오류"
+    },
+    "pdf-to-html": {
+      "dropFile": ".pdf 파일을 끌어다 놓거나 클릭해서 선택하세요",
+      "processing": "변환 중...",
+      "preview": "미리보기",
+      "copyHtml": "HTML 복사",
+      "downloadHtml": "HTML 다운로드",
+      "copied": "복사됨",
+      "error": "오류"
+    },
+    "pdf-to-md": {
+      "dropFile": ".pdf 파일을 끌어다 놓거나 클릭해서 선택하세요",
+      "processing": "변환 중...",
+      "preview": "미리보기",
+      "copyMd": "MD 복사",
+      "downloadMd": "MD 다운로드",
+      "copied": "복사됨",
+      "error": "오류"
     }
   }
 }

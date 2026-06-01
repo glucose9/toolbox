@@ -16,6 +16,29 @@ const nextConfig = {
       },
     ];
   },
+  webpack(config, { isServer, webpack }) {
+    if (!isServer) {
+      // Some libraries (e.g. pptxgenjs) reference node:fs / node:https in their
+      // ESM build even though they ship a browser bundle. Strip the node: prefix
+      // and provide empty fallbacks so client builds don't fail.
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
+          resource.request = resource.request.replace(/^node:/, "");
+        }),
+      );
+      config.resolve.fallback = {
+        ...(config.resolve.fallback || {}),
+        fs: false,
+        https: false,
+        http: false,
+        path: false,
+        stream: false,
+        crypto: false,
+        zlib: false,
+      };
+    }
+    return config;
+  },
 };
 
 export default withNextIntl(nextConfig);

@@ -3442,6 +3442,47 @@
       "downloadPdf": "Download PDF",
       "processing": "Converting...",
       "error": "Error"
+    },
+    "pdf-to-docx": {
+      "dropFile": "Drop a .pdf here or click to select",
+      "processing": "Converting...",
+      "downloadDocx": "Download DOCX",
+      "pageCount": "{count} pages",
+      "error": "Error",
+      "donelabel": "Download started"
+    },
+    "pdf-to-xlsx": {
+      "dropFile": "Drop a .pdf here or click to select",
+      "processing": "Converting...",
+      "downloadXlsx": "Download XLSX",
+      "sheetCount": "{count} sheets",
+      "sheetPrefix": "Page",
+      "error": "Error"
+    },
+    "pdf-to-pptx": {
+      "dropFile": "Drop a .pdf here or click to select",
+      "processing": "Converting...",
+      "downloadPptx": "Download PPTX",
+      "slideCount": "{count} slides",
+      "error": "Error"
+    },
+    "pdf-to-html": {
+      "dropFile": "Drop a .pdf here or click to select",
+      "processing": "Converting...",
+      "preview": "Preview",
+      "copyHtml": "Copy HTML",
+      "downloadHtml": "Download HTML",
+      "copied": "Copied",
+      "error": "Error"
+    },
+    "pdf-to-md": {
+      "dropFile": "Drop a .pdf here or click to select",
+      "processing": "Converting...",
+      "preview": "Preview",
+      "copyMd": "Copy MD",
+      "downloadMd": "Download MD",
+      "copied": "Copied",
+      "error": "Error"
     }
   }
 }

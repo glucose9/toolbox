@@ -3442,6 +3442,47 @@
       "downloadPdf": "PDFダウンロード",
       "processing": "変換中...",
       "error": "エラー"
+    },
+    "pdf-to-docx": {
+      "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
+      "processing": "変換中...",
+      "downloadDocx": "DOCXダウンロード",
+      "pageCount": "{count}ページ",
+      "error": "エラー",
+      "donelabel": "ダウンロードを開始しました"
+    },
+    "pdf-to-xlsx": {
+      "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
+      "processing": "変換中...",
+      "downloadXlsx": "XLSXダウンロード",
+      "sheetCount": "シート{count}枚",
+      "sheetPrefix": "ページ",
+      "error": "エラー"
+    },
+    "pdf-to-pptx": {
+      "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
+      "processing": "変換中...",
+      "downloadPptx": "PPTXダウンロード",
+      "slideCount": "スライド{count}枚",
+      "error": "エラー"
+    },
+    "pdf-to-html": {
+      "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
+      "processing": "変換中...",
+      "preview": "プレビュー",
+      "copyHtml": "HTMLをコピー",
+      "downloadHtml": "HTMLダウンロード",
+      "copied": "コピーしました",
+      "error": "エラー"
+    },
+    "pdf-to-md": {
+      "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
+      "processing": "変換中...",
+      "preview": "プレビュー",
+      "copyMd": "MDをコピー",
+      "downloadMd": "MDダウンロード",
+      "copied": "コピーしました",
+      "error": "エラー"
     }
   }
 }
