@@ -3451,7 +3451,10 @@
       "renderingPage": "渲染页面 {page}/{total}",
       "buildingDocx": "生成 DOCX...",
       "done": "完成",
-      "pagesUnit": "页"
+      "pagesUnit": "页",
+      "includeTextLabel": "在每页下方包含\"可复制文字\"",
+      "includeTextHint": "页面图片（原版样式）+ 下方提取的文字（小号灰色），便于在 Word 中复制粘贴。取消则仅图片。",
+      "extractedTextLabel": "— Page {page} text —"
     },
     "pdf-to-pptx": {
       "dropFile": "拖放 .pdf 文件或点击选择",
@@ -3472,7 +3475,9 @@
       "downloadHtml": "下载 HTML",
       "copyHtml": "复制 HTML",
       "copied": "已复制",
-      "preview": "预览"
+      "preview": "预览",
+      "textLayerNote": "完整保留原版样式 + 可选中/复制文字（图片上叠加透明文本层）。可像普通文档一样搜索和复制粘贴。",
+      "previewHint": "尝试在下方预览中拖动选择文字"
     }
   }
 }

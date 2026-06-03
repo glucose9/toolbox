@@ -3,6 +3,10 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
 export default function PdfToHtmlTool() {
   const t = useTranslations("toolUI.pdf-to-html");
   const [busy, setBusy] = useState(false);
@@ -32,7 +36,7 @@ export default function PdfToHtmlTool() {
       setPageCount(numPages);
 
       const SCALE = 2;
-      const pageImages: { dataUrl: string; w: number; h: number }[] = [];
+      const pages: { dataUrl: string; w: number; h: number; textLayer: string }[] = [];
 
       for (let i = 1; i <= numPages; i++) {
         setProgress(t("renderingPage", { page: i, total: numPages }));
@@ -45,16 +49,37 @@ export default function PdfToHtmlTool() {
         if (!ctx) throw new Error("canvas ctx");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await page.render({ canvasContext: ctx as any, viewport, canvas } as any).promise;
-        pageImages.push({
+
+        // Build transparent text layer for copy-paste
+        const textContent = await page.getTextContent();
+        const spans: string[] = [];
+        for (const item of textContent.items) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const it = item as any;
+          if (!it.str || !it.transform) continue;
+          const tx: number[] = it.transform;
+          // PDF transform: [a, b, c, d, e, f] — [a,b] = horizontal scale + skew
+          const fontSize = Math.sqrt(tx[0] * tx[0] + tx[1] * tx[1]) * SCALE;
+          if (fontSize < 1) continue;
+          const x = tx[4] * SCALE;
+          // pdfjs origin bottom-left → canvas top-left. Flip Y, then subtract fontSize so baseline aligns.
+          const y = canvas.height - tx[5] * SCALE - fontSize;
+          spans.push(
+            `<span style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;font-size:${fontSize.toFixed(1)}px;">${escapeHtml(it.str)}</span>`
+          );
+        }
+
+        pages.push({
           dataUrl: canvas.toDataURL("image/jpeg", 0.85),
           w: canvas.width,
           h: canvas.height,
+          textLayer: spans.join(""),
         });
       }
 
       setProgress(t("buildingHtml"));
       const title = file.name.replace(/\.pdf$/i, "");
-      const escapedTitle = title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const escapedTitle = escapeHtml(title);
       const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,21 +87,51 @@ export default function PdfToHtmlTool() {
   <title>${escapedTitle}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { margin: 0; padding: 24px 16px; background: #525659; font-family: system-ui, -apple-system, "Pretendard", sans-serif; }
-    .page { background: #fff; margin: 0 auto 24px; max-width: 1200px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: block; }
+    body { margin: 0; padding: 24px 16px; background: #525659; font-family: system-ui, -apple-system, "Pretendard", "Noto Sans KR", sans-serif; }
+    .page { position: relative; background: #fff; margin: 0 auto 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: block; line-height: 0; }
     .page img { display: block; width: 100%; height: auto; }
+    .text-layer { position: absolute; inset: 0; line-height: 1; pointer-events: auto; }
+    .text-layer span { position: absolute; color: transparent; white-space: nowrap; cursor: text; transform-origin: 0% 0%; }
+    .text-layer span::selection { background: rgba(60,120,255,0.35); color: transparent; }
     .meta { color: #ccc; text-align: center; font-size: 12px; margin: 0 0 12px; }
     @media print {
       body { background: #fff; padding: 0; }
-      .page { box-shadow: none; margin: 0; max-width: none; page-break-after: always; }
+      .page { box-shadow: none; margin: 0; page-break-after: always; }
       .page:last-child { page-break-after: auto; }
       .meta { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="meta">${escapedTitle} · ${numPages} page${numPages > 1 ? "s" : ""}</div>
-${pageImages.map((p, idx) => `  <section class="page" data-page="${idx + 1}"><img src="${p.dataUrl}" alt="page ${idx + 1}" width="${p.w}" height="${p.h}" /></section>`).join("\n")}
+  <div class="meta">${escapedTitle} · ${numPages} page${numPages > 1 ? "s" : ""} · 텍스트 드래그하면 복사 가능 / drag to select &amp; copy text</div>
+${pages
+  .map((p, idx) => {
+    // To preserve absolute coordinates while allowing img to scale responsively,
+    // set the .page container to the canvas pixel size; the image fills it.
+    return `  <div class="page" style="width:${p.w}px;max-width:100%;aspect-ratio:${p.w}/${p.h};" data-page="${idx + 1}">
+    <img src="${p.dataUrl}" alt="page ${idx + 1}" width="${p.w}" height="${p.h}" />
+    <div class="text-layer" style="width:${p.w}px;height:${p.h}px;">${p.textLayer}</div>
+  </div>`;
+  })
+  .join("\n")}
+  <script>
+    // Scale the text layer with the displayed image size so coordinates match.
+    (function () {
+      function rescale() {
+        document.querySelectorAll('.page').forEach(function (page) {
+          var img = page.querySelector('img');
+          var layer = page.querySelector('.text-layer');
+          if (!img || !layer) return;
+          var scale = img.clientWidth / img.naturalWidth;
+          layer.style.transform = 'scale(' + scale + ')';
+          layer.style.transformOrigin = '0 0';
+          page.style.height = (img.naturalHeight * scale) + 'px';
+        });
+      }
+      window.addEventListener('load', rescale);
+      window.addEventListener('resize', rescale);
+    })();
+  </script>
 </body>
 </html>`;
 
@@ -111,8 +166,8 @@ ${pageImages.map((p, idx) => `  <section class="page" data-page="${idx + 1}"><im
 
   return (
     <div className="card space-y-4">
-      <div className="text-xs text-muted leading-relaxed bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-3 py-2 rounded">
-        ⚠️ {t("imageBasedNote")}
+      <div className="text-xs text-muted leading-relaxed bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-3 py-2 rounded">
+        ✨ {t("textLayerNote")}
       </div>
 
       <div
@@ -155,11 +210,10 @@ ${pageImages.map((p, idx) => `  <section class="page" data-page="${idx + 1}"><im
             <button onClick={copyHtml} className="btn btn-secondary">{copied ? "✓ " + t("copied") : "📋 " + t("copyHtml")}</button>
           </div>
           <div>
-            <div className="text-sm text-muted mb-2">{t("preview")}</div>
+            <div className="text-sm text-muted mb-2">{t("preview")} — {t("previewHint")}</div>
             <iframe
               src={previewUrl}
               className="w-full h-[600px] rounded border border-gray-200 dark:border-gray-700"
-              sandbox=""
               title={t("preview")}
             />
           </div>

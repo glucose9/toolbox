@@ -3451,7 +3451,10 @@
       "renderingPage": "Rendering page {page}/{total}",
       "buildingDocx": "Building DOCX...",
       "done": "Done",
-      "pagesUnit": "pages"
+      "pagesUnit": "pages",
+      "includeTextLabel": "Include selectable text below each page",
+      "includeTextHint": "Page image (original look) + extracted text (small, gray) below it so you can copy-paste in Word. Uncheck for image-only.",
+      "extractedTextLabel": "— Page {page} text —"
     },
     "pdf-to-pptx": {
       "dropFile": "Drop a .pdf here or click to select",
@@ -3472,7 +3475,9 @@
       "downloadHtml": "Download HTML",
       "copyHtml": "Copy HTML",
       "copied": "Copied",
-      "preview": "Preview"
+      "preview": "Preview",
+      "textLayerNote": "Original look preserved 100% + selectable, copyable text (transparent text layer over the image). Search and copy/paste work like in a normal document.",
+      "previewHint": "Try dragging to select text in the preview below"
     }
   }
 }

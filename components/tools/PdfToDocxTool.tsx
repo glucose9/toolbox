@@ -10,6 +10,7 @@ export default function PdfToDocxTool() {
   const [pageCount, setPageCount] = useState(0);
   const [error, setError] = useState("");
   const [fileName, setFileName] = useState("");
+  const [includeText, setIncludeText] = useState(true); // include extracted text for copy-paste
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onFile = async (file: File) => {
@@ -20,7 +21,7 @@ export default function PdfToDocxTool() {
     try {
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-      const { Document, Packer, Paragraph, ImageRun, PageBreak } = await import("docx");
+      const { Document, Packer, Paragraph, TextRun, ImageRun, PageBreak, HeadingLevel } = await import("docx");
 
       const buf = await file.arrayBuffer();
       const pdf = await pdfjs.getDocument({ data: buf }).promise;
@@ -46,7 +47,6 @@ export default function PdfToDocxTool() {
         const base64 = dataUrl.split(",")[1];
         const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
 
-        // Word page width: ~540pt (A4 595pt minus side margins).
         const targetWidthPt = 540;
         const aspect = canvas.height / canvas.width;
         const targetHeightPt = Math.round(targetWidthPt * aspect);
@@ -64,6 +64,50 @@ export default function PdfToDocxTool() {
             ],
           })
         );
+
+        // Optional: include selectable text below each page image
+        if (includeText) {
+          const textContent = await page.getTextContent();
+          // Group items into lines by Y position, then join
+          const linesMap = new Map<number, string[]>();
+          for (const item of textContent.items) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const it = item as any;
+            if (!it.str || !it.transform) continue;
+            const y = Math.round(it.transform[5]); // round to group lines on same y
+            if (!linesMap.has(y)) linesMap.set(y, []);
+            linesMap.get(y)!.push(it.str);
+          }
+          // pdfjs Y is bottom-up; sort descending so visual top comes first
+          const ys = [...linesMap.keys()].sort((a, b) => b - a);
+          const lines = ys.map((y) => linesMap.get(y)!.join(" ").replace(/\s+/g, " ").trim()).filter(Boolean);
+
+          if (lines.length > 0) {
+            paragraphs.push(
+              new Paragraph({
+                spacing: { before: 200, after: 100 },
+                children: [
+                  new TextRun({
+                    text: t("extractedTextLabel", { page: i }),
+                    italics: true,
+                    color: "888888",
+                    size: 16, // half-points → 8pt
+                  }),
+                ],
+                heading: HeadingLevel.HEADING_6,
+              })
+            );
+            for (const line of lines) {
+              paragraphs.push(
+                new Paragraph({
+                  children: [new TextRun({ text: line, size: 20, color: "555555" })], // 10pt
+                  spacing: { after: 60 },
+                })
+              );
+            }
+          }
+        }
+
         if (i < numPages) {
           paragraphs.push(new Paragraph({ children: [new PageBreak()] }));
         }
@@ -91,6 +135,19 @@ export default function PdfToDocxTool() {
       <div className="text-xs text-muted leading-relaxed bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-3 py-2 rounded">
         ⚠️ {t("imageBasedNote")}
       </div>
+
+      <label className="flex items-start gap-2 text-sm cursor-pointer">
+        <input
+          type="checkbox"
+          checked={includeText}
+          onChange={(e) => setIncludeText(e.target.checked)}
+          className="mt-1"
+        />
+        <span>
+          <strong>{t("includeTextLabel")}</strong>
+          <div className="text-xs text-muted mt-0.5">{t("includeTextHint")}</div>
+        </span>
+      </label>
 
       <div
         onDrop={(e) => { e.preventDefault(); if (!busy && e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]); }}

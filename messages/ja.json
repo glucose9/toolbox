@@ -3451,7 +3451,10 @@
       "renderingPage": "ページレンダリング中 {page}/{total}",
       "buildingDocx": "DOCX生成中...",
       "done": "完了",
-      "pagesUnit": "ページ"
+      "pagesUnit": "ページ",
+      "includeTextLabel": "各ページの下に「コピー可能なテキスト」を含める",
+      "includeTextHint": "ページ画像（元の見た目）+ その下に抽出テキスト（小さいグレー）を一緒に入れて、Wordでコピペ可能に。オフにすると画像のみ。",
+      "extractedTextLabel": "— Page {page} text —"
     },
     "pdf-to-pptx": {
       "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
@@ -3472,7 +3475,9 @@
       "downloadHtml": "HTMLダウンロード",
       "copyHtml": "HTMLコピー",
       "copied": "コピー完了",
-      "preview": "プレビュー"
+      "preview": "プレビュー",
+      "textLayerNote": "元の見た目を100%保持 + テキスト選択・コピー可能（画像上に透明テキストレイヤー）。通常の文書のように検索・コピペ可能。",
+      "previewHint": "プレビュー内でドラッグしてテキストを選択してみてください"
     }
   }
 }
