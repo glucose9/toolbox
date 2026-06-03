@@ -9241,7 +9241,7 @@
   },
   "docx-to-pdf": {
     "h1": "DOCX to PDF コンバーター",
-    "description": "Word（.docx）ファイルをブラウザ内でPDFに変換します。ファイルは端末上で処理されアップロードされないため、契約書・履歴書・社内文書も安全です。本文・表・画像・基本書式が保持されます。",
+    "description": ".docx ファイルをブラウザ内で PDF に変換。Word ビューア相当の描画でフォント・色・画像・表・ページサイズをそのまま保持。100% クライアントサイド、アップロード不要。",
     "metaDescription": "DOCX to PDF 無料。Word文書をブラウザでPDFに変換、アップロードなし。",
     "howTo": [
       ".docxファイルをドラッグまたは選択。",
@@ -9277,7 +9277,7 @@
   },
   "xlsx-to-pdf": {
     "h1": "Excel (XLSX) to PDF",
-    "description": "Excelファイル（.xlsx/.xls/.csv）の各シートをきれいな表形式PDFに変換します。シートごとにページ分け、アップロードなし。",
+    "description": "Excel(.xlsx/.xls/.csv)をブラウザ内で PDF に変換。セルの背景色・フォント・罫線・結合セル・列幅をそのまま保持。シートごとに別ページ。全処理ブラウザ内完結。",
     "metaDescription": "Excel XLSX to PDF 無料。シート毎に表形式、アップロードなし。",
     "howTo": [
       "Excelファイルをアップロード。",

@@ -9241,7 +9241,7 @@
   },
   "docx-to-pdf": {
     "h1": "DOCX 转 PDF 转换器",
-    "description": "在浏览器内将 Word（.docx）文件转换为 PDF。文件在本地处理不上传,适合合同、简历、内部文档等敏感资料。正文、表格、图片和基本格式都会保留。",
+    "description": "在浏览器内将 .docx 转换为 PDF。Word 查看器级渲染，完整保留原文档的字体、颜色、图片、表格与页面尺寸。100% 客户端处理，不上传。",
     "metaDescription": "DOCX 转 PDF 免费。在浏览器内转换 Word 文档,不上传。",
     "howTo": [
       "拖放或选择 .docx 文件。",
@@ -9277,7 +9277,7 @@
   },
   "xlsx-to-pdf": {
     "h1": "Excel (XLSX) 转 PDF",
-    "description": "将 Excel 文件(.xlsx/.xls/.csv)的所有工作表转换为整洁的表格 PDF。每个工作表一页,浏览器内处理,无需上传。",
+    "description": "在浏览器内将 Excel（.xlsx/.xls/.csv）转换为 PDF。完整保留单元格背景色、字体、边框、合并单元格与列宽；每个工作表生成单独页面。全部处理在浏览器内完成。",
     "metaDescription": "Excel XLSX 转 PDF 免费。按工作表分页,不上传。",
     "howTo": [
       "上传 Excel 文件。",

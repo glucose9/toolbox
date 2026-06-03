@@ -3392,14 +3392,17 @@
       "processing": "转换中...",
       "downloadPdf": "下载 PDF",
       "preview": "预览",
-      "error": "错误"
+      "error": "错误",
+      "fidelityNote": "原版保留模式 — Word 查看器级渲染。完整保留字体、颜色、图片、表格、页面尺寸。",
+      "pagesUnit": "页"
     },
     "xlsx-to-pdf": {
       "dropFile": "将 .xlsx / .xls / .csv 文件拖到此处或点击选择",
       "processing": "转换中...",
       "downloadPdf": "下载 PDF",
       "sheetsFound": "找到 {count} 个工作表",
-      "error": "错误"
+      "error": "错误",
+      "fidelityNote": "原版保留模式 — 完整保留单元格背景色、字体、边框、合并单元格、列宽。"
     },
     "pptx-to-pdf": {
       "dropFile": "将 .pptx 文件拖到此处或点击选择",

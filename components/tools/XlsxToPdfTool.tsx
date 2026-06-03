@@ -12,6 +12,211 @@ function fmt(n: number) {
 
 type SheetEntry = { name: string; html: string };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type WS = any;
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Normalize cell color from SheetJS style — handles rgb hex or theme/argb.
+function colorToHex(c: { rgb?: string; theme?: number } | undefined): string | null {
+  if (!c) return null;
+  if (c.rgb) {
+    // ARGB → strip alpha
+    const v = c.rgb.length === 8 ? c.rgb.slice(2) : c.rgb;
+    return "#" + v.toUpperCase();
+  }
+  return null;
+}
+
+function borderSide(b: { style?: string; color?: { rgb?: string } } | undefined): string {
+  if (!b || !b.style || b.style === "none") return "none";
+  const widthMap: Record<string, string> = {
+    thin: "1px",
+    medium: "2px",
+    thick: "3px",
+    dashed: "1px",
+    dotted: "1px",
+    double: "3px",
+    hair: "0.5px",
+  };
+  const styleMap: Record<string, string> = {
+    thin: "solid",
+    medium: "solid",
+    thick: "solid",
+    dashed: "dashed",
+    dotted: "dotted",
+    double: "double",
+    hair: "solid",
+  };
+  const width = widthMap[b.style] || "1px";
+  const style = styleMap[b.style] || "solid";
+  const color = colorToHex(b.color) || "#000";
+  return `${width} ${style} ${color}`;
+}
+
+// Decode column reference (e.g. "A", "AB") to 0-based index.
+function colRefToIndex(ref: string): number {
+  let n = 0;
+  for (let i = 0; i < ref.length; i++) {
+    n = n * 26 + (ref.charCodeAt(i) - 64);
+  }
+  return n - 1;
+}
+
+function decodeAddr(addr: string): { c: number; r: number } {
+  const m = addr.match(/^([A-Z]+)(\d+)$/);
+  if (!m) return { c: 0, r: 0 };
+  return { c: colRefToIndex(m[1]), r: parseInt(m[2], 10) - 1 };
+}
+
+// Build a styled HTML table from a worksheet, preserving cell styles, merges,
+// column widths and row heights.
+function buildStyledTable(ws: WS): string {
+  if (!ws || !ws["!ref"]) return "<table></table>";
+
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  // Use sheet ref to determine bounds.
+  const ref: string = ws["!ref"];
+  const [start, end] = ref.split(":");
+  const s = decodeAddr(start);
+  const e = decodeAddr(end || start);
+
+  // Merges → map of "topleft" → {rs, cs}; map of "covered" → true
+  const mergeRoot = new Map<string, { rs: number; cs: number }>();
+  const covered = new Set<string>();
+  const merges: { s: { c: number; r: number }; e: { c: number; r: number } }[] =
+    ws["!merges"] || [];
+  for (const m of merges) {
+    const key = `${m.s.r}_${m.s.c}`;
+    mergeRoot.set(key, { rs: m.e.r - m.s.r + 1, cs: m.e.c - m.s.c + 1 });
+    for (let r = m.s.r; r <= m.e.r; r++) {
+      for (let c = m.s.c; c <= m.e.c; c++) {
+        if (!(r === m.s.r && c === m.s.c)) covered.add(`${r}_${c}`);
+      }
+    }
+  }
+
+  // Column widths: SheetJS `!cols[i].wpx` (pixel) or `.wch` (char). Default 64px.
+  const cols: { wpx?: number; wch?: number }[] = ws["!cols"] || [];
+  const colWidths: number[] = [];
+  for (let c = s.c; c <= e.c; c++) {
+    const cd = cols[c];
+    if (cd?.wpx) colWidths.push(cd.wpx);
+    else if (cd?.wch) colWidths.push(Math.round(cd.wch * 7 + 5));
+    else colWidths.push(64);
+  }
+
+  // Row heights: !rows[i].hpx
+  const rows: { hpx?: number; hpt?: number }[] = ws["!rows"] || [];
+
+  const colNumberToRef = (n: number): string => {
+    let s = "";
+    let v = n + 1;
+    while (v > 0) {
+      const m = (v - 1) % 26;
+      s = String.fromCharCode(65 + m) + s;
+      v = Math.floor((v - 1) / 26);
+    }
+    return s;
+  };
+
+  let html = '<table class="xlsx-styled"><colgroup>';
+  for (const w of colWidths) html += `<col style="width:${w}px;" />`;
+  html += "</colgroup><tbody>";
+
+  for (let r = s.r; r <= e.r; r++) {
+    const rh = rows[r]?.hpx ?? (rows[r]?.hpt ? Math.round(rows[r]!.hpt! * 1.333) : null);
+    html += rh ? `<tr style="height:${rh}px;">` : "<tr>";
+    for (let c = s.c; c <= e.c; c++) {
+      const key = `${r}_${c}`;
+      if (covered.has(key)) continue;
+      const addr = colNumberToRef(c) + (r + 1);
+      const cell = ws[addr];
+      const styles: string[] = [];
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const st: any = cell?.s;
+      if (st) {
+        // Fill (background)
+        const bg =
+          colorToHex(st.fill?.fgColor) ||
+          colorToHex(st.fill?.bgColor);
+        if (bg && bg !== "#000000") styles.push(`background-color:${bg}`);
+        // Font
+        if (st.font) {
+          if (st.font.name) styles.push(`font-family:'${st.font.name}',sans-serif`);
+          if (st.font.sz) styles.push(`font-size:${st.font.sz}px`);
+          if (st.font.bold) styles.push("font-weight:700");
+          if (st.font.italic) styles.push("font-style:italic");
+          if (st.font.underline) styles.push("text-decoration:underline");
+          const fc = colorToHex(st.font.color);
+          if (fc) styles.push(`color:${fc}`);
+        }
+        // Alignment
+        if (st.alignment) {
+          if (st.alignment.horizontal)
+            styles.push(`text-align:${st.alignment.horizontal}`);
+          if (st.alignment.vertical) {
+            const m: Record<string, string> = {
+              top: "top",
+              center: "middle",
+              bottom: "bottom",
+            };
+            styles.push(`vertical-align:${m[st.alignment.vertical] || "middle"}`);
+          }
+          if (st.alignment.wrapText) styles.push("white-space:normal");
+        }
+        // Borders
+        if (st.border) {
+          const bt = borderSide(st.border.top);
+          const br = borderSide(st.border.right);
+          const bb = borderSide(st.border.bottom);
+          const bl = borderSide(st.border.left);
+          if (bt !== "none") styles.push(`border-top:${bt}`);
+          if (br !== "none") styles.push(`border-right:${br}`);
+          if (bb !== "none") styles.push(`border-bottom:${bb}`);
+          if (bl !== "none") styles.push(`border-left:${bl}`);
+        }
+      }
+
+      // Default border if none set
+      if (!styles.some((x) => x.startsWith("border-"))) {
+        styles.push("border:1px solid #d1d5db");
+      }
+      // Default vertical-align
+      if (!styles.some((x) => x.startsWith("vertical-align"))) {
+        styles.push("vertical-align:middle");
+      }
+
+      const styleAttr = styles.join(";");
+      const mr = mergeRoot.get(key);
+      const span =
+        mr && (mr.rs > 1 || mr.cs > 1)
+          ? ` rowspan="${mr.rs}" colspan="${mr.cs}"`
+          : "";
+
+      // Use formatted text (w) when available, else raw value (v).
+      const display: string =
+        cell?.w !== undefined
+          ? String(cell.w)
+          : cell?.v !== undefined
+            ? String(cell.v)
+            : "";
+      html += `<td${span} style="${styleAttr};padding:4px 8px;">${escapeHtml(display)}</td>`;
+    }
+    html += "</tr>";
+  }
+  html += "</tbody></table>";
+  return html;
+}
+
 export default function XlsxToPdfTool() {
   const t = useTranslations("toolUI.xlsx-to-pdf");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -32,12 +237,14 @@ export default function XlsxToPdfTool() {
     try {
       const XLSX = await import("xlsx");
       const buf = await f.arrayBuffer();
-      const wb = XLSX.read(buf, { type: "array" });
+      // cellStyles: true pulls in fill/font/border/alignment etc. (xlsx only)
+      const wb = XLSX.read(buf, { type: "array", cellStyles: true });
       const out: SheetEntry[] = [];
       for (const name of wb.SheetNames) {
         const ws = wb.Sheets[name];
         if (!ws) continue;
-        const html = XLSX.utils.sheet_to_html(ws, { header: "", footer: "" });
+        // For CSV / non-styled files this still works because cell.s will be undefined.
+        const html = buildStyledTable(ws);
         out.push({ name, html });
       }
       setSheets(out);
@@ -62,9 +269,8 @@ export default function XlsxToPdfTool() {
     wrap.style.color = "#111827";
     wrap.innerHTML = `
       <style>
-        .xlsx-wrap table { border-collapse: collapse; width: max-content; }
-        .xlsx-wrap td, .xlsx-wrap th { border: 1px solid #d1d5db; padding: 4px 8px; vertical-align: top; white-space: nowrap; }
-        .xlsx-wrap th { background: #f3f4f6; font-weight: 600; }
+        .xlsx-wrap table.xlsx-styled { border-collapse: collapse; width: max-content; }
+        .xlsx-wrap table.xlsx-styled td { white-space: nowrap; }
         .xlsx-wrap .title { font-weight: 700; font-size: 14px; margin-bottom: 8px; }
       </style>
       <div class="xlsx-wrap">
@@ -92,15 +298,11 @@ export default function XlsxToPdfTool() {
         const el = renderSheetContainer(sheet);
         document.body.appendChild(el);
 
-        // Decide orientation per-sheet: landscape if the rendered width is large
-        // relative to height (very wide tables).
         const rect = el.getBoundingClientRect();
         const ratio = rect.width / Math.max(1, rect.height);
         const orientation: "portrait" | "landscape" = ratio > 1.2 ? "landscape" : "portrait";
 
-        // Constrain rendered width to fit the chosen page width.
         const targetPx = A4_PX[orientation].w;
-        // Apply zoom-like scaling: pick a scale so the content fits page width.
         const scale = Math.min(2, Math.max(0.5, targetPx / Math.max(1, rect.width)));
 
         let canvas: HTMLCanvasElement;
@@ -108,6 +310,7 @@ export default function XlsxToPdfTool() {
           canvas = await html2canvas(el, {
             backgroundColor: "#ffffff",
             scale: 2 * scale,
+            logging: false,
           });
         } finally {
           document.body.removeChild(el);
@@ -124,7 +327,6 @@ export default function XlsxToPdfTool() {
         const pxPerMm = canvas.width / pageW;
         const pageHeightPx = Math.floor(pageH * pxPerMm);
 
-        // Slice into pages if taller than one A4 page
         let yOffset = 0;
         let firstSlice = true;
         while (yOffset < canvas.height) {
@@ -136,17 +338,7 @@ export default function XlsxToPdfTool() {
           if (!ctx) break;
           ctx.fillStyle = "#ffffff";
           ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-          ctx.drawImage(
-            canvas,
-            0,
-            yOffset,
-            canvas.width,
-            sliceHeight,
-            0,
-            0,
-            canvas.width,
-            sliceHeight
-          );
+          ctx.drawImage(canvas, 0, yOffset, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
           const img = pageCanvas.toDataURL("image/jpeg", 0.92);
           if (!firstSlice) pdf.addPage("a4", orientation);
           const mmHeight = sliceHeight / pxPerMm;
@@ -194,6 +386,10 @@ export default function XlsxToPdfTool() {
 
   return (
     <div className="card space-y-4">
+      <div className="text-xs text-muted leading-relaxed bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-3 py-2 rounded">
+        ✨ {t("fidelityNote")}
+      </div>
+
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm min-w-0">
           <div className="truncate font-medium">{file.name}</div>
@@ -236,13 +432,4 @@ export default function XlsxToPdfTool() {
       )}
     </div>
   );
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }

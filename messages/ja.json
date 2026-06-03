@@ -3392,14 +3392,17 @@
       "processing": "変換中...",
       "downloadPdf": "PDFダウンロード",
       "preview": "プレビュー",
-      "error": "エラー"
+      "error": "エラー",
+      "fidelityNote": "原本忠実モード — Wordビューア相当の描画。フォント・色・画像・表・ページサイズをそのまま保持。",
+      "pagesUnit": "ページ"
     },
     "xlsx-to-pdf": {
       "dropFile": ".xlsx / .xls / .csvファイルをドラッグするかクリックして選択してください",
       "processing": "変換中...",
       "downloadPdf": "PDFダウンロード",
       "sheetsFound": "シート{count}個",
-      "error": "エラー"
+      "error": "エラー",
+      "fidelityNote": "原本忠実モード — セルの背景色・フォント・罫線・結合セル・列幅をそのまま保持。"
     },
     "pptx-to-pdf": {
       "dropFile": ".pptxファイルをドラッグするかクリックして選択してください",

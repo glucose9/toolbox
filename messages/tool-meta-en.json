@@ -9233,7 +9233,7 @@
   },
   "docx-to-pdf": {
     "h1": "DOCX to PDF Converter",
-    "description": "Convert Word (.docx) files to PDF in your browser. Files are processed on your device and never uploaded, so contracts, resumes, and internal documents stay private. Body text, tables, images, and basic formatting are preserved.",
+    "description": "Convert .docx to PDF in your browser. Word-viewer quality rendering preserves fonts, colors, images, tables, and page size from the original. 100% client-side, no upload.",
     "metaDescription": "Free DOCX to PDF. Convert Word documents to PDF in your browser, no upload.",
     "howTo": [
       "Drag or pick a .docx file.",
@@ -9269,7 +9269,7 @@
   },
   "xlsx-to-pdf": {
     "h1": "Excel (XLSX) to PDF Converter",
-    "description": "Convert Excel files (.xlsx/.xls/.csv) to a clean table-based PDF. Each sheet becomes its own page, processed in your browser with no upload.",
+    "description": "Convert Excel (.xlsx/.xls/.csv) to PDF in your browser. Preserves cell colors, fonts, borders, merged cells, and column widths; each sheet becomes its own page. All processing is in-browser.",
     "metaDescription": "Free Excel XLSX to PDF. Sheets become tables, no upload.",
     "howTo": [
       "Upload an Excel file (.xlsx, .xls, .csv).",

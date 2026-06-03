@@ -3392,14 +3392,17 @@
       "processing": "Converting...",
       "downloadPdf": "Download PDF",
       "preview": "Preview",
-      "error": "Error"
+      "error": "Error",
+      "fidelityNote": "Faithful rendering — Word-viewer quality. Preserves fonts, colors, images, tables, and page size from the original.",
+      "pagesUnit": "pages"
     },
     "xlsx-to-pdf": {
       "dropFile": "Drop an .xlsx / .xls / .csv file here or click to choose",
       "processing": "Converting...",
       "downloadPdf": "Download PDF",
       "sheetsFound": "{count} sheet(s)",
-      "error": "Error"
+      "error": "Error",
+      "fidelityNote": "Faithful rendering — preserves cell colors, fonts, borders, merged cells, and column widths."
     },
     "pptx-to-pdf": {
       "dropFile": "Drop a .pptx file here or click to choose",
