@@ -9,6 +9,28 @@ function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
 }
 
+// docx-preview's section-class can vary between versions ("docx", "docx_page",
+// "section.docx"); on some inputs (no explicit page breaks) it also flattens to
+// a single wrapper. Try several selectors, then fall back to the wrapper itself.
+function findPages(container: HTMLElement): HTMLElement[] {
+  const selectors = [
+    "section.docx",
+    "section.docx_page",
+    ".docx-wrapper > section",
+    ".docx > section",
+    "section",
+  ];
+  for (const sel of selectors) {
+    const found = Array.from(container.querySelectorAll<HTMLElement>(sel));
+    if (found.length > 0) return found;
+  }
+  const wrapper = container.querySelector<HTMLElement>(
+    ".docx-wrapper, .docx-rendered, .docx"
+  );
+  if (wrapper) return [wrapper];
+  return container.children.length > 0 ? [container.children[0] as HTMLElement] : [];
+}
+
 export default function DocxToPdfTool() {
   const t = useTranslations("toolUI.docx-to-pdf");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,7 +58,7 @@ export default function DocxToPdfTool() {
         const buf = await file.arrayBuffer();
         if (cancelled) return;
         await docxPreview.renderAsync(buf, container, undefined, {
-          className: "docx-rendered",
+          className: "docx",
           inWrapper: true,
           ignoreWidth: false,
           ignoreHeight: false,
@@ -46,8 +68,8 @@ export default function DocxToPdfTool() {
           useBase64URL: true,
         });
         if (cancelled) return;
-        const sections = container.querySelectorAll<HTMLElement>("section.docx");
-        setPageCount(sections.length);
+        const pages = findPages(container);
+        setPageCount(pages.length);
         setRendered(true);
       } catch (e) {
         if (!cancelled) setError(t("error") + ": " + (e as Error).message);
@@ -81,9 +103,7 @@ export default function DocxToPdfTool() {
       ]);
 
       const container = previewRef.current;
-      const sections = Array.from(
-        container.querySelectorAll<HTMLElement>("section.docx")
-      );
+      const sections = findPages(container);
       if (sections.length === 0) throw new Error("no pages rendered");
 
       // Determine page size from the first section (docx-preview sets page sizing).
