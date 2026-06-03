@@ -3444,20 +3444,14 @@
       "error": "エラー"
     },
     "pdf-to-docx": {
-      "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
-      "processing": "変換中...",
-      "downloadDocx": "DOCXダウンロード",
-      "pageCount": "{count}ページ",
-      "error": "エラー",
-      "donelabel": "ダウンロードを開始しました"
-    },
-    "pdf-to-xlsx": {
-      "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
-      "processing": "変換中...",
-      "downloadXlsx": "XLSXダウンロード",
-      "sheetCount": "シート{count}枚",
-      "sheetPrefix": "ページ",
-      "error": "エラー"
+      "imageBasedNote": "PDFの各ページを画像としてWord文書に埋め込みます。元のレイアウトは100%保持されますが、本文テキストの編集はできません。テキスト抽出のみが必要な場合は[PDFテキスト抽出]ツールをご利用ください。",
+      "dropFile": "PDFをドラッグまたはクリック",
+      "dropHint": "各ページがWord文書に画像として埋め込まれます（元の見た目を保持）",
+      "processing": "処理中...",
+      "renderingPage": "ページレンダリング中 {page}/{total}",
+      "buildingDocx": "DOCX生成中...",
+      "done": "完了",
+      "pagesUnit": "ページ"
     },
     "pdf-to-pptx": {
       "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
@@ -3467,22 +3461,18 @@
       "error": "エラー"
     },
     "pdf-to-html": {
-      "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
-      "processing": "変換中...",
-      "preview": "プレビュー",
-      "copyHtml": "HTMLをコピー",
+      "imageBasedNote": "PDFの各ページを画像としてHTMLに埋め込みます。元のレイアウトは保持されますが、テキストの選択・コピーはできません。テキスト抽出のみが必要な場合は[PDFテキスト抽出]ツールをご利用ください。",
+      "dropFile": "PDFをドラッグまたはクリック",
+      "dropHint": "各ページが単一HTMLファイルに画像として埋め込まれます",
+      "processing": "処理中...",
+      "renderingPage": "ページレンダリング中 {page}/{total}",
+      "buildingHtml": "HTML生成中...",
+      "done": "完了",
+      "pagesUnit": "ページ",
       "downloadHtml": "HTMLダウンロード",
-      "copied": "コピーしました",
-      "error": "エラー"
-    },
-    "pdf-to-md": {
-      "dropFile": ".pdfファイルをドラッグ＆ドロップまたはクリックして選択",
-      "processing": "変換中...",
-      "preview": "プレビュー",
-      "copyMd": "MDをコピー",
-      "downloadMd": "MDダウンロード",
-      "copied": "コピーしました",
-      "error": "エラー"
+      "copyHtml": "HTMLコピー",
+      "copied": "コピー完了",
+      "preview": "プレビュー"
     }
   }
 }

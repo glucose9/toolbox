@@ -9448,74 +9448,39 @@
     ]
   },
   "pdf-to-docx": {
-    "h1": "PDF to Word (DOCX) Converter",
-    "description": "Extract text from a PDF and convert it into a Word (.docx) document, ready for further editing. Paragraph breaks are preserved. Best suited for text-heavy PDFs (report bodies, contracts). Files are processed in your browser — no upload.",
-    "metaDescription": "Free PDF to DOCX. Editable Word output, in-browser processing.",
+    "h1": "PDF to Word (DOCX) Converter (Layout Preserved)",
+    "description": "Render each PDF page as a high-resolution image and embed it into a Word (.docx) document. The original layout, fonts, and design are preserved exactly. You can open the file in Word and overlay text boxes or comments on each page for annotation. **The body text is not directly editable** because the conversion is image-based — this tool is for preserving the original document as-is while letting you add notes in Word. For precise text-level editing, paid services like Adobe Acrobat or iLovePDF Pro use server-side OCR/ML.",
+    "metaDescription": "Free PDF to DOCX. Pages embedded as images in Word, original look preserved.",
     "howTo": [
       "Drag or pick a PDF file.",
-      "Text is extracted and converted to Word format.",
-      "Click Download DOCX."
+      "Each page is rendered at high resolution and placed on its own page in the Word document.",
+      "Click Download DOCX.",
+      "Open in Word to add text boxes or comments on top of the pages."
     ],
     "faq": [
       {
-        "q": "Is the original PDF layout preserved?",
-        "a": "No. The tool focuses on body text and paragraph breaks; complex multi-column layouts, tables, image positions, and precise font styling are simplified or omitted. Services like iLovePDF and SmallPDF are more accurate because they use server-side OCR and ML layout analysis."
+        "q": "Can I edit the text directly?",
+        "a": "No — the conversion is image-based. The tool's strength is 100% original-look preservation. You can add text boxes and comments on top of pages in Word."
       },
       {
-        "q": "Which PDFs work best?",
-        "a": "Single-column, text-heavy PDFs (report bodies, books, contract text). Academic papers, magazines, and complex forms may come out distorted."
+        "q": "Why image-based?",
+        "a": "Reconstructing a PDF into Word paragraphs and tables faithfully requires server-side OCR + ML layout analysis (used by paid services like Adobe Acrobat, iLovePDF Pro). Browser-only clients cannot do this accurately, so this tool preserves the original layout instead."
       },
       {
-        "q": "Does it support scanned PDFs?",
-        "a": "No. Image-only PDFs need OCR first. Use the Image OCR tool to extract text, then TXT → PDF or Markdown → PDF."
+        "q": "If I need editable text?",
+        "a": "For plain text extraction, use the [PDF Text Extract] tool and paste into Notepad or Word."
       },
       {
-        "q": "Tables and images?",
-        "a": "Not preserved (text only for now). For tables, try PDF → XLSX; for images, try PDF → Images."
-      },
-      {
-        "q": "Are files uploaded?",
-        "a": "No. pdfjs extracts text in your browser and the docx library builds the file locally."
-      },
-      {
-        "q": "Korean/Japanese/Chinese?",
-        "a": "Yes — Unicode text is preserved."
-      }
-    ]
-  },
-  "pdf-to-xlsx": {
-    "h1": "PDF to Excel (XLSX) Converter",
-    "description": "Extract text from a PDF and save it into an Excel (.xlsx) workbook. Each page becomes a separate sheet, with lines split into cells for easy post-processing. Best for simple table-style PDFs (price lists, score tables, basic financial data). Processed in your browser.",
-    "metaDescription": "Free PDF to Excel. Per-page sheets, simple-table PDFs, in-browser.",
-    "howTo": [
-      "Upload a PDF file.",
-      "Each page is extracted into a sheet (rows from lines).",
-      "Click Download XLSX."
-    ],
-    "faq": [
-      {
-        "q": "Does it detect complex tables well?",
-        "a": "No. Accurate table recognition needs server ML; this tool extracts text only, so it works best on clean grid tables. Tables without lines (whitespace-aligned), merged cells, and complex forms will be misaligned."
-      },
-      {
-        "q": "Which PDFs work best?",
-        "a": "Simple tables with clear column structure (price lists, schedules, basic financial tables). Multi-column, image-heavy, or complex forms are unreliable."
-      },
-      {
-        "q": "Scanned PDFs?",
-        "a": "Not supported. Run OCR first via the Image OCR tool."
-      },
-      {
-        "q": "Cells split incorrectly?",
-        "a": "Cell boundaries follow the PDF whitespace, so some misalignment is expected. Tidy up in Excel after download."
+        "q": "Why overlay text boxes in Word?",
+        "a": "Useful for adding comments to lecture handouts, annotating contracts, marking up reports, etc. — leave the original intact and put your information on top."
       },
       {
         "q": "Are files uploaded?",
-        "a": "No — pdfjs and SheetJS run in your browser."
+        "a": "No. pdfjs renders pages and the docx library builds the Word file — all in your browser."
       },
       {
-        "q": "Need precise PDF table extraction?",
-        "a": "Server OCR/ML is more accurate (Adobe Acrobat, iLovePDF Pro, etc.). This tool is a quick first-pass extractor."
+        "q": "Page limit?",
+        "a": "Comfortable up to a few dozen pages. 100+ pages take longer and produce larger files."
       }
     ]
   },
@@ -9557,74 +9522,38 @@
     ]
   },
   "pdf-to-html": {
-    "h1": "PDF to HTML Converter",
-    "description": "Extract a PDF's text and paragraphs into an HTML document. Useful for moving content onto a website, archiving in a search-friendly format, or as a first pass before further editing. Page breaks and basic paragraph structure preserved. Best for plain text-style PDFs.",
-    "metaDescription": "Free PDF to HTML. Web-friendly output, in-browser processing.",
+    "h1": "PDF to HTML Converter (Pages as Images)",
+    "description": "Render each PDF page as a high-resolution image and embed it into a single HTML file. The original layout is preserved exactly, and the file can be opened in any browser like a PDF. Great for publishing PDFs to a website (archival), attaching as a single-file HTML to email, or precise print previews. **Text is not selectable/copyable** because the conversion is image-based — use the [PDF Text Extract] tool if you need text.",
+    "metaDescription": "Free PDF to HTML. Pages embedded as images in a single HTML, original look preserved.",
     "howTo": [
       "Upload a PDF file.",
-      "Text is converted into HTML paragraphs.",
-      "Click Download HTML or copy the markup."
+      "Each page is rendered at high resolution and embedded into the HTML.",
+      "Click Download HTML (single file) or preview directly."
     ],
     "faq": [
       {
-        "q": "Is the layout preserved?",
-        "a": "Paragraph breaks and basic text are preserved; precise positioning, fonts, and multi-column layouts are simplified."
+        "q": "Can I select/copy text?",
+        "a": "No — image-based conversion. For text, use the [PDF Text Extract] tool. This tool's strength is 100% original-look preservation."
       },
       {
-        "q": "Are images extracted?",
-        "a": "Currently text-focused; images may be omitted. For images, use PDF → Images."
+        "q": "Why image-based?",
+        "a": "Reconstructing PDF precise layout (fonts, margins, columns) in HTML/CSS requires server-side ML. Browser-only clients cannot do this faithfully, so this tool preserves the original as images."
       },
       {
-        "q": "Good for what?",
-        "a": "Moving PDF content to a blog/wiki/website, archiving in a searchable form, or as a first pass before Markdown/HTML cleanup."
+        "q": "What is it good for?",
+        "a": "Publishing a PDF to a website as-is (archival), attaching as a single-file HTML in email, precise print previews, etc."
       },
       {
-        "q": "Complex tables?",
-        "a": "Tables are extracted as text but structure isn't fully preserved. For table-heavy PDFs, try PDF → XLSX."
-      },
-      {
-        "q": "Are files uploaded?",
-        "a": "No — pdfjs extracts text and builds the HTML in your browser."
-      },
-      {
-        "q": "Scanned PDFs?",
-        "a": "Not supported. Run OCR first."
-      }
-    ]
-  },
-  "pdf-to-md": {
-    "h1": "PDF to Markdown Converter",
-    "description": "Extract a PDF's text into Markdown (.md) format. Heading levels are inferred from font sizes (#, ##), paragraphs are preserved, and bullet lines are detected. Great for moving content to GitHub README, blogs, wikis, or as a first pass for Markdown notes. Processed in your browser.",
-    "metaDescription": "Free PDF to Markdown. Auto headings/paragraphs, GitHub/blog ready.",
-    "howTo": [
-      "Upload a PDF file.",
-      "Text is converted to Markdown (headings and paragraphs auto-detected).",
-      "Copy or click Download .md."
-    ],
-    "faq": [
-      {
-        "q": "How are headings (#) detected?",
-        "a": "By font size: the largest text becomes #, the next largest ##, and so on. Cover pages, logos, and some PDFs may be misclassified — review after download."
-      },
-      {
-        "q": "Is layout preserved?",
-        "a": "Markdown is a simple format and cannot represent precise PDF layout. Paragraphs, headings, and lists are preserved at most."
-      },
-      {
-        "q": "Which PDFs work best?",
-        "a": "Single-column, blog/document-style PDFs. Academic papers, magazines, and complex forms are unreliable."
-      },
-      {
-        "q": "Scanned PDFs?",
-        "a": "Not supported. Run OCR first."
-      },
-      {
-        "q": "Code blocks and tables?",
-        "a": "Monospace-looking blocks are guessed as code blocks; tables are attempted as pipe (|) tables but not perfectly."
+        "q": "Is the file large?",
+        "a": "Larger than text extraction since pages are images, but bundling all pages in a single HTML makes sharing easy."
       },
       {
         "q": "Are files uploaded?",
-        "a": "No — all in your browser."
+        "a": "No. pdfjs renders pages and builds the HTML — all in your browser."
+      },
+      {
+        "q": "Different from PDF → Images?",
+        "a": "That tool exports separate PNG files; this one bundles all pages into a single HTML file. For web sharing/archive, this tool is more convenient."
       }
     ]
   }

@@ -3444,20 +3444,14 @@
       "error": "错误"
     },
     "pdf-to-docx": {
-      "dropFile": "拖放 .pdf 文件或点击选择",
-      "processing": "转换中...",
-      "downloadDocx": "下载 DOCX",
-      "pageCount": "{count} 页",
-      "error": "错误",
-      "donelabel": "下载已开始"
-    },
-    "pdf-to-xlsx": {
-      "dropFile": "拖放 .pdf 文件或点击选择",
-      "processing": "转换中...",
-      "downloadXlsx": "下载 XLSX",
-      "sheetCount": "{count} 个工作表",
-      "sheetPrefix": "第",
-      "error": "错误"
+      "imageBasedNote": "将每页 PDF 作为图片嵌入到 Word 文档中。完整保留原版样式,但无法直接编辑正文文字。仅需文本请使用 [PDF 文本提取] 工具。",
+      "dropFile": "拖放或点击上传 PDF",
+      "dropHint": "每页作为图片嵌入到 Word 文档(完整保留原版)",
+      "processing": "处理中...",
+      "renderingPage": "渲染页面 {page}/{total}",
+      "buildingDocx": "生成 DOCX...",
+      "done": "完成",
+      "pagesUnit": "页"
     },
     "pdf-to-pptx": {
       "dropFile": "拖放 .pdf 文件或点击选择",
@@ -3467,22 +3461,18 @@
       "error": "错误"
     },
     "pdf-to-html": {
-      "dropFile": "拖放 .pdf 文件或点击选择",
-      "processing": "转换中...",
-      "preview": "预览",
-      "copyHtml": "复制 HTML",
+      "imageBasedNote": "将每页 PDF 作为图片嵌入到 HTML 中。完整保留原版样式,但无法选择或复制文字。仅需文本请使用 [PDF 文本提取] 工具。",
+      "dropFile": "拖放或点击上传 PDF",
+      "dropHint": "每页作为图片嵌入到单个 HTML 文件中",
+      "processing": "处理中...",
+      "renderingPage": "渲染页面 {page}/{total}",
+      "buildingHtml": "生成 HTML...",
+      "done": "完成",
+      "pagesUnit": "页",
       "downloadHtml": "下载 HTML",
+      "copyHtml": "复制 HTML",
       "copied": "已复制",
-      "error": "错误"
-    },
-    "pdf-to-md": {
-      "dropFile": "拖放 .pdf 文件或点击选择",
-      "processing": "转换中...",
-      "preview": "预览",
-      "copyMd": "复制 MD",
-      "downloadMd": "下载 MD",
-      "copied": "已复制",
-      "error": "错误"
+      "preview": "预览"
     }
   }
 }

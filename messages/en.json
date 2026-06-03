@@ -3444,20 +3444,14 @@
       "error": "Error"
     },
     "pdf-to-docx": {
-      "dropFile": "Drop a .pdf here or click to select",
-      "processing": "Converting...",
-      "downloadDocx": "Download DOCX",
-      "pageCount": "{count} pages",
-      "error": "Error",
-      "donelabel": "Download started"
-    },
-    "pdf-to-xlsx": {
-      "dropFile": "Drop a .pdf here or click to select",
-      "processing": "Converting...",
-      "downloadXlsx": "Download XLSX",
-      "sheetCount": "{count} sheets",
-      "sheetPrefix": "Page",
-      "error": "Error"
+      "imageBasedNote": "Each PDF page is embedded as an image in the Word document. The original layout is preserved exactly, but body text cannot be edited. Use the [PDF Text Extract] tool if you only need text.",
+      "dropFile": "Drag or click to upload a PDF",
+      "dropHint": "Each page becomes an image in the Word document (original look preserved)",
+      "processing": "Processing...",
+      "renderingPage": "Rendering page {page}/{total}",
+      "buildingDocx": "Building DOCX...",
+      "done": "Done",
+      "pagesUnit": "pages"
     },
     "pdf-to-pptx": {
       "dropFile": "Drop a .pdf here or click to select",
@@ -3467,22 +3461,18 @@
       "error": "Error"
     },
     "pdf-to-html": {
-      "dropFile": "Drop a .pdf here or click to select",
-      "processing": "Converting...",
-      "preview": "Preview",
-      "copyHtml": "Copy HTML",
+      "imageBasedNote": "Each PDF page is embedded as an image in the HTML file. The original layout is preserved exactly, but text cannot be selected or copied. Use the [PDF Text Extract] tool if you only need text.",
+      "dropFile": "Drag or click to upload a PDF",
+      "dropHint": "Each page becomes an image in a single HTML file (original look preserved)",
+      "processing": "Processing...",
+      "renderingPage": "Rendering page {page}/{total}",
+      "buildingHtml": "Building HTML...",
+      "done": "Done",
+      "pagesUnit": "pages",
       "downloadHtml": "Download HTML",
+      "copyHtml": "Copy HTML",
       "copied": "Copied",
-      "error": "Error"
-    },
-    "pdf-to-md": {
-      "dropFile": "Drop a .pdf here or click to select",
-      "processing": "Converting...",
-      "preview": "Preview",
-      "copyMd": "Copy MD",
-      "downloadMd": "Download MD",
-      "copied": "Copied",
-      "error": "Error"
+      "preview": "Preview"
     }
   }
 }
