@@ -5762,37 +5762,39 @@
   },
   "sci-calc": {
     "h1": "Scientific Calculator",
-    "description": "Supports trig, logs, powers, square roots, and other engineering/science calculations. Expression-based input handles long chained calculations. Useful for math/physics/engineering students, engineers, exam prep, and quick statistics.",
-    "metaDescription": "Free scientific calculator. sin/cos/tan/log/sqrt/pow with expression input.",
+    "description": "TI-84+ CE class scientific calculator. Expression-style sci calc (trig, log, exp, fractions, Ans, A–Z variables), polynomial & equation solver, matrix operations (determinant, inverse, rref, linear systems), and statistics (mean, std dev, quartiles, linear regression) — all computed instantly in your browser.",
+    "metaDescription": "Free scientific calculator - trig, log, fractions, equation solver, matrix (inverse, determinant, rref), stats & regression. TI-84 class, expression input.",
     "howTo": [
-      "Type an expression (e.g., sin(30) + cos(60)).",
-      "Result appears instantly.",
-      "Use parentheses for clear precedence."
+      "Pick a tab: Calc · Solver · Matrix · Stats.",
+      "In Calc, type an expression or use the keypad (e.g. sin(30)+ncr(5,2)). Supports DEG/RAD/GRAD, ▶Frac, Ans, and variable storage.",
+      "In Solver, enter polynomial coefficients or f(x) with an interval to find roots.",
+      "In Matrix, enter A and B to compute determinant, inverse, product, rref, and linear systems.",
+      "In Stats, paste a list of numbers for mean, std dev, quartiles, and linear regression."
     ],
     "faq": [
       {
-        "q": "What angle units?",
-        "a": "Choose degrees (0–360) or radians (0–2π). Korean high school exams use degrees; university math typically uses radians."
+        "q": "Can I change the angle unit?",
+        "a": "Yes — choose DEG, RAD, or GRAD at the top of the Calc tab, or cycle with the MODE key."
       },
       {
-        "q": "Which functions are supported?",
-        "a": "sin, cos, tan, asin, acos, atan, log (base 10), ln (natural log), sqrt (√), pow, abs, exp, and other standard functions."
+        "q": "Can I reuse previous results or variables?",
+        "a": "Use the Ans key for the last result, and 'Store Ans' into A–Z variables, then reference that letter in expressions (e.g. A^2)."
+      },
+      {
+        "q": "Can answers show as fractions?",
+        "a": "Turn on ▶Frac in the Calc tab to also display the result as an a/b fraction when it is rational."
+      },
+      {
+        "q": "What matrix operations are supported?",
+        "a": "Up to 5×5: add, subtract, multiply, scalar multiply, determinant, inverse, transpose, rref, and solving Ax=b."
+      },
+      {
+        "q": "Does the solver find complex roots?",
+        "a": "The polynomial solver (degree 2–4) returns both real and complex roots as a±bi. The f(x)=0 solver finds real roots numerically within the interval you set."
       },
       {
         "q": "Can it draw graphs?",
-        "a": "For plotting, use [Graphing Calculator]. For LaTeX formulas, use [Formula Builder]."
-      },
-      {
-        "q": "Very large or small numbers?",
-        "a": "Supports JavaScript floating point range (~±1.8×10³⁰⁸). Beyond that auto-displays as e+ notation."
-      },
-      {
-        "q": "Multiple expressions at once?",
-        "a": "Variables aren't supported, but you can copy results and chain them in the next expression."
-      },
-      {
-        "q": "Scientific notation?",
-        "a": "Large results show as 1.23e+10. You can also input that way (e.g., 1.5e3 = 1500)."
+        "a": "For graphs, use the separate Graphing Calculator tool — a shortcut link sits at the bottom of each tab."
       }
     ]
   },
