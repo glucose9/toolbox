@@ -24,7 +24,6 @@ type Tab = "calc" | "solver" | "matrix" | "stat";
 export default function SciCalcTool() {
   const t = useTranslations("toolUI.sci-calc");
   const [tab, setTab] = useState<Tab>("calc");
-  const [pinned, setPinned] = useState(false);
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "calc", label: t("tabCalc") },
@@ -34,17 +33,8 @@ export default function SciCalcTool() {
   ];
 
   return (
-    // When pinned, the whole card sticks just below the sticky site header
-    // (h-14 desktop; taller on mobile with the search row) so it stays visible
-    // while scrolling the how-to / FAQ below. z-30 keeps it under the header (z-40).
-    <div
-      className={`card space-y-3 ${
-        pinned
-          ? "sticky top-[104px] sm:top-16 z-30 bg-white dark:bg-gray-900 shadow-xl ring-1 ring-brand-300 dark:ring-brand-700"
-          : ""
-      }`}
-    >
-      <div className="flex flex-wrap items-center gap-1 border-b border-gray-200 dark:border-gray-700 pb-2">
+    <div className="card space-y-3">
+      <div className="flex flex-wrap gap-1 border-b border-gray-200 dark:border-gray-700 pb-2">
         {tabs.map((tb) => (
           <button
             key={tb.id}
@@ -58,17 +48,6 @@ export default function SciCalcTool() {
             {tb.label}
           </button>
         ))}
-        <button
-          onClick={() => setPinned((p) => !p)}
-          title={t("pinHint")}
-          className={`ml-auto px-2.5 py-1.5 rounded text-sm font-medium ${
-            pinned
-              ? "bg-brand-500 text-white"
-              : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-          }`}
-        >
-          📌 {pinned ? t("pinned") : t("pin")}
-        </button>
       </div>
 
       {tab === "calc" && <CalcTab />}
@@ -264,7 +243,9 @@ function CalcTab() {
         className="w-full px-3 py-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-right text-xl font-mono"
       />
 
-      <div className="text-right min-h-9">
+      {/* Fixed height so the keypad below never shifts when the fraction line
+          or an error appears/disappears. */}
+      <div className="h-16 flex flex-col justify-center items-end text-right overflow-hidden">
         {evald.error ? (
           <span className="text-red-600 text-sm">{evald.error}</span>
         ) : fracMode && frac ? (
@@ -284,8 +265,6 @@ function CalcTab() {
           </>
         )}
       </div>
-
-      {second && <div className="text-xs text-amber-600 dark:text-amber-400">{t("secondActive")}</div>}
 
       <div className="grid grid-cols-5 gap-1">
         {rows.flat().map((b, i) => {
