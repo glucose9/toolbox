@@ -710,7 +710,11 @@
       "graphHintPrefix": "Need a graph? Use the ",
       "graphLink": "graphing calculator",
       "graphHintSuffix": ".",
-      "secondActive": "2nd active — highlighted keys switch to their secondary function"
+      "secondActive": "2nd active — highlighted keys switch to their secondary function",
+      "pin": "Pin",
+      "pinned": "Pinned",
+      "pinHint": "Keep the calculator stuck to the top while scrolling",
+      "fracNA": "Cannot express as a fraction (irrational/integer)"
     },
     "text-hex": {
       "hexToText": "Hex → Text",

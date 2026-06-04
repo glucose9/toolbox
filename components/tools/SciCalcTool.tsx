@@ -24,6 +24,7 @@ type Tab = "calc" | "solver" | "matrix" | "stat";
 export default function SciCalcTool() {
   const t = useTranslations("toolUI.sci-calc");
   const [tab, setTab] = useState<Tab>("calc");
+  const [pinned, setPinned] = useState(false);
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "calc", label: t("tabCalc") },
@@ -33,8 +34,17 @@ export default function SciCalcTool() {
   ];
 
   return (
-    <div className="card space-y-3">
-      <div className="flex flex-wrap gap-1 border-b border-gray-200 dark:border-gray-700 pb-2">
+    // When pinned, the whole card sticks just below the sticky site header
+    // (h-14 desktop; taller on mobile with the search row) so it stays visible
+    // while scrolling the how-to / FAQ below. z-30 keeps it under the header (z-40).
+    <div
+      className={`card space-y-3 ${
+        pinned
+          ? "sticky top-[104px] sm:top-16 z-30 bg-white dark:bg-gray-900 shadow-xl ring-1 ring-brand-300 dark:ring-brand-700"
+          : ""
+      }`}
+    >
+      <div className="flex flex-wrap items-center gap-1 border-b border-gray-200 dark:border-gray-700 pb-2">
         {tabs.map((tb) => (
           <button
             key={tb.id}
@@ -48,6 +58,17 @@ export default function SciCalcTool() {
             {tb.label}
           </button>
         ))}
+        <button
+          onClick={() => setPinned((p) => !p)}
+          title={t("pinHint")}
+          className={`ml-auto px-2.5 py-1.5 rounded text-sm font-medium ${
+            pinned
+              ? "bg-brand-500 text-white"
+              : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+          }`}
+        >
+          📌 {pinned ? t("pinned") : t("pin")}
+        </button>
       </div>
 
       {tab === "calc" && <CalcTab />}
@@ -93,9 +114,11 @@ function CalcTab() {
     }
   }, [input, mode, vars, ans, notation, fixDigits, t]);
 
+  // Always compute the fraction form (independent of ►Frac) so it's visible
+  // whenever the answer is rational. ►Frac just promotes it to the big result.
   const frac = useMemo(
-    () => (fracMode && evald.value !== null ? toFraction(evald.value) : null),
-    [fracMode, evald.value]
+    () => (evald.value !== null ? toFraction(evald.value) : null),
+    [evald.value]
   );
 
   const insert = (s: string) => setInput((i) => i + s);
@@ -244,10 +267,20 @@ function CalcTab() {
       <div className="text-right min-h-9">
         {evald.error ? (
           <span className="text-red-600 text-sm">{evald.error}</span>
+        ) : fracMode && frac ? (
+          // ►Frac on + representable: fraction is the primary (big) result.
+          <>
+            <div className="text-2xl font-bold break-all text-emerald-600 dark:text-emerald-400 font-mono">{frac}</div>
+            <div className="text-sm text-muted break-all">= {evald.display}</div>
+          </>
         ) : (
           <>
             <div className="text-2xl font-bold break-all">{evald.display || "—"}</div>
-            {frac && <div className="text-sm text-emerald-600 dark:text-emerald-400 font-mono">= {frac}</div>}
+            {frac ? (
+              <div className="text-base text-emerald-600 dark:text-emerald-400 font-mono">= {frac}</div>
+            ) : fracMode && evald.value !== null ? (
+              <div className="text-xs text-muted">{t("fracNA")}</div>
+            ) : null}
           </>
         )}
       </div>

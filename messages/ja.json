@@ -710,7 +710,11 @@
       "graphHintPrefix": "グラフが必要なら ",
       "graphLink": "グラフ計算機",
       "graphHintSuffix": " をご利用ください。",
-      "secondActive": "2nd 有効 — 枠が付いたキーが第2機能に切り替わります"
+      "secondActive": "2nd 有効 — 枠が付いたキーが第2機能に切り替わります",
+      "pin": "画面に固定",
+      "pinned": "固定中",
+      "pinHint": "スクロールしても電卓を画面上部に固定します",
+      "fracNA": "分数で表せない値（無理数/整数）"
     },
     "text-hex": {
       "hexToText": "16進数 → テキスト",

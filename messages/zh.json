@@ -710,7 +710,11 @@
       "graphHintPrefix": "需要图像？请使用",
       "graphLink": "图形计算器",
       "graphHintSuffix": "。",
-      "secondActive": "2nd 已激活 — 高亮的按键切换为第二功能"
+      "secondActive": "2nd 已激活 — 高亮的按键切换为第二功能",
+      "pin": "固定到屏幕",
+      "pinned": "已固定",
+      "pinHint": "滚动时让计算器固定在屏幕顶部",
+      "fracNA": "无法表示为分数（无理数/整数）"
     },
     "text-hex": {
       "hexToText": "十六进制 → 文本",
