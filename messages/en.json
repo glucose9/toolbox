@@ -340,7 +340,16 @@
     "pptx-images": "PPTX Image Extract",
     "pptx-info": "PPTX Info",
     "teleprompter": "Teleprompter",
-    "number-tags": "Number Tag Generator"
+    "number-tags": "Number Tag Generator",
+    "docx-to-pdf": "DOCX → PDF",
+    "xlsx-to-pdf": "XLSX → PDF",
+    "pptx-to-pdf": "PPTX → PDF",
+    "html-to-pdf": "HTML → PDF",
+    "md-to-pdf": "Markdown → PDF",
+    "txt-to-pdf": "TXT → PDF",
+    "pdf-to-docx": "PDF → DOCX",
+    "pdf-to-html": "PDF → HTML",
+    "pdf-to-pptx": "PDF → PPTX"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -700,7 +709,8 @@
       "regIntercept": "Intercept",
       "graphHintPrefix": "Need a graph? Use the ",
       "graphLink": "graphing calculator",
-      "graphHintSuffix": "."
+      "graphHintSuffix": ".",
+      "secondActive": "2nd active — highlighted keys switch to their secondary function"
     },
     "text-hex": {
       "hexToText": "Hex → Text",

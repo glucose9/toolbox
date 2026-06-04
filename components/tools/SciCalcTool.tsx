@@ -118,14 +118,15 @@ function CalcTab() {
     }
   };
 
-  // trig keys flip to inverse when 2nd is active
-  const trig = (base: string) => (second ? `a${base}(` : `${base}(`);
-  const onKey = (ins: string) => {
-    insert(ins);
-    if (second) setSecond(false);
+  // Keys may carry a secondary (2nd) function shown/used while 2nd is active.
+  type Key = {
+    label: string;
+    ins?: string;
+    act?: () => void;
+    cls?: string;
+    label2?: string;
+    ins2?: string;
   };
-
-  type Key = { label: string; ins?: string; act?: () => void; cls?: string };
   const rows: Key[][] = [
     [
       { label: "2nd", act: () => setSecond((s) => !s), cls: second ? "bg-amber-400 text-black" : "bg-amber-100 dark:bg-amber-900/30" },
@@ -135,37 +136,37 @@ function CalcTab() {
       { label: t("ac"), act: clear, cls: "bg-red-100 dark:bg-red-900/30" },
     ],
     [
-      { label: "x²", ins: "^2" },
-      { label: "x³", ins: "^3" },
+      { label: "x²", ins: "^2", label2: "x⁻¹", ins2: "^(-1)" },
+      { label: "x³", ins: "^3", label2: "∛(", ins2: "cbrt(" },
       { label: "^", ins: "^" },
-      { label: "√(", ins: "sqrt(" },
+      { label: "√(", ins: "sqrt(", label2: "ⁿ√", ins2: "nthRoot(" },
       { label: "∛(", ins: "cbrt(" },
     ],
     [
-      { label: second ? "sin⁻¹" : "sin", ins: trig("sin") },
-      { label: second ? "cos⁻¹" : "cos", ins: trig("cos") },
-      { label: second ? "tan⁻¹" : "tan", ins: trig("tan") },
-      { label: "π", ins: "pi" },
+      { label: "sin", ins: "sin(", label2: "sin⁻¹", ins2: "asin(" },
+      { label: "cos", ins: "cos(", label2: "cos⁻¹", ins2: "acos(" },
+      { label: "tan", ins: "tan(", label2: "tan⁻¹", ins2: "atan(" },
+      { label: "π", ins: "pi", label2: "τ", ins2: "tau" },
       { label: "e", ins: "e" },
     ],
     [
-      { label: "log(", ins: "log10(" },
+      { label: "log", ins: "log10(", label2: "log₂", ins2: "log2(" },
       { label: "10^", ins: "10^" },
-      { label: "ln(", ins: "log(" },
+      { label: "ln", ins: "log(" },
       { label: "e^", ins: "e^" },
       { label: "1/x", ins: "^(-1)" },
     ],
     [
-      { label: "sinh", ins: "sinh(" },
-      { label: "cosh", ins: "cosh(" },
-      { label: "tanh", ins: "tanh(" },
+      { label: "sinh", ins: "sinh(", label2: "sinh⁻¹", ins2: "asinh(" },
+      { label: "cosh", ins: "cosh(", label2: "cosh⁻¹", ins2: "acosh(" },
+      { label: "tanh", ins: "tanh(", label2: "tanh⁻¹", ins2: "atanh(" },
       { label: "nPr", ins: "npr(" },
       { label: "nCr", ins: "ncr(" },
     ],
     [
       { label: "abs", ins: "abs(" },
       { label: "mod", ins: "mod(" },
-      { label: "gcd", ins: "gcd(" },
+      { label: "gcd", ins: "gcd(", label2: "lcm", ins2: "lcm(" },
       { label: "!", ins: "!" },
       { label: ",", ins: "," },
     ],
@@ -251,18 +252,30 @@ function CalcTab() {
         )}
       </div>
 
+      {second && <div className="text-xs text-amber-600 dark:text-amber-400">{t("secondActive")}</div>}
+
       <div className="grid grid-cols-5 gap-1">
-        {rows.flat().map((b, i) => (
-          <button
-            key={i}
-            onClick={b.act || (() => onKey(b.ins!))}
-            className={`py-2.5 rounded text-sm font-medium ${
-              b.cls || "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            {b.label}
-          </button>
-        ))}
+        {rows.flat().map((b, i) => {
+          const use2 = second && !!b.ins2;
+          const isToggle = b.label === "2nd";
+          const press = () => {
+            if (b.act) b.act();
+            else insert(use2 ? b.ins2! : b.ins!);
+            // 2nd is a one-shot modifier: clear it after any key except itself.
+            if (second && !isToggle) setSecond(false);
+          };
+          return (
+            <button
+              key={i}
+              onClick={press}
+              className={`py-2.5 rounded text-sm font-medium ${
+                b.cls || "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+              } ${use2 ? "ring-2 ring-amber-400" : ""}`}
+            >
+              {use2 ? b.label2 : b.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Variable storage */}

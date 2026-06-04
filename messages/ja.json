@@ -340,7 +340,16 @@
     "pptx-images": "PPTX画像抽出",
     "pptx-info": "PPTX情報",
     "teleprompter": "テレプロンプター",
-    "number-tags": "番号札メーカー"
+    "number-tags": "番号札メーカー",
+    "docx-to-pdf": "DOCX → PDF",
+    "xlsx-to-pdf": "XLSX → PDF",
+    "pptx-to-pdf": "PPTX → PDF",
+    "html-to-pdf": "HTML → PDF",
+    "md-to-pdf": "Markdown → PDF",
+    "txt-to-pdf": "TXT → PDF",
+    "pdf-to-docx": "PDF → DOCX",
+    "pdf-to-html": "PDF → HTML",
+    "pdf-to-pptx": "PDF → PPTX"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -700,7 +709,8 @@
       "regIntercept": "切片",
       "graphHintPrefix": "グラフが必要なら ",
       "graphLink": "グラフ計算機",
-      "graphHintSuffix": " をご利用ください。"
+      "graphHintSuffix": " をご利用ください。",
+      "secondActive": "2nd 有効 — 枠が付いたキーが第2機能に切り替わります"
     },
     "text-hex": {
       "hexToText": "16進数 → テキスト",

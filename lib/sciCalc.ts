@@ -1,4 +1,4 @@
-// Pure math helpers for the scientific-calculator suite (TI-84+ CE class).
+// Pure math helpers for the scientific-calculator suite (graphing-calculator class).
 // All evaluation goes through a single configured mathjs instance so that the
 // angle mode (deg/rad/grad) can be honored by the trig functions.
 

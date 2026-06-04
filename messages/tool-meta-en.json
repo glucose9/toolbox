@@ -5762,8 +5762,8 @@
   },
   "sci-calc": {
     "h1": "Scientific Calculator",
-    "description": "TI-84+ CE class scientific calculator. Expression-style sci calc (trig, log, exp, fractions, Ans, A–Z variables), polynomial & equation solver, matrix operations (determinant, inverse, rref, linear systems), and statistics (mean, std dev, quartiles, linear regression) — all computed instantly in your browser.",
-    "metaDescription": "Free scientific calculator - trig, log, fractions, equation solver, matrix (inverse, determinant, rref), stats & regression. TI-84 class, expression input.",
+    "description": "An advanced scientific calculator with matrices, statistics and equation solving. Expression-style sci calc (trig, log, exp, fractions, Ans, A–Z variables), polynomial & equation solver, matrix operations (determinant, inverse, rref, linear systems), and statistics (mean, std dev, quartiles, linear regression) — all computed instantly in your browser.",
+    "metaDescription": "Free scientific calculator - trig, log, fractions, equation solver, matrix (inverse, determinant, rref), stats & regression. Graphing-calculator class, expression input.",
     "howTo": [
       "Pick a tab: Calc · Solver · Matrix · Stats.",
       "In Calc, type an expression or use the keypad (e.g. sin(30)+ncr(5,2)). Supports DEG/RAD/GRAD, ▶Frac, Ans, and variable storage.",

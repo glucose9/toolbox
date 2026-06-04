@@ -340,7 +340,16 @@
     "pptx-images": "PPTX 图片提取",
     "pptx-info": "PPTX 信息",
     "teleprompter": "提词器",
-    "number-tags": "号码牌生成器"
+    "number-tags": "号码牌生成器",
+    "docx-to-pdf": "DOCX → PDF",
+    "xlsx-to-pdf": "XLSX → PDF",
+    "pptx-to-pdf": "PPTX → PDF",
+    "html-to-pdf": "HTML → PDF",
+    "md-to-pdf": "Markdown → PDF",
+    "txt-to-pdf": "TXT → PDF",
+    "pdf-to-docx": "PDF → DOCX",
+    "pdf-to-html": "PDF → HTML",
+    "pdf-to-pptx": "PDF → PPTX"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -700,7 +709,8 @@
       "regIntercept": "截距",
       "graphHintPrefix": "需要图像？请使用",
       "graphLink": "图形计算器",
-      "graphHintSuffix": "。"
+      "graphHintSuffix": "。",
+      "secondActive": "2nd 已激活 — 高亮的按键切换为第二功能"
     },
     "text-hex": {
       "hexToText": "十六进制 → 文本",
