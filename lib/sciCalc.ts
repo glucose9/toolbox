@@ -68,24 +68,50 @@ export function formatResult(
 }
 
 // Return "a/b" (or "-a/b") when value is a clean rational; null otherwise.
+//
+// NOTE: do NOT use math.fraction(value) here — it converts the exact binary
+// double, so 1/3 becomes 6004799503160661/18014398509481984 (huge denominator)
+// and gets rejected. Instead approximate with a continued fraction: convergents
+// hit a small p/q for true rationals (1/3, 7/12, …) but never get within eps for
+// irrationals (π, √2, e) before the denominator blows past the cap, so those
+// correctly return null.
 export function toFraction(value: number): string | null {
   if (!isFinite(value)) return null;
   if (Number.isInteger(value)) return null; // nothing to gain
-  try {
-    // fraction.js (mathjs) stores n/d as bigint and s as the sign; normalize.
-    const f = math.fraction(value) as unknown as {
-      n: bigint | number;
-      d: bigint | number;
-      s: bigint | number;
-    };
-    const n = Number(f.n);
-    const d = Number(f.d);
-    const s = Number(f.s);
-    if (!isFinite(d) || d <= 1 || d > 100000) return null;
-    return `${s < 0 ? "-" : ""}${n}/${d}`;
-  } catch {
-    return null;
+  const eps = 1e-12;
+  const maxDen = 1_000_000;
+  const x = Math.abs(value);
+  let h1 = 1,
+    h2 = 0,
+    k1 = 0,
+    k2 = 1,
+    b = x,
+    matched = false;
+  for (let i = 0; i < 64; i++) {
+    const a = Math.floor(b);
+    const h = a * h1 + h2;
+    const k = a * k1 + k2;
+    if (k > maxDen) break;
+    h2 = h1;
+    h1 = h;
+    k2 = k1;
+    k1 = k;
+    if (Math.abs(x - h1 / k1) <= eps) {
+      matched = true;
+      break;
+    }
+    const fp = b - a;
+    if (fp <= 1e-15) {
+      matched = true;
+      break;
+    }
+    b = 1 / fp;
   }
+  if (!matched) return null;
+  const p = h1;
+  const q = k1;
+  if (q <= 1 || q > 100000) return null; // skip integers and ugly denominators
+  return `${value < 0 ? "-" : ""}${p}/${q}`;
 }
 
 // ---------------------------------------------------------------------------
