@@ -7,14 +7,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // OG image route segments are auto-generated images, not pages. Keep them out of
-        // HTML crawl so they don't pile up as "crawled but not indexed" in GSC.
-        disallow: [
-          "/*/opengraph-image",
-          "/*/opengraph-image/*",
-          "/*/twitter-image",
-          "/*/twitter-image/*",
-        ],
+        // No Disallow. We previously blocked the auto-generated /*/opengraph-image
+        // and /*/twitter-image routes, but that made Search Console report them under
+        // "Blocked by robots.txt" (alarming, looked like pages weren't indexing) and
+        // stopped Google/social crawlers from fetching link-preview images. Per Google's
+        // guidance, don't block resources your pages reference — let them be crawled.
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
