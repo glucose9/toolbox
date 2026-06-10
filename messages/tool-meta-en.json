@@ -9558,5 +9558,53 @@
         "a": "That tool exports separate PNG files; this one bundles all pages into a single HTML file. For web sharing/archive, this tool is more convenient."
       }
     ]
+  },
+  "stat-tables": {
+    "h1": "Statistical Tables — z-table & t-table",
+    "description": "Standard normal (z) table and Student-t critical values in one place. Instant z↔probability conversion and t critical values by degrees of freedom — ready for hypothesis tests and confidence intervals.",
+    "metaDescription": "Free z-table and t-table. Φ(z) calculator, inverse lookup, t critical values by df.",
+    "howTo": [
+      "In the z-table tab, convert z→cumulative probability or probability→z instantly.",
+      "In the table, the cell where the row (z to one decimal) meets the column (second decimal) is Φ(z).",
+      "In the t-table tab, the cell where df meets one-tail α is the critical value."
+    ],
+    "faq": [
+      {
+        "q": "Do the values match textbook tables?",
+        "a": "Yes — computed numerically and identical to printed tables (e.g. t(10, 0.05)=1.812, Φ(1.96)=0.9750)."
+      },
+      {
+        "q": "How do I read two-tailed tests?",
+        "a": "Halve α: for two-tailed 0.05, use the one-tail 0.025 column."
+      },
+      {
+        "q": "My df isn't listed?",
+        "a": "We provide df 1–30, 40, 60, 120 and ∞ (=z). Interpolate or use the next smaller df to be conservative."
+      }
+    ]
+  },
+  "physics-constants": {
+    "h1": "Physics Constants (CODATA)",
+    "description": "25 physics and chemistry constants — speed of light, Planck constant, elementary charge, Avogadro number and more — at CODATA values. Search by name, symbol, or unit; copy in calculator-friendly e-notation.",
+    "metaDescription": "Free physics constants table. Speed of light, Planck constant, Avogadro number — CODATA values, search & copy.",
+    "howTo": [
+      "Search by name (Planck), symbol (h), or unit (J·s).",
+      "Press Copy to get calculator-ready e-notation like 6.626e-34.",
+      "Paste straight into the scientific calculator tool."
+    ],
+    "faq": [
+      {
+        "q": "Where do the values come from?",
+        "a": "CODATA 2018 recommended values. c, h, e, k_B and N_A are exact since the 2019 SI redefinition."
+      },
+      {
+        "q": "What format does Copy use?",
+        "a": "Exponential display is converted to calculator-friendly e-notation."
+      },
+      {
+        "q": "Are chemistry constants included?",
+        "a": "Yes — Avogadro number, gas constant R, Faraday constant, molar volume and more."
+      }
+    ]
   }
 }

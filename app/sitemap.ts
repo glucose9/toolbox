@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { tools, SITE_URL } from "@/lib/tools";
 import { routing } from "@/i18n/routing";
 import { CATEGORY_INTRO } from "@/lib/category-content";
+import { KITS } from "@/lib/kits";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -42,6 +43,42 @@ export default function sitemap(): MetadataRoute.Sitemap {
             en: `${SITE_URL}/en/category/${cat}`,
             ja: `${SITE_URL}/ja/category/${cat}`,
             zh: `${SITE_URL}/zh/category/${cat}`,
+          },
+        },
+      });
+    }
+  }
+
+  // Kit pages (index + each kit) × locales
+  for (const locale of routing.locales) {
+    entries.push({
+      url: pfx(locale, "/kits"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          ko: `${SITE_URL}/kits`,
+          en: `${SITE_URL}/en/kits`,
+          ja: `${SITE_URL}/ja/kits`,
+          zh: `${SITE_URL}/zh/kits`,
+        },
+      },
+    });
+  }
+  for (const kit of KITS) {
+    for (const locale of routing.locales) {
+      entries.push({
+        url: pfx(locale, `/kits/${kit.slug}`),
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.85,
+        alternates: {
+          languages: {
+            ko: `${SITE_URL}/kits/${kit.slug}`,
+            en: `${SITE_URL}/en/kits/${kit.slug}`,
+            ja: `${SITE_URL}/ja/kits/${kit.slug}`,
+            zh: `${SITE_URL}/zh/kits/${kit.slug}`,
           },
         },
       });

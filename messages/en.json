@@ -49,7 +49,10 @@
     "title": "{count} Free Online Tools",
     "subtitle": "QR codes, image conversion, video processing, text utilities — no signup, no watermarks.",
     "newBadge": "NEW",
-    "toolCount": "{count} tools"
+    "toolCount": "{count} tools",
+    "searchPlaceholder": "Search {count} tools — e.g. merge pdf, word count, calculator",
+    "kitsTitle": "Kits — curated tool bundles",
+    "kitsAll": "View all →"
   },
   "footer": {
     "tagline": "Free Online Tools",
@@ -349,7 +352,9 @@
     "txt-to-pdf": "TXT → PDF",
     "pdf-to-docx": "PDF → DOCX",
     "pdf-to-html": "PDF → HTML",
-    "pdf-to-pptx": "PDF → PPTX"
+    "pdf-to-pptx": "PDF → PPTX",
+    "stat-tables": "Stat Tables (z & t)",
+    "physics-constants": "Physics Constants"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3539,6 +3544,30 @@
       "preview": "Preview",
       "textLayerNote": "Original look preserved 100% + selectable, copyable text (transparent text layer over the image). Search and copy/paste work like in a normal document.",
       "previewHint": "Try dragging to select text in the preview below"
+    },
+    "stat-tables": {
+      "tabZ": "z-table (standard normal)",
+      "tabT": "t-table (critical values)",
+      "zToP": "z → cumulative probability Φ(z)",
+      "pToZ": "probability p → z",
+      "zNote": "Reading the table: row = z to the first decimal, column = second decimal. For negative z, Φ(−z) = 1 − Φ(z).",
+      "tNote": "Critical values for one-tail significance level α.",
+      "oneTail": "one-tail",
+      "twoTailHint": "For two-tailed tests halve α: two-tail 0.05 → use the 0.025 column. The ∞ row equals the z critical values."
+    },
+    "physics-constants": {
+      "searchPlaceholder": "Search by name, symbol, or unit (e.g. Planck, h, J·s)",
+      "colSymbol": "Symbol",
+      "colName": "Name",
+      "colValue": "Value",
+      "colUnit": "Unit",
+      "copy": "Copy",
+      "noResults": "No results",
+      "sourceNote": "CODATA 2018 recommended values. c, h, e, k_B, N_A are exact since the 2019 SI redefinition. Copy gives calculator-friendly e-notation."
     }
+  },
+  "kits": {
+    "title": "Kits",
+    "more": "More kits"
   }
 }

@@ -49,7 +49,10 @@
     "title": "免费在线工具 {count} 个",
     "subtitle": "QR码、图像转换、视频处理、文本处理 — 无需注册,无水印。",
     "newBadge": "NEW",
-    "toolCount": "{count} 个"
+    "toolCount": "{count} 个",
+    "searchPlaceholder": "在 {count} 个工具中搜索 — 如：合并PDF、字数统计、计算器",
+    "kitsTitle": "工具包 — 按场景精选",
+    "kitsAll": "查看全部 →"
   },
   "footer": {
     "tagline": "免费在线工具集",
@@ -349,7 +352,9 @@
     "txt-to-pdf": "TXT → PDF",
     "pdf-to-docx": "PDF → DOCX",
     "pdf-to-html": "PDF → HTML",
-    "pdf-to-pptx": "PDF → PPTX"
+    "pdf-to-pptx": "PDF → PPTX",
+    "stat-tables": "概率分布表（z·t）",
+    "physics-constants": "物理常数表"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3539,6 +3544,30 @@
       "preview": "预览",
       "textLayerNote": "完整保留原版样式 + 可选中/复制文字（图片上叠加透明文本层）。可像普通文档一样搜索和复制粘贴。",
       "previewHint": "尝试在下方预览中拖动选择文字"
+    },
+    "stat-tables": {
+      "tabZ": "z 表（标准正态）",
+      "tabT": "t 分布表（临界值）",
+      "zToP": "z → 累积概率 Φ(z)",
+      "pToZ": "累积概率 p → z",
+      "zNote": "查表方法：行 = z 的小数第一位，列 = 第二位。负 z 用 Φ(−z) = 1 − Φ(z)。",
+      "tNote": "按单侧显著性水平 α 给出的临界值。",
+      "oneTail": "单侧",
+      "twoTailHint": "双侧检验请将 α 减半：双侧 0.05 → 查 0.025 列。最后一行 ∞ 即 z 临界值。"
+    },
+    "physics-constants": {
+      "searchPlaceholder": "按名称、符号或单位搜索（如：普朗克、h、J·s）",
+      "colSymbol": "符号",
+      "colName": "名称",
+      "colValue": "数值",
+      "colUnit": "单位",
+      "copy": "复制",
+      "noResults": "无结果",
+      "sourceNote": "CODATA 2018 推荐值。c、h、e、k_B、N_A 自 2019 年 SI 重新定义后为精确固定值。复制时使用计算器友好的 e 记数法。"
     }
+  },
+  "kits": {
+    "title": "工具包",
+    "more": "更多工具包"
   }
 }

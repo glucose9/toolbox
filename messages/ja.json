@@ -49,7 +49,10 @@
     "title": "無料オンラインツール {count}個",
     "subtitle": "QRコード、画像変換、動画処理、テキスト処理 — 登録不要、ウォーターマークなし。",
     "newBadge": "NEW",
-    "toolCount": "{count}個"
+    "toolCount": "{count}個",
+    "searchPlaceholder": "{count}個のツールから検索 — 例：PDF結合、文字数、電卓",
+    "kitsTitle": "キット — 用途別ツールセット",
+    "kitsAll": "すべて見る →"
   },
   "footer": {
     "tagline": "無料オンラインツール集",
@@ -349,7 +352,9 @@
     "txt-to-pdf": "TXT → PDF",
     "pdf-to-docx": "PDF → DOCX",
     "pdf-to-html": "PDF → HTML",
-    "pdf-to-pptx": "PDF → PPTX"
+    "pdf-to-pptx": "PDF → PPTX",
+    "stat-tables": "確率分布表（z・t）",
+    "physics-constants": "物理定数表"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3539,6 +3544,30 @@
       "preview": "プレビュー",
       "textLayerNote": "元の見た目を100%保持 + テキスト選択・コピー可能（画像上に透明テキストレイヤー）。通常の文書のように検索・コピペ可能。",
       "previewHint": "プレビュー内でドラッグしてテキストを選択してみてください"
+    },
+    "stat-tables": {
+      "tabZ": "z表（標準正規）",
+      "tabT": "t分布表（臨界値）",
+      "zToP": "z → 累積確率 Φ(z)",
+      "pToZ": "累積確率 p → z",
+      "zNote": "表の読み方：行 = zの小数第1位まで、列 = 第2位。負のzは Φ(−z) = 1 − Φ(z)。",
+      "tNote": "片側有意水準 α に対する臨界値です。",
+      "oneTail": "片側",
+      "twoTailHint": "両側検定なら α を半分に：両側 0.05 → 片側 0.025 の列。最終行 ∞ は z の臨界値と同じです。"
+    },
+    "physics-constants": {
+      "searchPlaceholder": "名前・記号・単位で検索（例：プランク、h、J·s）",
+      "colSymbol": "記号",
+      "colName": "名称",
+      "colValue": "値",
+      "colUnit": "単位",
+      "copy": "コピー",
+      "noResults": "該当なし",
+      "sourceNote": "CODATA 2018 推奨値。c・h・e・k_B・N_A は 2019年SI再定義により正確な固定値です。コピーは電卓向けのe表記になります。"
     }
+  },
+  "kits": {
+    "title": "キット",
+    "more": "他のキット"
   }
 }

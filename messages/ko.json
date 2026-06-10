@@ -49,7 +49,10 @@
     "title": "무료로 쓰는 온라인 도구 {count}개",
     "subtitle": "QR코드, 이미지 변환, 동영상 처리, 글자수 세기 — 가입도 워터마크도 없이.",
     "newBadge": "NEW",
-    "toolCount": "{count}개"
+    "toolCount": "{count}개",
+    "searchPlaceholder": "{count}개 도구에서 검색 — 예: pdf 합치기, 글자수, 계산기",
+    "kitsTitle": "키트 — 상황별 도구 세트",
+    "kitsAll": "전체 보기 →"
   },
   "footer": {
     "tagline": "무료 온라인 도구 모음",
@@ -349,7 +352,9 @@
     "txt-to-pdf": "TXT → PDF",
     "pdf-to-docx": "PDF → DOCX",
     "pdf-to-html": "PDF → HTML",
-    "pdf-to-pptx": "PDF → PPTX"
+    "pdf-to-pptx": "PDF → PPTX",
+    "stat-tables": "확률분포표 (z·t)",
+    "physics-constants": "물리 상수표"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3539,6 +3544,30 @@
       "preview": "미리보기",
       "textLayerNote": "원본 모양 100% 보존 + 텍스트 드래그·복사 가능 (이미지 위에 투명 텍스트 레이어). 워드처럼 검색·복붙이 됩니다.",
       "previewHint": "미리보기 안에서 텍스트 드래그해 복사해 보세요"
+    },
+    "stat-tables": {
+      "tabZ": "z표 (표준정규)",
+      "tabT": "t분포표 (임계값)",
+      "zToP": "z → 누적확률 Φ(z)",
+      "pToZ": "누적확률 p → z",
+      "zNote": "표 읽는 법: 행 = z의 소수 첫째 자리까지, 열 = 둘째 자리. 음수 z는 Φ(−z) = 1 − Φ(z).",
+      "tNote": "단측(one-tail) 유의수준 α 기준 임계값입니다.",
+      "oneTail": "단측",
+      "twoTailHint": "양측검정이면 α를 반으로: 양측 0.05 → 단측 0.025 열을 보세요. 마지막 행 ∞는 z 임계값과 같습니다."
+    },
+    "physics-constants": {
+      "searchPlaceholder": "이름·기호·단위로 검색 (예: 플랑크, h, J·s)",
+      "colSymbol": "기호",
+      "colName": "이름",
+      "colValue": "값",
+      "colUnit": "단위",
+      "copy": "복사",
+      "noResults": "검색 결과가 없습니다",
+      "sourceNote": "CODATA 2018 권장값. c·h·e·k_B·N_A는 2019 SI 재정의로 정확히 고정된 값입니다. [복사]는 계산기용 e표기로 복사됩니다."
     }
+  },
+  "kits": {
+    "title": "키트",
+    "more": "다른 키트"
   }
 }
