@@ -45,15 +45,53 @@ export default function VideoMergeTool() {
     setBusy(true); setError("");
     try {
       const ff = await loadFf();
+      const names: string[] = [];
       const list: string[] = [];
       for (let i = 0; i < files.length; i++) {
-        const name = `in${i}.mp4`;
+        // Keep original extension so ffmpeg picks the right demuxer.
+        const ext = (files[i].name.match(/\.(\w{1,5})$/)?.[1] || "mp4").toLowerCase();
+        const name = `in${i}.${ext}`;
         await ff.writeFile(name, await fetchFile(files[i]));
+        names.push(name);
         list.push(`file '${name}'`);
       }
+      // Fast path: stream-copy concat (only works when all inputs share the
+      // same codec/resolution/timebase). If it fails or produces a dud file,
+      // fall back to a full re-encode via the concat FILTER, normalizing every
+      // input to 1280x720/30fps so mixed sources merge cleanly.
       await ff.writeFile("list.txt", new TextEncoder().encode(list.join("\n")));
-      await ff.exec(["-f", "concat", "-safe", "0", "-i", "list.txt", "-c", "copy", "out.mp4"]);
-      const data = (await ff.readFile("out.mp4")) as Uint8Array;
+      // Clear any stale outputs from a previous run on the reused instance.
+      for (const f of ["out.mp4", "out2.mp4", "out3.mp4"]) {
+        try { await ff.deleteFile(f); } catch { /* not present */ }
+      }
+      // exec resolves with the exit code (does NOT reject on ffmpeg failure).
+      const copyCode = await ff.exec(["-f", "concat", "-safe", "0", "-i", "list.txt", "-c", "copy", "out.mp4"]);
+      let data: Uint8Array;
+      try {
+        if (copyCode !== 0) throw new Error("copy concat failed");
+        data = (await ff.readFile("out.mp4")) as Uint8Array;
+        if (data.byteLength < 1024) throw new Error("copy concat produced empty output");
+      } catch {
+        const n = files.length;
+        const inputs = names.flatMap((name) => ["-i", name]);
+        const norm = (i: number) =>
+          `[${i}:v]scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30[v${i}]`;
+        // Attempt 1: video+audio. Attempt 2 (some inputs have no audio): video only.
+        const filterAV =
+          names.map((_, i) => `${norm(i)};[${i}:a]aresample=44100[a${i}]`).join(";") +
+          ";" + names.map((_, i) => `[v${i}][a${i}]`).join("") + `concat=n=${n}:v=1:a=1[v][a]`;
+        const avCode = await ff.exec([...inputs, "-filter_complex", filterAV, "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-c:a", "aac", "out2.mp4"]);
+        if (avCode === 0) {
+          data = (await ff.readFile("out2.mp4")) as Uint8Array;
+        } else {
+          const filterV =
+            names.map((_, i) => norm(i)).join(";") +
+            ";" + names.map((_, i) => `[v${i}]`).join("") + `concat=n=${n}:v=1:a=0[v]`;
+          const vCode = await ff.exec([...inputs, "-filter_complex", filterV, "-map", "[v]", "-c:v", "libx264", "-preset", "veryfast", "-an", "out3.mp4"]);
+          if (vCode !== 0) throw new Error("merge failed");
+          data = (await ff.readFile("out3.mp4")) as Uint8Array;
+        }
+      }
       const ab = new ArrayBuffer(data.byteLength); new Uint8Array(ab).set(data);
       const blob = new Blob([ab], { type: "video/mp4" });
       if (outUrl) URL.revokeObjectURL(outUrl);

@@ -27,13 +27,31 @@ export default function AudioMergeTool() {
     setBusy(true); setError("");
     try {
       const ff = await loadFf();
-      const list: string[] = [];
+      // Keep each file's original extension so ffmpeg picks the right demuxer,
+      // then merge via the concat FILTER with re-encode to mp3. Unlike the
+      // concat demuxer + "-c copy" (previous approach), this works when inputs
+      // have different formats/codecs/bitrates (mp3 + wav + m4a etc.).
+      const inputs: string[] = [];
       for (let i = 0; i < files.length; i++) {
-        await ff.writeFile(`in${i}.mp3`, await fetchFile(files[i]));
-        list.push(`file 'in${i}.mp3'`);
+        const ext = (files[i].name.match(/\.(\w{1,5})$/)?.[1] || "mp3").toLowerCase();
+        const name = `in${i}.${ext}`;
+        await ff.writeFile(name, await fetchFile(files[i]));
+        inputs.push("-i", name);
       }
-      await ff.writeFile("list.txt", new TextEncoder().encode(list.join("\n")));
-      await ff.exec(["-f", "concat", "-safe", "0", "-i", "list.txt", "-c", "copy", "out.mp3"]);
+      const n = files.length;
+      const filter =
+        files.map((_, i) => `[${i}:a]`).join("") + `concat=n=${n}:v=0:a=1[a]`;
+      try { await ff.deleteFile("out.mp3"); } catch { /* not present */ }
+      // exec resolves with the exit code (does NOT reject on ffmpeg failure).
+      const code = await ff.exec([
+        ...inputs,
+        "-filter_complex", filter,
+        "-map", "[a]",
+        "-c:a", "libmp3lame",
+        "-b:a", "192k",
+        "out.mp3",
+      ]);
+      if (code !== 0) throw new Error("merge failed");
       const data = (await ff.readFile("out.mp3")) as Uint8Array;
       const ab = new ArrayBuffer(data.byteLength); new Uint8Array(ab).set(data);
       const blob = new Blob([ab], { type: "audio/mpeg" });

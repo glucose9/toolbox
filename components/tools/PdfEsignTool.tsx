@@ -478,17 +478,12 @@ export default function PdfEsignTool() {
           )}
 
           <div className="flex gap-2">
+            {/* Single action — applying the signature downloads the signed PDF.
+                (Previously two differently-labeled buttons ran the same handler.) */}
             <button
               onClick={applyAndDownload}
               disabled={busy || !signaturePng || placements.length === 0}
               className="btn btn-primary"
-            >
-              {t("applySignature")}
-            </button>
-            <button
-              onClick={applyAndDownload}
-              disabled={busy || !signaturePng || placements.length === 0}
-              className="btn btn-secondary"
             >
               {t("downloadSignedPdf")}
             </button>

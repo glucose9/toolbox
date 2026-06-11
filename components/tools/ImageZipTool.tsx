@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import JSZip from "jszip";
 
@@ -41,6 +41,13 @@ export default function ImageZipTool() {
 
   const total = files.reduce((s, f) => s + f.size, 0);
 
+  // Stable preview URLs — previously created inline in render (a new object URL
+  // per file on EVERY re-render, never revoked → memory leak with many images).
+  const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
+  useEffect(() => {
+    return () => previews.forEach((u) => URL.revokeObjectURL(u));
+  }, [previews]);
+
   return (
     <div className="card space-y-3">
       <div onClick={() => inputRef.current?.click()} onDrop={(e) => { e.preventDefault(); add(e.dataTransfer.files); }} onDragOver={(e) => e.preventDefault()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-8 text-center cursor-pointer hover:border-brand-500">
@@ -54,7 +61,7 @@ export default function ImageZipTool() {
           <div className="max-h-72 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded divide-y divide-gray-200 dark:divide-gray-700">
             {files.map((f, i) => (
               <div key={i} className="flex items-center gap-2 p-2 text-sm">
-                <img src={URL.createObjectURL(f)} alt="" className="w-8 h-8 object-cover rounded" />
+                <img src={previews[i]} alt="" className="w-8 h-8 object-cover rounded" />
                 <span className="flex-1 truncate">{f.name}</span>
                 <span className="text-xs text-muted">{fmt(f.size)}</span>
                 <button onClick={() => remove(i)} className="text-red-600">×</button>

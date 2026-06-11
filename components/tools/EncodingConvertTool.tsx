@@ -3,7 +3,9 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
-const ENCODINGS = ["utf-8", "euc-kr", "iso-2022-kr", "shift_jis", "gb18030", "big5", "windows-1252", "iso-8859-1"];
+// NOTE: iso-2022-kr is intentionally absent — the WHATWG Encoding Standard maps
+// it to the "replacement" decoder, so TextDecoder can't actually decode it.
+const ENCODINGS = ["utf-8", "euc-kr", "shift_jis", "gb18030", "big5", "windows-1252", "iso-8859-1"];
 
 export default function EncodingConvertTool() {
   const t = useTranslations("toolUI.encoding-convert");
