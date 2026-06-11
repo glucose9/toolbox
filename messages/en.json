@@ -52,7 +52,8 @@
     "toolCount": "{count} tools",
     "searchPlaceholder": "Search {count} tools — e.g. merge pdf, word count, calculator",
     "kitsTitle": "Kits — curated tool bundles",
-    "kitsAll": "View all →"
+    "kitsAll": "View all →",
+    "viewAll": "View all {count} →"
   },
   "footer": {
     "tagline": "Free Online Tools",

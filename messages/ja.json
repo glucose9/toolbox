@@ -52,7 +52,8 @@
     "toolCount": "{count}個",
     "searchPlaceholder": "{count}個のツールから検索 — 例：PDF結合、文字数、電卓",
     "kitsTitle": "キット — 用途別ツールセット",
-    "kitsAll": "すべて見る →"
+    "kitsAll": "すべて見る →",
+    "viewAll": "{count}個すべて見る →"
   },
   "footer": {
     "tagline": "無料オンラインツール集",

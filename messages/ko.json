@@ -52,7 +52,8 @@
     "toolCount": "{count}개",
     "searchPlaceholder": "{count}개 도구에서 검색 — 예: pdf 합치기, 글자수, 계산기",
     "kitsTitle": "키트 — 상황별 도구 세트",
-    "kitsAll": "전체 보기 →"
+    "kitsAll": "전체 보기 →",
+    "viewAll": "{count}개 모두 보기 →"
   },
   "footer": {
     "tagline": "무료 온라인 도구 모음",

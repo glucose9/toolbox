@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link as IntlLink } from "@/i18n/navigation";
 import { getToolsByCategory, SITE_URL, tools, isNewTool } from "@/lib/tools";
@@ -41,7 +40,7 @@ export default async function HomePage({
             <HomeSearch />
           </div>
           <div className="mt-6">
-            <TrustBadges variant="full" />
+            <TrustBadges variant="compact" />
           </div>
         </div>
       </section>
@@ -72,69 +71,69 @@ export default async function HomePage({
             {t("home.kitsAll")}
           </IntlLink>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {/* Single horizontally-scrollable row of slim pills — was a 2-row grid of
+            chunky cards, which crowded the page. */}
+        <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {KITS.map((kit) => {
             const kloc = (["ko", "en", "ja", "zh"].includes(locale) ? locale : "ko") as KitLocale;
             return (
               <IntlLink
                 key={kit.slug}
                 href={`/kits/${kit.slug}`}
-                className="card hover:border-brand-500 hover:shadow-sm transition-all text-center py-4"
+                className="shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-brand-500 hover:text-brand-700 dark:hover:text-brand-300 text-sm font-medium transition-colors"
               >
-                <div className="text-3xl mb-2">{kit.icon}</div>
-                <div className="text-sm font-semibold leading-tight">
-                  {kit.copy[kloc].title.split("—")[0].trim()}
-                </div>
-                <div className="mt-1 text-xs text-muted">
-                  {t("home.toolCount", { count: kit.tools.length })}
-                </div>
+                <span>{kit.icon}</span>
+                <span>{kit.copy[kloc].title.split("—")[0].trim()}</span>
               </IntlLink>
             );
           })}
         </div>
       </section>
 
-      <section className="max-w-5xl mx-auto px-4 py-12 space-y-12">
-        {Object.entries(byCategory).map(([cat, list]) => (
-          <div key={cat} id={cat} className="scroll-mt-40 sm:scroll-mt-28">
-            <h2 className="text-2xl font-bold mb-4">
-              <IntlLink href={`/category/${cat}`} className="hover:text-brand-600">
-                {t(`categories.${cat}`)}
-              </IntlLink>{" "}
-              <span className="text-muted text-base font-normal">
-                ({t("home.toolCount", { count: list.length })})
-              </span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {list.map((tool) => (
-                <IntlLink
-                  key={tool.slug}
-                  href={`/tools/${tool.slug}`}
-                  className="card hover:border-brand-500 hover:shadow-sm transition-all group relative"
-                >
-                  {isNewTool(tool) && (
-                    <span className="absolute top-2 right-2 px-2 py-0.5 text-xs font-bold rounded-full bg-red-500 text-white">
-                      {t("home.newBadge")}
+      {/* Tools by category — compact tiles (icon + name), capped at 12 per
+          category with a "view all" link to the category page, which carries
+          the full list with descriptions. The home page is a directory, not a
+          catalog: 272 description cards made it unreadable. */}
+      <section className="max-w-5xl mx-auto px-4 py-12 space-y-10">
+        {Object.entries(byCategory).map(([cat, list]) => {
+          const shown = list.slice(0, 12);
+          return (
+            <div key={cat} id={cat} className="scroll-mt-40 sm:scroll-mt-28">
+              <div className="flex items-baseline justify-between mb-3">
+                <h2 className="text-xl font-bold">
+                  <IntlLink href={`/category/${cat}`} className="hover:text-brand-600">
+                    {t(`categories.${cat}`)}
+                  </IntlLink>{" "}
+                  <span className="text-muted text-sm font-normal">{list.length}</span>
+                </h2>
+                {list.length > shown.length && (
+                  <IntlLink href={`/category/${cat}`} className="text-sm text-brand-600 hover:underline shrink-0">
+                    {t("home.viewAll", { count: list.length })}
+                  </IntlLink>
+                )}
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {shown.map((tool) => (
+                  <IntlLink
+                    key={tool.slug}
+                    href={`/tools/${tool.slug}`}
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-brand-500 hover:shadow-sm transition-all group"
+                  >
+                    <span className="text-xl shrink-0">{tool.icon}</span>
+                    <span className="text-sm font-medium truncate group-hover:text-brand-600">
+                      {t(`tools.${tool.slug}`, {}, { fallback: tool.navTitle } as never)}
                     </span>
-                  )}
-                  <div className="flex items-start gap-3">
-                    <div className="text-3xl">{tool.icon}</div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold group-hover:text-brand-600">
-                        {t(`tools.${tool.slug}`, {}, { fallback: tool.navTitle } as never)}
-                      </h3>
-                      <p className="mt-1 text-sm text-muted line-clamp-2">
-                        {locale === "ko"
-                          ? tool.description
-                          : t(`toolMeta.${tool.slug}.description`, {}, { fallback: tool.description } as never)}
-                      </p>
-                    </div>
-                  </div>
-                </IntlLink>
-              ))}
+                    {isNewTool(tool) && (
+                      <span className="ml-auto shrink-0 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-red-500 text-white">
+                        {t("home.newBadge")}
+                      </span>
+                    )}
+                  </IntlLink>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </section>
     </div>
   );

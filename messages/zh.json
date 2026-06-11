@@ -52,7 +52,8 @@
     "toolCount": "{count} 个",
     "searchPlaceholder": "在 {count} 个工具中搜索 — 如：合并PDF、字数统计、计算器",
     "kitsTitle": "工具包 — 按场景精选",
-    "kitsAll": "查看全部 →"
+    "kitsAll": "查看全部 →",
+    "viewAll": "查看全部 {count} 个 →"
   },
   "footer": {
     "tagline": "免费在线工具集",
