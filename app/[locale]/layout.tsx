@@ -7,6 +7,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import "../globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import LocaleSuggestBanner from "@/components/LocaleSuggestBanner";
 import { SITE_URL } from "@/lib/tools";
 import { routing } from "@/i18n/routing";
 
@@ -92,6 +93,7 @@ export default async function LocaleLayout({
       </head>
       <body className="min-h-screen flex flex-col antialiased">
         <NextIntlClientProvider>
+          <LocaleSuggestBanner />
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
