@@ -6,17 +6,30 @@ const intl = createMiddleware(routing);
 
 export default function middleware(req: NextRequest) {
   const res = intl(req);
-  // Promote next-intl's 307 (temporary) locale redirects to 308 (permanent) so search
-  // engines treat the destination as the canonical URL. Important for /ko/foo → /foo
-  // (Korean is served at root via the as-needed prefix).
+  // Promote 307 → 308 (permanent) ONLY for the /ko/foo → /foo canonicalization
+  // (Korean served at root via the as-needed prefix). That redirect is stable
+  // per-URL, so permanence is safe and good for SEO.
+  //
+  // Never promote any other redirect: locale-detection style redirects are
+  // request-dependent, and browsers cache 308s aggressively — a cached
+  // "/kits/x → /en/kits/x" permanently stuck Korean users in English.
+  // (Detection is now disabled in i18n/routing.ts, but keep this guard so a
+  // future config change can't reintroduce the bug.)
   if (res && res.status === 307) {
     const location = res.headers.get("location");
     if (location) {
-      const redirect = NextResponse.redirect(new URL(location, req.url), 308);
-      res.headers.forEach((v, k) => {
-        if (k.toLowerCase() !== "location") redirect.headers.set(k, v);
-      });
-      return redirect;
+      const target = new URL(location, req.url);
+      const isKoStrip =
+        req.nextUrl.pathname.startsWith("/ko") &&
+        (target.pathname === req.nextUrl.pathname.slice(3) ||
+          (req.nextUrl.pathname === "/ko" && target.pathname === "/"));
+      if (isKoStrip) {
+        const redirect = NextResponse.redirect(target, 308);
+        res.headers.forEach((v, k) => {
+          if (k.toLowerCase() !== "location") redirect.headers.set(k, v);
+        });
+        return redirect;
+      }
     }
   }
   return res;
