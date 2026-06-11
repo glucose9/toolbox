@@ -3,10 +3,13 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
 function htmlToText(html: string): string {
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  div.querySelectorAll("script, style").forEach((el) => el.remove());
-  return (div.innerText || div.textContent || "").replace(/\n{3,}/g, "\n\n").trim();
+  // DOMParser produces an inert document: scripts never run and resources
+  // (e.g. <img onerror>) are never fetched, unlike assigning to innerHTML.
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  doc.querySelectorAll("script, style").forEach((el) => el.remove());
+  // The previous detached <div> was never rendered, so its innerText already
+  // behaved like textContent; reading body.textContent matches that output.
+  return (doc.body.textContent || "").replace(/\n{3,}/g, "\n\n").trim();
 }
 
 export default function HtmlToTextTool() {

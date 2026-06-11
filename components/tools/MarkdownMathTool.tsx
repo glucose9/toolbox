@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { marked } from "marked";
+import DOMPurify from "dompurify";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import { printHtmlAsPdf } from "@/lib/print";
@@ -80,6 +81,13 @@ const blockMathExt = {
 marked.use({ extensions: [blockMathExt, inlineMathExt] });
 marked.setOptions({ gfm: true, breaks: true });
 
+// KaTeX emits MathML alongside its HTML output; allow those tags/attrs so
+// DOMPurify doesn't strip the rendered math.
+const SANITIZE_CONFIG = {
+  ADD_TAGS: ["semantics", "annotation", "math", "mrow", "mi", "mo", "mn", "msup", "msub", "mfrac", "msqrt", "mtext", "mspace", "mover", "munder", "mtable", "mtr", "mtd", "mstyle"],
+  ADD_ATTR: ["encoding", "definitionURL", "mathvariant"],
+};
+
 export default function MarkdownMathTool() {
   const t = useTranslations("toolUI.markdown-math");
   const [md, setMd] = useState(SAMPLE);
@@ -106,11 +114,13 @@ export default function MarkdownMathTool() {
   };
 
   const html = useMemo(() => {
+    let raw: string;
     try {
-      return marked.parse(md) as string;
+      raw = marked.parse(md) as string;
     } catch (e) {
-      return `<p style="color:red">${(e as Error).message}</p>`;
+      raw = `<p style="color:red">${(e as Error).message}</p>`;
     }
+    return DOMPurify.sanitize(raw, SANITIZE_CONFIG);
   }, [md]);
 
   const copy = async () => {

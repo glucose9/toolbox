@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { marked } from "marked";
+import DOMPurify from "dompurify";
 import { printHtmlAsPdf } from "@/lib/print";
 import { downloadText, imageToMarkdown, insertAtCursor, readMdFile } from "@/lib/markdown-io";
 
@@ -45,11 +46,15 @@ export default function MarkdownPreviewTool() {
   }, []);
 
   const html = useMemo(() => {
+    let raw: string;
     try {
-      return marked.parse(md) as string;
+      raw = marked.parse(md) as string;
     } catch (e) {
-      return `<p style="color:red">${(e as Error).message}</p>`;
+      raw = `<p style="color:red">${(e as Error).message}</p>`;
     }
+    // Allow target so "open in new tab" links written in raw HTML survive;
+    // iframes/scripts stay stripped (intended XSS hardening).
+    return DOMPurify.sanitize(raw, { ADD_ATTR: ["target"] });
   }, [md]);
 
   const copy = async () => {

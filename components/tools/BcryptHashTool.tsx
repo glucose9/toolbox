@@ -40,6 +40,11 @@ export default function BcryptHashTool() {
         <label className="text-sm">cost factor ({rounds})<input type="range" min="4" max="14" value={rounds} onChange={(e) => setRounds(+e.target.value)} className="w-full" /></label>
         <button onClick={generate} disabled={busy} className="btn btn-primary disabled:opacity-50">{t("generate")}</button>
       </div>
+      {rounds >= 13 && (
+        <div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 p-2 rounded border border-amber-200 dark:border-amber-800">
+          {t("highCostWarning")}
+        </div>
+      )}
       {hash && (
         <div><label className="label">{t("hash")}</label><textarea readOnly value={hash} className="w-full h-20 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-xs font-mono resize-y" /></div>
       )}

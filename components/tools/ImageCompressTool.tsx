@@ -129,6 +129,11 @@ export default function ImageCompressTool() {
               onTouchEnd={reprocess}
               className="w-full"
             />
+            {input.type === "image/png" && (
+              <div className="mt-2 text-xs text-muted bg-blue-50 dark:bg-blue-900/20 p-2 rounded border border-blue-200 dark:border-blue-800">
+                {t("pngToWebpNote")}
+              </div>
+            )}
           </div>
 
           <div className="flex gap-2">

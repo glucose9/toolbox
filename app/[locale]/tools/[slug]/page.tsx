@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { tools, getTool, SITE_URL } from "@/lib/tools";
+import { getKitsForTool, type KitLocale } from "@/lib/kits";
 import { routing } from "@/i18n/routing";
 import ToolRenderer from "@/components/ToolRenderer";
 import FAQ from "@/components/FAQ";
@@ -25,6 +26,10 @@ function safeT(t: (k: string) => string, key: string, fallback: string): string 
   } catch {
     return fallback;
   }
+}
+
+function asKitLocale(locale: string): KitLocale {
+  return (["ko", "en", "ja", "zh"].includes(locale) ? locale : "ko") as KitLocale;
 }
 
 type TRaw = { raw: (key: string) => unknown };
@@ -92,9 +97,28 @@ export default async function ToolPage({
   const faqTitle = t("tool.faqTitle");
   const relatedTitle = t("tool.related");
 
-  const related = tools
-    .filter((x) => x.category === tool.category && x.slug !== tool.slug)
-    .slice(0, 4);
+  // Kits this tool belongs to — used both for related-tool ranking and the
+  // "in kits" cross-link section below.
+  const inKits = getKitsForTool(slug);
+  const loc = asKitLocale(locale);
+
+  // Related tools: kit co-members first (tools sharing a kit with this one,
+  // deduped, in kit order), then same-category tools fill the rest, total 4.
+  const coMemberSlugs: string[] = [];
+  for (const kit of inKits) {
+    for (const entry of kit.tools) {
+      if (entry.slug !== tool.slug && !coMemberSlugs.includes(entry.slug)) {
+        coMemberSlugs.push(entry.slug);
+      }
+    }
+  }
+  const coMembers = coMemberSlugs
+    .map((s) => getTool(s))
+    .filter((x): x is NonNullable<ReturnType<typeof getTool>> => !!x);
+  const sameCategory = tools.filter(
+    (x) => x.category === tool.category && x.slug !== tool.slug && !coMemberSlugs.includes(x.slug)
+  );
+  const related = [...coMembers, ...sameCategory].slice(0, 4);
 
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -200,6 +224,24 @@ export default async function ToolPage({
               >
                 <div className="text-2xl">{r.icon}</div>
                 <div className="mt-2 text-sm font-medium">{safeT(t, `tools.${r.slug}`, r.navTitle)}</div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {inKits.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-xl font-bold mb-4">{safeT(t, "tool.inKits", "이 도구가 포함된 키트")}</h2>
+          <div className="flex flex-wrap gap-2">
+            {inKits.map((k) => (
+              <Link
+                key={k.slug}
+                href={`/kits/${k.slug}`}
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 hover:text-brand-700 dark:hover:text-brand-300 text-sm font-medium transition-colors"
+              >
+                <span>{k.icon}</span>
+                <span>{k.copy[loc].title.split("—")[0].trim()}</span>
               </Link>
             ))}
           </div>

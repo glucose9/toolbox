@@ -6,6 +6,9 @@ import { useTranslations } from "next-intl";
 const FLAGS = ["g", "i", "m", "s", "u", "y"] as const;
 type Flag = (typeof FLAGS)[number];
 
+const MAX_INPUT = 100_000;
+const MAX_MATCHES = 2_000;
+
 export default function RegexTesterTool() {
   const t = useTranslations("toolUI.regex-tester");
   const [pattern, setPattern] = useState("\\b\\w+\\b");
@@ -13,13 +16,19 @@ export default function RegexTesterTool() {
   const [input, setInput] = useState("Hello, world! Hello, Claude.");
   const [replacement, setReplacement] = useState("[$&]");
 
-  const { error, matches, replaced, highlighted } = useMemo(() => {
+  const { error, matches, replaced, highlighted, truncated, capped } = useMemo(() => {
+    const truncated = input.length > MAX_INPUT;
+    const src = truncated ? input.slice(0, MAX_INPUT) : input;
     try {
       const re = new RegExp(pattern, flags.join(""));
       const ms: { match: string; groups: string[]; index: number }[] = [];
-      const src = input;
+      let capped = false;
       if (flags.includes("g")) {
         for (const m of src.matchAll(re)) {
+          if (ms.length >= MAX_MATCHES) {
+            capped = true;
+            break;
+          }
           ms.push({ match: m[0], groups: m.slice(1), index: m.index ?? 0 });
         }
       } else {
@@ -37,9 +46,9 @@ export default function RegexTesterTool() {
         if (!flags.includes("g")) break;
       }
       html += escape(src.slice(i));
-      return { error: "", matches: ms, replaced: rep, highlighted: html };
+      return { error: "", matches: ms, replaced: rep, highlighted: html, truncated, capped };
     } catch (e) {
-      return { error: (e as Error).message, matches: [], replaced: "", highlighted: escape(input) };
+      return { error: (e as Error).message, matches: [], replaced: "", highlighted: escape(src), truncated, capped: false };
     }
   }, [pattern, flags, input, replacement]);
 
@@ -72,6 +81,16 @@ export default function RegexTesterTool() {
       </div>
 
       {error && <div className="text-sm text-red-600">❌ {error}</div>}
+      {truncated && (
+        <div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 p-2 rounded border border-amber-200 dark:border-amber-800">
+          {t("inputTruncated")}
+        </div>
+      )}
+      {capped && (
+        <div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 p-2 rounded border border-amber-200 dark:border-amber-800">
+          {t("matchesCapped")}
+        </div>
+      )}
 
       <div>
         <label className="label">{t("testString")}</label>

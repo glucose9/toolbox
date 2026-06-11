@@ -68,7 +68,8 @@
     "addFavorite": "お気に入り",
     "removeFavorite": "お気に入り解除",
     "addedFavorite": "✓ 追加しました",
-    "usageCount": "{count}回使用"
+    "usageCount": "{count}回使用",
+    "inKits": "このツールを含むキット"
   },
   "trust": {
     "noUpload": "アップロードなし",
@@ -812,7 +813,9 @@
       "highlight": "ハイライト",
       "matches": "マッチ",
       "viewGroups": "キャプチャグループを表示",
-      "replacementPreview": "置換プレビュー (replacement)"
+      "replacementPreview": "置換プレビュー (replacement)",
+      "inputTruncated": "入力が100,000文字を超えたため、先頭の100,000文字のみをテストします。",
+      "matchesCapped": "一致件数が多いため、最初の2,000件のみを表示します。"
     },
     "sleep-recommend": {
       "modeWake": "今寝たら → 起きる時間",
@@ -901,7 +904,8 @@
       "verifyHash": "検証するハッシュ",
       "verify": "検証",
       "match": "✓ 一致",
-      "mismatch": "❌ 不一致"
+      "mismatch": "❌ 不一致",
+      "highCostWarning": "コスト係数13以上は計算量が非常に大きく、ハッシュ生成中にタブが数秒間固まったように見えることがあります。"
     },
     "css-gradient": {
       "angle": "角度",
@@ -1786,7 +1790,8 @@
       "reduced": "{percent}% 削減",
       "qualityLabel": "画質 ({percent}%) — 低いほど容量が小さくなります",
       "download": "ダウンロード",
-      "otherFile": "別のファイル"
+      "otherFile": "別のファイル",
+      "pngToWebpNote": "PNGは品質指定の圧縮に対応していないため、出力はWebP形式で保存されます。透過はそのまま保持されます。"
     },
     "images-to-pdf": {
       "errorSelectImage": "画像ファイルを選択してください。",
@@ -3564,6 +3569,10 @@
       "copy": "コピー",
       "noResults": "該当なし",
       "sourceNote": "CODATA 2018 推奨値。c・h・e・k_B・N_A は 2019年SI再定義により正確な固定値です。コピーは電卓向けのe表記になります。"
+    },
+    "data-size": {
+      "modeSi": "SI (1000)",
+      "modeIec": "IEC (1024)"
     }
   },
   "kits": {

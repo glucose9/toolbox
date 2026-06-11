@@ -730,3 +730,7 @@ export const KITS: Kit[] = [
 export function getKit(slug: string): Kit | undefined {
   return KITS.find((k) => k.slug === slug);
 }
+
+export function getKitsForTool(slug: string): Kit[] {
+  return KITS.filter((k) => k.tools.some((t) => t.slug === slug));
+}

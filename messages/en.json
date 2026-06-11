@@ -68,7 +68,8 @@
     "addFavorite": "Favorite",
     "removeFavorite": "Remove from favorites",
     "addedFavorite": "✓ Added to favorites",
-    "usageCount": "Used {count} times"
+    "usageCount": "Used {count} times",
+    "inKits": "Kits that include this tool"
   },
   "trust": {
     "noUpload": "No file upload",
@@ -812,7 +813,9 @@
       "highlight": "Highlight",
       "matches": "Matches",
       "viewGroups": "View capture groups",
-      "replacementPreview": "Replacement preview"
+      "replacementPreview": "Replacement preview",
+      "inputTruncated": "Input exceeds 100,000 characters — only the first 100,000 are tested.",
+      "matchesCapped": "Too many matches — showing only the first 2,000."
     },
     "sleep-recommend": {
       "modeWake": "Sleep now → Wake time",
@@ -901,7 +904,8 @@
       "verifyHash": "Hash to verify",
       "verify": "Verify",
       "match": "✓ Match",
-      "mismatch": "❌ Mismatch"
+      "mismatch": "❌ Mismatch",
+      "highCostWarning": "A cost factor of 13 or higher is very CPU-intensive — the tab may appear frozen for several seconds while hashing."
     },
     "css-gradient": {
       "angle": "Angle",
@@ -1786,7 +1790,8 @@
       "reduced": "{percent}% smaller",
       "qualityLabel": "Quality ({percent}%) — lower means smaller file",
       "download": "Download",
-      "otherFile": "Other file"
+      "otherFile": "Other file",
+      "pngToWebpNote": "PNG doesn't support quality-based compression, so the output is saved as WebP. Transparency is preserved."
     },
     "images-to-pdf": {
       "errorSelectImage": "Please select image files.",
@@ -3564,6 +3569,10 @@
       "copy": "Copy",
       "noResults": "No results",
       "sourceNote": "CODATA 2018 recommended values. c, h, e, k_B, N_A are exact since the 2019 SI redefinition. Copy gives calculator-friendly e-notation."
+    },
+    "data-size": {
+      "modeSi": "SI (1000)",
+      "modeIec": "IEC (1024)"
     }
   },
   "kits": {

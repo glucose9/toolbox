@@ -21,6 +21,7 @@ export default async function Footer() {
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             <Link href="/" className="hover:text-brand-600">{t("nav.home")}</Link>
+            <Link href="/kits" className="hover:text-brand-600">{t("kits.title")}</Link>
             <Link href="/about" className="hover:text-brand-600">{t("footer.about")}</Link>
             <Link href="/privacy" className="hover:text-brand-600">{t("footer.privacy")}</Link>
             <Link href="/terms" className="hover:text-brand-600">{t("footer.terms")}</Link>
