@@ -9606,5 +9606,30 @@
         "a": "Yes — Avogadro number, gas constant R, Faraday constant, molar volume and more."
       }
     ]
+  },
+  "chart-maker": {
+    "description": "Type in your data and instantly build a pie, donut, bar, horizontal-bar, or line chart, then save it as PNG or SVG. Toggle title, colors, legend, and value labels. Everything runs in your browser — no upload.",
+    "metaDescription": "Free chart maker. Build pie, bar, and line charts from your data; download as PNG or SVG.",
+    "howTo": [
+      "Pick a chart type (pie, donut, bar, horizontal, line).",
+      "Enter labels and values in the data table; add rows as needed.",
+      "Adjust the title, colors, legend, and value labels.",
+      "Save as PNG or SVG, or copy the image."
+    ],
+    "faq": [
+      {
+        "q": "What formats can I save?",
+        "a": "PNG (2× bitmap) and SVG (lossless vector); you can also copy the PNG to the clipboard."
+      },
+      {
+        "q": "Is my data uploaded?",
+        "a": "No. All chart rendering happens entirely in your browser."
+      },
+      {
+        "q": "Do non-Latin titles work?",
+        "a": "Yes — any language and digits render into the PNG and SVG as-is."
+      }
+    ],
+    "h1": "Chart Maker"
   }
 }

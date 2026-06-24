@@ -147,6 +147,7 @@ const FormulaBuilderTool = dynamic(() => import("./tools/FormulaBuilderTool"), {
 const PeriodicTableTool = dynamic(() => import("./tools/PeriodicTableTool"), { ssr: false });
 const StatTablesTool = dynamic(() => import("./tools/StatTablesTool"), { ssr: false });
 const PhysicsConstantsTool = dynamic(() => import("./tools/PhysicsConstantsTool"), { ssr: false });
+const ChartMakerTool = dynamic(() => import("./tools/ChartMakerTool"), { ssr: false });
 const HwpEditorTool = dynamic(() => import("./tools/HwpEditorTool"), { ssr: false });
 const CarTaxTool = dynamic(() => import("./tools/CarTaxTool"), { ssr: false });
 const SeverancePayTool = dynamic(() => import("./tools/SeverancePayTool"), { ssr: false });
@@ -515,6 +516,7 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "PeriodicTableTool": return <PeriodicTableTool />;
     case "StatTablesTool": return <StatTablesTool />;
     case "PhysicsConstantsTool": return <PhysicsConstantsTool />;
+    case "ChartMakerTool": return <ChartMakerTool />;
     case "HwpEditorTool": return <HwpEditorTool />;
     case "CarTaxTool": return <CarTaxTool />;
     case "SeverancePayTool": return <SeverancePayTool />;

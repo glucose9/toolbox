@@ -356,7 +356,8 @@
     "pdf-to-html": "PDF → HTML",
     "pdf-to-pptx": "PDF → PPTX",
     "stat-tables": "概率分布表（z·t）",
-    "physics-constants": "物理常数表"
+    "physics-constants": "物理常数表",
+    "chart-maker": "图表制作"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3574,6 +3575,28 @@
     "data-size": {
       "modeSi": "SI (1000)",
       "modeIec": "IEC (1024)"
+    },
+    "chart-maker": {
+      "typePie": "饼图",
+      "typeDonut": "环形图",
+      "typeBar": "柱状图",
+      "typeBarH": "横向条形",
+      "typeLine": "折线图",
+      "downloadPng": "保存 PNG",
+      "downloadSvg": "保存 SVG",
+      "copyPng": "复制图片",
+      "copied": "已复制",
+      "titleLabel": "标题",
+      "titlePlaceholder": "图表标题（可选）",
+      "paletteLabel": "颜色",
+      "showLegend": "显示图例",
+      "showValues": "显示数值",
+      "dataLabel": "数据",
+      "colLabel": "项目",
+      "colValue": "数值",
+      "addRow": "添加行",
+      "rowCount": "{count} 项",
+      "noData": "请输入数据"
     }
   },
   "kits": {

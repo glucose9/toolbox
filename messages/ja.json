@@ -356,7 +356,8 @@
     "pdf-to-html": "PDF → HTML",
     "pdf-to-pptx": "PDF → PPTX",
     "stat-tables": "確率分布表（z・t）",
-    "physics-constants": "物理定数表"
+    "physics-constants": "物理定数表",
+    "chart-maker": "グラフ作成"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3574,6 +3575,28 @@
     "data-size": {
       "modeSi": "SI (1000)",
       "modeIec": "IEC (1024)"
+    },
+    "chart-maker": {
+      "typePie": "円グラフ",
+      "typeDonut": "ドーナツ",
+      "typeBar": "棒グラフ",
+      "typeBarH": "横棒",
+      "typeLine": "折れ線",
+      "downloadPng": "PNG保存",
+      "downloadSvg": "SVG保存",
+      "copyPng": "画像をコピー",
+      "copied": "コピー済み",
+      "titleLabel": "タイトル",
+      "titlePlaceholder": "グラフのタイトル（任意）",
+      "paletteLabel": "色",
+      "showLegend": "凡例を表示",
+      "showValues": "値を表示",
+      "dataLabel": "データ",
+      "colLabel": "項目",
+      "colValue": "値",
+      "addRow": "行を追加",
+      "rowCount": "{count}件",
+      "noData": "データを入力してください"
     }
   },
   "kits": {

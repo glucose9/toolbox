@@ -356,7 +356,8 @@
     "pdf-to-html": "PDF → HTML",
     "pdf-to-pptx": "PDF → PPTX",
     "stat-tables": "확률분포표 (z·t)",
-    "physics-constants": "물리 상수표"
+    "physics-constants": "물리 상수표",
+    "chart-maker": "그래프 만들기"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3574,6 +3575,28 @@
     "data-size": {
       "modeSi": "SI (1000)",
       "modeIec": "IEC (1024)"
+    },
+    "chart-maker": {
+      "typePie": "원그래프",
+      "typeDonut": "도넛",
+      "typeBar": "막대",
+      "typeBarH": "가로 막대",
+      "typeLine": "선 그래프",
+      "downloadPng": "PNG 저장",
+      "downloadSvg": "SVG 저장",
+      "copyPng": "이미지 복사",
+      "copied": "복사됨",
+      "titleLabel": "제목",
+      "titlePlaceholder": "그래프 제목 (선택)",
+      "paletteLabel": "색상",
+      "showLegend": "범례 표시",
+      "showValues": "값 표시",
+      "dataLabel": "데이터",
+      "colLabel": "항목",
+      "colValue": "값",
+      "addRow": "행 추가",
+      "rowCount": "{count}개 항목",
+      "noData": "데이터를 입력하세요"
     }
   },
   "kits": {

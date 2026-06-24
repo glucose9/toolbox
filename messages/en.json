@@ -356,7 +356,8 @@
     "pdf-to-html": "PDF → HTML",
     "pdf-to-pptx": "PDF → PPTX",
     "stat-tables": "Stat Tables (z & t)",
-    "physics-constants": "Physics Constants"
+    "physics-constants": "Physics Constants",
+    "chart-maker": "Chart Maker"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3574,6 +3575,28 @@
     "data-size": {
       "modeSi": "SI (1000)",
       "modeIec": "IEC (1024)"
+    },
+    "chart-maker": {
+      "typePie": "Pie",
+      "typeDonut": "Donut",
+      "typeBar": "Bar",
+      "typeBarH": "Horizontal",
+      "typeLine": "Line",
+      "downloadPng": "Save PNG",
+      "downloadSvg": "Save SVG",
+      "copyPng": "Copy image",
+      "copied": "Copied",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Chart title (optional)",
+      "paletteLabel": "Colors",
+      "showLegend": "Show legend",
+      "showValues": "Show values",
+      "dataLabel": "Data",
+      "colLabel": "Label",
+      "colValue": "Value",
+      "addRow": "Add row",
+      "rowCount": "{count} items",
+      "noData": "Enter some data"
     }
   },
   "kits": {
