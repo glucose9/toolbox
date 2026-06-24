@@ -48,6 +48,20 @@ function polar(cx: number, cy: number, r: number, frac: number): [number, number
   return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
 }
 
+// Approximate rendered width (CJK glyphs ≈ full em, Latin ≈ 0.56 em).
+function textWidth(s: string, fs: number): number {
+  let w = 0;
+  for (const ch of s) w += ch.charCodeAt(0) >= 0x1100 ? fs : fs * 0.56;
+  return w;
+}
+// Truncate with an ellipsis only if it genuinely overflows maxW.
+function fitText(s: string, maxW: number, fs: number): string {
+  if (textWidth(s, fs) <= maxW) return s;
+  let out = s;
+  while (out.length > 1 && textWidth(out + "…", fs) > maxW) out = out.slice(0, -1);
+  return out + "…";
+}
+
 // Annular/pie sector path. innerR=0 → pie slice. Sweep clamped below full turn
 // so a single 100% slice stays a valid arc.
 function sectorPath(cx: number, cy: number, r: number, ir: number, startFrac: number, endFrac: number): string {
@@ -182,11 +196,18 @@ export default function ChartMakerTool() {
 
     if (type === "pie" || type === "donut") {
       const total = data.reduce((s, d) => s + Math.max(0, d.value), 0);
-      const legendW = showLegend ? 220 : 0;
-      const cx = (W - legendW) / 2;
-      const cy = top + (H - top - 20) / 2;
-      const r = Math.min((W - legendW) / 2, (H - top - 20) / 2) - 10;
+      // When labels are shown they sit OUTSIDE the pie with leader lines, so
+      // reserve horizontal room on both sides; otherwise the pie fills the width.
+      const sideRoom = showLegend ? 150 : 16;
+      const cx = W / 2;
+      const cyTop = top;
+      const cyBot = H - 16;
+      const cy = (cyTop + cyBot) / 2;
+      const r = Math.max(40, Math.min((cyBot - cyTop) / 2 - 4, (W - 2 * sideRoom) / 2));
       const ir = type === "donut" ? r * 0.55 : 0;
+
+      type Slice = { i: number; label: string; mid: number; pct: number; color: string };
+      const slices: Slice[] = [];
       let acc = 0;
       if (total > 0) {
         data.forEach((d, i) => {
@@ -197,57 +218,65 @@ export default function ChartMakerTool() {
           const end = acc / total;
           const color = colors[i % colors.length];
           els.push(<path key={`s${i}`} d={sectorPath(cx, cy, r, ir, start, end)} fill={color} stroke="#fff" strokeWidth="2" />);
-          // On-slice label: the item NAME (always, so each slice is identified)
-          // plus the % when "show values" is on. White text with a dark halo
-          // (paint-order: stroke) so it's legible over any palette color.
-          const mid = (start + end) / 2;
-          const pct = (v / total) * 100;
-          if (pct >= 6) {
-            const labelR = type === "donut" ? (r + ir) / 2 : r * 0.6;
-            const [lx, ly] = polar(cx, cy, labelR, mid);
-            const nm = d.label.length > 9 ? d.label.slice(0, 8) + "…" : d.label;
-            const lines = showValues ? [nm, `${pct.toFixed(0)}%`] : [nm];
+          slices.push({ i, label: d.label, mid: (start + end) / 2, pct: (v / total) * 100, color });
+        });
+      }
+
+      if (showLegend && slices.length) {
+        // Outside leader-line labels with full names (no per-slice width limit),
+        // de-collided per side so adjacent labels don't overlap.
+        const FS = 12, lineH = 17, minY = top + 4, maxY = H - 8;
+        type L = Slice & { ax: number; ay: number; ty: number; side: "l" | "r" };
+        const placed: L[] = slices.map((s) => {
+          const a = s.mid * Math.PI * 2 - Math.PI / 2;
+          const [ax, ay] = polar(cx, cy, r, s.mid);
+          return { ...s, ax, ay, ty: ay, side: Math.cos(a) >= 0 ? "r" : "l" };
+        });
+        for (const side of ["r", "l"] as const) {
+          const arr = placed.filter((p) => p.side === side).sort((p, q) => p.ay - q.ay);
+          // De-collide: enforce min gap downward, shift the whole column up if it
+          // overflows the bottom, then if it's still taller than the band (more
+          // labels than fit) distribute them evenly so none stack exactly.
+          for (let k = 1; k < arr.length; k++) if (arr[k].ty - arr[k - 1].ty < lineH) arr[k].ty = arr[k - 1].ty + lineH;
+          if (arr.length) {
+            const overflow = arr[arr.length - 1].ty - maxY;
+            if (overflow > 0) for (const p of arr) p.ty -= overflow;
+            if (arr[0].ty < minY) {
+              const gap = arr.length > 1 ? (maxY - minY) / (arr.length - 1) : 0;
+              arr.forEach((p, k) => (p.ty = minY + k * gap));
+            }
+          }
+          const colX = side === "r" ? cx + r + 14 : cx - r - 14;
+          for (const p of arr) {
+            const text = showValues ? `${p.label} ${p.pct.toFixed(0)}%` : p.label;
+            const maxW = side === "r" ? W - 6 - (colX + 4) : colX - 4 - 6;
+            els.push(<polyline key={`ld${p.i}`} points={`${p.ax.toFixed(1)},${p.ay.toFixed(1)} ${colX.toFixed(1)},${p.ty.toFixed(1)}`} fill="none" stroke="#cbd5e1" strokeWidth="1" />);
+            els.push(<circle key={`lc${p.i}`} cx={p.ax} cy={p.ay} r="2.5" fill={p.color} />);
             els.push(
-              <text
-                key={`v${i}`}
-                x={lx}
-                y={ly}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill="#ffffff"
-                stroke="#1e293b"
-                strokeWidth="2.6"
-                strokeLinejoin="round"
-                paintOrder="stroke"
-              >
-                {lines.map((ln, k) => (
-                  <tspan
-                    key={k}
-                    x={lx}
-                    dy={k === 0 ? (lines.length > 1 ? "-0.3em" : "0") : "1.25em"}
-                    fontSize={k === 0 ? 13 : 11}
-                    fontWeight={k === 0 ? 600 : 500}
-                  >
-                    {ln}
-                  </tspan>
-                ))}
+              <text key={`lt${p.i}`} x={side === "r" ? colX + 4 : colX - 4} y={p.ty + 4} textAnchor={side === "r" ? "start" : "end"} fontSize={FS} fill="#334155">
+                {fitText(text, maxW, FS)}
               </text>
             );
           }
-        });
-      }
-      if (showLegend) {
-        data.forEach((d, i) => {
-          const ly = top + 6 + i * 24;
-          const color = colors[i % colors.length];
-          const pct = total > 0 ? ((Math.max(0, d.value) / total) * 100).toFixed(1) : "0";
-          els.push(<rect key={`lg${i}`} x={W - legendW + 10} y={ly} width="14" height="14" rx="3" fill={color} />);
+        }
+      } else if (!showLegend && slices.length) {
+        // No legend: short name inside each big-enough slice, halo for contrast.
+        for (const s of slices) {
+          if (s.pct < 6) continue;
+          const labelR = type === "donut" ? (r + ir) / 2 : r * 0.6;
+          const [lx, ly] = polar(cx, cy, labelR, s.mid);
+          const nm = fitText(s.label, type === "donut" ? r - ir - 8 : r * 0.7, 13);
+          const lines = showValues ? [nm, `${s.pct.toFixed(0)}%`] : [nm];
           els.push(
-            <text key={`lt${i}`} x={W - legendW + 32} y={ly + 12} fontSize="13" fill="#334155">
-              {d.label} · {pct}%
+            <text key={`v${s.i}`} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle" fill="#ffffff" stroke="#1e293b" strokeWidth="2.6" strokeLinejoin="round" paintOrder="stroke">
+              {lines.map((ln, k) => (
+                <tspan key={k} x={lx} dy={k === 0 ? (lines.length > 1 ? "-0.3em" : "0") : "1.25em"} fontSize={k === 0 ? 13 : 11} fontWeight={k === 0 ? 600 : 500}>
+                  {ln}
+                </tspan>
+              ))}
             </text>
           );
-        });
+        }
       }
     } else if (type === "bar" || type === "barH") {
       const { lo, hi } = niceRange(data.map((d) => d.value));
