@@ -197,17 +197,42 @@ export default function ChartMakerTool() {
           const end = acc / total;
           const color = colors[i % colors.length];
           els.push(<path key={`s${i}`} d={sectorPath(cx, cy, r, ir, start, end)} fill={color} stroke="#fff" strokeWidth="2" />);
-          if (showValues) {
-            const mid = (start + end) / 2;
-            const [lx, ly] = polar(cx, cy, ir > 0 ? (r + ir) / 2 : r * 0.62, mid);
-            const pct = (v / total) * 100;
-            if (pct >= 5) {
-              els.push(
-                <text key={`v${i}`} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle" fontSize="13" fontWeight="600" fill={type === "donut" ? "#1e293b" : "#fff"}>
-                  {pct.toFixed(0)}%
-                </text>
-              );
-            }
+          // On-slice label: the item NAME (always, so each slice is identified)
+          // plus the % when "show values" is on. White text with a dark halo
+          // (paint-order: stroke) so it's legible over any palette color.
+          const mid = (start + end) / 2;
+          const pct = (v / total) * 100;
+          if (pct >= 6) {
+            const labelR = type === "donut" ? (r + ir) / 2 : r * 0.6;
+            const [lx, ly] = polar(cx, cy, labelR, mid);
+            const nm = d.label.length > 9 ? d.label.slice(0, 8) + "…" : d.label;
+            const lines = showValues ? [nm, `${pct.toFixed(0)}%`] : [nm];
+            els.push(
+              <text
+                key={`v${i}`}
+                x={lx}
+                y={ly}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="#ffffff"
+                stroke="#1e293b"
+                strokeWidth="2.6"
+                strokeLinejoin="round"
+                paintOrder="stroke"
+              >
+                {lines.map((ln, k) => (
+                  <tspan
+                    key={k}
+                    x={lx}
+                    dy={k === 0 ? (lines.length > 1 ? "-0.3em" : "0") : "1.25em"}
+                    fontSize={k === 0 ? 13 : 11}
+                    fontWeight={k === 0 ? 600 : 500}
+                  >
+                    {ln}
+                  </tspan>
+                ))}
+              </text>
+            );
           }
         });
       }
