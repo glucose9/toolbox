@@ -357,7 +357,8 @@
     "pdf-to-pptx": "PDF → PPTX",
     "stat-tables": "확률분포표 (z·t)",
     "physics-constants": "물리 상수표",
-    "chart-maker": "그래프 만들기"
+    "chart-maker": "그래프 만들기",
+    "pdf-compress": "PDF 압축"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3597,6 +3598,27 @@
       "addRow": "행 추가",
       "rowCount": "{count}개 항목",
       "noData": "데이터를 입력하세요"
+    },
+    "pdf-compress": {
+      "dropOrClick": "PDF 파일을 드래그하거나 클릭해서 업로드",
+      "errPdfOnly": "PDF 파일만 업로드할 수 있습니다.",
+      "errConvert": "압축 실패",
+      "errCanvasFailed": "이미지 생성 실패",
+      "otherFile": "다른 파일 선택",
+      "originalSize": "원본: {size}",
+      "compressedLabel": "압축 결과",
+      "placeholder": "압축 시작 버튼을 누르면 결과가 여기에 표시됩니다",
+      "compressionLevel": "압축 강도",
+      "presetHigh": "고화질",
+      "presetMedium": "표준 (권장)",
+      "presetLow": "최대 압축",
+      "startCompress": "압축 시작",
+      "compressing": "압축 중...",
+      "rendering": "페이지 렌더링 중",
+      "savedPct": "{pct}% 절감",
+      "notReduced": "원본이 이미 작아 압축 효과가 크지 않습니다",
+      "downloadPdf": "PDF 다운로드",
+      "textLostNotice": "⚠️ 압축 후에는 텍스트 선택·검색이 불가능합니다 (모든 페이지가 이미지로 변환됩니다)"
     }
   },
   "kits": {

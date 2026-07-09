@@ -266,6 +266,7 @@ const DataUriTool = dynamic(() => import("./tools/DataUriTool"), { ssr: false })
 const FileHashVerifyTool = dynamic(() => import("./tools/FileHashVerifyTool"), { ssr: false });
 const FileSplitJoinTool = dynamic(() => import("./tools/FileSplitJoinTool"), { ssr: false });
 const PdfEsignTool = dynamic(() => import("./tools/PdfEsignTool"), { ssr: false });
+const PdfCompressTool = dynamic(() => import("./tools/PdfCompressTool"), { ssr: false });
 
 export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
   const config = tool.config || {};
@@ -635,6 +636,7 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "FileHashVerifyTool": return <FileHashVerifyTool />;
     case "FileSplitJoinTool": return <FileSplitJoinTool />;
     case "PdfEsignTool": return <PdfEsignTool />;
+    case "PdfCompressTool": return <PdfCompressTool />;
     default:
       return <div>Tool not found.</div>;
   }

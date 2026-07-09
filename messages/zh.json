@@ -357,7 +357,8 @@
     "pdf-to-pptx": "PDF → PPTX",
     "stat-tables": "概率分布表（z·t）",
     "physics-constants": "物理常数表",
-    "chart-maker": "图表制作"
+    "chart-maker": "图表制作",
+    "pdf-compress": "PDF压缩"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3597,6 +3598,27 @@
       "addRow": "添加行",
       "rowCount": "{count} 项",
       "noData": "请输入数据"
+    },
+    "pdf-compress": {
+      "dropOrClick": "拖放 PDF 文件，或点击上传",
+      "errPdfOnly": "只能上传 PDF 文件。",
+      "errConvert": "压缩失败",
+      "errCanvasFailed": "生成图片失败",
+      "otherFile": "选择其他文件",
+      "originalSize": "原始大小：{size}",
+      "compressedLabel": "压缩结果",
+      "placeholder": "点击开始压缩后，结果会显示在这里",
+      "compressionLevel": "压缩强度",
+      "presetHigh": "高画质",
+      "presetMedium": "标准（推荐）",
+      "presetLow": "最大压缩",
+      "startCompress": "开始压缩",
+      "compressing": "压缩中...",
+      "rendering": "正在渲染页面",
+      "savedPct": "减少 {pct}%",
+      "notReduced": "原文件已经很小，压缩效果不明显",
+      "downloadPdf": "下载 PDF",
+      "textLostNotice": "⚠️ 压缩后文本将无法选择或搜索（所有页面都会转换为图片）"
     }
   },
   "kits": {

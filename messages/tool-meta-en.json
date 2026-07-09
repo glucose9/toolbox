@@ -9631,5 +9631,45 @@
       }
     ],
     "h1": "Chart Maker"
+  },
+  "pdf-compress": {
+    "h1": "Reduce PDF File Size",
+    "description": "Shrink your PDF file size significantly. Especially effective for scanned documents and photo-heavy PDFs. Commonly used to get under email attachment limits (25MB), government portal upload caps, or to send via chat apps. Everything runs in your browser.",
+    "howTo": [
+      "Upload your PDF file.",
+      "Choose a compression level (quality) and resolution.",
+      "Click Start Compressing — pages are processed one by one.",
+      "Compare the before/after size, then download."
+    ],
+    "faq": [
+      {
+        "q": "How does this reduce file size?",
+        "a": "Each page is re-rendered as an image and re-encoded as a highly compressed JPEG, then rebuilt into a PDF. This works especially well on scanned or photo-heavy PDFs (50–90% smaller)."
+      },
+      {
+        "q": "Can I still select or search text afterward?",
+        "a": "No. Every page becomes an image during compression, so text selection, search, and copy no longer work. If you need selectable text, use your original program's save/export options instead of this tool."
+      },
+      {
+        "q": "Does it help PDFs that are already mostly text?",
+        "a": "It works, but the benefit is small. This tool is most effective on image-heavy or scanned PDFs. Text-heavy PDFs are usually already small, so there's little to gain."
+      },
+      {
+        "q": "Which quality setting should I choose?",
+        "a": "\"Standard\" is enough for email or submissions. Choose \"High quality\" if you plan to print, or \"Max compression\" if you need the smallest possible file."
+      },
+      {
+        "q": "Is my file uploaded to a server?",
+        "a": "No. Everything happens in your browser — your file is never sent anywhere."
+      },
+      {
+        "q": "Does it work with password-protected PDFs?",
+        "a": "Not currently. Please remove the password first, then try again."
+      },
+      {
+        "q": "Are form fields and hyperlinks preserved?",
+        "a": "No. Since pages are rebuilt as images, form fields, hyperlinks, and bookmarks are lost. If these matter, don't compress — use the original file."
+      }
+    ]
   }
 }

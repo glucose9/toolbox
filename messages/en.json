@@ -357,7 +357,8 @@
     "pdf-to-pptx": "PDF → PPTX",
     "stat-tables": "Stat Tables (z & t)",
     "physics-constants": "Physics Constants",
-    "chart-maker": "Chart Maker"
+    "chart-maker": "Chart Maker",
+    "pdf-compress": "PDF Compress"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3597,6 +3598,27 @@
       "addRow": "Add row",
       "rowCount": "{count} items",
       "noData": "Enter some data"
+    },
+    "pdf-compress": {
+      "dropOrClick": "Drag & drop a PDF, or click to upload",
+      "errPdfOnly": "Only PDF files can be uploaded.",
+      "errConvert": "Compression failed",
+      "errCanvasFailed": "Failed to render page image",
+      "otherFile": "Choose another file",
+      "originalSize": "Original: {size}",
+      "compressedLabel": "Compressed result",
+      "placeholder": "The result will appear here after you start compressing",
+      "compressionLevel": "Compression level",
+      "presetHigh": "High quality",
+      "presetMedium": "Standard (recommended)",
+      "presetLow": "Max compression",
+      "startCompress": "Start compressing",
+      "compressing": "Compressing...",
+      "rendering": "Rendering pages",
+      "savedPct": "{pct}% smaller",
+      "notReduced": "The original is already small, so savings are minimal",
+      "downloadPdf": "Download PDF",
+      "textLostNotice": "⚠️ After compression, text can no longer be selected or searched (every page becomes an image)"
     }
   },
   "kits": {

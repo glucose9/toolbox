@@ -357,7 +357,8 @@
     "pdf-to-pptx": "PDF → PPTX",
     "stat-tables": "確率分布表（z・t）",
     "physics-constants": "物理定数表",
-    "chart-maker": "グラフ作成"
+    "chart-maker": "グラフ作成",
+    "pdf-compress": "PDF圧縮"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3597,6 +3598,27 @@
       "addRow": "行を追加",
       "rowCount": "{count}件",
       "noData": "データを入力してください"
+    },
+    "pdf-compress": {
+      "dropOrClick": "PDFファイルをドラッグ&ドロップ、またはクリックしてアップロード",
+      "errPdfOnly": "PDFファイルのみアップロードできます。",
+      "errConvert": "圧縮に失敗しました",
+      "errCanvasFailed": "画像の生成に失敗しました",
+      "otherFile": "別のファイルを選択",
+      "originalSize": "元のサイズ: {size}",
+      "compressedLabel": "圧縮結果",
+      "placeholder": "圧縮を開始すると結果がここに表示されます",
+      "compressionLevel": "圧縮レベル",
+      "presetHigh": "高画質",
+      "presetMedium": "標準(推奨)",
+      "presetLow": "最大圧縮",
+      "startCompress": "圧縮開始",
+      "compressing": "圧縮中...",
+      "rendering": "ページをレンダリング中",
+      "savedPct": "{pct}% 削減",
+      "notReduced": "元のファイルがすでに小さいため、削減効果は限定的です",
+      "downloadPdf": "PDFをダウンロード",
+      "textLostNotice": "⚠️ 圧縮後はテキストの選択・検索ができなくなります(全ページが画像に変換されます)"
     }
   },
   "kits": {
