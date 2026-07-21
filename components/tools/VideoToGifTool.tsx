@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getFFmpeg, ffmpegFetchFile } from "@/lib/ffmpeg";
 import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
@@ -16,6 +16,13 @@ export default function VideoToGifTool() {
   const [progress, setProgress] = useState(0);
   const [output, setOutput] = useState<{ url: string; size: number } | null>(null);
 
+  const fileUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+  useEffect(() => {
+    return () => {
+      if (fileUrl) URL.revokeObjectURL(fileUrl);
+    };
+  }, [fileUrl]);
+
   const run = async () => {
     if (!file) return;
     setBusy(true);
@@ -29,14 +36,17 @@ export default function VideoToGifTool() {
       setStatus(t("statusLoading"));
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
       setStatus(t("statusConverting"));
+      const outName = `out_${Date.now()}.gif`;
       await ff.exec([
+        "-y",
         "-i", inputName,
         "-t", String(maxSeconds),
         "-vf", `fps=${fps},scale=${width}:-1:flags=lanczos`,
         "-loop", "0",
-        "out.gif",
+        outName,
       ]);
-      const data = (await ff.readFile("out.gif")) as Uint8Array;
+      const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const blob = new Blob([data as BlobPart], { type: "image/gif" });
       setOutput({ url: URL.createObjectURL(blob), size: blob.size });
       setStatus(t("statusDone"));
@@ -64,7 +74,7 @@ export default function VideoToGifTool() {
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <div className="text-sm font-medium mb-2">{t("original")} ({fmtBytes(file.size)})</div>
-              <video src={URL.createObjectURL(file)} controls className="w-full max-h-60 rounded border border-gray-200" />
+              <video src={fileUrl ?? undefined} controls className="w-full max-h-60 rounded border border-gray-200" />
               <button onClick={() => { setFile(null); setOutput(null); }} className="mt-2 text-sm text-brand-600 hover:underline">
                 {t("otherFile")}
               </button>

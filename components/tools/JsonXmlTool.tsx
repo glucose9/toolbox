@@ -36,7 +36,7 @@ export default function JsonXmlTool() {
         const builder = new XMLBuilder({ ignoreAttributes: false, format: true, indentBy: "  ", attributeNamePrefix: "@_" });
         return { output: builder.build(obj) as string, error: "" };
       } else {
-        const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "@_" });
+        const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "@_", parseTagValue: false, parseAttributeValue: false });
         const obj = parser.parse(input);
         return { output: JSON.stringify(obj, null, 2), error: "" };
       }

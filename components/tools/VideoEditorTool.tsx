@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getFFmpeg, ffmpegFetchFile } from "@/lib/ffmpeg";
 import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
@@ -74,6 +74,13 @@ export default function VideoEditorTool() {
 
   const needsReencode = trimEnabled || rotate || speed !== 1 || resize !== "" || reencode;
 
+  const fileUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+  useEffect(() => {
+    return () => {
+      if (fileUrl) URL.revokeObjectURL(fileUrl);
+    };
+  }, [fileUrl]);
+
   const onPick = (f: File) => {
     setFile(f);
     setOutput(null);
@@ -102,20 +109,13 @@ export default function VideoEditorTool() {
       setStatus(t("loadingFile"));
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
 
-      const args: string[] = ["-i", inputName];
-
-      if (trimEnabled && trimEnd > trimStart) {
-        args.splice(0, 0, "-ss", String(trimStart));
-        args.push("-to", String(trimEnd - trimStart));
-      }
-
-      const cmd: string[] = [];
+      const cmd: string[] = ["-y"];
       if (trimEnabled && trimEnd > trimStart) {
         cmd.push("-ss", String(trimStart));
       }
       cmd.push("-i", inputName);
       if (trimEnabled && trimEnd > trimStart) {
-        cmd.push("-t", String(trimEnd - trimStart));
+        cmd.push("-t", String((trimEnd - trimStart) / speed));
       }
 
       const vfilters: string[] = [];
@@ -157,12 +157,14 @@ export default function VideoEditorTool() {
         cmd.push("-c", "copy");
       }
 
-      cmd.push("out.mp4");
+      const outName = `out_${Date.now()}.mp4`;
+      cmd.push(outName);
 
       setStatus(needsReencode ? t("processingReencode") : t("processingCopy"));
       await ff.exec(cmd);
 
-      const data = (await ff.readFile("out.mp4")) as Uint8Array;
+      const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const blob = new Blob([data as BlobPart], { type: "video/mp4" });
       setOutput({ url: URL.createObjectURL(blob), size: blob.size });
       setStatus(`✓ ${t("done")}`);
@@ -207,7 +209,7 @@ export default function VideoEditorTool() {
       <div className="grid md:grid-cols-2 gap-4">
         <div>
           <div className="text-sm font-medium mb-2">{t("original", { size: fmtBytes(file.size), time: fmtTime(duration) })}</div>
-          <video src={URL.createObjectURL(file)} controls className="w-full max-h-60 rounded border border-gray-200 dark:border-gray-700" />
+          <video src={fileUrl ?? undefined} controls className="w-full max-h-60 rounded border border-gray-200 dark:border-gray-700" />
           <button onClick={() => { setFile(null); setOutput(null); }} className="mt-2 text-sm text-blue-600 hover:underline">
             {t("pickAnother")}
           </button>

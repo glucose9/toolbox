@@ -17,8 +17,8 @@ const LIAISON: Record<string, [string, string]> = {
   "22-h": ["", "ch"], // ㅈ + ㅎ
 };
 
-function romanizeChar(syllable: number, prevJong: number, nextCho: number): { jongRom: string; choRom: string } {
-  const choIdx = Math.floor((syllable % 588) / 28);
+function romanizeChar(prevJong: number, nextCho: number): { jongRom: string; choRom: string } {
+  const choIdx = nextCho;
   // We're processing prev syllable's jong with current syllable's cho
   let jongRom = JONG_ROM[prevJong];
   let choRom = CHO_ROM[choIdx];
@@ -48,7 +48,7 @@ function romanize(text: string): string {
       const jungIdx = Math.floor((idx % 588) / 28);
       const jongIdx = idx % 28;
       if (prevWasHangul) {
-        const { jongRom, choRom } = romanizeChar(idx, prevJong, choIdx);
+        const { jongRom, choRom } = romanizeChar(prevJong, choIdx);
         out += jongRom + choRom;
       } else {
         out += CHO_ROM[choIdx];

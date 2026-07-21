@@ -17,7 +17,9 @@ function minify(html: string): string {
   let out = protectedHtml
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/\s+/g, " ")
-    .replace(/>\s+</g, "><")
+    // Keep one space: inter-tag whitespace separates words between inline
+    // elements ("<b>Hello</b> <i>world</i>"), removing it changes rendering.
+    .replace(/>\s+</g, "> <")
     .trim();
   sheltered.forEach((block, i) => {
     out = out.replace("__HTMLMIN" + i + "__", () => block);

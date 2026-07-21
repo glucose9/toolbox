@@ -30,7 +30,11 @@ export default function TimestampTool() {
   const valid = date && !isNaN(date.getTime());
 
   const parseDate = () => {
-    const d = new Date(dateInput);
+    // Free-form new Date(string) parsing is engine-dependent (Safari rejects
+    // the space-separated form). Accept only "YYYY-MM-DD[ T]HH:mm[:ss]" and
+    // normalize the separator to "T" so it parses as local time everywhere.
+    if (!/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(?::\d{2})?$/.test(dateInput)) return null;
+    const d = new Date(dateInput.replace(" ", "T"));
     return isNaN(d.getTime()) ? null : d;
   };
   const dateFromInput = parseDate();
@@ -72,12 +76,14 @@ export default function TimestampTool() {
           onChange={(e) => setDateInput(e.target.value)}
           className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded text-sm bg-white dark:bg-gray-900"
         />
-        {dateFromInput && (
+        {dateFromInput ? (
           <div className="mt-2 space-y-1 text-sm">
             <div><span className="text-muted">{t("seconds")}:</span> <span className="font-mono">{Math.floor(dateFromInput.getTime() / 1000)}</span></div>
             <div><span className="text-muted">{t("milliseconds")}:</span> <span className="font-mono">{dateFromInput.getTime()}</span></div>
           </div>
-        )}
+        ) : dateInput ? (
+          <div className="mt-2 text-sm text-red-600">{t("invalidDate")}</div>
+        ) : null}
       </div>
     </div>
   );

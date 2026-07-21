@@ -41,18 +41,29 @@ export default function LatexEditorTool() {
 
   const downloadSvg = () => {
     if (!html) return;
-    // Render KaTeX HTML offscreen, wrap in foreignObject SVG
+    // Standalone SVG has no page CSS: re-render without the MathML copy
+    // (which is only hidden by katex.min.css) and embed the KaTeX rules,
+    // otherwise the equation shows twice and loses its layout.
+    let svgHtml: string;
+    try {
+      svgHtml = katex.renderToString(code, { throwOnError: true, displayMode, output: "html" });
+    } catch {
+      return;
+    }
     const container = document.createElement("div");
-    container.innerHTML = html;
+    container.innerHTML = svgHtml;
     document.body.appendChild(container);
     const rect = container.getBoundingClientRect();
     const w = Math.ceil(rect.width) + 20;
     const h = Math.ceil(rect.height) + 20;
     document.body.removeChild(container);
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+<style><![CDATA[
+${collectKatexCss()}
+]]></style>
 <foreignObject width="100%" height="100%">
   <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: KaTeX_Main, 'Times New Roman', serif; padding: 10px;">
-    ${html}
+    ${svgHtml}
   </div>
 </foreignObject>
 </svg>`;
@@ -103,4 +114,24 @@ export default function LatexEditorTool() {
       </div>
     </div>
   );
+}
+
+function collectKatexCss(): string {
+  // katex.min.css is bundled into a hashed CSS file, so pick its rules out by
+  // content (they all mention "katex" in a selector or font-family name).
+  const parts: string[] = [];
+  try {
+    for (const sheet of Array.from(document.styleSheets)) {
+      try {
+        for (const rule of Array.from(sheet.cssRules)) {
+          if (/katex/i.test(rule.cssText)) parts.push(rule.cssText);
+        }
+      } catch {
+        /* cross-origin sheet — skip */
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return parts.join("\n");
 }

@@ -3,7 +3,8 @@
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 
-const SPECIAL_SPACES = /[   -   　﻿​-‍]/g;
+const SPECIAL_SPACES = /[   -   　]/g;
+const ZERO_WIDTH = /[​-‍﻿]/g;
 const SMART_DOUBLE_QUOTES = /[“”„‟]/g;
 const SMART_SINGLE_QUOTES = /[‘’‚‛]/g;
 const FULLWIDTH_ASCII = /[！-～]/g;
@@ -31,7 +32,7 @@ export default function TextNormalizeTool() {
   const result = useMemo(() => {
     let s = input;
     if (opts.nfc) s = s.normalize("NFC");
-    if (opts.nbsp) s = s.replace(SPECIAL_SPACES, " ");
+    if (opts.nbsp) s = s.replace(SPECIAL_SPACES, " ").replace(ZERO_WIDTH, "");
     if (opts.quotes) {
       s = s.replace(SMART_DOUBLE_QUOTES, '"').replace(SMART_SINGLE_QUOTES, "'");
     }
@@ -41,7 +42,16 @@ export default function TextNormalizeTool() {
     }
     if (opts.punctSpacing) {
       s = s.replace(/\s+([.,!?;:])/g, "$1");
-      s = s.replace(/([.,!?;:])(?=\S)/g, "$1 ");
+      // 숫자 사이 구분자(3.14 / 1,000), 도메인·약어(example.com), URL 스킴(https://)은
+      // 문장부호가 아니므로 공백을 넣지 않는다.
+      s = s.replace(/([.,!?;:])(?=\S)/g, (m, p: string, off: number, str: string) => {
+        const prev = str[off - 1] ?? "";
+        const next = str[off + 1] ?? "";
+        if (/\d/.test(prev) && /\d/.test(next)) return m;
+        if (p === "." && /[A-Za-z]/.test(prev) && /[a-z]/.test(next)) return m;
+        if (p === ":" && str.slice(off + 1, off + 3) === "//") return m;
+        return p + " ";
+      });
     }
     if (opts.spaces) {
       s = s.replace(/[ \t]+/g, " ").replace(/^ +| +$/gm, "");

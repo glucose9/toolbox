@@ -46,10 +46,14 @@ export default function PdfToPptxTool() {
       const firstVp = firstPage.getViewport({ scale: 1 });
       const ratio = firstVp.width / firstVp.height;
       // 16:9 ≈ 1.778, 4:3 ≈ 1.333
+      let slideW: number;
+      const slideH = 7.5;
       if (ratio > 1.5) {
-        pres.layout = "LAYOUT_WIDE";
+        pres.layout = "LAYOUT_WIDE"; // 13.333 x 7.5 in
+        slideW = 40 / 3;
       } else {
-        pres.layout = "LAYOUT_4x3";
+        pres.layout = "LAYOUT_4x3"; // 10 x 7.5 in
+        slideW = 10;
       }
 
       for (let i = 1; i <= total; i++) {
@@ -67,7 +71,15 @@ export default function PdfToPptxTool() {
         const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
 
         const slide = pres.addSlide();
-        slide.addImage({ data: dataUrl, x: 0, y: 0, w: "100%", h: "100%" });
+        // Contain the page inside the slide (centered, aspect ratio preserved).
+        const pageRatio = viewport.width / viewport.height;
+        let imgW = slideW;
+        let imgH = slideW / pageRatio;
+        if (imgH > slideH) {
+          imgH = slideH;
+          imgW = slideH * pageRatio;
+        }
+        slide.addImage({ data: dataUrl, x: (slideW - imgW) / 2, y: (slideH - imgH) / 2, w: imgW, h: imgH });
 
         setProgress({ done: i, total });
       }

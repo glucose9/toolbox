@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 const A4_MM = { w: 210, h: 297 };
 const A4_PX_W = 794;
@@ -38,12 +39,16 @@ export default function MdToPdfTool() {
   const [error, setError] = useState("");
 
   const html = useMemo(() => {
+    let raw: string;
     try {
       marked.setOptions({ gfm: true, breaks: true });
-      return marked.parse(md) as string;
+      raw = marked.parse(md) as string;
     } catch (e) {
-      return `<p style="color:red">${(e as Error).message}</p>`;
+      raw = `<p style="color:red">${(e as Error).message}</p>`;
     }
+    // Allow target so "open in new tab" links written in raw HTML survive;
+    // iframes/scripts stay stripped (intended XSS hardening).
+    return DOMPurify.sanitize(raw, { ADD_ATTR: ["target"] });
   }, [md]);
 
   const loadSample = () => {

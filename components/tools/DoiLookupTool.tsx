@@ -74,9 +74,33 @@ export default function DoiLookupTool() {
   };
 
   const apa = meta && (() => {
-    const a = meta.authors.join(", ");
-    if (meta.type === "book") return `${a} (${meta.year}). ${meta.title}. ${meta.publisher}.`;
-    return `${a} (${meta.year}). ${meta.title}. ${meta.container}, ${meta.volume}${meta.issue ? `(${meta.issue})` : ""}, ${meta.pages}.${meta.doi ? ` https://doi.org/${meta.doi}` : ""}`;
+    const toInitials = (n: string) => {
+      const ix = n.indexOf(",");
+      if (ix < 0) return n.trim();
+      const family = n.slice(0, ix).trim();
+      const given = n.slice(ix + 1).trim();
+      if (!family) return given;
+      if (!given) return family;
+      const ini = given
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((w) => w.split("-").filter(Boolean).map((p) => `${p[0].toUpperCase()}.`).join("-"))
+        .join(" ");
+      return ini ? `${family}, ${ini}` : family;
+    };
+    const list = meta.authors.map(toInitials).filter(Boolean);
+    // APA 7: 마지막 저자 앞 &, 21명 이상이면 처음 19명 + ... + 마지막 저자
+    const a =
+      list.length === 0
+        ? ""
+        : list.length === 1
+          ? list[0]
+          : list.length > 20
+            ? `${list.slice(0, 19).join(", ")}, ... ${list[list.length - 1]}`
+            : `${list.slice(0, -1).join(", ")}, & ${list[list.length - 1]}`;
+    const year = meta.year || "n.d.";
+    if (meta.type === "book") return `${a} (${year}). ${meta.title}. ${meta.publisher}.`;
+    return `${a} (${year}). ${meta.title}. ${meta.container}, ${meta.volume}${meta.issue ? `(${meta.issue})` : ""}, ${meta.pages}.${meta.doi ? ` https://doi.org/${meta.doi}` : ""}`;
   })();
 
   const mla = meta && (() => {

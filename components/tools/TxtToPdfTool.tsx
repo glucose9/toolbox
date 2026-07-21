@@ -7,7 +7,9 @@ const A4_MM = { portrait: { w: 210, h: 297 }, landscape: { w: 297, h: 210 } };
 
 type Orientation = "portrait" | "landscape";
 
-const CJK_RE = /[぀-ヿ㐀-䶿一-鿿가-힯]/;
+// Standard-14 fonts only encode WinAnsi (Latin-1-ish); any char above U+00FF
+// (Hangul jamo like ㅋ, emoji, halfwidth kana, Cyrillic...) must be rasterized.
+const NON_LATIN1_RE = /[^\u0000-\u00ff]/;
 
 export default function TxtToPdfTool() {
   const t = useTranslations("toolUI.txt-to-pdf");
@@ -40,8 +42,8 @@ export default function TxtToPdfTool() {
       const pageW = A4_MM[orientation].w;
       const pageH = A4_MM[orientation].h;
 
-      // CJK detection → fall back to html2canvas for crisp glyphs.
-      if (CJK_RE.test(text)) {
+      // Non-WinAnsi text → fall back to html2canvas for correct glyphs.
+      if (NON_LATIN1_RE.test(text)) {
         const { default: html2canvas } = await import("html2canvas");
         const pxPerMm = 96 / 25.4;
         const widthPx = Math.round(pageW * pxPerMm);

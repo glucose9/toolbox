@@ -11,17 +11,27 @@ type Entry = {
 
 function parseBibtex(input: string): Entry[] {
   const entries: Entry[] = [];
-  const re = /@(\w+)\s*\{\s*([^,]+),([\s\S]*?)\n\}/g;
+  const re = /@(\w+)\s*\{\s*([^,]+),/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(input)) !== null) {
     const type = m[1].toLowerCase();
     const key = m[2].trim();
-    const body = m[3];
+    // 엔트리 종료는 중괄호 깊이로 판정 (닫는 }가 마지막 필드와 같은 줄에 올 수 있음)
+    let depth = 1;
+    let i = re.lastIndex;
+    while (i < input.length && depth > 0) {
+      const ch = input[i];
+      if (ch === "{") depth++;
+      else if (ch === "}") depth--;
+      i++;
+    }
+    const body = input.slice(re.lastIndex, depth === 0 ? i - 1 : input.length);
+    re.lastIndex = i;
     const fields: Record<string, string> = {};
-    const fre = /(\w+)\s*=\s*[{"](.+?)["}](?=\s*,?\s*\n|\s*,?\s*$)/gs;
+    const fre = /(\w+)\s*=\s*(?:\{((?:[^{}]|\{[^{}]*\})*)\}|"([^"]*)")/g;
     let f: RegExpExecArray | null;
     while ((f = fre.exec(body)) !== null) {
-      fields[f[1].toLowerCase()] = f[2].replace(/[{}]/g, "").trim();
+      fields[f[1].toLowerCase()] = (f[2] ?? f[3] ?? "").replace(/[{}]/g, "").trim();
     }
     entries.push({ type, key, fields });
   }
@@ -38,7 +48,14 @@ function formatAuthors(raw: string, style: "apa" | "mla" | "chicago"): string {
     const last = parts.pop()!;
     return `${last}, ${parts.map((p) => p[0] + ".").join(" ")}`;
   });
-  if (style === "apa") return formatted.join(", ");
+  if (style === "apa") {
+    if (formatted.length === 1) return formatted[0];
+    // APA 7: 21명 이상이면 처음 19명 + ... + 마지막 저자
+    if (formatted.length > 20) {
+      return `${formatted.slice(0, 19).join(", ")}, ... ${formatted[formatted.length - 1]}`;
+    }
+    return `${formatted.slice(0, -1).join(", ")}, & ${formatted[formatted.length - 1]}`;
+  }
   if (style === "mla") {
     if (formatted.length === 1) return formatted[0];
     if (formatted.length === 2) return `${formatted[0]}, and ${formatted[1]}`;

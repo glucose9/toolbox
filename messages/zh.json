@@ -1492,7 +1492,8 @@
       "timestampToDate": "时间戳 → 日期",
       "dateToTimestamp": "日期 → 时间戳",
       "local": "本地",
-      "detectedUnit": "检测到的单位"
+      "detectedUnit": "检测到的单位",
+      "invalidDate": "日期格式不正确。示例：2026-07-20 14:30"
     },
     "video-rotate": {
       "errVideoOnly": "仅支持视频文件。",
@@ -2103,6 +2104,7 @@
     "pdf-unlock": {
       "statusSuccess": "✓ 处理完成。如果是带有编辑/打印/复制限制的 PDF，限制将被解除。请使用下载按钮获取。",
       "statusUserPassword": "❌ 这是一个设置了用户打开密码的 PDF。本工具无法解锁正文被加密的 PDF。请在 Hancom Office 或 Adobe Acrobat 等正规工具中用原密码打开并另存。",
+      "statusEncrypted": "❌ 此文件已加密，无法在浏览器中解锁。请在 Hancom Office 或 Adobe Acrobat 等正规工具中用原密码打开并另存。",
       "statusFailed": "❌ 处理失败：{msg}",
       "unknownError": "未知错误",
       "lockedPdf": "已锁定的 PDF 文件",
@@ -2743,10 +2745,11 @@
       "ageReduction": "车龄减免 (第 {years} 年)",
       "educationTax": "地方教育税 (30%)",
       "hybridReduction": "混动减免 (50%)",
+      "hybridSameNote": "混合动力车没有汽车税减免制度,与普通乘用车按相同标准征税。",
       "annualTax": "年度汽车税",
       "biAnnual": "半年(6 月、12 月)缴纳: 每次 {half} 韩元",
       "won": "{v} 韩元",
-      "tipNote": "💡 按韩国地方税法估算的汽车税。营业用、混动、电动车另有税率与减免。请以地方政府通知书为准。年缴申请约可享 10% 额外优惠。"
+      "tipNote": "💡 按韩国地方税法估算的汽车税。营业用、电动车另有税率。请以地方政府通知书为准。年缴申请约可享 5% 抵扣。"
     },
     "loan-calc": {
       "principal": "贷款本金 (韩元)",
@@ -2885,9 +2888,9 @@
       "nontaxable": "免税额 (餐补、交通补贴等)",
       "nontaxableNote": "每月 {amount} KRW (餐补每月 20 万 KRW 以内免税)",
       "deductionTitle": "月度扣除明细",
-      "pension": "国民年金 (4.5%)",
-      "health": "健康保险 (3.545%)",
-      "longTerm": "长期照护 (0.459%)",
+      "pension": "国民年金 (4.75%)",
+      "health": "健康保险 (3.595%)",
+      "longTerm": "长期照护 (健康保险费的 13.14%)",
       "employment": "雇佣保险 (0.9%)",
       "incomeTax": "所得税 (简易)",
       "localTax": "地方所得税 (10%)",
@@ -3085,6 +3088,8 @@
       "areaNote": "超过 85㎡ (约 26 坪) 会加征农特税",
       "isHouse": "住宅 (officetel / 商铺请取消勾选)",
       "isMulti": "多套房 (持有 2 套以上)",
+      "multi2": "2 套",
+      "multi3": "3 套及以上",
       "appliedRate": "适用税率",
       "acqBase": "取得税本税",
       "localEdu": "地方教育税 (取得税 ×10%)",

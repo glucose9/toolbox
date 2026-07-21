@@ -2,14 +2,42 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
+const BLOCK_TAGS = new Set([
+  "ADDRESS", "ARTICLE", "ASIDE", "BLOCKQUOTE", "DD", "DETAILS", "DIV", "DL",
+  "DT", "FIELDSET", "FIGCAPTION", "FIGURE", "FOOTER", "FORM", "H1", "H2", "H3",
+  "H4", "H5", "H6", "HEADER", "HR", "LI", "MAIN", "NAV", "OL", "P", "PRE",
+  "SECTION", "SUMMARY", "TABLE", "TD", "TH", "TR", "UL",
+]);
+
 function htmlToText(html: string): string {
   // DOMParser produces an inert document: scripts never run and resources
   // (e.g. <img onerror>) are never fetched, unlike assigning to innerHTML.
   const doc = new DOMParser().parseFromString(html, "text/html");
   doc.querySelectorAll("script, style").forEach((el) => el.remove());
-  // The previous detached <div> was never rendered, so its innerText already
-  // behaved like textContent; reading body.textContent matches that output.
-  return (doc.body.textContent || "").replace(/\n{3,}/g, "\n\n").trim();
+  // textContent joins block elements with no separator, so walk the tree and
+  // emit line breaks at block boundaries and <br>.
+  let out = "";
+  const ensureBreak = () => {
+    if (out && !out.endsWith("\n")) out += "\n";
+  };
+  const walk = (node: Node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      out += node.nodeValue || "";
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    const tag = (node as Element).tagName;
+    if (tag === "BR") {
+      out += "\n";
+      return;
+    }
+    const block = BLOCK_TAGS.has(tag);
+    if (block) ensureBreak();
+    node.childNodes.forEach(walk);
+    if (block) ensureBreak();
+  };
+  walk(doc.body);
+  return out.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
 export default function HtmlToTextTool() {

@@ -39,8 +39,10 @@ export default function VideoResizeTool() {
       const ext = file.name.split(".").pop() || "mp4";
       await ff.writeFile(`in.${ext}`, await fetchFile(file));
       const p = PRESETS[presetIdx];
-      await ff.exec(["-i", `in.${ext}`, "-vf", `scale=${p.w}:${p.h}:force_original_aspect_ratio=decrease,pad=${p.w}:${p.h}:(ow-iw)/2:(oh-ih)/2`, "-preset", "veryfast", "out.mp4"]);
-      const data = (await ff.readFile("out.mp4")) as Uint8Array;
+      const outName = `out_${Date.now()}.mp4`;
+      await ff.exec(["-y", "-i", `in.${ext}`, "-vf", `scale=${p.w}:${p.h}:force_original_aspect_ratio=decrease,pad=${p.w}:${p.h}:(ow-iw)/2:(oh-ih)/2`, "-preset", "veryfast", outName]);
+      const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const ab = new ArrayBuffer(data.byteLength); new Uint8Array(ab).set(data);
       const blob = new Blob([ab], { type: "video/mp4" });
       if (outUrl) URL.revokeObjectURL(outUrl);

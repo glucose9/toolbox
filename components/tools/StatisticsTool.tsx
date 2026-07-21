@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
 function parse(t: string): number[] {
-  return t.split(/[,\s\n]+/).map(Number).filter((n) => !isNaN(n));
+  return t.split(/[,\s\n]+/).filter((s) => s.trim().length > 0).map(Number).filter((n) => !isNaN(n));
 }
 
 const fmt = (n: number) => isFinite(n) ? n.toFixed(4).replace(/\.?0+$/, "") : "—";
@@ -21,13 +21,21 @@ export default function StatisticsTool() {
     const median = n % 2 === 0 ? (sorted[n / 2 - 1] + sorted[n / 2]) / 2 : sorted[Math.floor(n / 2)];
     const counts = new Map<number, number>();
     for (const x of nums) counts.set(x, (counts.get(x) || 0) + 1);
-    const maxCount = Math.max(...counts.values());
-    const mode = [...counts.entries()].filter(([, c]) => c === maxCount).map(([k]) => k);
+    let maxCount = 0;
+    for (const c of counts.values()) if (c > maxCount) maxCount = c;
+    const mode = maxCount <= 1 ? [] : [...counts.entries()].filter(([, c]) => c === maxCount).map(([k]) => k);
     const variance = nums.reduce((s, x) => s + (x - mean) ** 2, 0) / n;
     const stdPop = Math.sqrt(variance);
     const stdSample = Math.sqrt(nums.reduce((s, x) => s + (x - mean) ** 2, 0) / Math.max(1, n - 1));
-    const q1 = sorted[Math.floor(n * 0.25)];
-    const q3 = sorted[Math.floor(n * 0.75)];
+    // R-7 quantile (Excel/NumPy default): linear interpolation on h = (n-1)p
+    const quantile = (p: number) => {
+      const h = (n - 1) * p;
+      const lo = Math.floor(h);
+      const hi = Math.ceil(h);
+      return sorted[lo] + (h - lo) * (sorted[hi] - sorted[lo]);
+    };
+    const q1 = quantile(0.25);
+    const q3 = quantile(0.75);
     return { n, sum, mean, median, mode, min: sorted[0], max: sorted[n - 1], range: sorted[n - 1] - sorted[0], variance, stdPop, stdSample, q1, q3, iqr: q3 - q1 };
   }, [text]);
   return (
@@ -40,7 +48,7 @@ export default function StatisticsTool() {
             <tr><td className="py-2 pr-3 text-muted">{t("sum")}</td><td className="font-mono">{fmt(stats.sum)}</td></tr>
             <tr><td className="py-2 pr-3 text-muted">{t("mean")}</td><td className="font-mono">{fmt(stats.mean)}</td></tr>
             <tr><td className="py-2 pr-3 text-muted">{t("median")}</td><td className="font-mono">{fmt(stats.median)}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("mode")}</td><td className="font-mono">{stats.mode.join(", ")}</td></tr>
+            <tr><td className="py-2 pr-3 text-muted">{t("mode")}</td><td className="font-mono">{stats.mode.length > 0 ? stats.mode.join(", ") : "—"}</td></tr>
             <tr><td className="py-2 pr-3 text-muted">{t("minMax")}</td><td className="font-mono">{fmt(stats.min)} / {fmt(stats.max)}</td></tr>
             <tr><td className="py-2 pr-3 text-muted">{t("range")}</td><td className="font-mono">{fmt(stats.range)}</td></tr>
             <tr><td className="py-2 pr-3 text-muted">{t("variance")}</td><td className="font-mono">{fmt(stats.variance)}</td></tr>

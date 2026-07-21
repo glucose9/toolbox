@@ -18,7 +18,9 @@ function toEnglish(n: number): string {
   if (n < 0) return "negative " + toEnglish(-n);
   if (!Number.isInteger(n)) {
     const intPart = Math.floor(n);
-    const fracStr = n.toString().split(".")[1];
+    const str = n.toString();
+    const fracStr = ((str.includes("e") ? n.toFixed(20) : str).split(".")[1] || "").replace(/0+$/, "");
+    if (!fracStr) return toEnglish(intPart);
     return toEnglish(intPart) + " point " + Array.from(fracStr).map((d) => ONES[+d] || "zero").join(" ");
   }
   let out = "";

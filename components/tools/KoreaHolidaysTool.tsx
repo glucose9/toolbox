@@ -4,7 +4,11 @@ import { useMemo, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import KoreanLunarCalendar from "korean-lunar-calendar";
 
-type FixedHoliday = { name: string; type: "fixed"; month: number; day: number };
+// 대체공휴일 규칙 (관공서의 공휴일에 관한 규정 §3): "weekend" = 토·일 겹침 시 대체,
+// "sunday" = 일요일 겹침 시에만 대체 (설·추석 연휴)
+type SubstRule = "weekend" | "sunday";
+
+type FixedHoliday = { name: string; type: "fixed"; month: number; day: number; fromYear?: number; subst?: SubstRule };
 type FloatingHoliday = {
   name: string;
   type: "floating";
@@ -12,7 +16,7 @@ type FloatingHoliday = {
   weekday: number; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
   occurrence: number; // 1..5, or -1 for "last"
 };
-type LunarKoHoliday = { name: string; type: "lunar-ko"; lunarMonth: number; lunarDay: number };
+type LunarKoHoliday = { name: string; type: "lunar-ko"; lunarMonth: number; lunarDay: number; offsetDays?: number; subst?: SubstRule };
 type LunarFixedHoliday = { name: string; type: "lunar-fixed"; dates: Record<number, string> };
 type ApproxHoliday = { name: string; type: "approx"; dates: Record<number, string> };
 
@@ -21,20 +25,28 @@ type LocaleHoliday = FixedHoliday | FloatingHoliday | LunarKoHoliday | LunarFixe
 // ---------- KO ----------
 const KO_HOLIDAYS: LocaleHoliday[] = [
   { name: "신정", type: "fixed", month: 1, day: 1 },
-  { name: "삼일절", type: "fixed", month: 3, day: 1 },
-  { name: "어린이날", type: "fixed", month: 5, day: 5 },
+  { name: "삼일절", type: "fixed", month: 3, day: 1, subst: "weekend" },
+  // 노동절: 2026년부터 관공서 공휴일로 신규 지정
+  { name: "노동절", type: "fixed", month: 5, day: 1, fromYear: 2026 },
+  { name: "어린이날", type: "fixed", month: 5, day: 5, subst: "weekend" },
   { name: "현충일", type: "fixed", month: 6, day: 6 },
-  { name: "광복절", type: "fixed", month: 8, day: 15 },
-  { name: "개천절", type: "fixed", month: 10, day: 3 },
-  { name: "한글날", type: "fixed", month: 10, day: 9 },
-  { name: "크리스마스", type: "fixed", month: 12, day: 25 },
-  { name: "설날 (전날)", type: "lunar-ko", lunarMonth: 12, lunarDay: 30 },
-  { name: "설날", type: "lunar-ko", lunarMonth: 1, lunarDay: 1 },
-  { name: "설날 (다음날)", type: "lunar-ko", lunarMonth: 1, lunarDay: 2 },
-  { name: "부처님오신날", type: "lunar-ko", lunarMonth: 4, lunarDay: 8 },
-  { name: "추석 (전날)", type: "lunar-ko", lunarMonth: 8, lunarDay: 14 },
-  { name: "추석", type: "lunar-ko", lunarMonth: 8, lunarDay: 15 },
-  { name: "추석 (다음날)", type: "lunar-ko", lunarMonth: 8, lunarDay: 16 },
+  // 제헌절: 2026년부터 공휴일 재지정
+  { name: "제헌절", type: "fixed", month: 7, day: 17, fromYear: 2026 },
+  { name: "광복절", type: "fixed", month: 8, day: 15, subst: "weekend" },
+  { name: "개천절", type: "fixed", month: 10, day: 3, subst: "weekend" },
+  { name: "한글날", type: "fixed", month: 10, day: 9, subst: "weekend" },
+  { name: "크리스마스", type: "fixed", month: 12, day: 25, subst: "weekend" },
+  // 설날 전날 = 설날(음 1/1) 하루 전. 음력 12월이 29일까지인 해에는 '음 12/30'이
+  // 존재하지 않으므로 고정 음력일 대신 날짜 연산으로 구한다.
+  { name: "설날 (전날)", type: "lunar-ko", lunarMonth: 1, lunarDay: 1, offsetDays: -1, subst: "sunday" },
+  { name: "설날", type: "lunar-ko", lunarMonth: 1, lunarDay: 1, subst: "sunday" },
+  { name: "설날 (다음날)", type: "lunar-ko", lunarMonth: 1, lunarDay: 2, subst: "sunday" },
+  { name: "부처님오신날", type: "lunar-ko", lunarMonth: 4, lunarDay: 8, subst: "weekend" },
+  { name: "추석 (전날)", type: "lunar-ko", lunarMonth: 8, lunarDay: 14, subst: "sunday" },
+  { name: "추석", type: "lunar-ko", lunarMonth: 8, lunarDay: 15, subst: "sunday" },
+  { name: "추석 (다음날)", type: "lunar-ko", lunarMonth: 8, lunarDay: 16, subst: "sunday" },
+  // 공직선거법상 법정공휴일인 선거일 (확정 연도만 수록)
+  { name: "지방선거", type: "approx", dates: { 2026: "2026-06-03" } },
 ];
 
 // ---------- EN (US federal) ----------
@@ -137,14 +149,15 @@ function fmt(year: number, month: number, day: number) {
   return `${year}-${pad2(month)}-${pad2(day)}`;
 }
 
-function lunarToSolar(year: number, m: number, d: number): string {
+function lunarToSolar(year: number, m: number, d: number, offsetDays = 0): string {
   try {
     const cal = new KoreanLunarCalendar();
     let yr = year;
     if (m === 12) yr = year - 1;
     if (cal.setLunarDate(yr, m, d, false)) {
       const s = cal.getSolarCalendar();
-      return fmt(s.year, s.month, s.day);
+      const dt = new Date(s.year, s.month - 1, s.day + offsetDays);
+      return fmt(dt.getFullYear(), dt.getMonth() + 1, dt.getDate());
     }
   } catch {}
   return "";
@@ -176,7 +189,7 @@ function nthWeekdayOfMonth(year: number, month: number, weekday: number, occurre
 function resolveHoliday(h: LocaleHoliday, year: number): string {
   if (h.type === "fixed") return fmt(year, h.month, h.day);
   if (h.type === "floating") return nthWeekdayOfMonth(year, h.month, h.weekday, h.occurrence);
-  if (h.type === "lunar-ko") return lunarToSolar(year, h.lunarMonth, h.lunarDay);
+  if (h.type === "lunar-ko") return lunarToSolar(year, h.lunarMonth, h.lunarDay, h.offsetDays ?? 0);
   if (h.type === "lunar-fixed" || h.type === "approx") return h.dates[year] || "";
   return "";
 }
@@ -199,9 +212,30 @@ export default function KoreaHolidaysTool() {
 
   const holidays = useMemo(() => {
     const list: { name: string; date: string }[] = [];
+    const substSources: { name: string; date: string; rule: SubstRule }[] = [];
     for (const h of dataset) {
+      if (h.type === "fixed" && h.fromYear && year < h.fromYear) continue;
       const solar = resolveHoliday(h, year);
-      if (solar) list.push({ name: h.name, date: solar });
+      if (!solar) continue;
+      list.push({ name: h.name, date: solar });
+      if ((h.type === "fixed" || h.type === "lunar-ko") && h.subst) {
+        substSources.push({ name: h.name, date: solar, rule: h.subst });
+      }
+    }
+    // 대체공휴일: 겹침 발생 시 그 날 이후 첫 번째 비공휴일 평일
+    const taken = new Set(list.map((x) => x.date));
+    for (const s of substSources) {
+      const d = new Date(s.date + "T00:00:00");
+      if (isNaN(d.getTime())) continue;
+      const day = d.getDay();
+      const hit = s.rule === "sunday" ? day === 0 : day === 0 || day === 6;
+      if (!hit) continue;
+      do {
+        d.setDate(d.getDate() + 1);
+      } while (d.getDay() === 0 || d.getDay() === 6 || taken.has(fmt(d.getFullYear(), d.getMonth() + 1, d.getDate())));
+      const sub = fmt(d.getFullYear(), d.getMonth() + 1, d.getDate());
+      taken.add(sub);
+      list.push({ name: `${s.name} 대체공휴일`, date: sub });
     }
     list.sort((a, b) => a.date.localeCompare(b.date));
     return list;

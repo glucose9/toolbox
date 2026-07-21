@@ -25,21 +25,21 @@ export default function JsonFormatterTool() {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const parse = () => {
+  const parse = (): { ok: boolean; value: unknown } => {
     try {
-      const v = JSON.parse(text);
+      const value = JSON.parse(text);
       setError("");
-      return v;
+      return { ok: true, value };
     } catch (e) {
       setError((e as Error).message);
-      return null;
+      return { ok: false, value: null };
     }
   };
 
   const format = (minified = false) => {
-    const v = parse();
-    if (v === null && error) return;
-    const target = doSort ? sortKeys(v) : v;
+    const parsed = parse();
+    if (!parsed.ok) return;
+    const target = doSort ? sortKeys(parsed.value) : parsed.value;
     const indentStr = minified ? 0 : indent === "tab" ? "\t" : parseInt(indent, 10);
     setText(JSON.stringify(target, null, indentStr as never));
   };

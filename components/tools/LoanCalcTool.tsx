@@ -14,14 +14,15 @@ export default function LoanCalcTool() {
   const [method, setMethod] = useState<"equal-payment" | "equal-principal" | "bullet">("equal-payment");
 
   const result = useMemo(() => {
+    const n = Math.max(1, Math.floor(months) || 1); // 빈 입력(0)·음수 방지
     const r = rate / 100 / 12;
     if (method === "equal-payment") {
-      const monthly = r === 0 ? principal / months : (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
-      const total = monthly * months;
+      const monthly = r === 0 ? principal / n : (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      const total = monthly * n;
       const interest = total - principal;
       const schedule: { m: number; pay: number; principal: number; interest: number; remain: number }[] = [];
       let remain = principal;
-      for (let m = 1; m <= months; m++) {
+      for (let m = 1; m <= n; m++) {
         const intPart = remain * r;
         const prinPart = monthly - intPart;
         remain -= prinPart;
@@ -30,11 +31,11 @@ export default function LoanCalcTool() {
       return { monthly, total, interest, schedule, firstMonth: monthly, lastMonth: monthly };
     }
     if (method === "equal-principal") {
-      const monthlyPrincipal = principal / months;
+      const monthlyPrincipal = principal / n;
       let remain = principal;
       let total = 0;
       const schedule: { m: number; pay: number; principal: number; interest: number; remain: number }[] = [];
-      for (let m = 1; m <= months; m++) {
+      for (let m = 1; m <= n; m++) {
         const interest = remain * r;
         const pay = monthlyPrincipal + interest;
         total += pay;
@@ -44,7 +45,7 @@ export default function LoanCalcTool() {
       return { monthly: NaN, total, interest: total - principal, schedule, firstMonth: schedule[0].pay, lastMonth: schedule[schedule.length - 1].pay };
     }
     const monthlyInterest = principal * r;
-    const totalInterest = monthlyInterest * months;
+    const totalInterest = monthlyInterest * n;
     return {
       monthly: monthlyInterest,
       total: principal + totalInterest,
@@ -116,7 +117,7 @@ export default function LoanCalcTool() {
                 </tr>
               </thead>
               <tbody>
-                {[0, 11, months - 1].filter((i, j, arr) => arr.indexOf(i) === j && i < result.schedule.length).map((i) => {
+                {[0, 11, result.schedule.length - 1].filter((i, j, arr) => arr.indexOf(i) === j && i < result.schedule.length).map((i) => {
                   const s = result.schedule[i];
                   return (
                     <tr key={i} className="border-b border-gray-100 dark:border-gray-800">

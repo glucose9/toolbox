@@ -20,7 +20,16 @@ const MORSE_KR: Record<string, string> = {
   "ㄱ": ".-..", "ㄴ": "..-.", "ㄷ": "-...", "ㄹ": "...-", "ㅁ": "--", "ㅂ": ".--", "ㅅ": "--.",
   "ㅇ": "-.-", "ㅈ": ".--.", "ㅊ": "-.-.", "ㅋ": "-..-", "ㅌ": "--..", "ㅍ": "---", "ㅎ": ".---",
   "ㅏ": ".", "ㅑ": "..", "ㅓ": "-", "ㅕ": "...", "ㅗ": ".-", "ㅛ": "-.", "ㅜ": "....",
-  "ㅠ": ".--", "ㅡ": "-..", "ㅣ": "..-",
+  "ㅠ": ".-.", "ㅡ": "-..", "ㅣ": "..-",
+};
+
+// 표준 국문 모스 합성 규정: 복합모음·쌍자음·겹받침은 기본 자모 조합으로 전송
+const JAMO_EXPAND: Record<string, string> = {
+  "ㄲ": "ㄱㄱ", "ㄸ": "ㄷㄷ", "ㅃ": "ㅂㅂ", "ㅆ": "ㅅㅅ", "ㅉ": "ㅈㅈ",
+  "ㅐ": "ㅏㅣ", "ㅒ": "ㅑㅣ", "ㅔ": "ㅓㅣ", "ㅖ": "ㅕㅣ",
+  "ㅘ": "ㅗㅏ", "ㅙ": "ㅗㅏㅣ", "ㅚ": "ㅗㅣ", "ㅝ": "ㅜㅓ", "ㅞ": "ㅜㅓㅣ", "ㅟ": "ㅜㅣ", "ㅢ": "ㅡㅣ",
+  "ㄳ": "ㄱㅅ", "ㄵ": "ㄴㅈ", "ㄶ": "ㄴㅎ", "ㄺ": "ㄹㄱ", "ㄻ": "ㄹㅁ", "ㄼ": "ㄹㅂ",
+  "ㄽ": "ㄹㅅ", "ㄾ": "ㄹㅌ", "ㄿ": "ㄹㅍ", "ㅀ": "ㄹㅎ", "ㅄ": "ㅂㅅ",
 };
 
 const CHO = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
@@ -47,10 +56,13 @@ function toMorse(text: string): string {
         .map((c) => {
           if (c.charCodeAt(0) >= 0xac00 && c.charCodeAt(0) <= 0xd7a3) {
             return Array.from(decomposeHangul(c))
+              .flatMap((j) => Array.from(JAMO_EXPAND[j] ?? j))
               .map((j) => MORSE_KR[j] || j)
               .filter(Boolean)
               .join(" ");
           }
+          const jamo = Array.from(JAMO_EXPAND[c] ?? c).map((j) => MORSE_KR[j]);
+          if (jamo.every(Boolean)) return jamo.join(" ");
           const up = c.toUpperCase();
           return MORSE_EN[up] || c;
         })
@@ -61,8 +73,9 @@ function toMorse(text: string): string {
 
 function fromMorse(morse: string): string {
   const reverse: Record<string, string> = {};
-  for (const [k, v] of Object.entries(MORSE_EN)) reverse[v] = k;
   for (const [k, v] of Object.entries(MORSE_KR)) reverse[v] = k;
+  for (const [k, v] of Object.entries(MORSE_EN)) reverse[v] = k; // 충돌 코드는 영문 우선
+
   const words = morse.split(/\s*\/\s*/);
   return words
     .map((w) =>

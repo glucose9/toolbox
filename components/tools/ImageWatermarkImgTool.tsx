@@ -32,7 +32,9 @@ export default function ImageWatermarkImgTool() {
     if (wm) {
       const w = (c.width * size) / 100;
       const h = (wm.naturalHeight / wm.naturalWidth) * w;
-      const [vp, hp] = position.split("-");
+      const parts = position.split("-");
+      const vp = parts[0];
+      const hp = parts[1] ?? parts[0];
       let x = margin, y = margin;
       if (hp === "center") x = (c.width - w) / 2;
       else if (hp === "right") x = c.width - w - margin;

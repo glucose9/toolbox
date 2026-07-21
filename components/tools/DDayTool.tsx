@@ -17,12 +17,16 @@ function fmt(d: Date): string {
   return d.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 }
 
+function ymd(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export default function DDayTool() {
   const t = useTranslations("toolUI.dday");
   const [mode, setMode] = useState<Mode>("dday");
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = ymd(today);
 
   const [target, setTarget] = useState(todayStr);
   const [from, setFrom] = useState(todayStr);
@@ -71,7 +75,7 @@ export default function DDayTool() {
     const out = new Date(b.getTime() + n * DAY_MS);
     return (
       <div>
-        <div className="text-3xl font-bold">{out.toISOString().slice(0, 10)}</div>
+        <div className="text-3xl font-bold">{ymd(out)}</div>
         <div className="text-sm text-muted mt-1">{fmt(out)}</div>
         <div className="text-sm mt-1">{n >= 0 ? t("daysAfter", { date: fmt(b), n }) : t("daysBefore", { date: fmt(b), n: Math.abs(n) })}</div>
       </div>

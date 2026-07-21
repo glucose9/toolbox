@@ -21,14 +21,31 @@ export default function CiteFormatTool() {
   const [accessed, setAccessed] = useState("");
   const [doi, setDoi] = useState("10.1234/abcd.2024.567");
 
-  const splitAuthors = (s: string) =>
-    s.split(/[,&]|\band\b/).map((a) => a.trim()).filter(Boolean);
+  const splitAuthors = (s: string) => {
+    if (s.includes(";")) return s.split(";").map((a) => a.trim()).filter(Boolean);
+    const INITIALS = /^[A-ZÀ-Ý]\.([\s-]*[A-ZÀ-Ý]\.)*$/;
+    const out: string[] = [];
+    for (const part of s.split(/\s*&\s*|\s+and\s+/)) {
+      for (const raw of part.split(",")) {
+        const tk = raw.trim();
+        if (!tk) continue;
+        if (INITIALS.test(tk) && out.length > 0) out[out.length - 1] += `, ${tk}`;
+        else out.push(tk);
+      }
+    }
+    return out;
+  };
 
   const mlaAuthors = (raw: string) => {
-    const list = raw.split(/,\s*(?=[A-ZÀ-Ý])|,\s*&\s*|\s+&\s+|\sand\s/);
-    if (list.length === 1) return list[0].trim();
-    if (list.length === 2) return `${list[0].trim()}, and ${list[1].trim()}`;
-    return `${list[0].trim()}, et al.`;
+    const list = splitAuthors(raw);
+    const deinvert = (n: string) => {
+      const ix = n.indexOf(",");
+      return ix >= 0 ? `${n.slice(ix + 1).trim()} ${n.slice(0, ix).trim()}` : n;
+    };
+    if (list.length === 0) return raw.trim();
+    if (list.length === 1) return list[0];
+    if (list.length === 2) return `${list[0]}, and ${deinvert(list[1])}`;
+    return `${list[0]}, et al.`;
   };
 
   const apa = (() => {
@@ -43,7 +60,7 @@ export default function CiteFormatTool() {
   })();
 
   const mla = (() => {
-    const a = mlaAuthors(authors);
+    const a = mlaAuthors(authors).replace(/\.$/, "");
     if (type === "journal") {
       return `${a}. "${title}." *${container}*, vol. ${volume}, no. ${issue}, ${year}, pp. ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`;
     }

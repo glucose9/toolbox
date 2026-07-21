@@ -36,7 +36,6 @@ function calcSedanTax(cc: number, ageYears: number, isBusiness: boolean): {
 }
 
 const EV_TAX = 130_000;
-const HYBRID_RATE = 0.5;
 
 export default function CarTaxTool() {
   const t = useTranslations("toolUI.car-tax");
@@ -59,11 +58,7 @@ export default function CarTaxTool() {
         half: Math.round(EV_TAX / 2),
       };
     }
-    if (type === "hybrid") {
-      const sedan = calcSedanTax(cc, ageYears, isBusiness);
-      const hybridTotal = Math.round(sedan.total * (1 - HYBRID_RATE));
-      return { ...sedan, total: hybridTotal, annual: hybridTotal, half: Math.round(hybridTotal / 2) };
-    }
+    // 하이브리드 자동차세 감면 제도는 없음 — 일반 승용차와 동일 과세
     const sedan = calcSedanTax(cc, ageYears, isBusiness);
     return { ...sedan, annual: sedan.total, half: Math.round(sedan.total / 2) };
   }, [type, cc, ageYears, isBusiness]);
@@ -141,10 +136,7 @@ export default function CarTaxTool() {
               <span>+{t("won", { v: fmt(result.educationTax) })}</span>
             </div>
             {type === "hybrid" && (
-              <div className="flex justify-between text-green-600">
-                <span>{t("hybridReduction")}</span>
-                <span>-{t("won", { v: fmt(result.baseAnnual + result.educationTax - result.reduction - result.total) })}</span>
-              </div>
+              <div className="text-xs text-muted">{t("hybridSameNote")}</div>
             )}
           </>
         )}

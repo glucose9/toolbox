@@ -182,21 +182,39 @@ export default function KoreanCiteTool() {
   const [pages, setPages] = useState("123-145");
   const [doi, setDoi] = useState("");
 
-  const splitAuthors = authors.split(/[,·、]/).map((a) => a.trim()).filter(Boolean);
+  const splitAuthors = (() => {
+    if (authors.includes(";")) return authors.split(";").map((a) => a.trim()).filter(Boolean);
+    const INITIALS = /^[A-ZÀ-Ý]\.([\s-]*[A-ZÀ-Ý]\.)*$/;
+    const out: string[] = [];
+    for (const part of authors.split(/\s*&\s*|\s+and\s+/)) {
+      for (const raw of part.split(/[,·、]/)) {
+        const tk = raw.trim();
+        if (!tk) continue;
+        if (INITIALS.test(tk) && out.length > 0) out[out.length - 1] += `, ${tk}`;
+        else out.push(tk);
+      }
+    }
+    return out;
+  })();
+  const surname = (n: string) => (localeKey === "en" ? n.split(",")[0].trim() : n);
   const intextAuthors = (() => {
     if (splitAuthors.length === 0) return "";
-    if (splitAuthors.length === 1) return splitAuthors[0];
+    if (splitAuthors.length === 1) return surname(splitAuthors[0]);
     if (splitAuthors.length === 2) {
-      if (localeKey === "en") return `${splitAuthors[0]} & ${splitAuthors[1]}`;
+      if (localeKey === "en") return `${surname(splitAuthors[0])} & ${surname(splitAuthors[1])}`;
       return `${splitAuthors[0]}, ${splitAuthors[1]}`;
     }
-    if (localeKey === "en") return `${splitAuthors[0]} et al.`;
+    if (localeKey === "en") return `${surname(splitAuthors[0])} et al.`;
     if (localeKey === "ja") return `${splitAuthors[0]} ほか`;
     if (localeKey === "zh") return `${splitAuthors[0]} 等`;
     return `${splitAuthors[0]} 외`;
   })();
 
-  const refList = splitAuthors.join(", ");
+  const refList = (() => {
+    if (localeKey !== "en" || splitAuthors.length < 2) return splitAuthors.join(", ");
+    const conj = style === "apa" || style === "harvard" ? "&" : "and";
+    return `${splitAuthors.slice(0, -1).join(", ")}, ${conj} ${splitAuthors[splitAuthors.length - 1]}`;
+  })();
   const buildArgs: BuildArgs = {
     refList,
     intextAuthors,

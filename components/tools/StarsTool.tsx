@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 function stars(score: number, max: number): string {
-  const ratio = (score / max) * 5;
+  if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) return "☆☆☆☆☆";
+  const ratio = Math.max(0, Math.min(5, (score / max) * 5));
   const full = Math.floor(ratio);
   const half = ratio - full >= 0.5;
   return "★".repeat(full) + (half ? "½" : "") + "☆".repeat(Math.max(0, 5 - full - (half ? 1 : 0)));

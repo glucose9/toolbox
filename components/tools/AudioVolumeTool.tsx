@@ -27,8 +27,10 @@ export default function AudioVolumeTool() {
       const ff = ffmpegRef.current;
       const ext = file.name.split(".").pop() || "mp3";
       await ff.writeFile(`in.${ext}`, await fetchFile(file));
-      await ff.exec(["-i", `in.${ext}`, "-filter:a", `volume=${db}dB`, "out.mp3"]);
-      const data = (await ff.readFile("out.mp3")) as Uint8Array;
+      const outName = `out_${Date.now()}.mp3`;
+      await ff.exec(["-y", "-i", `in.${ext}`, "-filter:a", `volume=${db}dB`, outName]);
+      const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const ab = new ArrayBuffer(data.byteLength); new Uint8Array(ab).set(data);
       const blob = new Blob([ab], { type: "audio/mpeg" });
       if (outUrl) URL.revokeObjectURL(outUrl);

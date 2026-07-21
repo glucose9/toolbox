@@ -19,11 +19,14 @@ export default function PdfUnlockTool() {
       const buf = await file.arrayBuffer();
       const { PDFDocument } = await import("pdf-lib");
 
-      // pdf-lib doesn't accept passwords directly. We use ignoreEncryption
-      // to strip owner-level restrictions (edit/print/copy) and re-save.
-      // PDFs encrypted with a real user-open password generally won't be
-      // readable this way — those require a different toolchain.
+      // pdf-lib cannot decrypt PDFs: ignoreEncryption only skips the load-time
+      // throw, and save() would serialize the still-encrypted streams into a
+      // broken file. Detect encryption and fail honestly instead.
       const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
+      if (pdf.isEncrypted) {
+        setStatus(t("statusEncrypted"));
+        return;
+      }
 
       const bytes = await pdf.save();
       const blob = new Blob([bytes as BlobPart], { type: "application/pdf" });

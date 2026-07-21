@@ -4,10 +4,13 @@ import { useState, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 
 // 2026 기준 4대보험 요율 (사용자 부담)
-const NATIONAL_PENSION = 0.045;
-const HEALTH = 0.03545;
-const LONG_TERM = 0.004591;
+const NATIONAL_PENSION = 0.0475; // 연금개혁: 총 9.5%의 근로자 절반
+const HEALTH = 0.03595; // 총 7.19%의 근로자 절반
+const LONG_TERM = HEALTH * 0.1314; // 장기요양 = 건강보험료의 13.14%
 const EMPLOYMENT = 0.009;
+// 국민연금 기준소득월액 상·하한 (2026.7~2027.6 고시 — 매년 7월 갱신 필요)
+const PENSION_BASE_MAX = 6_590_000;
+const PENSION_BASE_MIN = 410_000;
 
 function incomeTax(monthly: number, dependents: number, children: number): number {
   const taxable = Math.max(0, monthly - 1_500_000);
@@ -32,8 +35,8 @@ export default function NetSalaryTool() {
 
   const result = useMemo(() => {
     const monthly = annual / 12;
-    const taxableMonthly = monthly - nontaxable;
-    const pension = Math.min(taxableMonthly * NATIONAL_PENSION, 5_530_000 * NATIONAL_PENSION);
+    const taxableMonthly = Math.max(0, monthly - nontaxable);
+    const pension = Math.min(Math.max(taxableMonthly, PENSION_BASE_MIN), PENSION_BASE_MAX) * NATIONAL_PENSION;
     const health = taxableMonthly * HEALTH;
     const longTerm = taxableMonthly * LONG_TERM;
     const employment = taxableMonthly * EMPLOYMENT;

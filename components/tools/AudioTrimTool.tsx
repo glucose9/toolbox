@@ -85,16 +85,17 @@ export default function AudioTrimTool() {
       const ext = file.name.split(".").pop()?.toLowerCase() || "mp3";
       const inName = `in.${ext}`;
       const outExt = ext === "wav" || ext === "flac" ? ext : "mp3";
-      const outName = `out.${outExt}`;
+      const outName = `out_${Date.now()}.${outExt}`;
       await ff.writeFile(inName, await fetchFile(file));
       const dur = (end - start).toFixed(2);
       const ss = start.toFixed(2);
-      const args = ["-ss", ss, "-t", dur, "-i", inName];
+      const args = ["-y", "-ss", ss, "-t", dur, "-i", inName];
       if (outExt === "mp3") args.push("-codec:a", "libmp3lame", "-q:a", "2");
       else args.push("-c", "copy");
       args.push(outName);
       await ff.exec(args);
       const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const ab = new ArrayBuffer(data.byteLength);
       new Uint8Array(ab).set(data);
       const blob = new Blob([ab], { type: outExt === "wav" ? "audio/wav" : outExt === "flac" ? "audio/flac" : "audio/mpeg" });

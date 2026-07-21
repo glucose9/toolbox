@@ -26,7 +26,7 @@ export default function SleepRecommendTool() {
     const cycles = [3, 4, 5, 6];
     return cycles.map((c) => {
       const dir = mode === "wake" ? 1 : -1;
-      const d = addMinutes(base, dir * (90 * c + (mode === "sleep" ? -fallAsleep : fallAsleep)));
+      const d = addMinutes(base, dir * (90 * c + fallAsleep));
       return { cycles: c, hours: (90 * c) / 60, time: fmtTime(d) };
     });
   }, [time, mode]);

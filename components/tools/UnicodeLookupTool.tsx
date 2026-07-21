@@ -22,7 +22,8 @@ export default function UnicodeLookupTool() {
       return matches.map((m) => {
         const hex = m.replace(/^U\+?/, "");
         const code = parseInt(hex, 16);
-        return { char: String.fromCodePoint(code), code, hex: hex.toUpperCase().padStart(4, "0") };
+        const char = code <= 0x10ffff ? String.fromCodePoint(code) : "�";
+        return { char, code, hex: hex.toUpperCase().padStart(4, "0") };
       });
     }
   }, [input, mode]);

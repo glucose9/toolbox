@@ -3,24 +3,26 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-// 2026 Korean minimum wage (reference; update after announcement)
-const KR_MIN_WAGE_2026 = 10310;
+// 2026 Korean minimum wage (confirmed: 10,320 KRW/h)
+const KR_MIN_WAGE_2026 = 10320;
 
 export default function WageConverterTool() {
   const t = useTranslations("toolUI.wage-converter");
   const [hourlyHours, setHourlyHours] = useState(40);
   const [hourly, setHourly] = useState<number>(KR_MIN_WAGE_2026);
 
-  const monthlyHours = (hourlyHours / 40) * 209; // 209h/month based on 40h/week incl. weekly holiday pay
+  const holidayHours = Math.min(hourlyHours / 40, 1) * 8; // 주휴 = (주 소정근로/40)×8h, 상한 8h
+  const paidWeeklyHours = hourlyHours + holidayHours;
+  const monthlyHours = paidWeeklyHours * (209 / 48); // 209h/month at 40h/week incl. weekly holiday pay
   const monthly = hourly * monthlyHours;
   const daily = hourly * 8;
-  const weekly = hourly * (hourlyHours + 8); // includes 1 weekly holiday day
+  const weekly = hourly * paidWeeklyHours;
   const annual = monthly * 12;
 
   const setFrom = (val: number, kind: "h" | "d" | "w" | "m" | "y") => {
     if (kind === "h") setHourly(val);
     else if (kind === "d") setHourly(val / 8);
-    else if (kind === "w") setHourly(val / (hourlyHours + 8));
+    else if (kind === "w") setHourly(val / paidWeeklyHours);
     else if (kind === "m") setHourly(val / monthlyHours);
     else if (kind === "y") setHourly(val / (monthlyHours * 12));
   };
@@ -51,7 +53,7 @@ export default function WageConverterTool() {
       <div>
         {row(t("hourly"), hourly, "h")}
         {row(t("daily"), daily, "d", t("krwDaily"))}
-        {row(t("weekly"), weekly, "w", t("krwWeekly", { n: hourlyHours + 8 }))}
+        {row(t("weekly"), weekly, "w", t("krwWeekly", { n: Math.round(paidWeeklyHours) }))}
         {row(t("monthly"), monthly, "m", t("krwMonthly", { n: Math.round(monthlyHours) }))}
         {row(t("annual"), annual, "y", t("krw"))}
       </div>

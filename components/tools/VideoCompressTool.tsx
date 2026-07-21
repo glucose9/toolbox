@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getFFmpeg, ffmpegFetchFile } from "@/lib/ffmpeg";
 import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
@@ -20,6 +20,13 @@ export default function VideoCompressTool() {
   const [progress, setProgress] = useState(0);
   const [output, setOutput] = useState<{ url: string; size: number } | null>(null);
 
+  const fileUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+  useEffect(() => {
+    return () => {
+      if (fileUrl) URL.revokeObjectURL(fileUrl);
+    };
+  }, [fileUrl]);
+
   const run = async () => {
     if (!file) return;
     setBusy(true);
@@ -34,16 +41,19 @@ export default function VideoCompressTool() {
       setStatus(t("statusLoading"));
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
       setStatus(t("statusCompressing", { crf }));
+      const outName = `out_${Date.now()}.mp4`;
       await ff.exec([
+        "-y",
         "-i", inputName,
         "-vcodec", "libx264",
         "-crf", String(crf),
         "-preset", "veryfast",
         "-acodec", "aac",
         "-b:a", "128k",
-        "out.mp4",
+        outName,
       ]);
-      const data = (await ff.readFile("out.mp4")) as Uint8Array;
+      const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const blob = new Blob([data as BlobPart], { type: "video/mp4" });
       setOutput({ url: URL.createObjectURL(blob), size: blob.size });
       setStatus(t("statusDone"));
@@ -71,7 +81,7 @@ export default function VideoCompressTool() {
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <div className="text-sm font-medium mb-2">{t("originalSize", { size: fmtBytes(file.size) })}</div>
-              <video src={URL.createObjectURL(file)} controls className="w-full max-h-60 rounded border border-gray-200" />
+              <video src={fileUrl ?? undefined} controls className="w-full max-h-60 rounded border border-gray-200" />
               <button onClick={() => { setFile(null); setOutput(null); }} className="mt-2 text-sm text-brand-600 hover:underline">
                 {t("chooseOther")}
               </button>

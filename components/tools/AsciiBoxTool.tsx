@@ -13,14 +13,23 @@ const STYLES: Record<Style, { tl: string; tr: string; bl: string; br: string; h:
   thick: { tl: "┏", tr: "┓", bl: "┗", br: "┛", h: "━", v: "┃" },
 };
 
+// East Asian Wide/Fullwidth 문자는 모노스페이스에서 2칸 폭
+const WIDE_RE = /[ᄀ-ᇿ⺀-꓏가-힣豈-﫿︰-﹏＀-｠￠-￦]/;
+
+function dispWidth(s: string): number {
+  let w = 0;
+  for (const ch of s) w += WIDE_RE.test(ch) ? 2 : 1;
+  return w;
+}
+
 function box(text: string, style: Style, padding: number): string {
   const s = STYLES[style];
   const lines = text.split("\n");
-  const width = Math.max(...lines.map((l) => l.length));
+  const width = Math.max(...lines.map((l) => dispWidth(l)));
   const top = s.tl + s.h.repeat(width + padding * 2) + s.tr;
   const bot = s.bl + s.h.repeat(width + padding * 2) + s.br;
   const pad = " ".repeat(padding);
-  const middle = lines.map((l) => s.v + pad + l.padEnd(width, " ") + pad + s.v);
+  const middle = lines.map((l) => s.v + pad + l + " ".repeat(width - dispWidth(l)) + pad + s.v);
   return [top, ...middle, bot].join("\n");
 }
 

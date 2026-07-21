@@ -80,14 +80,17 @@ export default function VideoSpeedTool() {
       await ff.writeFile(`in.${ext}`, await fetchFile(file));
       const ptsFactor = (1 / speed).toFixed(4);
       const aFilter = audioFilter(speed);
+      const outName = `out_${Date.now()}.mp4`;
       await ff.exec([
+        "-y",
         "-i", `in.${ext}`,
         "-vf", `setpts=${ptsFactor}*PTS`,
         "-af", aFilter,
         "-preset", "veryfast",
-        "out.mp4",
+        outName,
       ]);
-      const data = (await ff.readFile("out.mp4")) as Uint8Array;
+      const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const ab = new ArrayBuffer(data.byteLength);
       new Uint8Array(ab).set(data);
       const blob = new Blob([ab], { type: "video/mp4" });

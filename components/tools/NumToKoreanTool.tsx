@@ -54,7 +54,13 @@ function groupToKor(g: string, useFormal: boolean): string {
 }
 
 function fracToKor(s: string): string {
-  return Array.from(s).map((c) => DIGITS[parseInt(c, 10)] || c).join("");
+  return Array.from(s)
+    .map((c) => {
+      const d = parseInt(c, 10);
+      if (Number.isNaN(d)) return c;
+      return d === 0 ? "영" : DIGITS[d];
+    })
+    .join("");
 }
 
 export default function NumToKoreanTool() {

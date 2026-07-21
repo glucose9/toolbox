@@ -1492,7 +1492,8 @@
       "timestampToDate": "타임스탬프 → 날짜",
       "dateToTimestamp": "날짜 → 타임스탬프",
       "local": "로컬",
-      "detectedUnit": "감지된 단위"
+      "detectedUnit": "감지된 단위",
+      "invalidDate": "날짜 형식이 올바르지 않습니다. 예: 2026-07-20 14:30"
     },
     "video-rotate": {
       "errVideoOnly": "동영상 파일만 지원합니다.",
@@ -2103,6 +2104,7 @@
     "pdf-unlock": {
       "statusSuccess": "✓ 처리 완료. 편집/인쇄/복사 제한이 걸린 PDF였다면 제한이 해제됩니다. 다운로드 버튼으로 받으세요.",
       "statusUserPassword": "❌ 사용자 열기 암호가 설정된 PDF입니다. 이 도구는 본문 자체를 잠근 PDF는 해제할 수 없습니다. 한컴오피스·Adobe Acrobat 같은 정식 도구에서 본래 암호로 열어 저장하세요.",
+      "statusEncrypted": "❌ 이 파일은 암호화되어 있어 브라우저에서는 잠금을 해제할 수 없습니다. 한컴오피스·Adobe Acrobat 같은 정식 도구에서 본래 암호로 열어 다시 저장하세요.",
       "statusFailed": "❌ 처리 실패: {msg}",
       "unknownError": "알 수 없는 오류",
       "lockedPdf": "잠긴 PDF 파일",
@@ -2743,10 +2745,11 @@
       "ageReduction": "차령 경감 ({years}년차)",
       "educationTax": "지방교육세 (30%)",
       "hybridReduction": "하이브리드 경감 (50%)",
+      "hybridSameNote": "하이브리드는 자동차세 감면 제도가 없어 일반 승용차와 동일하게 과세됩니다.",
       "annualTax": "연간 자동차세",
       "biAnnual": "반기별(6월·12월) 납부: 각 {half}원",
       "won": "{v}원",
-      "tipNote": "💡 한국 지방세법 기준 자동차세 추정치. 영업용·하이브리드·전기차는 별도 세율·경감 적용. 정확한 고지액은 지방자치단체의 통지서를 참고하세요. 연납 신청 시 약 10% 추가 할인."
+      "tipNote": "💡 한국 지방세법 기준 자동차세 추정치. 영업용·전기차는 별도 세율 적용. 정확한 고지액은 지방자치단체의 통지서를 참고하세요. 연납 신청 시 약 5% 공제."
     },
     "loan-calc": {
       "principal": "대출 원금 (원)",
@@ -2885,9 +2888,9 @@
       "nontaxable": "비과세 (식대·자가운전·교통비 등)",
       "nontaxableNote": "월 {amount}원 (식대는 월 20만원까지 비과세)",
       "deductionTitle": "월 공제 내역",
-      "pension": "국민연금 (4.5%)",
-      "health": "건강보험 (3.545%)",
-      "longTerm": "장기요양 (0.459%)",
+      "pension": "국민연금 (4.75%)",
+      "health": "건강보험 (3.595%)",
+      "longTerm": "장기요양 (건강보험료의 13.14%)",
       "employment": "고용보험 (0.9%)",
       "incomeTax": "소득세 (간이)",
       "localTax": "지방소득세 (10%)",
@@ -3085,6 +3088,8 @@
       "areaNote": "85㎡(약 26평) 초과 시 농특세 가산",
       "isHouse": "주택 (오피스텔·상가는 체크 해제)",
       "isMulti": "다주택자 (2주택 이상)",
+      "multi2": "2주택",
+      "multi3": "3주택 이상",
       "appliedRate": "적용 세율",
       "acqBase": "취득세 본세",
       "localEdu": "지방교육세 (취득세 ×10%)",

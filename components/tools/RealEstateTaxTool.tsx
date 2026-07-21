@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 
 type Mode = "acquisition" | "transfer" | "property";
 
-function calcAcquisitionTax(price: number, isHouse: boolean, isMulti: boolean, area: number): {
+function calcAcquisitionTax(price: number, isHouse: boolean, isMulti: boolean, area: number, multiCount: number): {
   baseRate: number;
   base: number;
   localEdu: number;
@@ -16,11 +16,12 @@ function calcAcquisitionTax(price: number, isHouse: boolean, isMulti: boolean, a
   if (!isHouse) {
     baseRate = 0.04;
   } else if (isMulti) {
-    if (price <= 6_00_000_000) baseRate = 0.08;
-    else baseRate = 0.12;
+    // 다주택 중과는 주택 수 기준: 조정 2주택 8%, 조정 3주택 이상·법인 12%
+    baseRate = multiCount >= 3 ? 0.12 : 0.08;
   } else {
     if (price <= 6_00_000_000) baseRate = 0.01;
-    else if (price <= 9_00_000_000) baseRate = 0.02;
+    // 6~9억 연속 누진: 세율(%) = 취득가(억) × 2/3 − 3 (1~3% 클램프)
+    else if (price <= 9_00_000_000) baseRate = Math.min(0.03, Math.max(0.01, ((price / 100_000_000) * 2 / 3 - 3) / 100));
     else baseRate = 0.03;
   }
   const base = Math.round(price * baseRate);
@@ -48,30 +49,38 @@ function calcTransferTax(profit: number, holdYears: number, is1House: boolean, h
   else if (holdYears >= 3) longTermRate = 0.06;
   const longTermDeduction = Math.round(profit * longTermRate);
   const taxable = Math.max(0, profit - longTermDeduction - baseExemption);
+  // 단기세율 판정은 총 보유개월(년×12+월) 기준
+  const totalMonths = holdYears * 12 + holdMonths;
   let rate: number;
-  if (holdYears < 1 || holdMonths < 12) rate = 0.7;
-  else if (holdYears < 2) rate = 0.6;
+  let progDeduction = 0;
+  if (totalMonths < 12) rate = 0.7;
+  else if (totalMonths < 24) rate = 0.6;
   else {
+    // 2026 소득세 8구간 누진세율 + 누진공제
     if (taxable <= 14_000_000) rate = 0.06;
-    else if (taxable <= 50_000_000) rate = 0.15;
-    else if (taxable <= 88_000_000) rate = 0.24;
-    else if (taxable <= 150_000_000) rate = 0.35;
-    else if (taxable <= 300_000_000) rate = 0.38;
-    else if (taxable <= 500_000_000) rate = 0.4;
-    else rate = 0.42;
+    else if (taxable <= 50_000_000) { rate = 0.15; progDeduction = 1_260_000; }
+    else if (taxable <= 88_000_000) { rate = 0.24; progDeduction = 5_760_000; }
+    else if (taxable <= 150_000_000) { rate = 0.35; progDeduction = 15_440_000; }
+    else if (taxable <= 300_000_000) { rate = 0.38; progDeduction = 19_940_000; }
+    else if (taxable <= 500_000_000) { rate = 0.4; progDeduction = 25_940_000; }
+    else if (taxable <= 1_000_000_000) { rate = 0.42; progDeduction = 35_940_000; }
+    else { rate = 0.45; progDeduction = 65_940_000; }
   }
-  const tax = Math.max(0, Math.round(taxable * rate));
+  const tax = Math.max(0, Math.round(taxable * rate - progDeduction));
   const localTax = Math.round(tax * 0.1);
   return { taxable, rate, tax, localTax, total: tax + localTax, exempt: false };
 }
 
 function calcPropertyTax(stdValue: number): { tax: number; rate: number } {
+  // 과세표준 = 공시가격 × 공정시장가액비율 60%, 주택 재산세는 초과누진세율
+  const base = stdValue * 0.6;
   let rate: number;
-  if (stdValue <= 60_000_000) rate = 0.001;
-  else if (stdValue <= 150_000_000) rate = 0.0015;
-  else if (stdValue <= 300_000_000) rate = 0.0025;
-  else rate = 0.004;
-  return { tax: Math.round(stdValue * rate), rate };
+  let tax: number;
+  if (base <= 60_000_000) { rate = 0.001; tax = base * 0.001; }
+  else if (base <= 150_000_000) { rate = 0.0015; tax = 60_000 + (base - 60_000_000) * 0.0015; }
+  else if (base <= 300_000_000) { rate = 0.0025; tax = 195_000 + (base - 150_000_000) * 0.0025; }
+  else { rate = 0.004; tax = 570_000 + (base - 300_000_000) * 0.004; }
+  return { tax: Math.round(tax), rate };
 }
 
 export default function RealEstateTaxTool() {
@@ -82,6 +91,7 @@ export default function RealEstateTaxTool() {
   const [price, setPrice] = useState(500_000_000);
   const [isHouse, setIsHouse] = useState(true);
   const [isMulti, setIsMulti] = useState(false);
+  const [multiCount, setMultiCount] = useState(2);
   const [area, setArea] = useState(85);
 
   const [profit, setProfit] = useState(100_000_000);
@@ -91,7 +101,7 @@ export default function RealEstateTaxTool() {
 
   const [stdValue, setStdValue] = useState(300_000_000);
 
-  const acq = useMemo(() => calcAcquisitionTax(price, isHouse, isMulti, area), [price, isHouse, isMulti, area]);
+  const acq = useMemo(() => calcAcquisitionTax(price, isHouse, isMulti, area, multiCount), [price, isHouse, isMulti, area, multiCount]);
   const tr = useMemo(() => calcTransferTax(profit, holdYears, is1House, holdMonths), [profit, holdYears, is1House, holdMonths]);
   const prop = useMemo(() => calcPropertyTax(stdValue), [stdValue]);
 
@@ -127,6 +137,12 @@ export default function RealEstateTaxTool() {
             </label>
             <label className="flex items-center gap-2"><input type="checkbox" checked={isHouse} onChange={(e) => setIsHouse(e.target.checked)} /> {t("isHouse")}</label>
             <label className="flex items-center gap-2"><input type="checkbox" checked={isMulti} onChange={(e) => setIsMulti(e.target.checked)} /> {t("isMulti")}</label>
+            {isMulti && (
+              <div className="sm:col-span-2 flex items-center gap-4">
+                <label className="flex items-center gap-2"><input type="radio" checked={multiCount === 2} onChange={() => setMultiCount(2)} /> {t("multi2")}</label>
+                <label className="flex items-center gap-2"><input type="radio" checked={multiCount >= 3} onChange={() => setMultiCount(3)} /> {t("multi3")}</label>
+              </div>
+            )}
           </div>
 
           <div className="card-section space-y-1 text-sm">

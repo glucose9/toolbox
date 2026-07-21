@@ -4,12 +4,33 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
 function minify(css: string): string {
-  return css
+  // Strings and (...) groups keep their inner spacing untouched: the CSS spec
+  // requires spaces around + and - inside calc(), and quoted content is literal.
+  const sheltered: string[] = [];
+  const shelter = (s: string) => {
+    sheltered.push(s);
+    return "__CSSMIN" + (sheltered.length - 1) + "__";
+  };
+  let out = css
     .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, shelter);
+  let prev = "";
+  while (prev !== out) {
+    prev = out;
+    out = out.replace(/\([^()]*\)/g, (m) => shelter(m.replace(/\s+/g, " ")));
+  }
+  out = out
     .replace(/\s+/g, " ")
-    .replace(/\s*([{}:;,>+~])\s*/g, "$1")
+    .replace(/\s*([{};,>+~])\s*/g, "$1")
+    // Trim only after ":" — a space before it can be a descendant combinator
+    // (".card :hover") whose removal changes the selector's meaning.
+    .replace(/:\s+/g, ":")
     .replace(/;}/g, "}")
     .trim();
+  for (let i = sheltered.length - 1; i >= 0; i--) {
+    out = out.replace("__CSSMIN" + i + "__", () => sheltered[i]);
+  }
+  return out;
 }
 
 export default function CssMinifierTool() {

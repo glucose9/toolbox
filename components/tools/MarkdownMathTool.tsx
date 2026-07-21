@@ -199,36 +199,31 @@ function extractTitle(md: string): string | null {
 let cachedKatexCss: string | null = null;
 async function loadKatexCssText(): Promise<string> {
   if (cachedKatexCss !== null) return cachedKatexCss;
+  // Next.js bundles katex.min.css into a hashed /_next/static/css file, so the
+  // sheet href never contains "katex" — collect the rules by content instead
+  // (every rule in katex.min.css mentions "katex" in its selector or font name).
+  const parts: string[] = [];
   try {
-    const links = Array.from(document.styleSheets);
-    for (const sheet of links) {
-      const href = sheet.href || "";
-      if (href.includes("katex")) {
-        try {
-          const rules = sheet.cssRules;
-          if (rules) {
-            const text = Array.from(rules).map((r) => r.cssText).join("\n");
-            cachedKatexCss = text;
-            return text;
-          }
-        } catch {
-          // CORS - fall through to fetch
+    for (const sheet of Array.from(document.styleSheets)) {
+      try {
+        for (const rule of Array.from(sheet.cssRules)) {
+          if (/katex/i.test(rule.cssText)) parts.push(rule.cssText);
         }
-        try {
-          const res = await fetch(href);
-          if (res.ok) {
-            const tt = await res.text();
-            cachedKatexCss = tt;
-            return tt;
+      } catch {
+        // Cross-origin sheet: cssRules is unreadable — fetch if it is KaTeX's.
+        if ((sheet.href || "").includes("katex")) {
+          try {
+            const res = await fetch(sheet.href as string);
+            if (res.ok) parts.push(await res.text());
+          } catch {
+            /* ignore */
           }
-        } catch {
-          /* ignore */
         }
       }
     }
   } catch {
     /* ignore */
   }
-  cachedKatexCss = "";
-  return "";
+  cachedKatexCss = parts.join("\n");
+  return cachedKatexCss;
 }

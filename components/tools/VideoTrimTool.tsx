@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { getFFmpeg, ffmpegFetchFile } from "@/lib/ffmpeg";
 import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
@@ -23,6 +23,13 @@ export default function VideoTrimTool() {
   const [progress, setProgress] = useState(0);
   const [output, setOutput] = useState<{ url: string; size: number } | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const fileUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+  useEffect(() => {
+    return () => {
+      if (fileUrl) URL.revokeObjectURL(fileUrl);
+    };
+  }, [fileUrl]);
 
   const handleFile = (f: File) => {
     setFile(f);
@@ -50,14 +57,17 @@ export default function VideoTrimTool() {
       setStatus(t("statusLoading"));
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
       setStatus(t("statusTrimming", { start: fmtTime(start), end: fmtTime(end) }));
+      const outName = `out_${Date.now()}.mp4`;
       await ff.exec([
+        "-y",
         "-ss", String(start),
         "-to", String(end),
         "-i", inputName,
         "-c", "copy",
-        "out.mp4",
+        outName,
       ]);
-      const data = (await ff.readFile("out.mp4")) as Uint8Array;
+      const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const blob = new Blob([data as BlobPart], { type: "video/mp4" });
       setOutput({ url: URL.createObjectURL(blob), size: blob.size });
       setStatus(t("statusDone"));
@@ -90,7 +100,7 @@ export default function VideoTrimTool() {
             <div className="text-sm font-medium mb-2">{t("original")} ({fmtBytes(file.size)})</div>
             <video
               ref={videoRef}
-              src={URL.createObjectURL(file)}
+              src={fileUrl ?? undefined}
               controls
               onLoadedMetadata={onLoadedMetadata}
               className="w-full max-h-80 rounded border border-gray-200 bg-black"

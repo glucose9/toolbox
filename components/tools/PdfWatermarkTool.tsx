@@ -44,20 +44,55 @@ export default function PdfWatermarkTool() {
     try {
       const bytes = await readBytes(file);
       const doc = await PDFDocument.load(bytes);
-      const font = await doc.embedFont(StandardFonts.HelveticaBold);
       const [r, g, b] = hexToRgb(color);
-      for (const page of doc.getPages()) {
-        const { width, height } = page.getSize();
-        const textWidth = font.widthOfTextAtSize(text, size);
-        page.drawText(text, {
-          x: (width - textWidth) / 2,
-          y: height / 2 - size / 2,
-          size,
-          font,
-          color: rgb(r, g, b),
-          opacity,
-          rotate: degrees(angle),
-        });
+      // Standard-14 fonts only encode WinAnsi, so Korean/CJK text would throw.
+      // Rasterize such text on a canvas and embed it as a PNG instead (same
+      // canvas→embedPng pattern the e-sign tool uses).
+      const needsRaster = Array.from(text).some((c) => (c.codePointAt(0) ?? 0) > 0xff);
+      if (needsRaster) {
+        const SCALE = 4; // canvas px per PDF pt, for crisp glyphs
+        const cv = document.createElement("canvas");
+        const cx = cv.getContext("2d");
+        if (!cx) throw new Error("canvas context unavailable");
+        const fontCss = `700 ${size * SCALE}px 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif`;
+        cx.font = fontCss;
+        const m = cx.measureText(text);
+        const ascent = m.actualBoundingBoxAscent || size * SCALE * 0.8;
+        const descent = m.actualBoundingBoxDescent || size * SCALE * 0.25;
+        cv.width = Math.max(1, Math.ceil(m.width));
+        cv.height = Math.max(1, Math.ceil(ascent + descent));
+        cx.font = fontCss; // resizing the canvas resets context state
+        cx.fillStyle = color;
+        cx.fillText(text, 0, ascent);
+        const img = await doc.embedPng(cv.toDataURL("image/png"));
+        const imgW = cv.width / SCALE;
+        const imgH = cv.height / SCALE;
+        for (const page of doc.getPages()) {
+          const { width, height } = page.getSize();
+          page.drawImage(img, {
+            x: (width - imgW) / 2,
+            y: height / 2 - imgH / 2,
+            width: imgW,
+            height: imgH,
+            opacity,
+            rotate: degrees(angle),
+          });
+        }
+      } else {
+        const font = await doc.embedFont(StandardFonts.HelveticaBold);
+        for (const page of doc.getPages()) {
+          const { width, height } = page.getSize();
+          const textWidth = font.widthOfTextAtSize(text, size);
+          page.drawText(text, {
+            x: (width - textWidth) / 2,
+            y: height / 2 - size / 2,
+            size,
+            font,
+            color: rgb(r, g, b),
+            opacity,
+            rotate: degrees(angle),
+          });
+        }
       }
       const out = await doc.save();
       const baseName = file.name.replace(/\.pdf$/i, "");

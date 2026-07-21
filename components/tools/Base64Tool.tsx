@@ -18,7 +18,7 @@ function encode(text: string, urlSafe: boolean) {
 
 function decode(b64: string, urlSafe: boolean) {
   try {
-    let s = b64;
+    let s = b64.replace(/\s/g, "");
     if (urlSafe) s = s.replace(/-/g, "+").replace(/_/g, "/");
     while (s.length % 4) s += "=";
     const bin = atob(s);

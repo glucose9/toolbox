@@ -1492,7 +1492,8 @@
       "timestampToDate": "Timestamp → Date",
       "dateToTimestamp": "Date → Timestamp",
       "local": "Local",
-      "detectedUnit": "Detected unit"
+      "detectedUnit": "Detected unit",
+      "invalidDate": "Invalid date format. Example: 2026-07-20 14:30"
     },
     "video-rotate": {
       "errVideoOnly": "Only video files are supported.",
@@ -2103,6 +2104,7 @@
     "pdf-unlock": {
       "statusSuccess": "✓ Done. Edit/print/copy restrictions, if any, have been removed. Use the Download button.",
       "statusUserPassword": "❌ This PDF has a user open password. This tool can't unlock content locked behind one — open it in Hancom Office or Adobe Acrobat with the original password and resave.",
+      "statusEncrypted": "❌ This file is encrypted and cannot be unlocked in the browser. Open it with the original password in Hancom Office or Adobe Acrobat and resave it.",
       "statusFailed": "❌ Failed: {msg}",
       "unknownError": "Unknown error",
       "lockedPdf": "Locked PDF file",
@@ -2743,10 +2745,11 @@
       "ageReduction": "Age reduction (year {years})",
       "educationTax": "Local education tax (30%)",
       "hybridReduction": "Hybrid reduction (50%)",
+      "hybridSameNote": "Hybrids have no vehicle-tax reduction — they are taxed the same as regular passenger cars.",
       "annualTax": "Annual vehicle tax",
       "biAnnual": "Bi-annual (June, December): {half} KRW each",
       "won": "{v} KRW",
-      "tipNote": "💡 Estimated under Korean local tax law. Commercial, hybrid, and EVs have separate rates and reductions. For the exact amount, see your municipal notice. Annual prepayment usually offers ~10% extra discount."
+      "tipNote": "💡 Estimated under Korean local tax law. Commercial vehicles and EVs have separate rates. For the exact amount, see your municipal notice. Annual prepayment offers about a 5% discount."
     },
     "loan-calc": {
       "principal": "Loan principal (KRW)",
@@ -2885,9 +2888,9 @@
       "nontaxable": "Non-taxable (meals, transportation, etc.)",
       "nontaxableNote": "Monthly {amount} KRW (up to 200,000 KRW/month for meals is exempt)",
       "deductionTitle": "Monthly deductions",
-      "pension": "National pension (4.5%)",
-      "health": "Health insurance (3.545%)",
-      "longTerm": "Long-term care (0.459%)",
+      "pension": "National pension (4.75%)",
+      "health": "Health insurance (3.595%)",
+      "longTerm": "Long-term care (13.14% of health premium)",
       "employment": "Employment insurance (0.9%)",
       "incomeTax": "Income tax (simplified)",
       "localTax": "Local income tax (10%)",
@@ -3085,6 +3088,8 @@
       "areaNote": "Above 85㎡ (~26 pyeong) adds rural-development surtax",
       "isHouse": "House (uncheck for officetel / commercial)",
       "isMulti": "Multi-home owner (2+ homes)",
+      "multi2": "2 homes",
+      "multi3": "3+ homes",
       "appliedRate": "Applied rate",
       "acqBase": "Acquisition tax (base)",
       "localEdu": "Local education tax (10% of acq. tax)",

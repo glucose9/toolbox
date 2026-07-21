@@ -18,9 +18,9 @@ function secToVtt(s: number): string {
   return secToSrt(s).replace(",", ".");
 }
 function parseTime(t: string): number {
-  const m = t.trim().match(/(\d+):(\d+):(\d+)[,.](\d+)/);
+  const m = t.trim().match(/(?:(\d+):)?(\d+):(\d+)[,.](\d+)/);
   if (!m) return 0;
-  return (+m[1]) * 3600 + (+m[2]) * 60 + (+m[3]) + (+m[4]) / 1000;
+  return (+(m[1] ?? 0)) * 3600 + (+m[2]) * 60 + (+m[3]) + (+m[4].padEnd(3, "0").slice(0, 3)) / 1000;
 }
 
 function parseSrtOrVtt(text: string): Cue[] {

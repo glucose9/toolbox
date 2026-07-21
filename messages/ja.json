@@ -1492,7 +1492,8 @@
       "timestampToDate": "タイムスタンプ → 日付",
       "dateToTimestamp": "日付 → タイムスタンプ",
       "local": "ローカル",
-      "detectedUnit": "検出された単位"
+      "detectedUnit": "検出された単位",
+      "invalidDate": "日付の形式が正しくありません。例: 2026-07-20 14:30"
     },
     "video-rotate": {
       "errVideoOnly": "動画ファイルのみ対応しています。",
@@ -2103,6 +2104,7 @@
     "pdf-unlock": {
       "statusSuccess": "✓ 処理完了。編集/印刷/コピー制限のあるPDFであれば制限が解除されます。ダウンロードボタンで取得してください。",
       "statusUserPassword": "❌ ユーザー開封パスワードが設定されたPDFです。このツールは本文自体がロックされたPDFを解除できません。Hancom Office・Adobe Acrobat等の正規ツールで本来のパスワードで開いて保存し直してください。",
+      "statusEncrypted": "❌ このファイルは暗号化されており、ブラウザでは解除できません。Hancom OfficeやAdobe Acrobatなどの正規ツールで本来のパスワードで開いて保存し直してください。",
       "statusFailed": "❌ 処理失敗: {msg}",
       "unknownError": "不明なエラー",
       "lockedPdf": "ロックされたPDFファイル",
@@ -2743,10 +2745,11 @@
       "ageReduction": "車齢軽減 ({years} 年目)",
       "educationTax": "地方教育税 (30%)",
       "hybridReduction": "ハイブリッド軽減 (50%)",
+      "hybridSameNote": "ハイブリッド車には自動車税の減免制度がなく、一般乗用車と同じ基準で課税されます。",
       "annualTax": "年間自動車税",
       "biAnnual": "半期ごと(6 月・12 月)の納付: 各 {half} ウォン",
       "won": "{v} ウォン",
-      "tipNote": "💡 韓国地方税法に基づく自動車税の概算。営業用・ハイブリッド・電気自動車は別途税率・軽減が適用されます。正確な金額は地方自治体の通知書をご参照ください。年納申請で約 10% 追加割引。"
+      "tipNote": "💡 韓国地方税法に基づく自動車税の概算。営業用・電気自動車は別途税率が適用されます。正確な金額は地方自治体の通知書をご参照ください。年納申請で約 5% 控除。"
     },
     "loan-calc": {
       "principal": "借入元金 (ウォン)",
@@ -2885,9 +2888,9 @@
       "nontaxable": "非課税 (食事・自家用車・交通費など)",
       "nontaxableNote": "月 {amount} KRW (食事代は月 20 万 KRW まで非課税)",
       "deductionTitle": "月次控除内訳",
-      "pension": "国民年金 (4.5%)",
-      "health": "健康保険 (3.545%)",
-      "longTerm": "長期療養 (0.459%)",
+      "pension": "国民年金 (4.75%)",
+      "health": "健康保険 (3.595%)",
+      "longTerm": "長期療養 (健康保険料の 13.14%)",
       "employment": "雇用保険 (0.9%)",
       "incomeTax": "所得税 (簡易)",
       "localTax": "地方所得税 (10%)",
@@ -3085,6 +3088,8 @@
       "areaNote": "85㎡ (約 26 坪) を超えると農特税が加算されます",
       "isHouse": "住宅 (オフィステル・商業施設はチェックを外す)",
       "isMulti": "多住宅所有者 (2 戸以上)",
+      "multi2": "2 戸",
+      "multi3": "3 戸以上",
       "appliedRate": "適用税率",
       "acqBase": "取得税本税",
       "localEdu": "地方教育税 (取得税の 10%)",

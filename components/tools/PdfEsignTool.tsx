@@ -250,12 +250,16 @@ export default function PdfEsignTool() {
       const doc = await PDFDocument.load(pdfBytes);
       // signature image -> bytes
       const sigBytes = await (await fetch(signaturePng)).arrayBuffer();
-      const png = await doc.embedPng(sigBytes);
+      // Uploaded signatures may be JPEG (input accepts image/jpeg); feeding
+      // JPEG bytes to embedPng throws, so branch on the data URL's MIME type.
+      const sigImg = /^data:image\/jpe?g/i.test(signaturePng)
+        ? await doc.embedJpg(sigBytes)
+        : await doc.embedPng(sigBytes);
       const pages = doc.getPages();
       for (const p of placements) {
         const page = pages[p.page - 1];
         if (!page) continue;
-        page.drawImage(png, { x: p.x, y: p.y, width: p.w, height: p.h });
+        page.drawImage(sigImg, { x: p.x, y: p.y, width: p.w, height: p.h });
       }
       const out = await doc.save();
       const blob = new Blob([out as unknown as BlobPart], { type: "application/pdf" });

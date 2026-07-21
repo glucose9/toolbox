@@ -117,7 +117,7 @@ export default function PeriodicTableTool() {
             </div>
           ))}
           {/* Spacer row before lanthanides */}
-          <div className="col-span-18 h-2"></div>
+          <div className="h-2" style={{ gridColumn: "span 18 / span 18" }}></div>
           {/* Lanthanides row 9 - shifted to col 4-18 */}
           {Array.from({ length: 18 }).map((_, col) => {
             if (col < 3) return <div key={`la-empty-${col}`} />;

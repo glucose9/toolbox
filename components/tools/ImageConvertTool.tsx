@@ -88,10 +88,16 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
     setFiles([]);
   };
 
-  const processAll = async () => {
+  const processAll = async (force = false) => {
     setBusy(true);
+    if (force) {
+      files.forEach((f) => {
+        if (f.outUrl) URL.revokeObjectURL(f.outUrl);
+      });
+      setFiles((prev) => prev.map((f) => ({ ...f, status: "pending", outBlob: undefined, outUrl: undefined })));
+    }
     for (const file of files) {
-      if (file.status === "done") continue;
+      if (file.status === "done" && !force) continue;
       setFiles((prev) =>
         prev.map((f) => (f.id === file.id ? { ...f, status: "processing" } : f))
       );
@@ -236,7 +242,7 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
           )}
 
           <div className="flex flex-wrap gap-2">
-            <button onClick={processAll} disabled={busy} className="btn btn-primary disabled:opacity-50">
+            <button onClick={() => processAll(doneCount === files.length)} disabled={busy} className="btn btn-primary disabled:opacity-50">
               {busy ? t("convertingShort") : doneCount === files.length ? t("convertAgain") : t("convertButton", { fmt: EXT[to].toUpperCase(), n: files.length })}
             </button>
             {doneCount > 1 && (

@@ -76,10 +76,18 @@ export default function ImageCropTool() {
     let h = y - drag.startY;
     const r = RATIOS[ratio];
     if (r !== null) {
-      const aw = Math.abs(w);
-      const ah = Math.abs(h);
+      let aw = Math.abs(w);
+      let ah = Math.abs(h);
       if (aw / r > ah) h = (aw / r) * Math.sign(h || 1);
       else w = ah * r * Math.sign(w || 1);
+      const maxW = w >= 0 ? cs.w - drag.startX : drag.startX;
+      const maxH = h >= 0 ? cs.h - drag.startY : drag.startY;
+      aw = Math.abs(w);
+      ah = Math.abs(h);
+      if (aw > maxW) { aw = maxW; ah = aw / r; }
+      if (ah > maxH) { ah = maxH; aw = ah * r; }
+      w = aw * Math.sign(w || 1);
+      h = ah * Math.sign(h || 1);
     }
     const sx = w < 0 ? drag.startX + w : drag.startX;
     const sy = h < 0 ? drag.startY + h : drag.startY;
@@ -91,7 +99,15 @@ export default function ImageCropTool() {
   useEffect(() => {
     if (sel && RATIOS[ratio] !== null) {
       const r = RATIOS[ratio]!;
-      setSel((s) => (s ? { ...s, h: s.w / r } : s));
+      const cs = containerSize();
+      setSel((s) => {
+        if (!s) return s;
+        let w = s.w;
+        let h = w / r;
+        if (h > cs.h - s.y) { h = cs.h - s.y; w = h * r; }
+        if (w > cs.w - s.x) { w = cs.w - s.x; h = w / r; }
+        return { ...s, w, h };
+      });
     }
   }, [ratio]);
 
@@ -102,10 +118,10 @@ export default function ImageCropTool() {
     }
     setError("");
     const cs = containerSize();
-    const sx = sel.x / cs.scale;
-    const sy = sel.y / cs.scale;
-    const sw = sel.w / cs.scale;
-    const sh = sel.h / cs.scale;
+    const sx = Math.min(Math.max(0, sel.x / cs.scale), img.naturalWidth);
+    const sy = Math.min(Math.max(0, sel.y / cs.scale), img.naturalHeight);
+    const sw = Math.max(1, Math.min(sel.w / cs.scale, img.naturalWidth - sx));
+    const sh = Math.max(1, Math.min(sel.h / cs.scale, img.naturalHeight - sy));
     const c = document.createElement("canvas");
     c.width = Math.round(sw);
     c.height = Math.round(sh);

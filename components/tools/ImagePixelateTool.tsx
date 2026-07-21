@@ -14,6 +14,7 @@ export default function ImagePixelateTool() {
   const [pixelSize, setPixelSize] = useState(15);
   const [wholeImage, setWholeImage] = useState(false);
   const [sels, setSels] = useState<Sel[]>([]);
+  const [tempSel, setTempSel] = useState<Sel | null>(null);
   const [drag, setDrag] = useState<{ startX: number; startY: number } | null>(null);
   const [scale, setScale] = useState(1);
 
@@ -57,8 +58,9 @@ export default function ImagePixelateTool() {
       pixelate(0, 0, c.width, c.height);
     } else {
       for (const sel of sels) pixelate(sel.x, sel.y, sel.w, sel.h);
+      if (tempSel) pixelate(tempSel.x, tempSel.y, tempSel.w, tempSel.h);
     }
-  }, [img, pixelSize, wholeImage, sels]);
+  }, [img, pixelSize, wholeImage, sels, tempSel]);
 
   const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (wholeImage) return;
@@ -80,10 +82,13 @@ export default function ImagePixelateTool() {
       w: Math.abs(x - drag.startX),
       h: Math.abs(y - drag.startY),
     };
-    // preview drawing handled by useEffect; for live, replace last temp
-    setSels((prev) => [...prev.filter((_, i) => i !== prev.length - 1 || !drag), sel]);
+    setTempSel(sel);
   };
-  const onMouseUp = () => setDrag(null);
+  const onMouseUp = () => {
+    if (tempSel && tempSel.w > 0 && tempSel.h > 0) setSels((prev) => [...prev, tempSel]);
+    setTempSel(null);
+    setDrag(null);
+  };
 
   const download = () => {
     if (!file) return;

@@ -71,8 +71,10 @@ export default function VideoRotateTool() {
       if (flipH) filters.push("hflip");
       if (flipV) filters.push("vflip");
       const vf = filters.join(",");
-      await ff.exec(["-i", `in.${ext}`, "-vf", vf, "-preset", "veryfast", "out.mp4"]);
-      const data = (await ff.readFile("out.mp4")) as Uint8Array;
+      const outName = `out_${Date.now()}.mp4`;
+      await ff.exec(["-y", "-i", `in.${ext}`, "-vf", vf, "-preset", "veryfast", outName]);
+      const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const ab = new ArrayBuffer(data.byteLength);
       new Uint8Array(ab).set(data);
       const blob = new Blob([ab], { type: "video/mp4" });

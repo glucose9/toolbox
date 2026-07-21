@@ -58,14 +58,17 @@ export default function GifToMp4Tool() {
     try {
       const ff = await loadFf();
       await ff.writeFile("in.gif", await fetchFile(file));
+      const outName = `out_${Date.now()}.mp4`;
       await ff.exec([
+        "-y",
         "-i", "in.gif",
         "-movflags", "faststart",
         "-pix_fmt", "yuv420p",
         "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2",
-        "out.mp4",
+        outName,
       ]);
-      const data = (await ff.readFile("out.mp4")) as Uint8Array;
+      const data = (await ff.readFile(outName)) as Uint8Array;
+      try { await ff.deleteFile(outName); } catch {}
       const ab = new ArrayBuffer(data.byteLength);
       new Uint8Array(ab).set(data);
       const blob = new Blob([ab], { type: "video/mp4" });

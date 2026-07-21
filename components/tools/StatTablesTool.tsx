@@ -23,44 +23,49 @@ function phiInv(p: number): number {
   return (lo + hi) / 2;
 }
 
-// Student-t critical values computed numerically (verified against textbook
-// tables: t(10,.05)=1.812, t(1,.025)=12.706, t(30,.005)=2.750).
-function lgamma(x: number): number {
-  const g = 7;
-  const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
-  if (x < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * x)) - lgamma(1 - x);
-  x -= 1;
-  let a = c[0];
-  const t = x + g + 0.5;
-  for (let i = 1; i < g + 2; i++) a += c[i] / (x + i);
-  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
-}
-function tPdf(x: number, v: number): number {
-  return (Math.exp(lgamma((v + 1) / 2) - lgamma(v / 2)) / Math.sqrt(v * Math.PI)) * Math.pow(1 + (x * x) / v, -(v + 1) / 2);
-}
-function tUpper(x: number, v: number): number {
-  // P(T > x) = 0.5 − ∫₀ˣ pdf (Simpson)
-  const N = 2000;
-  const h = x / N;
-  let s = 0;
-  for (let i = 0; i <= N; i++) {
-    const xx = i * h;
-    const w = i === 0 || i === N ? 1 : i % 2 ? 4 : 2;
-    s += w * tPdf(xx, v);
-  }
-  return 0.5 - (s * h) / 3;
-}
-function tCrit(v: number, alpha: number): number {
-  let lo = 0, hi = 1000;
-  for (let i = 0; i < 120; i++) {
-    const m = (lo + hi) / 2;
-    if (tUpper(m, v) > alpha) lo = m; else hi = m;
-  }
-  return (lo + hi) / 2;
-}
-
 const T_DFS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 40, 60, 120];
 const T_ALPHAS = [0.1, 0.05, 0.025, 0.01, 0.005];
+
+// Student-t one-tail critical values for T_DFS × T_ALPHAS, precomputed offline
+// (incomplete-beta CDF, cross-checked against Simpson integration to <1e-10 and
+// textbook tables: t(10,.05)=1.812, t(1,.025)=12.706, t(30,.005)=2.750).
+// Precomputed because deriving these numerically at runtime froze the main
+// thread for seconds on mount.
+const T_CRIT: number[][] = [
+  [3.0777, 6.3138, 12.7062, 31.8205, 63.6567],
+  [1.8856, 2.92, 4.3027, 6.9646, 9.9248],
+  [1.6377, 2.3534, 3.1824, 4.5407, 5.8409],
+  [1.5332, 2.1318, 2.7764, 3.7469, 4.6041],
+  [1.4759, 2.015, 2.5706, 3.3649, 4.0321],
+  [1.4398, 1.9432, 2.4469, 3.1427, 3.7074],
+  [1.4149, 1.8946, 2.3646, 2.998, 3.4995],
+  [1.3968, 1.8595, 2.306, 2.8965, 3.3554],
+  [1.383, 1.8331, 2.2622, 2.8214, 3.2498],
+  [1.3722, 1.8125, 2.2281, 2.7638, 3.1693],
+  [1.3634, 1.7959, 2.201, 2.7181, 3.1058],
+  [1.3562, 1.7823, 2.1788, 2.681, 3.0545],
+  [1.3502, 1.7709, 2.1604, 2.6503, 3.0123],
+  [1.345, 1.7613, 2.1448, 2.6245, 2.9768],
+  [1.3406, 1.7531, 2.1314, 2.6025, 2.9467],
+  [1.3368, 1.7459, 2.1199, 2.5835, 2.9208],
+  [1.3334, 1.7396, 2.1098, 2.5669, 2.8982],
+  [1.3304, 1.7341, 2.1009, 2.5524, 2.8784],
+  [1.3277, 1.7291, 2.093, 2.5395, 2.8609],
+  [1.3253, 1.7247, 2.086, 2.528, 2.8453],
+  [1.3232, 1.7207, 2.0796, 2.5176, 2.8314],
+  [1.3212, 1.7171, 2.0739, 2.5083, 2.8188],
+  [1.3195, 1.7139, 2.0687, 2.4999, 2.8073],
+  [1.3178, 1.7109, 2.0639, 2.4922, 2.7969],
+  [1.3163, 1.7081, 2.0595, 2.4851, 2.7874],
+  [1.315, 1.7056, 2.0555, 2.4786, 2.7787],
+  [1.3137, 1.7033, 2.0518, 2.4727, 2.7707],
+  [1.3125, 1.7011, 2.0484, 2.4671, 2.7633],
+  [1.3114, 1.6991, 2.0452, 2.462, 2.7564],
+  [1.3104, 1.6973, 2.0423, 2.4573, 2.75],
+  [1.3031, 1.6839, 2.0211, 2.4233, 2.7045],
+  [1.2958, 1.6706, 2.0003, 2.3901, 2.6603],
+  [1.2886, 1.6577, 1.9799, 2.3578, 2.6174],
+];
 
 export default function StatTablesTool() {
   const t = useTranslations("toolUI.stat-tables");
@@ -83,9 +88,9 @@ export default function StatTablesTool() {
     return rows;
   }, []);
 
-  // t critical-value table (computed once)
+  // t critical-value table (precomputed constants)
   const tRows = useMemo(
-    () => T_DFS.map((df) => ({ df, cells: T_ALPHAS.map((a) => tCrit(df, a)) })),
+    () => T_DFS.map((df, i) => ({ df, cells: T_CRIT[i] })),
     []
   );
   const tInf = useMemo(() => T_ALPHAS.map((a) => phiInv(1 - a)), []);

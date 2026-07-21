@@ -16,7 +16,12 @@ function apaTitleCase(s: string): string {
     .map((w, i) => {
       if (/^\s+$/.test(w) || /^[-:—]$/.test(w)) return w;
       const lower = w.toLowerCase();
-      const isFirst = i === 0 || /[-:—]/.test(words[i - 1] || "");
+      let prev = "";
+      for (let j = i - 1; j >= 0; j--) {
+        const p = words[j];
+        if (p && !/^\s+$/.test(p)) { prev = p; break; }
+      }
+      const isFirst = i === 0 || prev === "" || /^[-:—]$/.test(prev);
       if (isFirst) return cap(lower);
       if (w.length >= 4) return cap(lower);
       if (SMALL_WORDS.has(lower)) return lower;
@@ -34,7 +39,7 @@ function chicagoTitleCase(s: string): string {
     .map((w) => {
       if (/^\s+$/.test(w)) return w;
       const lower = w.toLowerCase();
-      const isFirst = wi === 0;
+      const isFirst = wi === 0 || /[:—]$/.test(wordOnly[wi - 1] || "");
       const isLast = wi === wordOnly.length - 1;
       wi++;
       if (isFirst || isLast) return cap(lower);
