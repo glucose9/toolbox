@@ -11,7 +11,7 @@ const SMALL_WORDS = new Set([
 
 function apaTitleCase(s: string): string {
   // APA: capitalize first word, words 4+ letters, and proper nouns; lowercase short prepositions/conjunctions
-  const words = s.split(/(\s+|[-:—])/);
+  const words = s.trim().split(/(\s+|[-:—])/);
   return words
     .map((w, i) => {
       if (/^\s+$/.test(w) || /^[-:—]$/.test(w)) return w;
@@ -32,7 +32,7 @@ function apaTitleCase(s: string): string {
 
 function chicagoTitleCase(s: string): string {
   // Chicago: capitalize first/last word and all important words; lowercase articles, coord conj, prepositions
-  const words = s.split(/(\s+)/);
+  const words = s.trim().split(/(\s+)/);
   const wordOnly = words.filter((w) => !/^\s+$/.test(w));
   let wi = 0;
   return words

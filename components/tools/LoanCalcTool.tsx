@@ -56,7 +56,7 @@ export default function LoanCalcTool() {
     };
   }, [principal, rate, months, method]);
 
-  const fmt = (n: number) => Math.round(n).toLocaleString(numLocale);
+  const fmt = (n: number) => (isFinite(n) ? Math.round(n).toLocaleString(numLocale) : "—");
 
   return (
     <div className="card space-y-3">

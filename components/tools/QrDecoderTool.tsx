@@ -71,6 +71,7 @@ export default function QrDecoderTool() {
           <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
+        {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
       </div>
     );
   }

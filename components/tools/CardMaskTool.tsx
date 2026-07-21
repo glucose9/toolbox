@@ -9,7 +9,9 @@ function mask(text: string): string {
     .replace(/\b(3[47]\d{2})[-\s]?\d{6}[-\s]?\d(\d{4})\b/g, "$1-******-*$2")
     .replace(/\b(\d{6})[-\s]?(\d{7})\b/g, "$1-*******")
     .replace(/\b(01[016-9])[-\s]?(\d{3,4})[-\s]?(\d{4})\b/g, "$1-****-$3")
-    .replace(/\b(0[2-6][0-5]?)[-\s]?(\d{3,4})[-\s]?(\d{4})\b/g, "$1-****-$3")
+    // Seoul is a 2-digit area code (02); the rest are 3 digits. An optional
+    // [0-5] would greedily swallow the first subscriber digit of 02 numbers.
+    .replace(/\b(02|0[3-6][0-5])[-\s]?(\d{3,4})[-\s]?(\d{4})\b/g, "$1-****-$3")
     .replace(/([a-zA-Z0-9._%+-]{2})[a-zA-Z0-9._%+-]*(@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, "$1***$2");
 }
 

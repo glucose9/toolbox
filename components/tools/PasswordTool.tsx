@@ -8,6 +8,16 @@ const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const DIGITS = "0123456789";
 const SYMBOLS = "!@#$%^&*()-_=+[]{};:,.<>?";
 
+// Uniform random index in [0, n) via rejection sampling (no modulo bias).
+function randIndex(n: number): number {
+  const limit = Math.floor(0x100000000 / n) * n;
+  const buf = new Uint32Array(1);
+  do {
+    crypto.getRandomValues(buf);
+  } while (buf[0] >= limit);
+  return buf[0] % n;
+}
+
 function generate(length: number, options: { lower: boolean; upper: boolean; digits: boolean; symbols: boolean }) {
   const sets: string[] = [];
   if (options.lower) sets.push(LOWER);
@@ -16,19 +26,15 @@ function generate(length: number, options: { lower: boolean; upper: boolean; dig
   if (options.symbols) sets.push(SYMBOLS);
   if (!sets.length) return "";
   const alphabet = sets.join("");
-  const arr = new Uint32Array(length);
-  crypto.getRandomValues(arr);
   // The first slots take one character from each selected set so every
   // selected set is guaranteed to appear, then the result is shuffled.
   const chars: string[] = [];
   for (let i = 0; i < length; i++) {
     const set = i < sets.length ? sets[i] : alphabet;
-    chars.push(set[arr[i] % set.length]);
+    chars.push(set[randIndex(set.length)]);
   }
-  const swaps = new Uint32Array(length);
-  crypto.getRandomValues(swaps);
   for (let i = chars.length - 1; i > 0; i--) {
-    const j = swaps[i] % (i + 1);
+    const j = randIndex(i + 1);
     const tmp = chars[i];
     chars[i] = chars[j];
     chars[j] = tmp;

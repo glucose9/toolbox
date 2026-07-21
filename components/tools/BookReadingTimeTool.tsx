@@ -10,8 +10,9 @@ export default function BookReadingTimeTool() {
   const [dailyMin, setDailyMin] = useState(30);
 
   const fmt = (min: number): string => {
-    if (min < 60) return t("minutes", { n: Math.round(min) });
-    const h = Math.floor(min / 60), m = Math.round(min % 60);
+    const r = Math.round(min);
+    if (r < 60) return t("minutes", { n: r });
+    const h = Math.floor(r / 60), m = r % 60;
     return m > 0 ? t("hoursMinutes", { h, m }) : t("hours", { h });
   };
 

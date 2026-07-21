@@ -17,16 +17,23 @@ export default function PdfMetadataTool() {
 
   const handleFile = async (f: File) => {
     if (!isPdfFile(f)) return;
+    setError("");
     setFile(f);
-    const src = await PDFDocument.load(await readBytes(f));
-    setMeta({
-      title: src.getTitle() || "",
-      author: src.getAuthor() || "",
-      subject: src.getSubject() || "",
-      keywords: (src.getKeywords() || "").toString(),
-      creator: src.getCreator() || "",
-      producer: src.getProducer() || "",
-    });
+    setMeta({ title: "", author: "", subject: "", keywords: "", creator: "", producer: "" });
+    try {
+      const src = await PDFDocument.load(await readBytes(f));
+      setMeta({
+        title: src.getTitle() || "",
+        author: src.getAuthor() || "",
+        subject: src.getSubject() || "",
+        keywords: (src.getKeywords() || "").toString(),
+        creator: src.getCreator() || "",
+        producer: src.getProducer() || "",
+      });
+    } catch (e) {
+      setError(t("errPdfLoad") + ": " + (e as Error).message);
+      setFile(null);
+    }
   };
 
   const save = async () => {
@@ -54,6 +61,7 @@ export default function PdfMetadataTool() {
           <div className="font-medium mt-2">{t("uploadPdf")}</div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
+        {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
       </div>
     );
   }

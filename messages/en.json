@@ -459,7 +459,8 @@
     },
     "exchange-rate": {
       "rateLabel": "Rate: 1 USD = ? KRW",
-      "rateHint": "Check the live exchange rate on Naver or Google and enter it."
+      "rateHint": "Check the live exchange rate on Naver or Google and enter it.",
+      "rateRequired": "Enter a rate greater than 0 to convert."
     },
     "html-minifier": {
       "copy": "Copy",
@@ -592,7 +593,8 @@
       "binToText": "Binary → Text",
       "textToBin": "Text → Binary (UTF-8)",
       "copy": "Copy",
-      "copied": "✓ Copied"
+      "copied": "✓ Copied",
+      "partialBits": "Bit count is not a multiple of 8 — the trailing bits are ignored."
     },
     "text-blockquote": {
       "depth": "Depth",
@@ -608,7 +610,8 @@
       "uploadVideo": "Upload video",
       "resize": "Resize",
       "processing": "Processing...",
-      "download": "📥 Download"
+      "download": "📥 Download",
+      "otherFile": "Other file"
     },
     "audio-volume": {
       "uploadAudio": "Upload audio",
@@ -733,7 +736,8 @@
       "textToHex": "Text → Hex (UTF-8)",
       "spaced": "Space separated",
       "copy": "Copy",
-      "copied": "✓ Copied"
+      "copied": "✓ Copied",
+      "oddLength": "Odd number of hex digits — the last digit is ignored."
     },
     "unicode-lookup": {
       "charToCode": "Character → Code point",
@@ -812,6 +816,7 @@
       "excludeNumbers": "Exclude numbers (optional)",
       "excludePlaceholder": "e.g. 7, 13, 23",
       "draw": "🎲 Draw",
+      "tooManyExcluded": "You can exclude at most 39 numbers.",
       "note": "Uses Web Crypto's secure random for drawing. Every combination has the same probability — for fun only."
     },
     "regex-tester": {
@@ -874,7 +879,8 @@
       "merge": "🎞️ Merge",
       "merging": "Merging...",
       "download": "📥 Download",
-      "codecHint": "(If codecs or resolutions differ, re-encoding may be required)"
+      "codecHint": "(If codecs or resolutions differ, re-encoding may be required)",
+      "audioDropped": "⚠️ Some clips had no audio track, so sound was removed from the merged video."
     },
     "base64-image": {
       "upload": "Upload image",
@@ -961,6 +967,7 @@
       "note": "Supports Korean jamo and English/digit Morse code. Word separator: /, character separator: space."
     },
     "pdf-blank-page": {
+      "errPdfLoad": "PDF load failed",
       "uploadPdf": "Upload PDF",
       "pagesSuffix": " pages",
       "insertPosition": "Insert position",
@@ -970,6 +977,7 @@
       "otherFile": "Other file"
     },
     "pdf-metadata": {
+      "errPdfLoad": "PDF load failed",
       "uploadPdf": "Upload PDF",
       "title": "Title",
       "author": "Author",
@@ -987,7 +995,9 @@
       "saved": "saved",
       "decompressed": "decompressed",
       "copy": "Copy",
-      "copied": "✓ Copied"
+      "copied": "✓ Copied",
+      "invalidCompressed": "Not a valid compressed string.",
+      "increased": "larger"
     },
     "text-dedupe": {
       "placeholder": "One entry per line",
@@ -1017,6 +1027,7 @@
     },
     "chinese-zodiac": {
       "birthYear": "Birth year",
+      "invalidYear": "Enter a birth year between 1 and 9999.",
       "yearOfAnimal": "Year of the {animal}",
       "ganji": "Ganji",
       "yearSuffix": "",
@@ -1274,6 +1285,7 @@
     },
     "pdf-extract": {
       "errPdfOnly": "Only PDF files are supported.",
+      "errPdfLoad": "PDF load failed",
       "errEnterPages": "Please enter the pages to extract.",
       "dropOrClick": "Drop or click a PDF file",
       "otherFile": "Other file",
@@ -1401,6 +1413,7 @@
     },
     "image-stack": {
       "errImageLoad": "Failed to load image",
+      "errSomeFailed": "Could not load: {names}",
       "dropOrClick": "Drop or click multiple images",
       "imageCount": "{count} images",
       "addMore": "+ Add",
@@ -1511,7 +1524,8 @@
       "loadingFfmpeg": "Loading ffmpeg.wasm...",
       "processing": "Processing...",
       "convert": "Convert",
-      "download": "Download"
+      "download": "Download",
+      "noRotate": "No rotation"
     },
     "video-speed": {
       "errVideoOnly": "Only video files are supported.",
@@ -1705,7 +1719,8 @@
       "unique": "{count} unique",
       "total": "{count} total",
       "count": "Count",
-      "ratio": "Ratio"
+      "ratio": "Ratio",
+      "tokenizeNote": "Tokens are split on whitespace only, so inflected forms are counted separately (Korean particles are not stripped)."
     },
     "book-reading-time": {
       "minutes": "{n} min",
@@ -1798,6 +1813,7 @@
       "compressed": "Compressed",
       "compressing": "Compressing...",
       "reduced": "{percent}% smaller",
+      "increased": "{percent}% larger than the original — keeping the original is recommended",
       "qualityLabel": "Quality ({percent}%) — lower means smaller file",
       "download": "Download",
       "otherFile": "Other file",
@@ -1905,7 +1921,8 @@
       "offsetHint": "Positive: delay, negative: advance",
       "copy": "📋 Copy",
       "saveAs": "💾 Save .{ext}",
-      "hint": "💡 Convert between SRT (SubRip) and VTT (WebVTT), shift all timings, or extract plain text. If audio and subtitles are out of sync, try ±1–3 second offset. Everything is processed in your browser."
+      "hint": "💡 Convert between SRT (SubRip) and VTT (WebVTT), shift all timings, or extract plain text. If audio and subtitles are out of sync, try ±1–3 second offset. Everything is processed in your browser.",
+      "sampleInput": "1\n00:00:01,000 --> 00:00:04,500\nHi, this is Barokit.\n\n2\n00:00:05,000 --> 00:00:08,000\nYou can edit subtitle files with this tool.\n\n3\n00:00:09,000 --> 00:00:12,000\nIt converts between SRT and VTT both ways."
     },
     "unit-price": {
       "productA": "Product A",
@@ -1958,6 +1975,7 @@
       "lmpLabel": "First day of last period",
       "conceptionLabel": "Estimated conception date",
       "expectedDueDate": "Estimated due date",
+      "dDay": "D-Day · the due date is today",
       "pastDue": "Past due ({n} days)",
       "currentWeeks": "Current gestation",
       "weeksDaysFmt": "{w}w {d}d",
@@ -2178,6 +2196,7 @@
       "doneSuffix": "→ {n} converted ({size})",
       "addFiles": "+ Add files",
       "savedPercent": "{pct}% smaller",
+      "increasedPercent": "{pct}% larger than original",
       "pending": "Pending",
       "converting": "Converting...",
       "download": "✓ Download",
@@ -2422,7 +2441,8 @@
       "statusLoading": "Loading file...",
       "statusCompressing": "Compressing (CRF {crf})... this can take a while depending on length",
       "statusDone": "Done",
-      "statusFailed": "Failed: {msg}"
+      "statusFailed": "Failed: {msg}",
+      "increasedPct": "{pct}% larger than the original — keeping the original is recommended"
     },
     "ocr": {
       "language": "Language",
@@ -3616,7 +3636,8 @@
       "colValue": "Value",
       "addRow": "Add row",
       "rowCount": "{count} items",
-      "noData": "Enter some data"
+      "noData": "Enter some data",
+      "negativeExcluded": "Negative values can't be drawn in a pie chart, so they were left out"
     },
     "pdf-compress": {
       "dropOrClick": "Drag & drop a PDF, or click to upload",

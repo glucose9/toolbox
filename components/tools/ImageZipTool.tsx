@@ -24,9 +24,22 @@ export default function ImageZipTool() {
     setBusy(true);
     try {
       const zip = new JSZip();
+      const used = new Set<string>();
       for (const f of files) {
         const buf = await f.arrayBuffer();
-        zip.file(f.name, buf);
+        // JSZip replaces entries with the same path — same-named files from
+        // different folders would silently collapse into one.
+        let name = f.name;
+        if (used.has(name)) {
+          const dot = f.name.lastIndexOf(".");
+          const base = dot > 0 ? f.name.slice(0, dot) : f.name;
+          const ext = dot > 0 ? f.name.slice(dot) : "";
+          let n = 1;
+          while (used.has(`${base} (${n})${ext}`)) n++;
+          name = `${base} (${n})${ext}`;
+        }
+        used.add(name);
+        zip.file(name, buf);
       }
       const blob = await zip.generateAsync({ type: "blob" });
       const a = document.createElement("a");

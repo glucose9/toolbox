@@ -55,7 +55,13 @@ export default function ImageBatchTool() {
           resolve({ ...item, status: "error", error: t("errCanvas") });
           return;
         }
-        const outType = format || (item.file.type.startsWith("image/") ? item.file.type : "image/jpeg");
+        // canvas.toBlob only encodes jpeg/png/webp; anything else silently falls
+        // back to PNG, so normalize here and derive the extension from the blob.
+        const outType: Exclude<Format, ""> =
+          format ||
+          (item.file.type === "image/jpeg" || item.file.type === "image/webp"
+            ? (item.file.type as Exclude<Format, "">)
+            : "image/png");
         if (outType === "image/jpeg") {
           ctx.fillStyle = "#ffffff";
           ctx.fillRect(0, 0, width, height);
@@ -90,13 +96,16 @@ export default function ImageBatchTool() {
     setBusy(false);
   };
 
+  const outExt = (it: Item) => {
+    const sub = it.resultBlob?.type.split("/")[1];
+    return sub ? sub.replace("jpeg", "jpg") : (it.file.name.split(".").pop() || "jpg");
+  };
+
   const downloadAll = async () => {
     const zip = new JSZip();
     const done = items.filter((it) => it.status === "done" && it.resultBlob);
     for (const it of done) {
-      const ext = format
-        ? format.split("/")[1].replace("jpeg", "jpg")
-        : (it.file.name.split(".").pop() || "jpg");
+      const ext = outExt(it);
       const base = it.file.name.replace(/\.[^.]+$/, "");
       zip.file(`${base}.${ext}`, it.resultBlob!);
     }
@@ -111,9 +120,7 @@ export default function ImageBatchTool() {
 
   const downloadOne = (it: Item) => {
     if (!it.resultUrl) return;
-    const ext = format
-      ? format.split("/")[1].replace("jpeg", "jpg")
-      : (it.file.name.split(".").pop() || "jpg");
+    const ext = outExt(it);
     const a = document.createElement("a");
     a.href = it.resultUrl;
     a.download = `${it.file.name.replace(/\.[^.]+$/, "")}.${ext}`;

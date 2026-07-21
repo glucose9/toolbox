@@ -56,6 +56,7 @@ export default function PdfEsignTool() {
 
   // signature drawing
   const drawingRef = useRef(false);
+  const strokedRef = useRef(false);
   const lastPtRef = useRef<{ x: number; y: number } | null>(null);
 
   // ---- PDF preview rendering ----
@@ -109,6 +110,7 @@ export default function PdfEsignTool() {
     ctx.lineJoin = "round";
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2.5;
+    strokedRef.current = false;
   }
   useEffect(() => {
     if (mode === "draw") setupCanvas();
@@ -148,12 +150,15 @@ export default function PdfEsignTool() {
     ctx.moveTo(last.x, last.y);
     ctx.lineTo(p.x, p.y);
     ctx.stroke();
+    strokedRef.current = true;
     lastPtRef.current = p;
     e.preventDefault();
   }
   function endDraw() {
+    if (!drawingRef.current) return;
     drawingRef.current = false;
     lastPtRef.current = null;
+    if (!strokedRef.current) return;
     // capture PNG
     const c = canvasRef.current;
     if (c) {
@@ -228,10 +233,10 @@ export default function PdfEsignTool() {
       const pdfY = pdfPageSize.h - pdfYTop - hPdf;
       // We want the placement centered on click; recompute x/y
       const cx = pdfX - wPdf / 2;
-      const cy = pdfY + hPdf / 2 - hPdf / 2; // already bottom-left
+      const cy = pdfY + hPdf / 2;
       setPlacements((prev) => [
         ...prev,
-        { page: pageIdx, x: cx, y: pdfY, w: wPdf, h: hPdf },
+        { page: pageIdx, x: cx, y: cy, w: wPdf, h: hPdf },
       ]);
     };
     img.src = signaturePng;

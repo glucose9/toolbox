@@ -86,10 +86,16 @@ export default function ImageColorPickerTool() {
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (!ctx) return null;
     const rect = canvas.getBoundingClientRect();
-    const sx = canvas.width / rect.width;
-    const sy = canvas.height / rect.height;
-    const x = Math.floor((e.clientX - rect.left) * sx);
-    const y = Math.floor((e.clientY - rect.top) * sy);
+    // rect includes the 1px CSS border — measure against the content box only
+    const bx = canvas.clientLeft;
+    const by = canvas.clientTop;
+    const cw = rect.width - bx * 2;
+    const ch = rect.height - by * 2;
+    if (cw <= 0 || ch <= 0) return null;
+    const sx = canvas.width / cw;
+    const sy = canvas.height / ch;
+    const x = Math.floor((e.clientX - rect.left - bx) * sx);
+    const y = Math.floor((e.clientY - rect.top - by) * sy);
     if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return null;
     const data = ctx.getImageData(x, y, 1, 1).data;
     return {

@@ -19,8 +19,10 @@ function parse(ua: string) {
     { name: "Linux", re: /Linux/ },
   ];
   const devices = [
-    { name: "Mobile", re: /Mobile|Android|iPhone/ },
-    { name: "Tablet", re: /iPad|Tablet/ },
+    // Android tablets carry "Android" without the "Mobile" token, so check
+    // tablets before phones.
+    { name: "Tablet", re: /iPad|Tablet|Android(?!.*Mobile)/ },
+    { name: "Mobile", re: /Mobi|iPhone/ },
     { name: "Desktop", re: /./ },
   ];
   let browser = "Unknown", os = "Unknown", device = "Unknown";

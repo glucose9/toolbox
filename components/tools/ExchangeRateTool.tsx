@@ -12,8 +12,8 @@ export default function ExchangeRateTool() {
   const [active, setActive] = useState<"usd" | "krw">("usd");
 
   const updateUsd = (v: number) => { setUsd(v); setKrw(v * rate); };
-  const updateKrw = (v: number) => { setKrw(v); setUsd(v / rate); };
-  const updateRate = (v: number) => { setRate(v); if (active === "usd") setKrw(usd * v); else setUsd(krw / v); };
+  const updateKrw = (v: number) => { setKrw(v); if (rate > 0) setUsd(v / rate); };
+  const updateRate = (v: number) => { setRate(v); if (active === "usd") setKrw(usd * v); else if (v > 0) setUsd(krw / v); };
 
   return (
     <div className="card space-y-3">
@@ -21,6 +21,7 @@ export default function ExchangeRateTool() {
         <label className="label">{t("rateLabel")}</label>
         <input type="number" step="0.01" value={rate} onChange={(e) => updateRate(+e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
         <div className="text-xs text-muted mt-1">{t("rateHint")}</div>
+        {!(rate > 0) && <div className="text-xs text-amber-600 mt-1">{t("rateRequired")}</div>}
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div><label className="label">USD</label><input type="number" value={usd} onChange={(e) => { setActive("usd"); updateUsd(+e.target.value); }} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" /></div>

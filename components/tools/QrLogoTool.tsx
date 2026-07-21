@@ -15,9 +15,9 @@ export default function QrLogoTool() {
   const [size, setSize] = useState(400);
 
   useEffect(() => {
-    if (!text) return;
     const c = canvasRef.current!;
     c.width = size; c.height = size;
+    if (!text) return;
     QRCode.toCanvas(c, text, { width: size, errorCorrectionLevel: "H", margin: 2 }).then(() => {
       if (logo) {
         const ctx = c.getContext("2d")!;
@@ -61,7 +61,7 @@ export default function QrLogoTool() {
         <label>{t("logoBg")}<input type="color" value={logoBg} onChange={(e) => setLogoBg(e.target.value)} className="w-full h-7" /></label>
       </div>
       <canvas ref={canvasRef} className="max-w-full mx-auto" />
-      <button onClick={download} className="btn btn-primary">{t("downloadPng")}</button>
+      <button onClick={download} disabled={!text} className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed">{t("downloadPng")}</button>
     </div>
   );
 }

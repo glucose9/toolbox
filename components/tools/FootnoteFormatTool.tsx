@@ -55,7 +55,8 @@ export default function FootnoteFormatTool() {
     return `${authors}, "${title}," *${journal}*, vol. ${volume}, no. ${issue}, ${year}, p. ${pages}.`;
   })();
 
-  const ibid = "ibid., " + pages + ".";
+  const ibid = "Ibid., " + pages + ".";
+  const showIbid = style === "chicago-note" || style === "chicago-short";
 
   const labels: Record<Style, string> = {
     "chicago-note": t("labelChicagoNote"),
@@ -157,13 +158,15 @@ export default function FootnoteFormatTool() {
           </div>
           <div className="text-sm leading-relaxed break-words">{renderItalic(fn)}</div>
         </div>
-        <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("ibidLabel")}</span>
-            <button onClick={() => copy(ibid)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+        {showIbid && (
+          <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("ibidLabel")}</span>
+              <button onClick={() => copy(ibid)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+            </div>
+            <div className="text-sm leading-relaxed">{ibid}</div>
           </div>
-          <div className="text-sm leading-relaxed">{ibid}</div>
-        </div>
+        )}
       </div>
 
       <div className="text-xs text-muted leading-relaxed">

@@ -15,20 +15,28 @@ export default function ImageStackTool() {
   const [gap, setGap] = useState(8);
   const [bg, setBg] = useState("#ffffff");
   const [cols, setCols] = useState(2);
+  const [error, setError] = useState("");
 
   const addFiles = async (list: FileList) => {
     const next: Item[] = [];
+    const failed: string[] = [];
     for (const f of Array.from(list)) {
       if (!f.type.startsWith("image/")) continue;
       const src = URL.createObjectURL(f);
-      const img = await new Promise<HTMLImageElement>((resolve, reject) => {
-        const i = new Image();
-        i.onload = () => resolve(i);
-        i.onerror = () => reject(new Error(t("errImageLoad")));
-        i.src = src;
-      });
-      next.push({ id: Math.random().toString(36).slice(2), file: f, img, src });
+      try {
+        const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+          const i = new Image();
+          i.onload = () => resolve(i);
+          i.onerror = () => reject(new Error(t("errImageLoad")));
+          i.src = src;
+        });
+        next.push({ id: Math.random().toString(36).slice(2), file: f, img, src });
+      } catch {
+        URL.revokeObjectURL(src);
+        failed.push(f.name);
+      }
     }
+    setError(failed.length ? t("errSomeFailed", { names: failed.join(", ") }) : "");
     setItems((p) => [...p, ...next]);
   };
 
@@ -135,6 +143,7 @@ export default function ImageStackTool() {
           <div className="font-medium">{t("dropOrClick")}</div>
           <input ref={inputRef} type="file" accept="image/*" multiple onChange={(e) => e.target.files && addFiles(e.target.files)} className="hidden" />
         </div>
+        {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
       </div>
     );
   }
@@ -146,6 +155,8 @@ export default function ImageStackTool() {
         <button onClick={() => inputRef.current?.click()} className="text-sm text-brand-600 hover:underline">{t("addMore")}</button>
         <input ref={inputRef} type="file" accept="image/*" multiple onChange={(e) => e.target.files && addFiles(e.target.files)} className="hidden" />
       </div>
+
+      {error && <div className="text-sm text-red-600">{error}</div>}
 
       <div className="flex flex-wrap gap-2 text-sm">
         {(["horizontal", "vertical", "grid"] as Layout[]).map((l) => (

@@ -45,9 +45,10 @@ const CRF_PRESETS = [
 ];
 
 function fmtTime(s: number): string {
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  const ms = Math.floor((s - Math.floor(s)) * 1000);
+  const total = Math.round(Math.max(0, s) * 1000);
+  const m = Math.floor(total / 60000);
+  const sec = Math.floor((total % 60000) / 1000);
+  const ms = total % 1000;
   return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}.${String(ms).padStart(3, "0")}`;
 }
 
@@ -103,9 +104,11 @@ export default function VideoEditorTool() {
     setBusy(true);
     setOutput(null);
     setProgress(0);
+    let ffRef: Awaited<ReturnType<typeof getFFmpeg>> | null = null;
+    const onP = ({ progress }: { progress: number }) => setProgress(progress * 100);
     try {
       const ff = await getFFmpeg((s) => setStatus(s));
-      const onP = ({ progress }: { progress: number }) => setProgress(progress * 100);
+      ffRef = ff;
       ff.on("progress", onP);
 
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
@@ -130,7 +133,7 @@ export default function VideoEditorTool() {
       else if (rotate === "vflip") vfilters.push("vflip");
       if (resize) vfilters.push(`scale=${resize}`);
       if (speed !== 1) {
-        vfilters.push(`setpts=${(1 / speed).toFixed(4)}*PTS`);
+        vfilters.push(`setpts=PTS/${speed}`);
       }
 
       if (vfilters.length > 0) {
@@ -172,10 +175,10 @@ export default function VideoEditorTool() {
       const blob = new Blob([data as BlobPart], { type: "video/mp4" });
       setOutput({ url: URL.createObjectURL(blob), size: blob.size });
       setStatus(`✓ ${t("done")}`);
-      ff.off("progress", onP);
     } catch (e) {
       setStatus(`${t("failed")}: ${(e as Error).message}`);
     } finally {
+      try { ffRef?.off("progress", onP); } catch {}
       setBusy(false);
     }
   };

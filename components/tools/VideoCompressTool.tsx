@@ -32,9 +32,12 @@ export default function VideoCompressTool() {
     setBusy(true);
     setOutput(null);
     setProgress(0);
+    let ffRef: Awaited<ReturnType<typeof getFFmpeg>> | null = null;
+    const onP = ({ progress }: { progress: number }) => setProgress(progress * 100);
     try {
       const ff = await getFFmpeg((s) => setStatus(s));
-      ff.on("progress", ({ progress }) => setProgress(progress * 100));
+      ffRef = ff;
+      ff.on("progress", onP);
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
       const inputName = `input.${ext}`;
       const crf = PRESETS.find((p) => p.key === preset)?.crf ?? 28;
@@ -61,6 +64,7 @@ export default function VideoCompressTool() {
     } catch (e) {
       setStatus(t("statusFailed", { msg: (e as Error).message }));
     } finally {
+      try { ffRef?.off("progress", onP); } catch {}
       setBusy(false);
     }
   };
@@ -92,8 +96,10 @@ export default function VideoCompressTool() {
               {output ? (
                 <>
                   <video src={output.url} controls className="w-full max-h-60 rounded border border-gray-200" />
-                  <div className="mt-2 text-sm font-medium text-green-600">
-                    {t("savedPct", { pct: Math.round((1 - output.size / file.size) * 100) })}
+                  <div className={`mt-2 text-sm font-medium ${output.size < file.size ? "text-green-600" : "text-amber-600"}`}>
+                    {output.size < file.size
+                      ? t("savedPct", { pct: Math.round((1 - output.size / file.size) * 100) })
+                      : t("increasedPct", { pct: Math.round((output.size / file.size - 1) * 100) })}
                   </div>
                   <button onClick={download} className="btn btn-primary mt-3">{t("downloadMp4")}</button>
                 </>

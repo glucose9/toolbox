@@ -14,14 +14,31 @@ export default function SpellCheckTool() {
   const allIssues = useMemo(() => checkSpelling(text), [text]);
   const issues = allIssues.filter((i) => !dismissed.has(`${i.start}:${i.original}`));
 
+  const shiftDismissed = (applied: Issue[]) => {
+    setDismissed((prev) => {
+      const next = new Set<string>();
+      for (const key of prev) {
+        const sep = key.indexOf(":");
+        const start = Number(key.slice(0, sep));
+        const original = key.slice(sep + 1);
+        let delta = 0;
+        for (const a of applied) if (a.end <= start) delta += a.fix.length - (a.end - a.start);
+        next.add(`${start + delta}:${original}`);
+      }
+      return next;
+    });
+  };
+
   const applyOne = (issue: Issue) => {
     const next = text.slice(0, issue.start) + issue.fix + text.slice(issue.end);
+    shiftDismissed([issue]);
     setText(next);
   };
 
   const applyAll = () => {
     const safe = issues.filter((i) => !i.caution);
     if (safe.length === 0) return;
+    shiftDismissed(safe);
     setText(applyFixes(text, safe));
   };
 

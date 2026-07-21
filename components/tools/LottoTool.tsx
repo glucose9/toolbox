@@ -28,6 +28,7 @@ export default function LottoTool() {
   const t = useTranslations("toolUI.lotto");
   const [games, setGames] = useState(5);
   const [excludeStr, setExcludeStr] = useState("");
+  const [error, setError] = useState("");
   const [results, setResults] = useState<number[][]>(() =>
     Array.from({ length: 5 }, () => pickSix(new Set()))
   );
@@ -43,7 +44,11 @@ export default function LottoTool() {
 
   const generate = () => {
     const exclude = parseExclude();
-    if (exclude.size > 39) return;
+    if (exclude.size > 39) {
+      setError(t("tooManyExcluded"));
+      return;
+    }
+    setError("");
     const n = Math.max(1, Math.min(50, games));
     setResults(Array.from({ length: n }, () => pickSix(exclude)));
   };
@@ -74,6 +79,8 @@ export default function LottoTool() {
         </label>
         <button onClick={generate} className="btn btn-primary">{t("draw")}</button>
       </div>
+
+      {error && <div className="text-sm text-red-600">{error}</div>}
 
       <div className="space-y-2">
         {results.map((game, i) => (

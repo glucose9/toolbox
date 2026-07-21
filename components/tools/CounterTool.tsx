@@ -7,13 +7,21 @@ function getByteLength(s: string) {
   return new Blob([s]).size;
 }
 
+function countGraphemes(s: string) {
+  if (!s) return 0;
+  if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
+    return [...new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(s)].length;
+  }
+  return Array.from(s).length;
+}
+
 export default function CounterTool() {
   const t = useTranslations("toolUI.character-counter");
   const [text, setText] = useState("");
 
   const stats = useMemo(() => {
-    const withSpaces = text.length;
-    const withoutSpaces = text.replace(/\s/g, "").length;
+    const withSpaces = countGraphemes(text);
+    const withoutSpaces = countGraphemes(text.replace(/\s/g, ""));
     const words = text.trim() ? text.trim().split(/\s+/).length : 0;
     const lines = text ? text.split(/\r?\n/).length : 0;
     const bytes = getByteLength(text);

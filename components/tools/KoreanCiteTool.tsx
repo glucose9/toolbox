@@ -201,7 +201,10 @@ export default function KoreanCiteTool() {
     if (splitAuthors.length === 0) return "";
     if (splitAuthors.length === 1) return surname(splitAuthors[0]);
     if (splitAuthors.length === 2) {
-      if (localeKey === "en") return `${surname(splitAuthors[0])} & ${surname(splitAuthors[1])}`;
+      if (localeKey === "en") {
+        const conj = style === "apa" || style === "harvard" ? "&" : "and";
+        return `${surname(splitAuthors[0])} ${conj} ${surname(splitAuthors[1])}`;
+      }
       return `${splitAuthors[0]}, ${splitAuthors[1]}`;
     }
     if (localeKey === "en") return `${surname(splitAuthors[0])} et al.`;

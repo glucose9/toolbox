@@ -41,8 +41,9 @@ export default function NumberTagsTool() {
   const tagsPerA4Hint = perPage;
 
   const renderNum = (n: number) => {
-    const padded = padDigits > 0 ? n.toString().padStart(padDigits, "0") : n.toString();
-    return `${prefix}${padded}${suffix}`;
+    const digits = Math.abs(n).toString();
+    const padded = padDigits > 0 ? digits.padStart(padDigits, "0") : digits;
+    return `${prefix}${n < 0 ? "-" : ""}${padded}${suffix}`;
   };
 
   // Build an offscreen DOM at exact A4 px size with one page worth of tags.

@@ -28,15 +28,16 @@ export default function HwpToTextTool() {
     setFileName(file.name);
     setFileSize(file.size);
     setText("");
+    let doc: Awaited<ReturnType<typeof openHwp>> | null = null;
     try {
       const bytes = await readFileBytes(file);
-      const doc = await openHwp(bytes);
+      doc = await openHwp(bytes);
       const extracted = extractAllText(doc);
       setText(extracted);
-      doc.free?.();
     } catch (e) {
       setError(t("errExtract") + ": " + (e as Error).message);
     } finally {
+      doc?.free?.();
       setLoading(false);
     }
   };

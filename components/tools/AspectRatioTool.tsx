@@ -29,9 +29,10 @@ export default function AspectRatioTool() {
   const [height, setHeight] = useState<string>("1080");
   const [last, setLast] = useState<"w" | "h">("w");
 
-  const applyPreset = (w: number, h: number) => {
+  const applyRatio = (w: number, h: number) => {
     setRw(w);
     setRh(h);
+    if (!w || !h) return;
     // recompute based on last edited
     if (last === "w" && width) {
       setHeight(Math.round((parseFloat(width) * h) / w).toString());
@@ -66,7 +67,7 @@ export default function AspectRatioTool() {
           {PRESETS.map((p) => (
             <button
               key={p.label}
-              onClick={() => applyPreset(p.w, p.h)}
+              onClick={() => applyRatio(p.w, p.h)}
               className={`px-3 py-1.5 rounded text-sm ${rw === p.w && rh === p.h ? "bg-brand-600 text-white" : "bg-gray-100 dark:bg-gray-800"}`}
             >
               {p.label}
@@ -74,9 +75,9 @@ export default function AspectRatioTool() {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <input type="number" value={rw} onChange={(e) => setRw(parseFloat(e.target.value) || 0)} className="input w-20" />
+          <input type="number" value={rw} onChange={(e) => applyRatio(parseFloat(e.target.value) || 0, rh)} className="input w-20" />
           <span className="text-lg">:</span>
-          <input type="number" value={rh} onChange={(e) => setRh(parseFloat(e.target.value) || 0)} className="input w-20" />
+          <input type="number" value={rh} onChange={(e) => applyRatio(rw, parseFloat(e.target.value) || 0)} className="input w-20" />
         </div>
       </div>
 

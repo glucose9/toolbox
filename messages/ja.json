@@ -459,7 +459,8 @@
     },
     "exchange-rate": {
       "rateLabel": "為替レート: 1 USD = ? KRW",
-      "rateHint": "Naverまたはグーグルでリアルタイム為替レートを確認して入力してください。"
+      "rateHint": "Naverまたはグーグルでリアルタイム為替レートを確認して入力してください。",
+      "rateRequired": "換算するには為替レートに0より大きい値を入力してください。"
     },
     "html-minifier": {
       "copy": "コピー",
@@ -592,7 +593,8 @@
       "binToText": "2進数 → テキスト",
       "textToBin": "テキスト → 2進数 (UTF-8)",
       "copy": "コピー",
-      "copied": "✓ コピーしました"
+      "copied": "✓ コピーしました",
+      "partialBits": "ビット数が8の倍数ではありません。余りのビットは変換されません。"
     },
     "text-blockquote": {
       "depth": "深さ",
@@ -608,7 +610,8 @@
       "uploadVideo": "動画をアップロード",
       "resize": "リサイズ",
       "processing": "処理中...",
-      "download": "📥 ダウンロード"
+      "download": "📥 ダウンロード",
+      "otherFile": "別のファイル"
     },
     "audio-volume": {
       "uploadAudio": "オーディオをアップロード",
@@ -733,7 +736,8 @@
       "textToHex": "テキスト → 16進数 (UTF-8)",
       "spaced": "スペース区切り",
       "copy": "コピー",
-      "copied": "✓ コピーしました"
+      "copied": "✓ コピーしました",
+      "oddLength": "16進数の桁数が奇数です。最後の1桁は変換されません。"
     },
     "unicode-lookup": {
       "charToCode": "文字 → コードポイント",
@@ -812,6 +816,7 @@
       "excludeNumbers": "除外する番号（任意）",
       "excludePlaceholder": "例: 7, 13, 23",
       "draw": "🎲 抽選",
+      "tooManyExcluded": "除外できる番号は最大39個までです。",
       "note": "Web Cryptoの安全な乱数で抽選します。どの組み合わせも当選確率は同じです — 遊びとしてご利用ください。"
     },
     "regex-tester": {
@@ -874,7 +879,8 @@
       "merge": "🎞️ 結合",
       "merging": "結合中...",
       "download": "📥 ダウンロード",
-      "codecHint": "(コーデックや解像度が異なる場合は再エンコードが必要なことがあります)"
+      "codecHint": "(コーデックや解像度が異なる場合は再エンコードが必要なことがあります)",
+      "audioDropped": "⚠️ 音声トラックのない動画が含まれていたため、結合結果から音声が削除されました。"
     },
     "base64-image": {
       "upload": "画像アップロード",
@@ -961,6 +967,7 @@
       "note": "韓国語字母と英数字のモールス符号の両方に対応。単語区切り: /、文字区切り: 空白。"
     },
     "pdf-blank-page": {
+      "errPdfLoad": "PDFの読み込みに失敗しました",
       "uploadPdf": "PDFアップロード",
       "pagesSuffix": "ページ",
       "insertPosition": "挿入位置",
@@ -970,6 +977,7 @@
       "otherFile": "別のファイル"
     },
     "pdf-metadata": {
+      "errPdfLoad": "PDFの読み込みに失敗しました",
       "uploadPdf": "PDFアップロード",
       "title": "タイトル",
       "author": "著者",
@@ -987,7 +995,9 @@
       "saved": "削減",
       "decompressed": "解凍済み",
       "copy": "コピー",
-      "copied": "✓ コピー済み"
+      "copied": "✓ コピー済み",
+      "invalidCompressed": "有効な圧縮文字列ではありません。",
+      "increased": "増加"
     },
     "text-dedupe": {
       "placeholder": "1行に1つずつ入力してください",
@@ -1017,6 +1027,7 @@
     },
     "chinese-zodiac": {
       "birthYear": "生年",
+      "invalidYear": "生年を1〜9999の範囲で入力してください。",
       "yearOfAnimal": "{animal}年",
       "ganji": "干支",
       "yearSuffix": "年",
@@ -1274,6 +1285,7 @@
     },
     "pdf-extract": {
       "errPdfOnly": "PDFファイルのみ対応しています。",
+      "errPdfLoad": "PDFの読み込みに失敗しました",
       "errEnterPages": "抽出するページを入力してください。",
       "dropOrClick": "PDFファイルをドラッグまたはクリック",
       "otherFile": "別のファイル",
@@ -1401,6 +1413,7 @@
     },
     "image-stack": {
       "errImageLoad": "画像の読み込みに失敗しました",
+      "errSomeFailed": "読み込めなかったファイル: {names}",
       "dropOrClick": "複数の画像をドラッグまたはクリック",
       "imageCount": "{count}枚",
       "addMore": "+ 追加",
@@ -1511,7 +1524,8 @@
       "loadingFfmpeg": "ffmpeg.wasm 読み込み中...",
       "processing": "処理中...",
       "convert": "変換",
-      "download": "ダウンロード"
+      "download": "ダウンロード",
+      "noRotate": "回転なし"
     },
     "video-speed": {
       "errVideoOnly": "動画ファイルのみ対応しています。",
@@ -1705,7 +1719,8 @@
       "unique": "ユニーク {count}件",
       "total": "合計 {count}件",
       "count": "回数",
-      "ratio": "比率"
+      "ratio": "比率",
+      "tokenizeNote": "空白区切りで集計するため、活用形や助詞が付いた形は別の語として数えられます。"
     },
     "book-reading-time": {
       "minutes": "{n}分",
@@ -1798,6 +1813,7 @@
       "compressed": "圧縮済み",
       "compressing": "圧縮中...",
       "reduced": "{percent}% 削減",
+      "increased": "元のファイルより{percent}%大きくなりました — 元のファイルの利用をおすすめします",
       "qualityLabel": "画質 ({percent}%) — 低いほど容量が小さくなります",
       "download": "ダウンロード",
       "otherFile": "別のファイル",
@@ -1905,7 +1921,8 @@
       "offsetHint": "正の値: 遅らせる、負の値: 早める",
       "copy": "📋 コピー",
       "saveAs": "💾 .{ext} を保存",
-      "hint": "💡 SRT(SubRip)とVTT(WebVTT)の双方向変換、時間オフセットの一括調整、本文テキストのみの抽出ができます。映像と字幕がずれている場合は±1〜3秒で微調整してください。すべての処理はブラウザ内で行われます。"
+      "hint": "💡 SRT(SubRip)とVTT(WebVTT)の双方向変換、時間オフセットの一括調整、本文テキストのみの抽出ができます。映像と字幕がずれている場合は±1〜3秒で微調整してください。すべての処理はブラウザ内で行われます。",
+      "sampleInput": "1\n00:00:01,000 --> 00:00:04,500\nこんにちは、バロキットです。\n\n2\n00:00:05,000 --> 00:00:08,000\nこのツールで字幕を編集できます。\n\n3\n00:00:09,000 --> 00:00:12,000\nSRT と VTT を相互に変換します。"
     },
     "unit-price": {
       "productA": "商品A",
@@ -1958,6 +1975,7 @@
       "lmpLabel": "最終月経の初日",
       "conceptionLabel": "受精推定日",
       "expectedDueDate": "出産予定日",
+      "dDay": "D-Day・本日が予定日です",
       "pastDue": "予定日を過ぎています ({n}日)",
       "currentWeeks": "現在の妊娠週数",
       "weeksDaysFmt": "{w}週 {d}日",
@@ -2178,6 +2196,7 @@
       "doneSuffix": "→ {n}件変換済み ({size})",
       "addFiles": "+ ファイルを追加",
       "savedPercent": "{pct}%削減",
+      "increasedPercent": "元より{pct}%増加",
       "pending": "待機",
       "converting": "変換中...",
       "download": "✓ ダウンロード",
@@ -2422,7 +2441,8 @@
       "statusLoading": "ファイル読み込み中...",
       "statusCompressing": "圧縮中 (CRF {crf})... 動画の長さによって時間がかかります",
       "statusDone": "完了",
-      "statusFailed": "失敗: {msg}"
+      "statusFailed": "失敗: {msg}",
+      "increasedPct": "元より {pct}% 大きくなりました — 元のファイルの利用をおすすめします"
     },
     "ocr": {
       "language": "言語",
@@ -3616,7 +3636,8 @@
       "colValue": "値",
       "addRow": "行を追加",
       "rowCount": "{count}件",
-      "noData": "データを入力してください"
+      "noData": "データを入力してください",
+      "negativeExcluded": "負の値は円グラフに描けないため除外しました"
     },
     "pdf-compress": {
       "dropOrClick": "PDFファイルをドラッグ&ドロップ、またはクリックしてアップロード",

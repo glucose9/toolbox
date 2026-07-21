@@ -116,7 +116,7 @@ export default function OcrTool() {
           {busy ? t("recognizing", { progress }) : t("startOcr")}
         </button>
         {imgUrl && !busy && (
-          <button onClick={() => { setImgUrl(null); setText(""); }} className="btn">{t("reset")}</button>
+          <button onClick={() => { setImgUrl(null); setText(""); setError(null); setProgress(0); }} className="btn">{t("reset")}</button>
         )}
       </div>
 

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
 function b64urlDecode(s: string): string {
-  s = s.replace(/-/g, "+").replace(/_/g, "/");
+  s = s.replace(/\s/g, "").replace(/-/g, "+").replace(/_/g, "/");
   while (s.length % 4) s += "=";
   try {
     const bin = atob(s);

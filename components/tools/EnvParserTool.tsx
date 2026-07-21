@@ -12,6 +12,9 @@ function parseEnv(text: string): Record<string, string> {
     let v = m[2].trim();
     if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
       v = v.slice(1, -1);
+    } else {
+      // dotenv strips inline comments from unquoted values.
+      v = v.split(/\s+#/)[0].trim();
     }
     out[m[1]] = v;
   }

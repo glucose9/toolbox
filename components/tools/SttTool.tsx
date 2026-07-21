@@ -158,12 +158,13 @@ export default function SttTool() {
           <span className="text-xs text-muted">{t("charCount", { n: transcript.length })}</span>
         </div>
         <textarea
-          value={transcript + (interim ? `  ${interim}` : "")}
+          value={transcript}
           onChange={(e) => setTranscript(e.target.value)}
           rows={10}
           className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm"
           placeholder={t("placeholder")}
         />
+        {interim && <div className="mt-1 px-3 py-2 text-sm text-muted italic border border-dashed border-gray-200 dark:border-gray-700 rounded">{interim}</div>}
       </div>
 
       <div className="flex flex-wrap gap-2">

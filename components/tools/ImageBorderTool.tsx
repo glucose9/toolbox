@@ -27,7 +27,11 @@ export default function ImageBorderTool() {
     const c = canvasRef.current;
     if (!c) return;
     const pad = thickness;
-    const sh = shadow ? 20 : 0;
+    const blur = shadow ? 20 : 0;
+    const offsetY = shadow ? 10 : 0;
+    // margin must cover the widest spread (bottom = blur + offsetY) or the
+    // shadow gets clipped flat at the canvas edge
+    const sh = blur + offsetY;
     c.width = img.naturalWidth + pad * 2 + sh * 2;
     c.height = img.naturalHeight + pad * 2 + sh * 2;
     const ctx = c.getContext("2d")!;
@@ -35,9 +39,9 @@ export default function ImageBorderTool() {
     ctx.save();
     if (shadow) {
       ctx.shadowColor = "rgba(0,0,0,0.3)";
-      ctx.shadowBlur = sh;
+      ctx.shadowBlur = blur;
       ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = sh / 2;
+      ctx.shadowOffsetY = offsetY;
     }
     ctx.fillStyle = color;
     const x = sh;

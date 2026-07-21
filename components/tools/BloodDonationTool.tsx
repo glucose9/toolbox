@@ -12,7 +12,10 @@ const TYPES = [
 export default function BloodDonationTool() {
   const t = useTranslations("toolUI.blood-donation");
   const locale = useLocale();
-  const [last, setLast] = useState(new Date().toISOString().slice(0, 10));
+  const [last, setLast] = useState(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  });
   const [typeIdx, setTypeIdx] = useState(0);
 
   const result = useMemo(() => {

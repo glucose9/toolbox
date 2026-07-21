@@ -37,7 +37,8 @@ function partNumber(name: string): number {
 }
 
 function baseName(name: string): string {
-  return name.replace(/\.part\d+$/i, "").replace(/\.\d+$/, "");
+  if (/\.part\d+$/i.test(name)) return name.replace(/\.part\d+$/i, "");
+  return name.replace(/\.\d+$/, "");
 }
 
 export default function FileSplitJoinTool() {

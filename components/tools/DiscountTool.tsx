@@ -50,7 +50,7 @@ export default function DiscountTool() {
       <div className="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded p-4 text-center">
         <div className="text-xs text-muted">{resultLabel}</div>
         <div className="text-3xl font-bold mt-1">
-          {mode === "rate-from-price" ? `${resultValue.toFixed(2)}%` : t("priceWithUnit", { value: fmt(resultValue) })}
+          {mode === "rate-from-price" ? (isFinite(resultValue) ? `${resultValue.toFixed(2)}%` : "—") : t("priceWithUnit", { value: fmt(resultValue) })}
         </div>
         {mode === "price-from-rate" && (
           <div className="text-xs text-muted mt-1">{t("savings", { value: fmt(orig - resultValue) })}</div>

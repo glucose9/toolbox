@@ -14,6 +14,7 @@ export default function VideoMergeTool() {
   const [busy, setBusy] = useState(false);
   const [loadingFf, setLoadingFf] = useState(false);
   const [error, setError] = useState("");
+  const [warning, setWarning] = useState("");
 
   const loadFf = async () => {
     if (ffmpegRef.current) return ffmpegRef.current;
@@ -42,7 +43,7 @@ export default function VideoMergeTool() {
 
   const merge = async () => {
     if (files.length < 2) return;
-    setBusy(true); setError("");
+    setBusy(true); setError(""); setWarning("");
     try {
       const ff = await loadFf();
       const names: string[] = [];
@@ -90,6 +91,7 @@ export default function VideoMergeTool() {
           const vCode = await ff.exec([...inputs, "-filter_complex", filterV, "-map", "[v]", "-c:v", "libx264", "-preset", "veryfast", "-an", "out3.mp4"]);
           if (vCode !== 0) throw new Error("merge failed");
           data = (await ff.readFile("out3.mp4")) as Uint8Array;
+          setWarning(t("audioDropped"));
         }
       }
       const ab = new ArrayBuffer(data.byteLength); new Uint8Array(ab).set(data);
@@ -128,6 +130,7 @@ export default function VideoMergeTool() {
       )}
       {loadingFf && <div className="text-sm text-muted">{t("loadingFfmpeg")}</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}
+      {warning && <div className="text-sm text-amber-600">{warning}</div>}
       <div className="flex gap-2">
         <button onClick={merge} disabled={busy || files.length < 2} className="btn btn-primary disabled:opacity-50">{busy ? t("merging") : t("merge")}</button>
         {outUrl && <button onClick={download} className="btn btn-secondary">{t("download")}</button>}

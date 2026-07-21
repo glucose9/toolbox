@@ -17,10 +17,17 @@ export default function PdfBlankPageTool() {
 
   const handleFile = async (f: File) => {
     if (!isPdfFile(f)) return;
+    setError("");
     setFile(f);
-    const src = await PDFDocument.load(await readBytes(f));
-    setPageCount(src.getPageCount());
-    setPosition(src.getPageCount() + 1);
+    try {
+      const src = await PDFDocument.load(await readBytes(f));
+      setPageCount(src.getPageCount());
+      setPosition(src.getPageCount() + 1);
+    } catch (e) {
+      setError(t("errPdfLoad") + ": " + (e as Error).message);
+      setFile(null);
+      setPageCount(0);
+    }
   };
 
   const run = async () => {
@@ -31,7 +38,8 @@ export default function PdfBlankPageTool() {
       const first = src.getPage(0);
       const w = first.getWidth(), h = first.getHeight();
       const pos = Math.max(1, Math.min(position, src.getPageCount() + 1));
-      for (let i = 0; i < count; i++) {
+      const n = Math.max(1, Math.min(20, Math.floor(count) || 0));
+      for (let i = 0; i < n; i++) {
         src.insertPage(pos - 1 + i, [w, h]);
       }
       const out = await src.save();
@@ -48,6 +56,7 @@ export default function PdfBlankPageTool() {
           <div className="font-medium mt-2">{t("uploadPdf")}</div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
+        {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
       </div>
     );
   }

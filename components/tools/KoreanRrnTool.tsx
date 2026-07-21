@@ -21,7 +21,7 @@ function validate(input: string, labels: { male: string; female: string }): { va
   const dateOk = bd.getFullYear() === year && bd.getMonth() === mNum - 1 && bd.getDate() === dNum;
   const valid = checksumOk && dateOk;
   const gender = g % 2 === 1 ? labels.male : labels.female;
-  const foreigner = g >= 5;
+  const foreigner = g >= 5 && g <= 8;
   return { valid, formatted: `${d.slice(0, 6)}-${d.slice(6)}`, birth: `${year}-${month}-${day}`, gender, foreigner };
 }
 

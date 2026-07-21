@@ -71,7 +71,7 @@ export default function CiteFormatTool() {
   })();
 
   const chicago = (() => {
-    const a = authors.trim();
+    const a = authors.trim().replace(/\.$/, "");
     if (type === "journal") {
       return `${a}. "${title}." *${container}* ${volume}, no. ${issue} (${year}): ${pages}.${doi ? ` https://doi.org/${doi}` : ""}`;
     }

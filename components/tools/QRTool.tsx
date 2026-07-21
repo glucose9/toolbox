@@ -52,6 +52,7 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
       case "wifi": {
         if (!values.ssid) return "";
         const enc = values.encryption || "WPA";
+        if (enc === "nopass") return `WIFI:T:nopass;S:${escapeWifi(values.ssid)};;`;
         return `WIFI:T:${enc};S:${escapeWifi(values.ssid)};P:${escapeWifi(values.password)};;`;
       }
       case "vcard": {

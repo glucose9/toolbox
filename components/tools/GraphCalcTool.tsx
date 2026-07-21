@@ -132,6 +132,7 @@ export default function GraphCalcTool() {
       ctx.lineWidth = 2;
       ctx.beginPath();
       let prevDefined = false;
+      let prevSx = 0, prevSy = 0, prevY = 0;
       const steps = size.w * 2;
       for (let i = 0; i <= steps; i++) {
         const sx = (i / steps) * size.w;
@@ -152,9 +153,24 @@ export default function GraphCalcTool() {
           prevDefined = false;
           continue;
         }
+        // A large screen-space jump is either a genuinely steep slope or a pole
+        // (tan, 1/x). Probe the midpoint: on a continuous stretch its value stays
+        // between the two samples, near a pole it shoots past them.
+        if (prevDefined && Math.abs(sy - prevSy) > size.h / 4) {
+          let mid: number;
+          try {
+            mid = f.eval(screenToX((sx + prevSx) / 2));
+          } catch {
+            mid = NaN;
+          }
+          if (!isFinite(mid) || mid < Math.min(prevY, y) || mid > Math.max(prevY, y)) prevDefined = false;
+        }
         if (prevDefined) ctx.lineTo(sx, sy);
         else ctx.moveTo(sx, sy);
         prevDefined = true;
+        prevSx = sx;
+        prevSy = sy;
+        prevY = y;
       }
       ctx.stroke();
     }

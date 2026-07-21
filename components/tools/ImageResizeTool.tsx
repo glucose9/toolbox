@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 export default function ImageResizeTool() {
   const t = useTranslations("toolUI.image-resize");
   const [input, setInput] = useState<{ name: string; url: string; type: string; w: number; h: number } | null>(null);
-  const [output, setOutput] = useState<string | null>(null);
+  const [output, setOutput] = useState<{ url: string; w: number; h: number; type: string } | null>(null);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [keepRatio, setKeepRatio] = useState(true);
@@ -53,9 +53,13 @@ export default function ImageResizeTool() {
       const ctx = canvas.getContext("2d")!;
       ctx.imageSmoothingQuality = "high";
       ctx.drawImage(img, 0, 0, width, height);
-      const type = input.type || "image/png";
+      // canvas.toBlob only encodes jpeg/png/webp; other types silently fall back
+      // to PNG, so normalize and remember what was actually encoded.
+      const type = input.type === "image/jpeg" || input.type === "image/webp" ? input.type : "image/png";
+      const outW = width;
+      const outH = height;
       canvas.toBlob((blob) => {
-        if (blob) setOutput(URL.createObjectURL(blob));
+        if (blob) setOutput({ url: URL.createObjectURL(blob), w: outW, h: outH, type: blob.type || type });
       }, type, 0.92);
     };
     img.src = input.url;
@@ -64,10 +68,10 @@ export default function ImageResizeTool() {
   const download = () => {
     if (!output || !input) return;
     const baseName = input.name.replace(/\.[^.]+$/, "");
-    const ext = input.type.split("/")[1] || "png";
+    const ext = output.type.split("/")[1] || "png";
     const a = document.createElement("a");
-    a.href = output;
-    a.download = `${baseName}-${width}x${height}.${ext}`;
+    a.href = output.url;
+    a.download = `${baseName}-${output.w}x${output.h}.${ext}`;
     a.click();
   };
 
@@ -109,7 +113,7 @@ export default function ImageResizeTool() {
             <div>
               <div className="text-sm font-medium mb-2">{t("preview")}</div>
               {output ? (
-                <img src={output} className="max-w-full max-h-60 rounded border border-gray-200" alt={t("result")} />
+                <img src={output.url} className="max-w-full max-h-60 rounded border border-gray-200" alt={t("result")} />
               ) : (
                 <div className="h-60 flex items-center justify-center text-gray-400 text-sm">
                   {t("emptyPreview")}

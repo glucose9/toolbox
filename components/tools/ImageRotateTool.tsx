@@ -45,8 +45,9 @@ export default function ImageRotateTool() {
     c.height = h;
     const ctx = c.getContext("2d")!;
     ctx.translate(w / 2, h / 2);
-    ctx.rotate((a * Math.PI) / 180);
+    // scale before rotate so flips always follow the on-screen axes
     ctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+    ctx.rotate((a * Math.PI) / 180);
     ctx.drawImage(src, -src.naturalWidth / 2, -src.naturalHeight / 2);
     const mime = file.type === "image/png" ? "image/png" : "image/jpeg";
     c.toBlob(

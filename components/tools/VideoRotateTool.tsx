@@ -9,7 +9,7 @@ function fmtBytes(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
 }
 
-type Rotation = 90 | 180 | 270;
+type Rotation = 0 | 90 | 180 | 270;
 
 export default function VideoRotateTool() {
   const t = useTranslations("toolUI.video-rotate");
@@ -70,9 +70,11 @@ export default function VideoRotateTool() {
       else if (rotation === 270) filters.push("transpose=2");
       if (flipH) filters.push("hflip");
       if (flipV) filters.push("vflip");
-      const vf = filters.join(",");
       const outName = `out_${Date.now()}.mp4`;
-      await ff.exec(["-y", "-i", `in.${ext}`, "-vf", vf, "-preset", "veryfast", outName]);
+      const args = ["-y", "-i", `in.${ext}`];
+      if (filters.length > 0) args.push("-vf", filters.join(","));
+      args.push("-preset", "veryfast", outName);
+      await ff.exec(args);
       const data = (await ff.readFile(outName)) as Uint8Array;
       try { await ff.deleteFile(outName); } catch {}
       const ab = new ArrayBuffer(data.byteLength);
@@ -125,9 +127,9 @@ export default function VideoRotateTool() {
 
       <div className="space-y-2">
         <div className="flex gap-2 flex-wrap">
-          {([90, 180, 270] as Rotation[]).map((r) => (
+          {([0, 90, 180, 270] as Rotation[]).map((r) => (
             <button key={r} onClick={() => setRotation(r)} className={`btn ${rotation === r ? "btn-primary" : "btn-secondary"}`}>
-              {t("rotateBy", { deg: r })}
+              {r === 0 ? t("noRotate") : t("rotateBy", { deg: r })}
             </button>
           ))}
           <button onClick={() => setFlipH((v) => !v)} className={`btn ${flipH ? "btn-primary" : "btn-secondary"}`}>{t("flipH")}</button>

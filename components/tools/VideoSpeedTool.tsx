@@ -36,6 +36,7 @@ export default function VideoSpeedTool() {
   const [outUrl, setOutUrl] = useState("");
   const [outSize, setOutSize] = useState(0);
   const [speed, setSpeed] = useState(2);
+  const [convertedSpeed, setConvertedSpeed] = useState(2);
   const [busy, setBusy] = useState(false);
   const [loadingFf, setLoadingFf] = useState(false);
   const [error, setError] = useState("");
@@ -78,13 +79,12 @@ export default function VideoSpeedTool() {
       const ff = await loadFf();
       const ext = file.name.split(".").pop()?.toLowerCase() || "mp4";
       await ff.writeFile(`in.${ext}`, await fetchFile(file));
-      const ptsFactor = (1 / speed).toFixed(4);
       const aFilter = audioFilter(speed);
       const outName = `out_${Date.now()}.mp4`;
       await ff.exec([
         "-y",
         "-i", `in.${ext}`,
-        "-vf", `setpts=${ptsFactor}*PTS`,
+        "-vf", `setpts=PTS/${speed}`,
         "-af", aFilter,
         "-preset", "veryfast",
         outName,
@@ -97,6 +97,7 @@ export default function VideoSpeedTool() {
       if (outUrl) URL.revokeObjectURL(outUrl);
       setOutUrl(URL.createObjectURL(blob));
       setOutSize(blob.size);
+      setConvertedSpeed(speed);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -108,7 +109,7 @@ export default function VideoSpeedTool() {
     if (!outUrl || !file) return;
     const a = document.createElement("a");
     a.href = outUrl;
-    a.download = file.name.replace(/\.[^.]+$/, "") + `_${speed}x.mp4`;
+    a.download = file.name.replace(/\.[^.]+$/, "") + `_${convertedSpeed}x.mp4`;
     a.click();
   };
 

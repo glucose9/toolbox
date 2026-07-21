@@ -10,8 +10,11 @@ export default function KeycodeTool() {
   const [last, setLast] = useState<Info | null>(null);
 
   useEffect(() => {
+    // Only swallow keys that would scroll or move focus away from the demo.
+    // Shortcuts (Ctrl/Cmd/Alt combos, F5, F12, ...) must keep working.
+    const SWALLOW = new Set(["Tab", " ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "PageUp", "PageDown", "Home", "End"]);
     const handler = (e: KeyboardEvent) => {
-      e.preventDefault();
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && SWALLOW.has(e.key)) e.preventDefault();
       const mods: string[] = [];
       if (e.altKey) mods.push("Alt");
       if (e.ctrlKey) mods.push("Ctrl");

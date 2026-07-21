@@ -32,8 +32,8 @@ export default function PdfTextExtractTool() {
         const content = await page.getTextContent();
         const pageText = content.items
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((it: any) => ("str" in it ? it.str : ""))
-          .join(" ");
+          .map((it: any) => ("str" in it ? it.str + (it.hasEOL ? "\n" : " ") : ""))
+          .join("");
         parts.push(pageText);
         setProgress({ done: i, total });
       }

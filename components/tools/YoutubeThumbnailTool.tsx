@@ -18,6 +18,9 @@ function extractVideoId(url: string): string | null {
   // youtube.com/embed/ID
   const embed = trimmed.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/);
   if (embed) return embed[1];
+  // youtube.com/live/ID
+  const live = trimmed.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/);
+  if (live) return live[1];
   // Raw 11-char ID
   if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
   return null;

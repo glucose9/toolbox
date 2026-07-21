@@ -2,7 +2,15 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import DOMPurify from "dompurify";
 import { downloadText } from "@/lib/markdown-io";
+
+// mammoth copies docx hyperlink targets into <a href> verbatim, so a malicious
+// document can smuggle a javascript: URL or an event handler into the rendered
+// preview and the saved .html.
+function sanitizeHtml(raw: string): string {
+  return DOMPurify.sanitize(raw, { ADD_ATTR: ["target"] });
+}
 
 function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
@@ -32,7 +40,7 @@ export default function DocxViewerTool() {
       const buf = await f.arrayBuffer();
       const htmlRes = await mammoth.convertToHtml({ arrayBuffer: buf });
       const textRes = await mammoth.extractRawText({ arrayBuffer: buf });
-      setHtml(htmlRes.value);
+      setHtml(sanitizeHtml(htmlRes.value));
       setText(textRes.value);
     } catch (e) {
       setError((e as Error).message);

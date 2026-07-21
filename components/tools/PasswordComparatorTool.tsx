@@ -2,6 +2,14 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
+// Keep this scoring identical to PasswordStrengthTool so both tools agree.
+const COMMON = new Set([
+  "password", "123456", "12345678", "qwerty", "abc123", "111111", "password1",
+  "asdf", "asdfasdf", "iloveyou", "admin", "letmein", "1q2w3e4r", "qwer1234",
+  "1234", "12345", "1234567", "123456789", "1234567890", "monkey", "dragon",
+  "0000", "aaaa", "asdasd", "qweqwe",
+]);
+
 function score(pw: string): number {
   if (!pw) return 0;
   let pool = 0;
@@ -10,7 +18,21 @@ function score(pw: string): number {
   if (/[0-9]/.test(pw)) pool += 10;
   if (/[^a-zA-Z0-9]/.test(pw)) pool += 32;
   const e = pool > 0 ? Math.log2(pool) * pw.length : 0;
-  return Math.min(100, Math.round((e / 80) * 100));
+  const isCommon = COMMON.has(pw.toLowerCase());
+  let issues = 0;
+  if (pw.length < 8) issues++;
+  if (!/[A-Z]/.test(pw)) issues++;
+  if (!/[a-z]/.test(pw)) issues++;
+  if (!/[0-9]/.test(pw)) issues++;
+  if (!/[^a-zA-Z0-9]/.test(pw)) issues++;
+  if (/(.)\1{2,}/.test(pw)) issues++;
+  if (/(?:0123|1234|2345|3456|4567|5678|6789|abcd|qwer|asdf|zxcv)/i.test(pw)) issues++;
+  if (isCommon) issues++;
+  let s = Math.min(100, (e / 80) * 100);
+  s -= issues * 8;
+  if (isCommon) s = Math.min(s, 15);
+  if (pw.length < 6) s = Math.min(s, 10);
+  return Math.max(0, Math.round(s));
 }
 
 function color(s: number): string {

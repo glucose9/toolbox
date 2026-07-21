@@ -18,14 +18,18 @@ function mulberry32(seed: number) {
 const SIZE = 500;
 const CENTER = SIZE / 2;
 const BASE_R = 180;
+// Outermost jittered vertex must stay inside the viewBox, with room for the
+// bezier control points to bulge past it.
+const MAX_R = CENTER - 30;
 
 function buildBlobPath(points: number, randomness: number, seed: number): string {
   const rand = mulberry32(seed);
+  const baseR = Math.min(BASE_R, MAX_R / (1 + randomness));
   const ring: { x: number; y: number }[] = [];
   for (let i = 0; i < points; i++) {
     const angle = (i / points) * Math.PI * 2;
     const jitter = 1 - randomness + rand() * randomness * 2;
-    const r = BASE_R * jitter;
+    const r = baseR * jitter;
     ring.push({
       x: CENTER + Math.cos(angle) * r,
       y: CENTER + Math.sin(angle) * r,

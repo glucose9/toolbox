@@ -63,7 +63,15 @@ export default function VideoResizeTool() {
 
   return (
     <div className="card space-y-3">
-      <div className="text-sm font-medium truncate">{file.name}</div>
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-sm font-medium truncate">{file.name}</div>
+        <button
+          onClick={() => { if (outUrl) URL.revokeObjectURL(outUrl); setFile(null); setOutUrl(""); setError(""); }}
+          className="text-sm text-brand-600 hover:underline shrink-0"
+        >
+          {t("otherFile")}
+        </button>
+      </div>
       <select value={presetIdx} onChange={(e) => setPresetIdx(+e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
         {PRESETS.map((p, i) => <option key={i} value={i}>{p.label}</option>)}
       </select>

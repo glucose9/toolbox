@@ -84,6 +84,7 @@ export default function MermaidTool() {
         setError(null);
       } catch (e) {
         if (cancelled) return;
+        setSvgString("");
         setError(e instanceof Error ? e.message : t("renderFailed"));
       }
     })();

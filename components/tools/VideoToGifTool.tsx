@@ -28,31 +28,60 @@ export default function VideoToGifTool() {
     setBusy(true);
     setOutput(null);
     setProgress(0);
+    let ffRef: Awaited<ReturnType<typeof getFFmpeg>> | null = null;
+    const onP = ({ progress }: { progress: number }) => setProgress(progress * 100);
     try {
       const ff = await getFFmpeg((s) => setStatus(s));
-      ff.on("progress", ({ progress }) => setProgress(progress * 100));
+      ffRef = ff;
+      ff.on("progress", onP);
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
       const inputName = `input.${ext}`;
       setStatus(t("statusLoading"));
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
       setStatus(t("statusConverting"));
       const outName = `out_${Date.now()}.gif`;
-      await ff.exec([
+      const paletteName = `palette_${Date.now()}.png`;
+      const scaleChain = `fps=${fps},scale=${width}:-1:flags=lanczos`;
+      // Two-pass palette: pass 1 builds an optimal 256-color palette from the
+      // clip itself, pass 2 encodes with it. (The single-command split variant
+      // has to buffer every frame in memory, which OOMs ffmpeg.wasm.)
+      const paletteCode = await ff.exec([
         "-y",
-        "-i", inputName,
         "-t", String(maxSeconds),
-        "-vf", `fps=${fps},scale=${width}:-1:flags=lanczos`,
-        "-loop", "0",
-        outName,
+        "-i", inputName,
+        "-vf", `${scaleChain},palettegen`,
+        paletteName,
       ]);
+      if (paletteCode === 0) {
+        await ff.exec([
+          "-y",
+          "-t", String(maxSeconds),
+          "-i", inputName,
+          "-i", paletteName,
+          "-filter_complex", `[0:v]${scaleChain}[x];[x][1:v]paletteuse`,
+          "-loop", "0",
+          outName,
+        ]);
+      } else {
+        await ff.exec([
+          "-y",
+          "-i", inputName,
+          "-t", String(maxSeconds),
+          "-vf", scaleChain,
+          "-loop", "0",
+          outName,
+        ]);
+      }
       const data = (await ff.readFile(outName)) as Uint8Array;
       try { await ff.deleteFile(outName); } catch {}
+      try { await ff.deleteFile(paletteName); } catch {}
       const blob = new Blob([data as BlobPart], { type: "image/gif" });
       setOutput({ url: URL.createObjectURL(blob), size: blob.size });
       setStatus(t("statusDone"));
     } catch (e) {
       setStatus(t("statusFailed") + ": " + (e as Error).message);
     } finally {
+      try { ffRef?.off("progress", onP); } catch {}
       setBusy(false);
     }
   };

@@ -7,7 +7,7 @@ export default function ImageCompressTool() {
   const t = useTranslations("toolUI.image-compress");
   const [quality, setQuality] = useState(0.75);
   const [input, setInput] = useState<{ name: string; size: number; url: string; type: string } | null>(null);
-  const [output, setOutput] = useState<{ url: string; size: number } | null>(null);
+  const [output, setOutput] = useState<{ url: string; size: number; type: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -30,8 +30,10 @@ export default function ImageCompressTool() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
       ctx.drawImage(img, 0, 0);
-      // PNG doesn't accept quality; downgrade to WebP for compression
-      const outType = inputType === "image/png" ? "image/webp" : inputType;
+      // PNG doesn't accept quality; downgrade to WebP for compression.
+      // canvas.toBlob only encodes jpeg/png/webp — GIF/BMP/SVG would silently
+      // fall back to PNG, so route every non-JPEG input to WebP instead.
+      const outType = inputType === "image/jpeg" ? "image/jpeg" : "image/webp";
       canvas.toBlob(
         (blob) => {
           if (!blob) {
@@ -39,7 +41,7 @@ export default function ImageCompressTool() {
             setError(t("errLoad"));
             return;
           }
-          setOutput({ url: URL.createObjectURL(blob), size: blob.size });
+          setOutput({ url: URL.createObjectURL(blob), size: blob.size, type: blob.type || outType });
           setBusy(false);
         },
         outType,
@@ -63,7 +65,7 @@ export default function ImageCompressTool() {
   const download = () => {
     if (!output || !input) return;
     const baseName = input.name.replace(/\.[^.]+$/, "");
-    const ext = (input.type === "image/png" ? "webp" : input.type.split("/")[1]) || "jpg";
+    const ext = output.type.split("/")[1] || "jpg";
     const a = document.createElement("a");
     a.href = output.url;
     a.download = `${baseName}-compressed.${ext}`;
@@ -116,9 +118,15 @@ export default function ImageCompressTool() {
               ) : output ? (
                 <>
                   <img src={output.url} className="max-w-full max-h-60 rounded border border-gray-200" alt={t("compressed")} />
-                  <div className="mt-2 text-sm font-medium text-green-600">
-                    {t("reduced", { percent: Math.round((1 - output.size / input.size) * 100) })}
-                  </div>
+                  {output.size <= input.size ? (
+                    <div className="mt-2 text-sm font-medium text-green-600">
+                      {t("reduced", { percent: Math.round((1 - output.size / input.size) * 100) })}
+                    </div>
+                  ) : (
+                    <div className="mt-2 text-sm font-medium text-amber-600">
+                      {t("increased", { percent: Math.round((output.size / input.size - 1) * 100) })}
+                    </div>
+                  )}
                 </>
               ) : null}
             </div>

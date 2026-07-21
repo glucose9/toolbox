@@ -100,6 +100,7 @@ export default function ChartMakerTool() {
   const data = useMemo(
     () =>
       rows
+        .filter((r) => r.value.trim() !== "")
         .map((r) => ({ label: r.label.trim(), value: Number(r.value) }))
         .filter((r) => r.label !== "" && isFinite(r.value)),
     [rows]
@@ -220,6 +221,21 @@ export default function ChartMakerTool() {
           els.push(<path key={`s${i}`} d={sectorPath(cx, cy, r, ir, start, end)} fill={color} stroke="#fff" strokeWidth="2" />);
           slices.push({ i, label: d.label, mid: (start + end) / 2, pct: (v / total) * 100, color });
         });
+      }
+
+      const hasNegative = data.some((d) => d.value < 0);
+      if (slices.length === 0) {
+        els.push(
+          <text key="pieEmpty" x={W / 2} y={H / 2} textAnchor="middle" fontSize="16" fill="#94a3b8">
+            {hasNegative ? t("negativeExcluded") : t("noData")}
+          </text>
+        );
+      } else if (hasNegative) {
+        els.push(
+          <text key="pieNegNote" x={12} y={18} textAnchor="start" fontSize="12" fill="#d97706">
+            {t("negativeExcluded")}
+          </text>
+        );
       }
 
       if (showLegend && slices.length) {

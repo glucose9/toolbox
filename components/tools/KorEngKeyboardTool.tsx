@@ -28,7 +28,8 @@ const isJung = (j: string) => JUNG.includes(j);
 function engToKor(text: string): string {
   const jamos: string[] = [];
   for (const c of text) {
-    if (E2K[c]) jamos.push(E2K[c]);
+    const j = E2K[c] || E2K[c.toLowerCase()];
+    if (j) jamos.push(j);
     else jamos.push(c);
   }
   return composeJamos(jamos);

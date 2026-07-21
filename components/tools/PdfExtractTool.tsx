@@ -21,9 +21,15 @@ export default function PdfExtractTool() {
     }
     setError("");
     setFile(f);
-    const bytes = await readBytes(f);
-    const src = await PDFDocument.load(bytes);
-    setPageCount(src.getPageCount());
+    try {
+      const bytes = await readBytes(f);
+      const src = await PDFDocument.load(bytes);
+      setPageCount(src.getPageCount());
+    } catch (e) {
+      setError(t("errPdfLoad") + ": " + (e as Error).message);
+      setFile(null);
+      setPageCount(0);
+    }
   };
 
   const run = async () => {

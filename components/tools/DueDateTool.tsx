@@ -74,7 +74,8 @@ export default function DueDateTool() {
             <div className="text-xs text-muted">{t("expectedDueDate")}</div>
             <div className="text-2xl font-bold mt-1">{fmt(result.dueDate)}</div>
             {result.daysToDue > 0 && <div className="text-sm text-muted mt-1">D-{result.daysToDue}</div>}
-            {result.daysToDue <= 0 && <div className="text-sm text-muted mt-1">{t("pastDue", { n: Math.abs(result.daysToDue) })}</div>}
+            {result.daysToDue === 0 && <div className="text-sm text-muted mt-1">{t("dDay")}</div>}
+            {result.daysToDue < 0 && <div className="text-sm text-muted mt-1">{t("pastDue", { n: Math.abs(result.daysToDue) })}</div>}
           </div>
 
           {result.totalDaysPreg >= 0 && (

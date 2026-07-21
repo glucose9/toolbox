@@ -6,9 +6,10 @@ import { getFFmpeg, ffmpegFetchFile } from "@/lib/ffmpeg";
 import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
 
 function fmtTime(s: number) {
-  const mm = Math.floor(s / 60);
-  const ss = Math.floor(s % 60);
-  const ms = Math.floor((s % 1) * 100);
+  const total = Math.round(Math.max(0, s) * 100);
+  const mm = Math.floor(total / 6000);
+  const ss = Math.floor((total % 6000) / 100);
+  const ms = total % 100;
   return `${mm}:${ss.toString().padStart(2, "0")}.${ms.toString().padStart(2, "0")}`;
 }
 
@@ -49,9 +50,12 @@ export default function VideoTrimTool() {
     setBusy(true);
     setOutput(null);
     setProgress(0);
+    let ffRef: Awaited<ReturnType<typeof getFFmpeg>> | null = null;
+    const onP = ({ progress }: { progress: number }) => setProgress(progress * 100);
     try {
       const ff = await getFFmpeg((s) => setStatus(s));
-      ff.on("progress", ({ progress }) => setProgress(progress * 100));
+      ffRef = ff;
+      ff.on("progress", onP);
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
       const inputName = `input.${ext}`;
       setStatus(t("statusLoading"));
@@ -93,6 +97,7 @@ export default function VideoTrimTool() {
     } catch (e) {
       setStatus(t("statusFailed") + ": " + (e as Error).message);
     } finally {
+      try { ffRef?.off("progress", onP); } catch {}
       setBusy(false);
     }
   };

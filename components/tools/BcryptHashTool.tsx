@@ -34,7 +34,7 @@ export default function BcryptHashTool() {
     <div className="card space-y-3">
       <div>
         <label className="label">{t("password")}</label>
-        <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
+        <input type="text" value={password} onChange={(e) => { setPassword(e.target.value); setVerifyResult(null); }} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
       </div>
       <div className="grid grid-cols-2 gap-3 items-end">
         <label className="text-sm">cost factor ({rounds})<input type="range" min="4" max="14" value={rounds} onChange={(e) => setRounds(+e.target.value)} className="w-full" /></label>
@@ -51,7 +51,7 @@ export default function BcryptHashTool() {
       <hr className="border-gray-200 dark:border-gray-700" />
       <div>
         <label className="label">{t("verifyHash")}</label>
-        <textarea value={verifyHash} onChange={(e) => setVerifyHash(e.target.value)} className="w-full h-20 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono resize-y" />
+        <textarea value={verifyHash} onChange={(e) => { setVerifyHash(e.target.value); setVerifyResult(null); }} className="w-full h-20 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono resize-y" />
       </div>
       <button onClick={verify} disabled={busy} className="btn btn-secondary disabled:opacity-50">{t("verify")}</button>
       {verifyResult !== null && (

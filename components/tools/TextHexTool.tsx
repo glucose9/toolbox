@@ -25,6 +25,7 @@ export default function TextHexTool() {
   // "cafe", "dead" 처럼 hex 알파벳으로만 이루어진 일반 텍스트를 위해 수동 전환을 허용한다.
   const isHex = mode === "auto" ? autoIsHex : mode === "toText";
   const output = useMemo(() => (isHex ? fromHex(input) : toHex(input, spaced)), [input, spaced, isHex]);
+  const oddHex = isHex && input.replace(/[^0-9a-fA-F]/g, "").length % 2 !== 0;
   const [copied, setCopied] = useState(false);
   const copy = async () => { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
 
@@ -40,6 +41,7 @@ export default function TextHexTool() {
         <span className="text-muted">{isHex ? t("hexToText") : t("textToHex")}</span>
         {!isHex && <label className="flex items-center gap-1"><input type="checkbox" checked={spaced} onChange={(e) => setSpaced(e.target.checked)} /> {t("spaced")}</label>}
       </div>
+      {oddHex && <div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 p-2 rounded border border-amber-200 dark:border-amber-800">{t("oddLength")}</div>}
       <textarea readOnly value={output} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
       <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>

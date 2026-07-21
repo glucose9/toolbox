@@ -75,6 +75,13 @@ export default function PasswordStrengthTool() {
   }, [pw]);
 
   const crackTime = (ee: number): string => {
+    // 2^ee overflows to Infinity around ee >= 1024, so switch to log-space.
+    if (ee >= 1000) {
+      const log10Years = ee * Math.log10(2) - 10 - Math.log10(86400 * 365);
+      const exp10 = Math.floor(log10Years);
+      const mantissa = Math.pow(10, log10Years - exp10);
+      return `${mantissa.toFixed(1)}e+${exp10}${t("unitYear")}`;
+    }
     const seconds = Math.pow(2, ee) / 1e10;
     if (seconds < 1) return t("crackInstant");
     if (seconds < 60) return `${seconds.toFixed(1)}${t("unitSec")}`;

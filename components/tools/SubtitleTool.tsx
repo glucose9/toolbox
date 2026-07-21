@@ -8,10 +8,11 @@ type Cue = { idx: number; start: number; end: number; text: string };
 // Time in seconds → SRT timestamp 00:00:00,000
 function secToSrt(s: number): string {
   if (s < 0) s = 0;
-  const h = Math.floor(s / 3600);
-  const m = Math.floor((s % 3600) / 60);
-  const sec = Math.floor(s % 60);
-  const ms = Math.floor((s - Math.floor(s)) * 1000);
+  const total = Math.round(s * 1000);
+  const h = Math.floor(total / 3600000);
+  const m = Math.floor((total % 3600000) / 60000);
+  const sec = Math.floor((total % 60000) / 1000);
+  const ms = total % 1000;
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")},${String(ms).padStart(3, "0")}`;
 }
 function secToVtt(s: number): string {
@@ -57,17 +58,7 @@ function cuesToText(cues: Cue[]): string {
 
 export default function SubtitleTool() {
   const t = useTranslations("toolUI.subtitle");
-  const [input, setInput] = useState(`1
-00:00:01,000 --> 00:00:04,500
-안녕하세요, 바로킷입니다.
-
-2
-00:00:05,000 --> 00:00:08,000
-이 도구로 자막을 편집할 수 있습니다.
-
-3
-00:00:09,000 --> 00:00:12,000
-SRT와 VTT를 양방향 변환합니다.`);
+  const [input, setInput] = useState(() => t("sampleInput"));
   const [offset, setOffset] = useState(0); // seconds, can be negative
   const [outputFormat, setOutputFormat] = useState<"srt" | "vtt" | "txt">("srt");
 

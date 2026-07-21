@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
-function levenshtein(a: string, b: string): number {
+function levenshtein(a: string[], b: string[]): number {
   const m = a.length, n = b.length;
   if (m === 0) return n; if (n === 0) return m;
   const prev = new Array(n + 1).fill(0);
@@ -28,8 +28,9 @@ export default function TextSimilarityTool() {
   const tooLong = a.length > MAX_LEN || b.length > MAX_LEN;
   const { dist, sim } = useMemo(() => {
     if (a.length > MAX_LEN || b.length > MAX_LEN) return { dist: null, sim: null };
-    const d = levenshtein(a, b);
-    const maxLen = Math.max(a.length, b.length) || 1;
+    const av = Array.from(a), bv = Array.from(b);
+    const d = levenshtein(av, bv);
+    const maxLen = Math.max(av.length, bv.length) || 1;
     return { dist: d, sim: ((1 - d / maxLen) * 100).toFixed(1) };
   }, [a, b]);
   return (

@@ -459,7 +459,8 @@
     },
     "exchange-rate": {
       "rateLabel": "환율: 1 USD = ? KRW",
-      "rateHint": "네이버·구글에서 실시간 환율을 확인하고 입력하세요."
+      "rateHint": "네이버·구글에서 실시간 환율을 확인하고 입력하세요.",
+      "rateRequired": "환율을 0보다 큰 값으로 입력해야 환산됩니다."
     },
     "html-minifier": {
       "copy": "복사",
@@ -592,7 +593,8 @@
       "binToText": "2진수 → 텍스트",
       "textToBin": "텍스트 → 2진수 (UTF-8)",
       "copy": "복사",
-      "copied": "✓ 복사됨"
+      "copied": "✓ 복사됨",
+      "partialBits": "비트 수가 8의 배수가 아닙니다. 남은 비트는 변환되지 않습니다."
     },
     "text-blockquote": {
       "depth": "깊이",
@@ -608,7 +610,8 @@
       "uploadVideo": "동영상 업로드",
       "resize": "리사이즈",
       "processing": "처리 중...",
-      "download": "📥 다운로드"
+      "download": "📥 다운로드",
+      "otherFile": "다른 파일"
     },
     "audio-volume": {
       "uploadAudio": "오디오 업로드",
@@ -733,7 +736,8 @@
       "textToHex": "텍스트 → 16진수 (UTF-8)",
       "spaced": "공백 구분",
       "copy": "복사",
-      "copied": "✓ 복사됨"
+      "copied": "✓ 복사됨",
+      "oddLength": "16진수 자릿수가 홀수입니다. 마지막 한 자리는 변환되지 않습니다."
     },
     "unicode-lookup": {
       "charToCode": "글자 → 코드포인트",
@@ -812,6 +816,7 @@
       "excludeNumbers": "제외할 번호 (선택)",
       "excludePlaceholder": "예: 7, 13, 23",
       "draw": "🎲 추첨",
+      "tooManyExcluded": "제외할 번호는 최대 39개까지 지정할 수 있습니다.",
       "note": "Web Crypto의 안전한 난수로 추첨합니다. 어떤 조합이든 당첨 확률은 동일합니다 — 재미로만 쓰세요."
     },
     "regex-tester": {
@@ -874,7 +879,8 @@
       "merge": "🎞️ 합치기",
       "merging": "합치는 중...",
       "download": "📥 다운로드",
-      "codecHint": "(영상 코덱·해상도가 다르면 재인코딩이 필요할 수 있습니다)"
+      "codecHint": "(영상 코덱·해상도가 다르면 재인코딩이 필요할 수 있습니다)",
+      "audioDropped": "⚠️ 일부 영상에 오디오가 없어 결과물에서 소리가 제거되었습니다."
     },
     "base64-image": {
       "upload": "이미지 업로드",
@@ -961,6 +967,7 @@
       "note": "한국어 자모와 영문/숫자 모스 부호 모두 지원. 단어 구분: /, 글자 구분: 공백."
     },
     "pdf-blank-page": {
+      "errPdfLoad": "PDF 로드 실패",
       "uploadPdf": "PDF 업로드",
       "pagesSuffix": "페이지",
       "insertPosition": "삽입 위치",
@@ -970,6 +977,7 @@
       "otherFile": "다른 파일"
     },
     "pdf-metadata": {
+      "errPdfLoad": "PDF 로드 실패",
       "uploadPdf": "PDF 업로드",
       "title": "제목",
       "author": "저자",
@@ -987,7 +995,9 @@
       "saved": "절감",
       "decompressed": "해제됨",
       "copy": "복사",
-      "copied": "✓ 복사됨"
+      "copied": "✓ 복사됨",
+      "invalidCompressed": "유효한 압축 문자열이 아닙니다.",
+      "increased": "증가"
     },
     "text-dedupe": {
       "placeholder": "한 줄에 하나씩 입력하세요",
@@ -1017,6 +1027,7 @@
     },
     "chinese-zodiac": {
       "birthYear": "출생 연도",
+      "invalidYear": "출생 연도를 1~9999 사이로 입력해 주세요.",
       "yearOfAnimal": "{animal}띠",
       "ganji": "간지",
       "yearSuffix": "년",
@@ -1274,6 +1285,7 @@
     },
     "pdf-extract": {
       "errPdfOnly": "PDF 파일만 지원합니다.",
+      "errPdfLoad": "PDF 로드 실패",
       "errEnterPages": "추출할 페이지를 입력하세요.",
       "dropOrClick": "PDF 파일을 드래그하거나 클릭",
       "otherFile": "다른 파일",
@@ -1401,6 +1413,7 @@
     },
     "image-stack": {
       "errImageLoad": "이미지 로드 실패",
+      "errSomeFailed": "불러오지 못한 파일: {names}",
       "dropOrClick": "이미지를 여러 장 드래그하거나 클릭",
       "imageCount": "{count}장",
       "addMore": "+ 추가",
@@ -1511,7 +1524,8 @@
       "loadingFfmpeg": "ffmpeg.wasm 로딩 중...",
       "processing": "처리 중...",
       "convert": "변환",
-      "download": "다운로드"
+      "download": "다운로드",
+      "noRotate": "회전 없음"
     },
     "video-speed": {
       "errVideoOnly": "동영상 파일만 지원합니다.",
@@ -1705,7 +1719,8 @@
       "unique": "고유 {count}개",
       "total": "전체 {count}개",
       "count": "횟수",
-      "ratio": "비율"
+      "ratio": "비율",
+      "tokenizeNote": "공백 기준으로 나누므로 조사가 붙은 형태('단어가', '단어는')는 서로 다른 단어로 집계됩니다."
     },
     "book-reading-time": {
       "minutes": "{n}분",
@@ -1798,6 +1813,7 @@
       "compressed": "압축됨",
       "compressing": "압축 중...",
       "reduced": "{percent}% 절감",
+      "increased": "원본보다 {percent}% 커졌습니다 — 원본 사용을 권장합니다",
       "qualityLabel": "화질 ({percent}%) — 낮을수록 용량 작음",
       "download": "다운로드",
       "otherFile": "다른 파일",
@@ -1905,7 +1921,8 @@
       "offsetHint": "양수: 늦춤, 음수: 당김",
       "copy": "📋 복사",
       "saveAs": "💾 .{ext} 저장",
-      "hint": "💡 SRT(SubRip)와 VTT(WebVTT) 양방향 변환, 시간 오프셋 일괄 조정, 본문 텍스트만 추출. 영상과 자막이 안 맞을 때 오프셋 ±1~3초 정도로 미세 조정하세요. 모든 처리는 브라우저 안에서 일어납니다."
+      "hint": "💡 SRT(SubRip)와 VTT(WebVTT) 양방향 변환, 시간 오프셋 일괄 조정, 본문 텍스트만 추출. 영상과 자막이 안 맞을 때 오프셋 ±1~3초 정도로 미세 조정하세요. 모든 처리는 브라우저 안에서 일어납니다.",
+      "sampleInput": "1\n00:00:01,000 --> 00:00:04,500\n안녕하세요, 바로킷입니다.\n\n2\n00:00:05,000 --> 00:00:08,000\n이 도구로 자막을 편집할 수 있습니다.\n\n3\n00:00:09,000 --> 00:00:12,000\nSRT와 VTT를 양방향 변환합니다."
     },
     "unit-price": {
       "productA": "상품 A",
@@ -1958,6 +1975,7 @@
       "lmpLabel": "마지막 생리 시작일",
       "conceptionLabel": "수정 추정일",
       "expectedDueDate": "예상 출산일",
+      "dDay": "D-Day · 오늘이 예정일입니다",
       "pastDue": "예정일 지남 ({n}일)",
       "currentWeeks": "현재 임신 주수",
       "weeksDaysFmt": "{w}주 {d}일",
@@ -2178,6 +2196,7 @@
       "doneSuffix": "→ {n}개 변환됨 ({size})",
       "addFiles": "+ 파일 추가",
       "savedPercent": "{pct}% 절감",
+      "increasedPercent": "원본보다 {pct}% 커짐",
       "pending": "대기",
       "converting": "변환 중...",
       "download": "✓ 다운로드",
@@ -2422,7 +2441,8 @@
       "statusLoading": "파일 로드 중...",
       "statusCompressing": "압축 중 (CRF {crf})... 동영상 길이에 따라 시간이 걸립니다",
       "statusDone": "완료",
-      "statusFailed": "실패: {msg}"
+      "statusFailed": "실패: {msg}",
+      "increasedPct": "원본보다 {pct}% 커졌습니다 — 원본 사용을 권장합니다"
     },
     "ocr": {
       "language": "언어",
@@ -3616,7 +3636,8 @@
       "colValue": "값",
       "addRow": "행 추가",
       "rowCount": "{count}개 항목",
-      "noData": "데이터를 입력하세요"
+      "noData": "데이터를 입력하세요",
+      "negativeExcluded": "음수 값은 원그래프에 그릴 수 없어 제외했습니다"
     },
     "pdf-compress": {
       "dropOrClick": "PDF 파일을 드래그하거나 클릭해서 업로드",

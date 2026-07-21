@@ -3,14 +3,22 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
+// Uniform index in [0, n) — rejection sampling avoids the modulo bias of rand % n.
+function randIndex(n: number): number {
+  const buf = new Uint32Array(1);
+  const limit = Math.floor(4294967296 / n) * n;
+  let r = crypto.getRandomValues(buf)[0];
+  while (r >= limit) r = crypto.getRandomValues(buf)[0];
+  return r % n;
+}
+
 function pick(pool: string[], n: number, allowRepeat: boolean): string[] {
   if (pool.length === 0) return [];
   const out: string[] = [];
   const working = allowRepeat ? [...pool] : pool.slice();
   for (let i = 0; i < n; i++) {
     if (!allowRepeat && working.length === 0) break;
-    const rand = crypto.getRandomValues(new Uint32Array(1))[0];
-    const idx = rand % working.length;
+    const idx = randIndex(working.length);
     out.push(working[idx]);
     if (!allowRepeat) working.splice(idx, 1);
   }

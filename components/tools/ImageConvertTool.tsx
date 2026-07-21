@@ -133,9 +133,14 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
     const done = files.filter((f) => f.status === "done" && f.outBlob);
     if (done.length === 0) return;
     const zip = new JSZip();
+    const used = new Set<string>();
     done.forEach((f) => {
       const baseName = f.name.replace(/\.[^.]+$/, "");
-      zip.file(`${baseName}.${EXT[to]}`, f.outBlob!);
+      let name = `${baseName}.${EXT[to]}`;
+      let n = 2;
+      while (used.has(name)) name = `${baseName}-${n++}.${EXT[to]}`;
+      used.add(name);
+      zip.file(name, f.outBlob!);
     });
     const blob = await zip.generateAsync({ type: "blob" });
     const url = URL.createObjectURL(blob);
@@ -202,7 +207,12 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
                   <div className="text-sm truncate">{f.name}</div>
                   <div className="text-xs text-muted">
                     {fmt(f.size)}
-                    {f.outBlob && ` → ${fmt(f.outBlob.size)} (${t("savedPercent", { pct: Math.round((1 - f.outBlob.size / f.size) * 100) })})`}
+                    {f.outBlob &&
+                      ` → ${fmt(f.outBlob.size)} (${
+                        f.outBlob.size <= f.size
+                          ? t("savedPercent", { pct: Math.round((1 - f.outBlob.size / f.size) * 100) })
+                          : t("increasedPercent", { pct: Math.round((f.outBlob.size / f.size - 1) * 100) })
+                      })`}
                   </div>
                 </div>
                 <div className="text-xs whitespace-nowrap">

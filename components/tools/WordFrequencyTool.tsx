@@ -79,6 +79,8 @@ export default function WordFrequencyTool() {
 
       <div className="text-xs text-muted">{t("unique", { count: sorted.length })} · {t("total", { count: total.toLocaleString() })}</div>
 
+      {mode === "words" && <div className="text-xs text-muted">{t("tokenizeNote")}</div>}
+
       <div className="max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-gray-50 dark:bg-gray-900">

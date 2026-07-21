@@ -18,10 +18,10 @@ export default function QrTextTool() {
   const [shape, setShape] = useState<"rect" | "rounded" | "circle">("rounded");
 
   useEffect(() => {
-    if (!content) return;
     const c = canvasRef.current!;
     c.width = size;
     c.height = size;
+    if (!content) return;
     QRCode.toCanvas(c, content, { width: size, errorCorrectionLevel: "H", margin: 2 }).then(() => {
       if (!centerText) return;
       const ctx = c.getContext("2d")!;
@@ -130,7 +130,7 @@ export default function QrTextTool() {
         <canvas ref={canvasRef} className="max-w-full" />
       </div>
 
-      <button onClick={download} className="btn btn-primary">{t("downloadPng")}</button>
+      <button onClick={download} disabled={!content} className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed">{t("downloadPng")}</button>
 
       <div className="text-xs text-muted leading-relaxed">
         {t("tipNote")}

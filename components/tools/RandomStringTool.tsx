@@ -11,6 +11,16 @@ const PRESETS = {
   url: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
 };
 
+// Uniform random index in [0, n) via rejection sampling (no modulo bias).
+function randIndex(n: number): number {
+  const limit = Math.floor(0x100000000 / n) * n;
+  const buf = new Uint32Array(1);
+  do {
+    crypto.getRandomValues(buf);
+  } while (buf[0] >= limit);
+  return buf[0] % n;
+}
+
 export default function RandomStringTool() {
   const t = useTranslations("toolUI.random-string");
   const [length, setLength] = useState(16);
@@ -22,10 +32,8 @@ export default function RandomStringTool() {
     const charset = PRESETS[charsetName];
     const out: string[] = [];
     for (let i = 0; i < count; i++) {
-      const bytes = new Uint32Array(length);
-      crypto.getRandomValues(bytes);
       let s = "";
-      for (let j = 0; j < length; j++) s += charset[bytes[j] % charset.length];
+      for (let j = 0; j < length; j++) s += charset[randIndex(charset.length)];
       out.push(s);
     }
     setResults(out);

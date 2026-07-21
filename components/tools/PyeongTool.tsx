@@ -10,16 +10,20 @@ export default function PyeongTool() {
   const t = useTranslations("toolUI.pyeong");
   const [pyeong, setPyeong] = useState("32");
   const [sqm, setSqm] = useState((32 * PY_TO_SQM).toFixed(2));
+  // 표시용 문자열은 2자리 반올림이므로 파생값 계산에는 정밀 원본값을 따로 보관한다
+  const [exactSqm, setExactSqm] = useState(32 * PY_TO_SQM);
 
   const updatePy = (v: string) => {
     setPyeong(v);
     const n = parseFloat(v);
     setSqm(isNaN(n) ? "" : (n * PY_TO_SQM).toFixed(2));
+    setExactSqm(isNaN(n) ? 0 : n * PY_TO_SQM);
   };
   const updateSqm = (v: string) => {
     setSqm(v);
     const n = parseFloat(v);
     setPyeong(isNaN(n) ? "" : (n / PY_TO_SQM).toFixed(2));
+    setExactSqm(isNaN(n) ? 0 : n);
   };
 
   const presets = [
@@ -31,8 +35,8 @@ export default function PyeongTool() {
     { label: t("preset50"), py: 52, note: t("preset50Note") },
   ];
 
-  const py = parseFloat(pyeong) || 0;
-  const sqmN = parseFloat(sqm) || 0;
+  const sqmN = exactSqm;
+  const py = exactSqm / PY_TO_SQM;
 
   return (
     <div className="card space-y-3">

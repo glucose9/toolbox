@@ -212,6 +212,7 @@ export default function KoreaHolidaysTool() {
 
   const holidays = useMemo(() => {
     const list: { name: string; date: string }[] = [];
+    if (!Number.isFinite(year) || year < 1900 || year > 2100) return list;
     const substSources: { name: string; date: string; rule: SubstRule }[] = [];
     for (const h of dataset) {
       if (h.type === "fixed" && h.fromYear && year < h.fromYear) continue;

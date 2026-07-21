@@ -17,7 +17,11 @@ export default function TextCompressTool() {
     setError("");
     try {
       if (mode === "compress") setOutput(LZString.compressToEncodedURIComponent(input));
-      else setOutput(LZString.decompressFromEncodedURIComponent(input) || "");
+      else {
+        const decoded = LZString.decompressFromEncodedURIComponent(input);
+        if (input.trim() !== "" && !decoded) { setOutput(""); setError(t("invalidCompressed")); return; }
+        setOutput(decoded || "");
+      }
     } catch (e) { setError((e as Error).message); }
   };
 
@@ -35,7 +39,7 @@ export default function TextCompressTool() {
       <button onClick={run} className="btn btn-primary">{mode === "compress" ? t("compress") : t("decompress")}</button>
       {error && <div className="text-sm text-red-600">{error}</div>}
       <textarea readOnly value={output} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-xs font-mono resize-y break-all" />
-      {output && <div className="text-xs text-muted">{input.length} → {output.length} ({mode === "compress" ? `${pct}% ${t("saved")}` : t("decompressed")})</div>}
+      {output && <div className="text-xs text-muted">{input.length} → {output.length} ({mode === "compress" ? (pct < 0 ? `${-pct}% ${t("increased")}` : `${pct}% ${t("saved")}`) : t("decompressed")})</div>}
       <button onClick={copy} disabled={!output} className="btn btn-secondary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
     </div>
   );

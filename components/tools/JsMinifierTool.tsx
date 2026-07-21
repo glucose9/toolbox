@@ -7,6 +7,7 @@ export default function JsMinifierTool() {
   const t = useTranslations("toolUI.js-minifier");
   const [input, setInput] = useState(`// sample\nfunction add(a, b) {\n  // add two numbers\n  return a + b;\n}\n\nconst result = add(1, 2);\nconsole.log("Result:", result);`);
   const [output, setOutput] = useState("");
+  const [srcLen, setSrcLen] = useState(0);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [mangle, setMangle] = useState(true);
@@ -19,6 +20,7 @@ export default function JsMinifierTool() {
       const terser = await import("terser");
       const result = await terser.minify(input, { mangle, compress: true });
       setOutput(result.code || "");
+      setSrcLen(input.length);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -28,12 +30,12 @@ export default function JsMinifierTool() {
 
   const copy = async () => { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
 
-  const saved = input.length - output.length;
-  const pct = output && input.length > 0 ? Math.round((saved / input.length) * 100) : 0;
+  const saved = srcLen - output.length;
+  const pct = output && srcLen > 0 ? Math.round((saved / srcLen) * 100) : 0;
 
   return (
     <div className="card space-y-3">
-      <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-48 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
+      <textarea value={input} onChange={(e) => { setInput(e.target.value); setOutput(""); }} className="w-full h-48 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
       <div className="flex flex-wrap gap-3 text-sm items-center">
         <label className="flex items-center gap-1"><input type="checkbox" checked={mangle} onChange={(e) => setMangle(e.target.checked)} /> {t("mangle")}</label>
         <button onClick={minify} disabled={busy} className="btn btn-primary disabled:opacity-50">{busy ? t("processing") : t("compress")}</button>
@@ -43,7 +45,7 @@ export default function JsMinifierTool() {
       {output && (
         <>
           <textarea readOnly value={output} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-          <div className="text-sm text-muted">{input.length} → {output.length} ({pct}% {t("saved")})</div>
+          <div className="text-sm text-muted">{srcLen} → {output.length} ({pct}% {t("saved")})</div>
         </>
       )}
     </div>

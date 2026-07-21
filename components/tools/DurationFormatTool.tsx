@@ -4,12 +4,13 @@ import { useTranslations } from "next-intl";
 
 function secondsToIso(s: number): string {
   if (!isFinite(s)) return "";
-  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = Math.floor(s % 60);
+  const abs = Math.abs(s);
+  const h = Math.floor(abs / 3600), m = Math.floor((abs % 3600) / 60), sec = Math.floor(abs % 60);
   let out = "PT";
   if (h > 0) out += `${h}H`;
   if (m > 0) out += `${m}M`;
   if (sec > 0 || out === "PT") out += `${sec}S`;
-  return out;
+  return (s < 0 ? "-" : "") + out;
 }
 
 function humanToSeconds(s: string): number {
@@ -34,16 +35,17 @@ export default function DurationFormatTool() {
 
   const secondsToHuman = (s: number): string => {
     if (!isFinite(s)) return "";
-    const days = Math.floor(s / 86400);
-    const h = Math.floor((s % 86400) / 3600);
-    const m = Math.floor((s % 3600) / 60);
-    const sec = Math.floor(s % 60);
+    const abs = Math.abs(s);
+    const days = Math.floor(abs / 86400);
+    const h = Math.floor((abs % 86400) / 3600);
+    const m = Math.floor((abs % 3600) / 60);
+    const sec = Math.floor(abs % 60);
     const parts: string[] = [];
     if (days > 0) parts.push(t("daysUnit", { n: days }));
     if (h > 0) parts.push(t("hoursUnit", { n: h }));
     if (m > 0) parts.push(t("minutesUnit", { n: m }));
     if (sec > 0 || parts.length === 0) parts.push(t("secondsUnit", { n: sec }));
-    return parts.join(" ");
+    return (s < 0 ? "-" : "") + parts.join(" ");
   };
 
   return (

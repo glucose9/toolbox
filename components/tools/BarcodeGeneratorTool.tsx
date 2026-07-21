@@ -62,6 +62,9 @@ export default function BarcodeGeneratorTool({ config }: { config: Record<string
     if (!svgRef.current) return;
     if (!effectiveValue) {
       setError("");
+      svgRef.current.innerHTML = "";
+      const cv = canvasRef.current;
+      if (cv) cv.getContext("2d")?.clearRect(0, 0, cv.width, cv.height);
       return;
     }
     if (isbnInvalid) {
@@ -194,7 +197,7 @@ export default function BarcodeGeneratorTool({ config }: { config: Record<string
         <div className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-lg p-6 min-h-[260px]">
           <svg ref={svgRef} className={`max-w-full ${error ? "hidden" : ""}`} />
           <canvas ref={canvasRef} className="hidden" />
-          {!error && (
+          {!error && effectiveValue && (
             <div className="mt-4 flex gap-2">
               <button onClick={downloadPng} className="btn btn-primary">{t("downloadPng")}</button>
               <button onClick={downloadSvg} className="btn btn-secondary">{t("downloadSvg")}</button>
