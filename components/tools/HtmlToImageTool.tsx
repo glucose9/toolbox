@@ -34,6 +34,7 @@ export default function HtmlToImageTool() {
   const [html, setHtml] = useState<string>(SAMPLE_HTML);
   const [css, setCss] = useState<string>(SAMPLE_CSS);
   const [width, setWidth] = useState<string>("800");
+  const [error, setError] = useState("");
   const iframeRef = useRef<HTMLIFrameElement>(null);
   // clamp only for rendering so that typing intermediate values stays possible
   const widthPx = Math.max(100, Math.min(3000, Number(width) || 800));
@@ -54,20 +55,28 @@ export default function HtmlToImageTool() {
     const doc = frame.contentDocument;
     const body = doc?.body;
     if (!doc || !body) return;
-    const html2canvas = (await import("html2canvas")).default;
-    const canvas = await html2canvas(body, {
-      width: widthPx,
-      windowWidth: widthPx,
-      scale: 2,
-      useCORS: true,
-      logging: false,
-      backgroundColor: null,
-    });
-    const url = canvas.toDataURL("image/png");
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `html-${Date.now()}.png`;
-    a.click();
+    setError("");
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(body, {
+        width: widthPx,
+        windowWidth: widthPx,
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: null,
+      });
+      const url = canvas.toDataURL("image/png");
+      // an over-sized canvas yields "data:," instead of throwing — don't hand that to the user
+      if (url.length < 100) throw new Error("canvas encode failed");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `html-${Date.now()}.png`;
+      a.click();
+    } catch {
+      // async onClick: without this the rejection is swallowed and the button looks dead
+      setError(t("errorExport"));
+    }
   };
 
   return (
@@ -110,6 +119,7 @@ export default function HtmlToImageTool() {
               {t("downloadPng")}
             </button>
           </div>
+          {error && <div className="text-sm text-red-600">{error}</div>}
         </div>
 
         <div>

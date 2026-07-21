@@ -34,7 +34,11 @@ export default function QrLogoTool() {
   const handleLogo = (f: File) => {
     const url = URL.createObjectURL(f);
     const i = new Image();
-    i.onload = () => setLogo(i);
+    i.onload = () => {
+      URL.revokeObjectURL(url);
+      setLogo(i);
+    };
+    i.onerror = () => URL.revokeObjectURL(url);
     i.src = url;
   };
 
@@ -54,7 +58,18 @@ export default function QrLogoTool() {
       <input type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder={t("placeholder")} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
       <div className="grid grid-cols-2 gap-3 text-sm items-end">
         <button onClick={() => inputRef.current?.click()} className="btn btn-secondary">{logo ? t("changeLogo") : t("uploadLogo")}</button>
-        <input ref={inputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleLogo(e.target.files[0])} className="hidden" />
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) handleLogo(f);
+            // reset so picking the same file again still fires change (after "remove logo")
+            e.target.value = "";
+          }}
+          className="hidden"
+        />
         {logo && <button onClick={() => setLogo(null)} className="btn btn-secondary text-xs">{t("removeLogo")}</button>}
         <label>{t("logoSize")} ({logoSize}%)<input type="range" min="10" max="30" value={logoSize} onChange={(e) => setLogoSize(+e.target.value)} className="w-full" /></label>
         <label>{t("qrSize")} ({size}px)<input type="range" min="200" max="800" step="50" value={size} onChange={(e) => setSize(+e.target.value)} className="w-full" /></label>

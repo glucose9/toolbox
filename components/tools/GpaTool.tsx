@@ -13,11 +13,12 @@ const GRADE_43: Record<string, number> = {
   F: 0, P: 4.3, NP: 0,
 };
 
+// 국내 4.5 만점 체계는 마이너스 등급을 쓰지 않는다 (A+ 4.5 / A0 4.0 / B+ 3.5 / B0 3.0 ...)
 const GRADE_45: Record<string, number> = {
-  "A+": 4.5, A: 4.0, "A-": 3.5,
-  "B+": 3.5, B: 3.0, "B-": 2.5,
-  "C+": 2.5, C: 2.0, "C-": 1.5,
-  "D+": 1.5, D: 1.0, "D-": 0.5,
+  "A+": 4.5, A: 4.0,
+  "B+": 3.5, B: 3.0,
+  "C+": 2.5, C: 2.0,
+  "D+": 1.5, D: 1.0,
   F: 0, P: 4.5, NP: 0,
 };
 
@@ -29,6 +30,18 @@ const GRADE_40: Record<string, number> = {
   F: 0, P: 4.0, NP: 0,
 };
 
+function gradePoint(tbl: Record<string, number>, grade: string): number {
+  const direct = tbl[grade];
+  if (direct !== undefined) return direct;
+  // 대상 스케일에 없는 등급(예: 4.5 만점의 A-)은 기본 등급으로 환산
+  const base = grade.replace(/[+-]/g, "");
+  return tbl[base] ?? 0;
+}
+
+function tableFor(scale: "4.3" | "4.5" | "4.0"): Record<string, number> {
+  return scale === "4.3" ? GRADE_43 : scale === "4.5" ? GRADE_45 : GRADE_40;
+}
+
 export default function GpaTool() {
   const t = useTranslations("toolUI.gpa");
   const [scale, setScale] = useState<"4.3" | "4.5" | "4.0">("4.5");
@@ -38,21 +51,38 @@ export default function GpaTool() {
     { id: 3, name: "영어", grade: "B+", credit: 2 },
   ]);
 
-  const table = scale === "4.3" ? GRADE_43 : scale === "4.5" ? GRADE_45 : GRADE_40;
+  const table = tableFor(scale);
   const max = parseFloat(scale);
 
-  const totalCredits = courses.reduce((s, c) => s + (c.grade === "P" || c.grade === "NP" ? 0 : c.credit), 0);
-  const totalPoints = courses.reduce((s, c) => {
-    if (c.grade === "P" || c.grade === "NP") return s;
-    return s + (table[c.grade] ?? 0) * c.credit;
-  }, 0);
-  const gpa = totalCredits > 0 ? totalPoints / totalCredits : 0;
+  const safeCredit = (n: number) => (Number.isFinite(n) && n > 0 ? n : 0);
+  const totalCredits = courses.reduce((s, c) => s + (c.grade === "P" || c.grade === "NP" ? 0 : safeCredit(c.credit)), 0);
+  // 스케일 간 환산은 각 스케일의 등급표로 재계산한다 (선형 비율 환산은 이 도구의 등급표와 모순되는 값을 낸다)
+  const gpaWith = (tbl: Record<string, number>) => {
+    let credits = 0;
+    let points = 0;
+    for (const c of courses) {
+      if (c.grade === "P" || c.grade === "NP") continue;
+      const cr = safeCredit(c.credit);
+      credits += cr;
+      points += gradePoint(tbl, c.grade) * cr;
+    }
+    return credits > 0 ? points / credits : 0;
+  };
+  const gpa = gpaWith(table);
 
-  const ratio = gpa / max;
-  const gpa45 = ratio * 4.5;
-  const gpa43 = ratio * 4.3;
-  const gpa40 = ratio * 4.0;
-  const gpa100 = ratio * 100;
+  const gpa45 = gpaWith(GRADE_45);
+  const gpa43 = gpaWith(GRADE_43);
+  const gpa40 = gpaWith(GRADE_40);
+  const gpa100 = max > 0 ? (gpa / max) * 100 : 0;
+
+  const changeScale = (s: "4.3" | "4.5" | "4.0") => {
+    const next = tableFor(s);
+    // 새 스케일에 없는 등급(4.5의 A- 등)은 select 값이 비지 않도록 기본 등급으로 정규화
+    setCourses((prev) =>
+      prev.map((c) => (next[c.grade] !== undefined ? c : { ...c, grade: c.grade.replace(/[+-]/g, "") }))
+    );
+    setScale(s);
+  };
 
   const addCourse = () => setCourses([...courses, { id: Date.now(), name: "", grade: "A", credit: 3 }]);
   const removeCourse = (id: number) => setCourses(courses.filter((c) => c.id !== id));
@@ -70,7 +100,7 @@ export default function GpaTool() {
           {(["4.5", "4.3", "4.0"] as const).map((s) => (
             <button
               key={s}
-              onClick={() => setScale(s)}
+              onClick={() => changeScale(s)}
               className={`px-3 py-1.5 rounded text-sm ${scale === s ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800"}`}
             >
               {t("scalePointFormat", { scale: s })}

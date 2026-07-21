@@ -29,6 +29,7 @@ const CONTAINER_XML = `<?xml version="1.0" encoding="UTF-8"?>
 const MANIFEST_XML = `<?xml version="1.0" encoding="UTF-8"?>
 <manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0">
   <manifest:file-entry manifest:full-path="/" manifest:media-type="application/hwpml-package+xml"/>
+  <manifest:file-entry manifest:full-path="Contents/content.hpf" manifest:media-type="application/hwpml-package+xml"/>
   <manifest:file-entry manifest:full-path="Contents/header.xml" manifest:media-type="application/xml"/>
   <manifest:file-entry manifest:full-path="Contents/section0.xml" manifest:media-type="application/xml"/>
 </manifest:manifest>`;
@@ -41,8 +42,8 @@ const CONTENT_HPF = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <dc:title>HWPX Document</dc:title>
   </opf:metadata>
   <opf:manifest>
-    <opf:item id="header" href="header.xml" media-type="application/xml"/>
-    <opf:item id="section0" href="section0.xml" media-type="application/xml"/>
+    <opf:item id="header" href="Contents/header.xml" media-type="application/xml"/>
+    <opf:item id="section0" href="Contents/section0.xml" media-type="application/xml"/>
   </opf:manifest>
   <opf:spine>
     <opf:itemref idref="section0" linear="yes"/>
@@ -55,13 +56,13 @@ function headerXml(fontName: string, fontSizeHundredthsPt: number): string {
 <hh:head xmlns:hh="http://www.hancom.co.kr/hwpml/2011/head" version="1.4" secCnt="1">
   <hh:beginNum page="1" footnote="1" endnote="1" pic="1" tbl="1" equation="1"/>
   <hh:fontfaces itemCnt="7">
-    <hh:fontface lang="HANGUL" itemCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
-    <hh:fontface lang="LATIN" itemCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
-    <hh:fontface lang="HANJA" itemCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
-    <hh:fontface lang="JAPANESE" itemCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
-    <hh:fontface lang="OTHER" itemCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
-    <hh:fontface lang="SYMBOL" itemCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
-    <hh:fontface lang="USER" itemCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
+    <hh:fontface lang="HANGUL" fontCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
+    <hh:fontface lang="LATIN" fontCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
+    <hh:fontface lang="HANJA" fontCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
+    <hh:fontface lang="JAPANESE" fontCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
+    <hh:fontface lang="OTHER" fontCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
+    <hh:fontface lang="SYMBOL" fontCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
+    <hh:fontface lang="USER" fontCnt="1"><hh:font id="0" face="${f}" type="TTF" isEmbedded="0"/></hh:fontface>
   </hh:fontfaces>
   <hh:borderFills itemCnt="1">
     <hh:borderFill id="1" threeD="0" shadow="0" centerLine="NONE" breakCellSeparateLine="0">

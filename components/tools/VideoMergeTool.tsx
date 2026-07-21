@@ -41,9 +41,37 @@ export default function VideoMergeTool() {
     setFiles(next);
   };
 
+  // Read a clip's pixel dimensions via a detached <video>. Resolves null when the
+  // browser cannot decode the container, so an unknown size never forces a path.
+  const probeSize = (f: File) =>
+    new Promise<{ w: number; h: number } | null>((resolve) => {
+      const url = URL.createObjectURL(f);
+      const v = document.createElement("video");
+      let settled = false;
+      let timer = 0;
+      const finish = (r: { w: number; h: number } | null) => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timer);
+        v.onloadedmetadata = null;
+        v.onerror = null;
+        v.removeAttribute("src");
+        v.load(); // release the pending fetch before the URL goes away
+        URL.revokeObjectURL(url);
+        resolve(r);
+      };
+      timer = window.setTimeout(() => finish(null), 10000);
+      v.preload = "metadata";
+      v.muted = true;
+      v.onloadedmetadata = () => finish(v.videoWidth && v.videoHeight ? { w: v.videoWidth, h: v.videoHeight } : null);
+      v.onerror = () => finish(null);
+      v.src = url;
+    });
+
   const merge = async () => {
     if (files.length < 2) return;
     setBusy(true); setError(""); setWarning("");
+    const notes: string[] = [];
     try {
       const ff = await loadFf();
       const names: string[] = [];
@@ -65,14 +93,23 @@ export default function VideoMergeTool() {
       for (const f of ["out.mp4", "out2.mp4", "out3.mp4"]) {
         try { await ff.deleteFile(f); } catch { /* not present */ }
       }
-      // exec resolves with the exit code (does NOT reject on ffmpeg failure).
-      const copyCode = await ff.exec(["-f", "concat", "-safe", "0", "-i", "list.txt", "-c", "copy", "out.mp4"]);
+      // concat + `-c copy` exits 0 even when inputs differ in resolution, writing
+      // a file whose later segments are broken (mp4 keeps only the first avcC).
+      // Detect that up front and skip the fast path entirely when sizes differ.
+      const sizes = (await Promise.all(files.map(probeSize))).filter(
+        (s): s is { w: number; h: number } => s !== null
+      );
+      const sizeMismatch = sizes.length > 1 && sizes.some((s) => s.w !== sizes[0].w || s.h !== sizes[0].h);
       let data: Uint8Array;
       try {
+        if (sizeMismatch) throw new Error("resolution mismatch");
+        // exec resolves with the exit code (does NOT reject on ffmpeg failure).
+        const copyCode = await ff.exec(["-f", "concat", "-safe", "0", "-i", "list.txt", "-c", "copy", "out.mp4"]);
         if (copyCode !== 0) throw new Error("copy concat failed");
         data = (await ff.readFile("out.mp4")) as Uint8Array;
         if (data.byteLength < 1024) throw new Error("copy concat produced empty output");
       } catch {
+        if (sizeMismatch) notes.push(t("resolutionNormalized"));
         const n = files.length;
         const inputs = names.flatMap((name) => ["-i", name]);
         const norm = (i: number) =>
@@ -91,13 +128,14 @@ export default function VideoMergeTool() {
           const vCode = await ff.exec([...inputs, "-filter_complex", filterV, "-map", "[v]", "-c:v", "libx264", "-preset", "veryfast", "-an", "out3.mp4"]);
           if (vCode !== 0) throw new Error("merge failed");
           data = (await ff.readFile("out3.mp4")) as Uint8Array;
-          setWarning(t("audioDropped"));
+          notes.push(t("audioDropped"));
         }
       }
       const ab = new ArrayBuffer(data.byteLength); new Uint8Array(ab).set(data);
       const blob = new Blob([ab], { type: "video/mp4" });
       if (outUrl) URL.revokeObjectURL(outUrl);
       setOutUrl(URL.createObjectURL(blob));
+      if (notes.length) setWarning(notes.join(" "));
     } catch (e) { setError((e as Error).message + " " + t("codecHint")); }
     finally { setBusy(false); }
   };

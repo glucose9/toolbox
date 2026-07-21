@@ -25,16 +25,28 @@ export default function VideoThumbnailTool() {
   const [shots, setShots] = useState<{ t: number; url: string; blob: Blob }[]>([]);
   const [format, setFormat] = useState<"png" | "jpeg">("png");
 
+  // Keep the latest shots reachable from the unmount-only cleanup below without
+  // making that cleanup re-run (and revoke in-use URLs) on every capture.
+  const shotsRef = useRef<{ t: number; url: string; blob: Blob }[]>([]);
+  useEffect(() => {
+    shotsRef.current = shots;
+  }, [shots]);
+
+  // Revoke the video source only when it is actually replaced or on unmount.
+  useEffect(() => {
+    if (!srcUrl) return;
+    return () => URL.revokeObjectURL(srcUrl);
+  }, [srcUrl]);
+
+  // Capture URLs stay in use while displayed: revoke them on unmount only.
   useEffect(() => {
     return () => {
-      if (srcUrl) URL.revokeObjectURL(srcUrl);
-      shots.forEach((s) => URL.revokeObjectURL(s.url));
+      shotsRef.current.forEach((s) => URL.revokeObjectURL(s.url));
     };
-  }, [srcUrl, shots]);
+  }, []);
 
   const handleFile = (f: File) => {
     setFile(f);
-    if (srcUrl) URL.revokeObjectURL(srcUrl);
     setSrcUrl(URL.createObjectURL(f));
     shots.forEach((s) => URL.revokeObjectURL(s.url));
     setShots([]);
@@ -99,7 +111,7 @@ export default function VideoThumbnailTool() {
     <div className="card space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm truncate font-medium">{file.name}</div>
-        <button onClick={() => { setFile(null); setShots([]); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
+        <button onClick={() => { shots.forEach((s) => URL.revokeObjectURL(s.url)); setShots([]); setSrcUrl(""); setFile(null); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
 
       <video ref={videoRef} src={srcUrl} controls onLoadedMetadata={onMeta} onTimeUpdate={() => setTime(videoRef.current?.currentTime ?? 0)} className="w-full max-h-96 rounded border border-gray-200 dark:border-gray-700" />

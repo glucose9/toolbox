@@ -38,6 +38,29 @@ function toCss(f: Filters): string {
   ].join(" ");
 }
 
+// Preview uses CSS filter (supported everywhere) but the download path relies on
+// CanvasRenderingContext2D.filter, which only landed in Safari/iOS 18. Probe the property and
+// confirm with a pixel test (fill black through invert(100%) and check it did not stay black).
+function supportsCanvasFilter(): boolean {
+  try {
+    const c = document.createElement("canvas");
+    c.width = 1;
+    c.height = 1;
+    const ctx = c.getContext("2d");
+    if (!ctx || !("filter" in ctx)) return false; // Safari / iOS before 18
+    ctx.filter = "invert(100%)";
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, 1, 1);
+    const d = ctx.getImageData(0, 0, 1, 1).data;
+    // Treat as unsupported only when the pixel is unmistakably un-inverted (opaque black).
+    // Anti-fingerprinting modes can return blocked/noisy readbacks; those must not produce
+    // a false negative that blocks a download the browser could actually do.
+    return !(d[3] > 200 && d[0] < 50 && d[1] < 50 && d[2] < 50);
+  } catch {
+    return true; // detection itself failed — let the normal error path handle it
+  }
+}
+
 export default function ImageFilterTool() {
   const t = useTranslations("toolUI.image-filter");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +90,14 @@ export default function ImageFilterTool() {
 
   const download = async () => {
     if (!file || !imgUrl) return;
+    const css = toCss(filters);
+    // Only a problem when a filter is actually active — an untouched image saves fine.
+    if (css !== toCss(DEFAULTS) && !supportsCanvasFilter()) {
+      setError(t("errorNoCanvasFilter"));
+      return;
+    }
     setBusy(true);
+    setError("");
     try {
       const img = await new Promise<HTMLImageElement>((resolve, reject) => {
         const i = new Image();
@@ -79,7 +109,7 @@ export default function ImageFilterTool() {
       c.width = img.naturalWidth;
       c.height = img.naturalHeight;
       const ctx = c.getContext("2d")!;
-      ctx.filter = toCss(filters);
+      ctx.filter = css;
       ctx.drawImage(img, 0, 0);
       const mime = file.type === "image/png" ? "image/png" : "image/jpeg";
       const blob = await new Promise<Blob>((resolve, reject) =>

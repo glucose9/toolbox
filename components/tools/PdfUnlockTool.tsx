@@ -79,10 +79,10 @@ export default function PdfUnlockTool() {
       <div className="text-xs text-muted leading-relaxed bg-amber-50 dark:bg-amber-900/20 p-3 rounded border border-amber-200 dark:border-amber-800">
         <strong>{t("noticeTitle")}</strong>
         <ul className="list-disc list-inside mt-1 space-y-0.5">
-          <li dangerouslySetInnerHTML={{ __html: t("notice1") }} />
-          <li dangerouslySetInnerHTML={{ __html: t("notice2") }} />
+          <li>{t.rich("notice1", { strong: (c) => <strong>{c}</strong> })}</li>
+          <li>{t.rich("notice2", { strong: (c) => <strong>{c}</strong> })}</li>
           <li>{t("notice3")}</li>
-          <li dangerouslySetInnerHTML={{ __html: t("notice4") }} />
+          <li>{t.rich("notice4", { strong: (c) => <strong>{c}</strong> })}</li>
           <li>{t("notice5")}</li>
         </ul>
       </div>

@@ -22,18 +22,33 @@ export default function TextToSpeechTool() {
     const load = () => {
       const list = window.speechSynthesis.getVoices();
       setVoices(list);
-      // prefer Korean by default
-      const ko = list.find((v) => v.lang.startsWith("ko"));
-      if (ko && !voiceURI) setVoiceURI(ko.voiceURI);
-      else if (list[0] && !voiceURI) setVoiceURI(list[0].voiceURI);
+      // prefer Korean by default. voiceschanged can fire repeatedly, so read the
+      // current selection functionally instead of through a stale closure -
+      // otherwise a later re-fire would overwrite the user's own choice.
+      const fallback = list.find((v) => v.lang.startsWith("ko"))?.voiceURI ?? list[0]?.voiceURI;
+      if (fallback) setVoiceURI((prev) => prev || fallback);
     };
     load();
     window.speechSynthesis.onvoiceschanged = load;
     return () => {
+      window.speechSynthesis.onvoiceschanged = null;
       window.speechSynthesis.cancel();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Some engines (notably Chrome with remote voices on long text) stop without
+  // ever firing onend/onerror, which would leave `playing` stuck at true.
+  // Poll the engine and release the flag once it has been idle for ~1s.
+  useEffect(() => {
+    if (!playing) return;
+    let idle = 0;
+    const id = window.setInterval(() => {
+      const s = window.speechSynthesis;
+      if (s.speaking || s.pending) { idle = 0; return; }
+      if (++idle >= 2) setPlaying(false);
+    }, 500);
+    return () => window.clearInterval(id);
+  }, [playing]);
 
   const play = () => {
     if (!text.trim()) return;
@@ -89,7 +104,9 @@ export default function TextToSpeechTool() {
       </div>
 
       <div className="flex gap-2">
-        <button onClick={play} disabled={playing || !text.trim()} className="btn btn-primary disabled:opacity-50">▶ {t("play")}</button>
+        {/* Stays enabled while playing: play() cancels the queue first, so this
+            also recovers from an engine that stalled without firing onend. */}
+        <button onClick={play} disabled={!text.trim()} className="btn btn-primary disabled:opacity-50">▶ {t("play")}</button>
         <button onClick={stop} disabled={!playing} className="btn btn-secondary disabled:opacity-50">⏹ {t("stop")}</button>
       </div>
 

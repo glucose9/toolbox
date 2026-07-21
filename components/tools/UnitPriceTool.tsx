@@ -46,7 +46,15 @@ export default function UnitPriceTool() {
         <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded text-center"><div className="text-xs text-muted">{t("perUnit", { side: "B", unit, label: unitLabel })}</div><div className="text-lg font-bold">{t("currency", { value: fmt(unitB) })}</div></div>
       </div>
       {winner !== "Tie" && (
-        <div className="text-center text-sm" dangerouslySetInnerHTML={{ __html: t("cheaperBy", { winner, unit, label: unitLabel, amount: fmt(diff) }) }} />
+        <div className="text-center text-sm">
+          {t.rich("cheaperBy", {
+            strong: (chunks) => <strong>{chunks}</strong>,
+            winner,
+            unit,
+            label: unitLabel,
+            amount: fmt(diff),
+          })}
+        </div>
       )}
     </div>
   );

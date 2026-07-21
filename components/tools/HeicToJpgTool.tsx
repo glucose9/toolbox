@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 function fmt(n: number) {
@@ -17,22 +17,44 @@ export default function HeicToJpgTool() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
+  // Only the newest conversion may write state: dragging the quality slider can start
+  // several long-running conversions and they are not guaranteed to finish in order.
+  const reqRef = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const convert = async (f: File, q: number) => {
+    if (timerRef.current) clearTimeout(timerRef.current); // drop any pending debounced run
+    const reqId = ++reqRef.current;
     setBusy(true);
     setError("");
     try {
       // dynamic import to keep heic2any out of initial bundle
       const mod = (await import("heic2any")).default;
       const blob = (await mod({ blob: f, toType: "image/jpeg", quality: q })) as Blob;
-      if (outUrl) URL.revokeObjectURL(outUrl);
-      setOutUrl(URL.createObjectURL(blob));
+      if (reqId !== reqRef.current) return; // superseded — discard this result
+      const url = URL.createObjectURL(blob);
+      setOutUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return url;
+      });
       setOutSize(blob.size);
     } catch (e) {
+      if (reqId !== reqRef.current) return;
       setError(t("errConvert") + ": " + (e as Error).message);
     } finally {
-      setBusy(false);
+      if (reqId === reqRef.current) setBusy(false);
     }
   };
+
+  // slider ticks are debounced so a drag does not queue one heavy decode per step
+  const scheduleConvert = (f: File, q: number) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => convert(f, q), 300);
+  };
+
+  useEffect(() => () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }, []);
 
   const handleFile = (f: File) => {
     const ok = /\.(heic|heif)$/i.test(f.name) || /heic|heif/.test(f.type);
@@ -82,12 +104,27 @@ export default function HeicToJpgTool() {
             {outSize > 0 && ` → ${fmt(outSize)} (JPG)`}
           </div>
         </div>
-        <button onClick={() => { setFile(null); setOutUrl(""); setOutSize(0); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
+        <button
+          onClick={() => {
+            reqRef.current++; // ignore anything still in flight
+            if (timerRef.current) clearTimeout(timerRef.current);
+            setFile(null);
+            setOutUrl((prev) => {
+              if (prev) URL.revokeObjectURL(prev);
+              return "";
+            });
+            setOutSize(0);
+            setBusy(false);
+          }}
+          className="text-sm text-brand-600 hover:underline"
+        >
+          {t("otherFile")}
+        </button>
       </div>
 
       <div>
         <label className="label">{t("quality")} ({Math.round(quality * 100)}%)</label>
-        <input type="range" min="0.4" max="1" step="0.05" value={quality} onChange={(e) => { const q = +e.target.value; setQuality(q); convert(file, q); }} className="w-full" />
+        <input type="range" min="0.4" max="1" step="0.05" value={quality} onChange={(e) => { const q = +e.target.value; setQuality(q); scheduleConvert(file, q); }} className="w-full" />
       </div>
 
       {busy ? (

@@ -169,7 +169,9 @@ export default function VideoTrimTool() {
                   className="w-full"
                 />
               </div>
-              <div className="text-sm text-gray-600" dangerouslySetInnerHTML={{ __html: t("trimLength", { trim: fmtTime(end - start), total: fmtTime(duration) }) }} />
+              <div className="text-sm text-gray-600">
+                {t.rich("trimLength", { trim: fmtTime(end - start), total: fmtTime(duration), strong: (c) => <strong>{c}</strong> })}
+              </div>
               <div className="text-xs text-gray-500">{t("keyframeNotice")}</div>
             </>
           )}

@@ -45,7 +45,7 @@ export default function AlcoholConverterTool() {
           return (
             <div key={d.key} className="flex justify-between p-2 bg-gray-50 dark:bg-gray-900 rounded">
               <span>{t(`drink_${d.key}`)}</span>
-              <span className="font-mono" dangerouslySetInnerHTML={{ __html: t("glasses", { count: eqCount.toFixed(1) }) }} />
+              <span className="font-mono">{t.rich("glasses", { count: eqCount.toFixed(1), strong: (c) => <strong>{c}</strong> })}</span>
             </div>
           );
         })}

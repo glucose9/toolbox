@@ -153,6 +153,7 @@ export default function CodeToImageTool() {
   const [bg, setBg] = useState<string>("#0ea5e9");
   const [windowTitle, setWindowTitle] = useState<string>("main.js");
   const [showControls, setShowControls] = useState<boolean>(true);
+  const [error, setError] = useState("");
   const captureRef = useRef<HTMLDivElement>(null);
 
   const theme = useMemo(() => THEMES.find((th) => th.key === themeKey) || THEMES[0], [themeKey]);
@@ -211,19 +212,44 @@ export default function CodeToImageTool() {
   }, [theme]);
 
   const downloadPng = async () => {
-    if (!captureRef.current) return;
-    const html2canvas = (await import("html2canvas")).default;
-    const canvas = await html2canvas(captureRef.current, {
-      backgroundColor: bg,
-      scale: 2,
-      useCORS: true,
-      logging: false,
-    });
-    const url = canvas.toDataURL("image/png");
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `code-${Date.now()}.png`;
-    a.click();
+    const node = captureRef.current;
+    if (!node) return;
+    setError("");
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      // The preview scrolls horizontally, and html2canvas only renders what fits inside the
+      // element bounds — long lines would be cut off. Widen the *clone* so everything fits.
+      const pre = node.querySelector<HTMLElement>("pre.code2img-pre");
+      const hidden = pre ? Math.max(0, pre.scrollWidth - pre.clientWidth) : 0;
+      // keep the bitmap within the browser's canvas size limit for very long lines
+      const MAX_PX = 16000;
+      const wanted = hidden > 0 ? Math.ceil(node.getBoundingClientRect().width + hidden + 24) : 0;
+      const fullWidth = Math.min(wanted, MAX_PX);
+      const scale = fullWidth > MAX_PX / 2 ? Math.max(1, MAX_PX / fullWidth) : 2;
+      const canvas = await html2canvas(node, {
+        backgroundColor: bg,
+        scale,
+        useCORS: true,
+        logging: false,
+        onclone: (_doc, el) => {
+          if (!fullWidth) return;
+          el.style.overflow = "visible";
+          el.style.width = `${fullWidth}px`;
+          el.style.maxWidth = "none";
+          const clonedPre = el.querySelector<HTMLElement>("pre.code2img-pre");
+          if (clonedPre) clonedPre.style.overflow = "visible";
+        },
+      });
+      const url = canvas.toDataURL("image/png");
+      // an over-sized canvas yields "data:," instead of throwing — don't hand that to the user
+      if (url.length < 100) throw new Error("canvas encode failed");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `code-${Date.now()}.png`;
+      a.click();
+    } catch {
+      setError(t("errorExport"));
+    }
   };
 
   return (
@@ -300,6 +326,7 @@ export default function CodeToImageTool() {
           <button onClick={downloadPng} className="btn btn-primary w-full">
             {t("downloadPng")}
           </button>
+          {error && <div className="text-sm text-red-600">{error}</div>}
         </div>
 
         <div>

@@ -137,7 +137,9 @@ export default function SpellCheckTool() {
         </div>
       </div>
 
-      <div className="text-xs text-muted leading-relaxed bg-amber-50 dark:bg-amber-900/20 p-3 rounded border border-amber-200 dark:border-amber-800" dangerouslySetInnerHTML={{ __html: t("disclaimer", { n: RULES.length }) }} />
+      <div className="text-xs text-muted leading-relaxed bg-amber-50 dark:bg-amber-900/20 p-3 rounded border border-amber-200 dark:border-amber-800">
+        {t.rich("disclaimer", { n: RULES.length, strong: (c) => <strong>{c}</strong> })}
+      </div>
     </div>
   );
 }

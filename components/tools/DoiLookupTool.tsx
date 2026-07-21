@@ -54,7 +54,12 @@ export default function DoiLookupTool() {
         const j = await r.json();
         const m = j.message;
         setMeta({
-          authors: (m.author || []).map((a: { family?: string; given?: string }) => `${a.family || ""}, ${a.given || ""}`),
+          // Crossref 기관저자는 family/given 대신 name 하나만 온다 → name 우선, 빈 조각은 제거
+          authors: (m.author || [])
+            .map((a: { family?: string; given?: string; name?: string }) =>
+              (a.name || "").trim() || [a.family, a.given].map((s) => (s || "").trim()).filter(Boolean).join(", ")
+            )
+            .filter((s: string) => s.length > 0),
           year: (m.issued?.["date-parts"]?.[0]?.[0] || "").toString(),
           title: (m.title || []).join(" "),
           container: (m["container-title"] || []).join(" ") || "",
@@ -67,7 +72,10 @@ export default function DoiLookupTool() {
         });
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : t("errorLookup"));
+      // fetch 네트워크/CORS 실패는 TypeError, 응답 파싱 실패는 SyntaxError로 브라우저 원문(영문)이 그대로 노출된다.
+      // 이런 내부 오류는 번역된 안내로 대체하고, 우리가 던진 Error 메시지만 그대로 보여준다.
+      const isBrowserInternal = e instanceof TypeError || e instanceof SyntaxError;
+      setError(!isBrowserInternal && e instanceof Error && e.message ? e.message : t("errorLookup"));
     } finally {
       setLoading(false);
     }
@@ -99,8 +107,10 @@ export default function DoiLookupTool() {
             ? `${list.slice(0, 19).join(", ")}, ... ${list[list.length - 1]}`
             : `${list.slice(0, -1).join(", ")}, & ${list[list.length - 1]}`;
     const year = meta.year || "n.d.";
-    if (meta.type === "book") return `${a} (${year}). ${meta.title}. ${meta.publisher}.`;
-    return `${a} (${year}). ${meta.title}. ${meta.container}, ${meta.volume}${meta.issue ? `(${meta.issue})` : ""}, ${meta.pages}.${meta.doi ? ` https://doi.org/${meta.doi}` : ""}`;
+    // APA 7: 저자가 없으면 제목을 저자 위치로 올린다 (선행 공백/구두점 방지)
+    const head = a ? `${a} (${year}). ${meta.title}.` : `${meta.title}. (${year}).`;
+    if (meta.type === "book") return `${head} ${meta.publisher}.`;
+    return `${head} ${meta.container}, ${meta.volume}${meta.issue ? `(${meta.issue})` : ""}, ${meta.pages}.${meta.doi ? ` https://doi.org/${meta.doi}` : ""}`;
   })();
 
   const mla = meta && (() => {
@@ -114,14 +124,18 @@ export default function DoiLookupTool() {
       return given ? `${given} ${family}` : family;
     };
     const a = list.length === 0 ? "" : list.length === 1 ? list[0] : list.length === 2 ? `${list[0]}, and ${natural(list[1])}` : `${list[0]}, et al.`;
-    if (meta.type === "book") return `${a}. ${meta.title}. ${meta.publisher}, ${meta.year}.`;
-    return `${a}. "${meta.title}." ${meta.container}, vol. ${meta.volume}, no. ${meta.issue}, ${meta.year}, pp. ${meta.pages}.`;
+    // MLA 9: 저자가 없으면 제목으로 시작 (선행 '. ' 방지)
+    const head = a ? `${a}. ` : "";
+    if (meta.type === "book") return `${head}${meta.title}. ${meta.publisher}, ${meta.year}.`;
+    return `${head}"${meta.title}." ${meta.container}, vol. ${meta.volume}, no. ${meta.issue}, ${meta.year}, pp. ${meta.pages}.`;
   })();
 
   const chicago = meta && (() => {
     const a = meta.authors.join(", ");
-    if (meta.type === "book") return `${a}. ${meta.title}. ${meta.publisher}, ${meta.year}.`;
-    return `${a}. "${meta.title}." ${meta.container} ${meta.volume}, no. ${meta.issue} (${meta.year}): ${meta.pages}.`;
+    // Chicago: 저자가 없으면 제목으로 시작 (선행 '. ' 방지)
+    const head = a ? `${a}. ` : "";
+    if (meta.type === "book") return `${head}${meta.title}. ${meta.publisher}, ${meta.year}.`;
+    return `${head}"${meta.title}." ${meta.container} ${meta.volume}, no. ${meta.issue} (${meta.year}): ${meta.pages}.`;
   })();
 
   const copy = (t: string) => navigator.clipboard.writeText(t);
@@ -148,7 +162,7 @@ export default function DoiLookupTool() {
         <div className="space-y-3">
           <div className="card-section">
             <div className="text-sm space-y-1">
-              <div><strong>{t("authors")}:</strong> {meta.authors.join("; ")}</div>
+              {meta.authors.length > 0 && <div><strong>{t("authors")}:</strong> {meta.authors.join("; ")}</div>}
               <div><strong>{t("title")}:</strong> {meta.title}</div>
               {meta.container && <div><strong>{t("journalPublisher")}:</strong> {meta.container || meta.publisher}</div>}
               {meta.year && <div><strong>{t("year")}:</strong> {meta.year}</div>}
@@ -173,7 +187,9 @@ export default function DoiLookupTool() {
         </div>
       )}
 
-      <div className="text-xs text-muted leading-relaxed" dangerouslySetInnerHTML={{ __html: t("footer") }} />
+      <div className="text-xs text-muted leading-relaxed">
+        {t.rich("footer", { code: (c) => <code>{c}</code> })}
+      </div>
     </div>
   );
 }

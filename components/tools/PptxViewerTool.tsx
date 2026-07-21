@@ -15,6 +15,62 @@ function slideNumber(path: string): number {
   return m ? parseInt(m[1], 10) : 0;
 }
 
+/** Resolve an OPC relationship Target against the part's base directory (e.g. "ppt/"). */
+function resolveRelTarget(target: string, baseDir: string): string {
+  let p = target.replace(/^\.\//, "");
+  if (p.startsWith("/")) return p.replace(/^\/+/, "");
+  let dir = baseDir;
+  while (p.startsWith("../")) {
+    p = p.slice(3);
+    dir = dir.replace(/[^/]+\/$/, "");
+  }
+  return dir + p;
+}
+
+function relAttr(tag: string, name: string): string | null {
+  const m = tag.match(new RegExp(`\\b${name}="([^"]*)"`));
+  return m ? m[1] : null;
+}
+
+/**
+ * Presentation order is defined by <p:sldIdLst> in ppt/presentation.xml (resolved through
+ * ppt/_rels/presentation.xml.rels), NOT by the slideN.xml part file names — PowerPoint keeps
+ * part names stable when slides are reordered. Falls back to numeric file-name order.
+ */
+async function orderedSlidePaths(zip: JSZip): Promise<string[]> {
+  const byName = Object.keys(zip.files)
+    .filter((p) => /^ppt\/slides\/slide\d+\.xml$/.test(p))
+    .sort((a, b) => slideNumber(a) - slideNumber(b));
+  try {
+    const relFile = zip.files["ppt/_rels/presentation.xml.rels"];
+    const presFile = zip.files["ppt/presentation.xml"];
+    if (!relFile || !presFile) return byName;
+    const relXml = await relFile.async("string");
+    const idToPath = new Map<string, string>();
+    for (const tag of relXml.match(/<Relationship\b[^>]*>/g) || []) {
+      const id = relAttr(tag, "Id");
+      const target = relAttr(tag, "Target");
+      if (!id || !target) continue;
+      const resolved = resolveRelTarget(target, "ppt/");
+      if (/^ppt\/slides\/slide\d+\.xml$/.test(resolved)) idToPath.set(id, resolved);
+    }
+    const presXml = await presFile.async("string");
+    const lst = presXml.match(/<p:sldIdLst[\s\S]*?<\/p:sldIdLst>/);
+    if (!lst) return byName;
+    const ordered: string[] = [];
+    for (const ref of lst[0].match(/r:id="[^"]+"/g) || []) {
+      const id = ref.replace(/^r:id="/, "").replace(/"$/, "");
+      const path = idToPath.get(id);
+      if (path && zip.files[path] && !ordered.includes(path)) ordered.push(path);
+    }
+    if (ordered.length === 0) return byName;
+    for (const p of byName) if (!ordered.includes(p)) ordered.push(p);
+    return ordered;
+  } catch {
+    return byName;
+  }
+}
+
 function extractTexts(xml: string): string[] {
   const matches = xml.match(/<a:t>([\s\S]*?)<\/a:t>/g) || [];
   return matches
@@ -52,20 +108,17 @@ export default function PptxViewerTool() {
 
   const buildFallback = async (file: File) => {
     const zip = await JSZip.loadAsync(file);
-    const slidePaths = Object.keys(zip.files)
-      .filter((p) => /^ppt\/slides\/slide\d+\.xml$/.test(p))
-      .sort((a, b) => slideNumber(a) - slideNumber(b));
+    const slidePaths = await orderedSlidePaths(zip);
 
     const slides: FallbackSlide[] = [];
     for (let i = 0; i < slidePaths.length; i++) {
       const path = slidePaths[i];
-      const num = slideNumber(path);
       const xml = await zip.files[path].async("string");
       const texts = extractTexts(xml);
 
       // Map images via slide rels
       const images: string[] = [];
-      const relPath = `ppt/slides/_rels/slide${num}.xml.rels`;
+      const relPath = path.replace(/^ppt\/slides\//, "ppt/slides/_rels/") + ".rels";
       if (zip.files[relPath]) {
         const relXml = await zip.files[relPath].async("string");
         const targets = relXml.match(/Target="([^"]*media\/[^"]+)"/g) || [];

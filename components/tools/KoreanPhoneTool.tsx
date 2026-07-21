@@ -213,10 +213,9 @@ export default function KoreanPhoneTool() {
           </tr>
         </tbody>
       </table>
-      <div
-        className="text-xs text-muted bg-gray-50 dark:bg-gray-900 p-3 rounded"
-        dangerouslySetInnerHTML={{ __html: t("note") }}
-      />
+      <div className="text-xs text-muted bg-gray-50 dark:bg-gray-900 p-3 rounded">
+        {t.rich("note", { code: (c) => <code>{c}</code> })}
+      </div>
     </div>
   );
 }

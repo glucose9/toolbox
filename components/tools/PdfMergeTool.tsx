@@ -13,6 +13,7 @@ export default function PdfMergeTool() {
   const [items, setItems] = useState<Item[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [formWarning, setFormWarning] = useState(false);
 
   const addFiles = (list: FileList) => {
     const next: Item[] = [];
@@ -47,14 +48,26 @@ export default function PdfMergeTool() {
     }
     setBusy(true);
     setError("");
+    setFormWarning(false);
     try {
       const out = await PDFDocument.create();
+      let sawForm = false;
       for (const it of items) {
         const bytes = await readBytes(it.file);
         const src = await PDFDocument.load(bytes);
+        // copyPages does not carry over the source catalog's /AcroForm, so interactive form
+        // fields are lost on merge. We cannot reliably rebuild it here — warn instead.
+        if (!sawForm) {
+          try {
+            if (src.getForm().getFields().length > 0) sawForm = true;
+          } catch {
+            /* malformed or absent AcroForm — nothing to warn about */
+          }
+        }
         const pages = await out.copyPages(src, src.getPageIndices());
         pages.forEach((p) => out.addPage(p));
       }
+      if (sawForm) setFormWarning(true);
       const merged = await out.save();
       downloadBlob(new Blob([merged.buffer as ArrayBuffer], { type: "application/pdf" }), `merged-${Date.now()}.pdf`);
     } catch (e) {
@@ -141,6 +154,11 @@ export default function PdfMergeTool() {
       </div>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
+      {formWarning && (
+        <div className="text-sm text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded p-2.5">
+          ⚠️ {t("warnAcroForm")}
+        </div>
+      )}
 
       <div className="flex gap-2">
         <button onClick={merge} disabled={busy} className="btn btn-primary disabled:opacity-50">

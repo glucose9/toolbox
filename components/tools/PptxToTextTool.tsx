@@ -11,6 +11,81 @@ function slideNumber(path: string): number {
   return m ? parseInt(m[1], 10) : 0;
 }
 
+/** Resolve an OPC relationship Target against the part's base directory (e.g. "ppt/slides/"). */
+function resolveRelTarget(target: string, baseDir: string): string {
+  let p = target.replace(/^\.\//, "");
+  if (p.startsWith("/")) return p.replace(/^\/+/, "");
+  let dir = baseDir;
+  while (p.startsWith("../")) {
+    p = p.slice(3);
+    dir = dir.replace(/[^/]+\/$/, "");
+  }
+  return dir + p;
+}
+
+function relAttr(tag: string, name: string): string | null {
+  const m = tag.match(new RegExp(`\\b${name}="([^"]*)"`));
+  return m ? m[1] : null;
+}
+
+/**
+ * Presentation order is defined by <p:sldIdLst> in ppt/presentation.xml (resolved through
+ * ppt/_rels/presentation.xml.rels), NOT by the slideN.xml part file names — PowerPoint keeps
+ * part names stable when slides are reordered. Falls back to numeric file-name order.
+ */
+async function orderedSlidePaths(zip: JSZip): Promise<string[]> {
+  const byName = Object.keys(zip.files)
+    .filter((p) => /^ppt\/slides\/slide\d+\.xml$/.test(p))
+    .sort((a, b) => slideNumber(a) - slideNumber(b));
+  try {
+    const relFile = zip.files["ppt/_rels/presentation.xml.rels"];
+    const presFile = zip.files["ppt/presentation.xml"];
+    if (!relFile || !presFile) return byName;
+    const relXml = await relFile.async("string");
+    const idToPath = new Map<string, string>();
+    for (const tag of relXml.match(/<Relationship\b[^>]*>/g) || []) {
+      const id = relAttr(tag, "Id");
+      const target = relAttr(tag, "Target");
+      if (!id || !target) continue;
+      const resolved = resolveRelTarget(target, "ppt/");
+      if (/^ppt\/slides\/slide\d+\.xml$/.test(resolved)) idToPath.set(id, resolved);
+    }
+    const presXml = await presFile.async("string");
+    const lst = presXml.match(/<p:sldIdLst[\s\S]*?<\/p:sldIdLst>/);
+    if (!lst) return byName;
+    const ordered: string[] = [];
+    for (const ref of lst[0].match(/r:id="[^"]+"/g) || []) {
+      const id = ref.replace(/^r:id="/, "").replace(/"$/, "");
+      const path = idToPath.get(id);
+      if (path && zip.files[path] && !ordered.includes(path)) ordered.push(path);
+    }
+    if (ordered.length === 0) return byName;
+    for (const p of byName) if (!ordered.includes(p)) ordered.push(p);
+    return ordered;
+  } catch {
+    return byName;
+  }
+}
+
+/** Notes are linked from slideN.xml.rels; notesSlideN.xml numbering does NOT track slide numbers. */
+async function notesPathFor(zip: JSZip, slidePath: string): Promise<string | null> {
+  const relPath = slidePath.replace(/^ppt\/slides\//, "ppt/slides/_rels/") + ".rels";
+  const relFile = zip.files[relPath];
+  if (!relFile) {
+    const legacy = `ppt/notesSlides/notesSlide${slideNumber(slidePath)}.xml`;
+    return zip.files[legacy] ? legacy : null;
+  }
+  const relXml = await relFile.async("string");
+  for (const tag of relXml.match(/<Relationship\b[^>]*>/g) || []) {
+    const type = relAttr(tag, "Type") || "";
+    const target = relAttr(tag, "Target");
+    if (!target || !/\/notesSlide$/.test(type)) continue;
+    const resolved = resolveRelTarget(target, "ppt/slides/");
+    if (zip.files[resolved]) return resolved;
+  }
+  return null;
+}
+
 function decodeEntities(s: string): string {
   return s
     .replace(/&lt;/g, "<")
@@ -51,19 +126,16 @@ export default function PptxToTextTool() {
     setSlides([]);
     try {
       const zip = await JSZip.loadAsync(file);
-      const slidePaths = Object.keys(zip.files)
-        .filter((p) => /^ppt\/slides\/slide\d+\.xml$/.test(p))
-        .sort((a, b) => slideNumber(a) - slideNumber(b));
+      const slidePaths = await orderedSlidePaths(zip);
 
       const result: SlideText[] = [];
       for (let i = 0; i < slidePaths.length; i++) {
         const path = slidePaths[i];
-        const num = slideNumber(path);
         const xml = await zip.files[path].async("string");
         let text = extractTexts(xml);
         if (withNotes) {
-          const notePath = `ppt/notesSlides/notesSlide${num}.xml`;
-          if (zip.files[notePath]) {
+          const notePath = await notesPathFor(zip, path);
+          if (notePath) {
             const noteXml = await zip.files[notePath].async("string");
             const noteText = extractTexts(noteXml);
             if (noteText.trim()) text += (text ? "\n\n" : "") + "[Notes]\n" + noteText;

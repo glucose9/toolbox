@@ -880,7 +880,8 @@
       "merging": "合并中...",
       "download": "📥 下载",
       "codecHint": "(若编解码器或分辨率不同，可能需要重新编码)",
-      "audioDropped": "⚠️ 部分视频没有音轨，合并结果中的声音已被移除。"
+      "audioDropped": "⚠️ 部分视频没有音轨，合并结果中的声音已被移除。",
+      "resolutionNormalized": "⚠️ 输入视频的分辨率不同，已重新编码为 1280×720。"
     },
     "base64-image": {
       "upload": "上传图片",
@@ -1020,6 +1021,9 @@
       "avgTab": "打击率",
       "earnedRuns": "自责分 (ER)",
       "inningsPitched": "投球局数 (IP)",
+      "outs": "出局数 (0~2)",
+      "ipNote": "记录中的 50.1 表示 50 局 1 个出局(50⅓)，50.2 表示 50 局 2 个出局(50⅔)。请分别输入局数和出局数。",
+      "ipTotal": "换算局数 {value}",
       "eraLabel": "防御率 ERA",
       "hits": "安打 (H)",
       "atBats": "打数 (AB)",
@@ -1635,7 +1639,8 @@
       "moveDown": "下移",
       "merging": "合并中...",
       "mergeAction": "合并 {count} 个 PDF",
-      "clearAll": "全部清除"
+      "clearAll": "全部清除",
+      "warnAcroForm": "部分 PDF 包含交互式表单字段。合并后的文件可能会丢失表单（字段无法填写，已填内容可能不显示）。如需保留表单，请使用原始文件。"
     },
     "pdf-watermark": {
       "errPdfOnly": "仅支持 PDF 文件。",
@@ -2499,6 +2504,7 @@
       "hueRotate": "色相",
       "invert": "反色",
       "processing": "处理中...",
+      "errorNoCanvasFilter": "此浏览器不支持在保存时应用滤镜。请使用较新的浏览器（Safari 18 及以上）重试。",
       "downloadFiltered": "📥 下载滤镜图像"
     },
     "cite-format": {
@@ -3366,7 +3372,9 @@
       "selectParts": "拖放或点击选择 .part 文件",
       "joinNow": "执行合并",
       "joinedFile": "合并后文件",
-      "download": "下载"
+      "download": "下载",
+      "zipMemoryWarn": "总大小为 {size}。生成 ZIP 会一次性将所有分片载入内存，低配设备建议逐个下载。",
+      "zipTooLarge": "总大小超过 4GB，无法打包为 ZIP。请逐个下载分片。"
     },
     "pdf-esign": {
       "uploadPdf": "上传PDF",
@@ -3391,7 +3399,8 @@
       "windowTitle": "窗口标题",
       "windowControls": "显示窗口控件（红/黄/绿）",
       "downloadPng": "下载PNG",
-      "preview": "预览"
+      "preview": "预览",
+      "errorExport": "生成图片失败。请缩短代码后重试。"
     },
     "html-to-image": {
       "html": "HTML",
@@ -3399,7 +3408,8 @@
       "width": "宽度 (px)",
       "preview": "预览",
       "downloadPng": "下载PNG",
-      "samplePlaceholder": "在此输入HTML"
+      "samplePlaceholder": "在此输入HTML",
+      "errorExport": "生成图片失败。如果使用了外部图片，请移除后重试。"
     },
     "svg-blob": {
       "complexity": "复杂度（点数）",

@@ -48,6 +48,10 @@ export default function FaviconTool() {
     setPreviews([]);
     try {
       const img = await loadImage(f, t("errImageLoad"));
+      // Images without intrinsic dimensions (e.g. SVG with no width/height) report 0 here.
+      // Without this guard ratio becomes Infinity and the draw coords become NaN, which makes
+      // drawImage a no-op and produces fully transparent "successful" favicons.
+      if (!img.naturalWidth || !img.naturalHeight) throw new Error(t("errImageLoad"));
       const results: { size: number; url: string; blob: Blob }[] = [];
       for (const size of SIZES) {
         const c = document.createElement("canvas");

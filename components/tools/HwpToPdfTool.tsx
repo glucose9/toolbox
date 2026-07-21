@@ -68,7 +68,7 @@ export default function HwpToPdfTool() {
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;");
-    const html = `<!doctype html>
+    const head = `<!doctype html>
 <html><head>
 <meta charset="utf-8">
 <title>${safeName}</title>
@@ -80,11 +80,17 @@ export default function HwpToPdfTool() {
   .page svg { max-width: 100%; height: auto; display: block; }
 </style>
 </head><body>
-${pages.map((svg) => `<div class="page">${svg}</div>`).join("")}
-<script>window.addEventListener('load', function(){ setTimeout(function(){ window.print(); }, 200); });<\/script>
+`;
+    const tail = `<script>window.addEventListener('load', function(){ setTimeout(function(){ window.print(); }, 200); });<\/script>
 </body></html>`;
+    // Write page-by-page instead of joining every page SVG into one giant string —
+    // avoids holding a second full-document copy in memory on large documents.
     w.document.open();
-    w.document.write(html);
+    w.document.write(head);
+    for (const svg of pages) {
+      w.document.write(`<div class="page">${svg}</div>`);
+    }
+    w.document.write(tail);
     w.document.close();
   };
 
@@ -158,7 +164,9 @@ ${pages.map((svg) => `<div class="page">${svg}</div>`).join("")}
           <button onClick={printPdf} className="btn btn-primary">
             {t("savePdf")}
           </button>
-          <div className="text-xs text-muted leading-relaxed" dangerouslySetInnerHTML={{ __html: t("instructions") }} />
+          <div className="text-xs text-muted leading-relaxed">
+            {t.rich("instructions", { strong: (c) => <strong>{c}</strong> })}
+          </div>
         </>
       ) : null}
     </div>

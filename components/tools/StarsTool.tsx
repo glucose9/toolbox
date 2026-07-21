@@ -5,8 +5,10 @@ import { useTranslations } from "next-intl";
 function stars(score: number, max: number): string {
   if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) return "☆☆☆☆☆";
   const ratio = Math.max(0, Math.min(5, (score / max) * 5));
-  const full = Math.floor(ratio);
-  const half = ratio - full >= 0.5;
+  // 반 칸 단위 반올림(nearest half): 4.9/5 → ★★★★★ (표시 관례)
+  const halves = Math.min(10, Math.round(ratio * 2));
+  const full = Math.floor(halves / 2);
+  const half = halves % 2 === 1;
   return "★".repeat(full) + (half ? "½" : "") + "☆".repeat(Math.max(0, 5 - full - (half ? 1 : 0)));
 }
 

@@ -880,7 +880,8 @@
       "merging": "結合中...",
       "download": "📥 ダウンロード",
       "codecHint": "(コーデックや解像度が異なる場合は再エンコードが必要なことがあります)",
-      "audioDropped": "⚠️ 音声トラックのない動画が含まれていたため、結合結果から音声が削除されました。"
+      "audioDropped": "⚠️ 音声トラックのない動画が含まれていたため、結合結果から音声が削除されました。",
+      "resolutionNormalized": "⚠️ 入力動画の解像度が異なるため、1280×720に再エンコードしました。"
     },
     "base64-image": {
       "upload": "画像アップロード",
@@ -1020,6 +1021,9 @@
       "avgTab": "打率",
       "earnedRuns": "自責点 (ER)",
       "inningsPitched": "投球回 (IP)",
+      "outs": "アウト (0〜2)",
+      "ipNote": "記録上の 50.1 は 50回1アウト(50⅓)、50.2 は 50回2アウト(50⅔)です。回とアウトを分けて入力してください。",
+      "ipTotal": "換算イニング {value}",
       "eraLabel": "防御率 ERA",
       "hits": "安打 (H)",
       "atBats": "打数 (AB)",
@@ -1635,7 +1639,8 @@
       "moveDown": "下へ",
       "merging": "結合中...",
       "mergeAction": "{count}個のPDFを結合",
-      "clearAll": "すべて削除"
+      "clearAll": "すべて削除",
+      "warnAcroForm": "一部のPDFに入力フォーム（フォームフィールド）が含まれています。結合後のファイルではフォームが機能しなくなったり、入力値が表示されない場合があります。フォームが必要な場合は元のファイルをご利用ください。"
     },
     "pdf-watermark": {
       "errPdfOnly": "PDFファイルのみ対応しています。",
@@ -2499,6 +2504,7 @@
       "hueRotate": "色相",
       "invert": "反転",
       "processing": "処理中...",
+      "errorNoCanvasFilter": "このブラウザは保存時のフィルター適用に対応していません。最新のブラウザ（Safari 18 以降）でお試しください。",
       "downloadFiltered": "📥 フィルター適用画像をダウンロード"
     },
     "cite-format": {
@@ -3366,7 +3372,9 @@
       "selectParts": ".partファイルをドラッグまたはクリックして選択",
       "joinNow": "結合実行",
       "joinedFile": "結合済みファイル",
-      "download": "ダウンロード"
+      "download": "ダウンロード",
+      "zipMemoryWarn": "合計サイズは {size} です。ZIP の作成は全パートを一度にメモリへ読み込むため、メモリの少ない端末では個別ダウンロードをおすすめします。",
+      "zipTooLarge": "合計サイズが 4GB を超えるため ZIP にまとめられません。パートを個別にダウンロードしてください。"
     },
     "pdf-esign": {
       "uploadPdf": "PDFをアップロード",
@@ -3391,7 +3399,8 @@
       "windowTitle": "ウィンドウタイトル",
       "windowControls": "ウィンドウコントロール（赤/黄/緑）を表示",
       "downloadPng": "PNGダウンロード",
-      "preview": "プレビュー"
+      "preview": "プレビュー",
+      "errorExport": "画像の生成に失敗しました。コードを短くして、もう一度お試しください。"
     },
     "html-to-image": {
       "html": "HTML",
@@ -3399,7 +3408,8 @@
       "width": "幅 (px)",
       "preview": "プレビュー",
       "downloadPng": "PNGダウンロード",
-      "samplePlaceholder": "ここにHTMLを入力"
+      "samplePlaceholder": "ここにHTMLを入力",
+      "errorExport": "画像の生成に失敗しました。外部画像を使用している場合は削除して、もう一度お試しください。"
     },
     "svg-blob": {
       "complexity": "複雑さ（ポイント数）",

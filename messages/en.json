@@ -880,7 +880,8 @@
       "merging": "Merging...",
       "download": "📥 Download",
       "codecHint": "(If codecs or resolutions differ, re-encoding may be required)",
-      "audioDropped": "⚠️ Some clips had no audio track, so sound was removed from the merged video."
+      "audioDropped": "⚠️ Some clips had no audio track, so sound was removed from the merged video.",
+      "resolutionNormalized": "⚠️ The clips had different resolutions, so they were re-encoded to 1280×720."
     },
     "base64-image": {
       "upload": "Upload image",
@@ -1020,6 +1021,9 @@
       "avgTab": "AVG",
       "earnedRuns": "Earned runs (ER)",
       "inningsPitched": "Innings pitched (IP)",
+      "outs": "Outs (0-2)",
+      "ipNote": "On a box score 50.1 means 50 innings + 1 out (50⅓) and 50.2 means 50 innings + 2 outs (50⅔). Enter innings and outs separately.",
+      "ipTotal": "Innings used: {value}",
       "eraLabel": "Earned Run Average (ERA)",
       "hits": "Hits (H)",
       "atBats": "At bats (AB)",
@@ -1635,7 +1639,8 @@
       "moveDown": "Move down",
       "merging": "Merging...",
       "mergeAction": "Merge {count} PDFs",
-      "clearAll": "Clear all"
+      "clearAll": "Clear all",
+      "warnAcroForm": "Some of these PDFs contain interactive form fields. The merged file may lose the form — fields can become non-interactive and entered values may not display. Keep the original file if you need the form."
     },
     "pdf-watermark": {
       "errPdfOnly": "Only PDF files are supported.",
@@ -2499,6 +2504,7 @@
       "hueRotate": "Hue",
       "invert": "Invert",
       "processing": "Processing...",
+      "errorNoCanvasFilter": "This browser cannot apply filters when saving. Please try again in a newer browser (Safari 18 or later).",
       "downloadFiltered": "📥 Download filtered image"
     },
     "cite-format": {
@@ -3366,7 +3372,9 @@
       "selectParts": "Drag .part files here or click to select",
       "joinNow": "Join",
       "joinedFile": "Joined file",
-      "download": "Download"
+      "download": "Download",
+      "zipMemoryWarn": "Total size is {size}. Building the ZIP loads every part into memory at once — on low-memory devices, download the parts individually instead.",
+      "zipTooLarge": "Total size exceeds 4 GB, which the ZIP format used here cannot handle. Download the parts individually."
     },
     "pdf-esign": {
       "uploadPdf": "Upload PDF",
@@ -3391,7 +3399,8 @@
       "windowTitle": "Window title",
       "windowControls": "Show window controls (red/yellow/green)",
       "downloadPng": "Download PNG",
-      "preview": "Preview"
+      "preview": "Preview",
+      "errorExport": "Could not create the image. Try shortening the code and downloading again."
     },
     "html-to-image": {
       "html": "HTML",
@@ -3399,7 +3408,8 @@
       "width": "Width (px)",
       "preview": "Preview",
       "downloadPng": "Download PNG",
-      "samplePlaceholder": "Enter your HTML here"
+      "samplePlaceholder": "Enter your HTML here",
+      "errorExport": "Could not create the image. If you used external images, remove them and try again."
     },
     "svg-blob": {
       "complexity": "Complexity (points)",

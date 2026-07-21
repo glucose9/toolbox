@@ -58,7 +58,9 @@ export default function WageConverterTool() {
         {row(t("annual"), annual, "y", t("krw"))}
       </div>
 
-      <div className="text-xs text-muted bg-amber-50 dark:bg-amber-900/20 p-3 rounded border border-amber-200 dark:border-amber-800" dangerouslySetInnerHTML={{ __html: t("note", { minWage: KR_MIN_WAGE_2026.toLocaleString(), hourly: hourly.toLocaleString(), pct: Math.round((hourly / KR_MIN_WAGE_2026) * 100) }) }} />
+      <div className="text-xs text-muted bg-amber-50 dark:bg-amber-900/20 p-3 rounded border border-amber-200 dark:border-amber-800">
+        {t.rich("note", { minWage: KR_MIN_WAGE_2026.toLocaleString(), hourly: hourly.toLocaleString(), pct: Math.round((hourly / KR_MIN_WAGE_2026) * 100), strong: (c) => <strong>{c}</strong> })}
+      </div>
     </div>
   );
 }

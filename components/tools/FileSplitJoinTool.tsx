@@ -85,8 +85,15 @@ export default function FileSplitJoinTool() {
     setBusy(false);
   }
 
+  // JSZip builds the whole archive in memory (and has no ZIP64 support), so the
+  // "download all" path is bounded by available RAM and by the 4 GB ZIP limit.
+  const ZIP_WARN_BYTES = 500 * 1024 * 1024;
+  const ZIP_MAX_BYTES = 4 * 1024 * 1024 * 1024;
+  const partsTotal = parts.reduce((sum, p) => sum + p.blob.size, 0);
+  const zipTooLarge = partsTotal >= ZIP_MAX_BYTES;
+
   async function downloadAllZip() {
-    if (parts.length === 0) return;
+    if (parts.length === 0 || zipTooLarge) return;
     setBusy(true);
     const zip = new JSZip();
     for (const p of parts) {
@@ -212,12 +219,19 @@ export default function FileSplitJoinTool() {
                 </span>
                 <button
                   onClick={downloadAllZip}
-                  disabled={busy}
-                  className="btn btn-secondary text-sm"
+                  disabled={busy || zipTooLarge}
+                  className="btn btn-secondary text-sm disabled:opacity-50"
                 >
                   {t("downloadAll")}
                 </button>
               </div>
+              {zipTooLarge ? (
+                <div className="mb-2 text-xs text-red-600">{t("zipTooLarge")}</div>
+              ) : partsTotal >= ZIP_WARN_BYTES ? (
+                <div className="mb-2 text-xs text-amber-700 dark:text-amber-400">
+                  ⚠️ {t("zipMemoryWarn", { size: formatSize(partsTotal) })}
+                </div>
+              ) : null}
               <div className="max-h-72 overflow-auto border border-gray-200 dark:border-gray-700 rounded">
                 {parts.map((p, i) => (
                   <div

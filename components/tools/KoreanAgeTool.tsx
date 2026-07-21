@@ -141,10 +141,9 @@ export default function KoreanAgeTool() {
         </div>
       )}
 
-      <div
-        className="text-xs text-muted bg-gray-50 dark:bg-gray-900 p-3 rounded"
-        dangerouslySetInnerHTML={{ __html: t("note") }}
-      />
+      <div className="text-xs text-muted bg-gray-50 dark:bg-gray-900 p-3 rounded">
+        {t.rich("note", { strong: (c) => <strong>{c}</strong> })}
+      </div>
     </div>
   );
 }

@@ -9,10 +9,13 @@ function calcSedanTax(cc: number, ageYears: number, isBusiness: boolean): {
   reduction: number;
   total: number;
 } {
+  // 지방세법 제127조 제1항 제1호(비영업용) / 제2호(영업용) 승용자동차 cc당 세액
   let rate: number;
   if (isBusiness) {
     if (cc <= 1000) rate = 18;
     else if (cc <= 1600) rate = 18;
+    else if (cc <= 2000) rate = 19;
+    else if (cc <= 2500) rate = 19;
     else rate = 24;
   } else {
     if (cc <= 1000) rate = 80;
@@ -20,13 +23,15 @@ function calcSedanTax(cc: number, ageYears: number, isBusiness: boolean): {
     else rate = 200;
   }
   const baseAnnual = cc * rate;
+  // 차령에 따른 경감은 "제1호에 따른 비영업용 승용자동차" 한정 (지방세법 제127조 제3항)
   let reductionRate = 0;
-  if (ageYears >= 3) {
+  if (!isBusiness && ageYears >= 3) {
     reductionRate = Math.min(0.5, (ageYears - 2) * 0.05);
   }
   const reduction = Math.round(baseAnnual * reductionRate);
   const afterReduction = baseAnnual - reduction;
-  const educationTax = Math.round(afterReduction * 0.3);
+  // 지방교육세는 비영업용 승용자동차 자동차세액의 30% (지방세법 제150조·제151조) — 영업용은 비과세
+  const educationTax = isBusiness ? 0 : Math.round(afterReduction * 0.3);
   return {
     baseAnnual,
     educationTax,
@@ -131,10 +136,12 @@ export default function CarTaxTool() {
                 <span>-{t("won", { v: fmt(result.reduction) })}</span>
               </div>
             )}
-            <div className="flex justify-between">
-              <span>{t("educationTax")}</span>
-              <span>+{t("won", { v: fmt(result.educationTax) })}</span>
-            </div>
+            {result.educationTax > 0 && (
+              <div className="flex justify-between">
+                <span>{t("educationTax")}</span>
+                <span>+{t("won", { v: fmt(result.educationTax) })}</span>
+              </div>
+            )}
             {type === "hybrid" && (
               <div className="text-xs text-muted">{t("hybridSameNote")}</div>
             )}

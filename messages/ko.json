@@ -880,7 +880,8 @@
       "merging": "합치는 중...",
       "download": "📥 다운로드",
       "codecHint": "(영상 코덱·해상도가 다르면 재인코딩이 필요할 수 있습니다)",
-      "audioDropped": "⚠️ 일부 영상에 오디오가 없어 결과물에서 소리가 제거되었습니다."
+      "audioDropped": "⚠️ 일부 영상에 오디오가 없어 결과물에서 소리가 제거되었습니다.",
+      "resolutionNormalized": "⚠️ 입력 영상의 해상도가 서로 달라 1280×720으로 재인코딩했습니다."
     },
     "base64-image": {
       "upload": "이미지 업로드",
@@ -1020,6 +1021,9 @@
       "avgTab": "타율",
       "earnedRuns": "자책점 (ER)",
       "inningsPitched": "투구이닝 (IP)",
+      "outs": "아웃 (0~2)",
+      "ipNote": "기록지 표기 50.1 = 50이닝 1아웃(50⅓), 50.2 = 50이닝 2아웃(50⅔)입니다. 이닝과 아웃을 나눠 입력하세요.",
+      "ipTotal": "환산 이닝 {value}",
       "eraLabel": "평균자책점 ERA",
       "hits": "안타 (H)",
       "atBats": "타수 (AB)",
@@ -1635,7 +1639,8 @@
       "moveDown": "아래로",
       "merging": "병합 중...",
       "mergeAction": "{count}개 PDF 병합",
-      "clearAll": "전체 삭제"
+      "clearAll": "전체 삭제",
+      "warnAcroForm": "일부 PDF에 입력 양식(폼 필드)이 포함되어 있습니다. 병합된 파일에서는 양식이 동작하지 않거나 입력값이 보이지 않을 수 있습니다. 양식이 필요하면 원본 파일을 그대로 사용하세요."
     },
     "pdf-watermark": {
       "errPdfOnly": "PDF 파일만 지원합니다.",
@@ -2499,6 +2504,7 @@
       "hueRotate": "색조",
       "invert": "반전",
       "processing": "처리 중...",
+      "errorNoCanvasFilter": "이 브라우저는 저장 시 필터 적용을 지원하지 않습니다. 최신 브라우저(Safari 18 이상)에서 다시 시도해 주세요.",
       "downloadFiltered": "📥 필터 적용 이미지 다운로드"
     },
     "cite-format": {
@@ -3366,7 +3372,9 @@
       "selectParts": ".part 파일들을 드래그하거나 클릭하여 선택",
       "joinNow": "병합 실행",
       "joinedFile": "병합된 파일",
-      "download": "다운로드"
+      "download": "다운로드",
+      "zipMemoryWarn": "전체 용량은 {size}입니다. ZIP 생성은 모든 조각을 한꺼번에 메모리에 올리므로, 사양이 낮은 기기에서는 개별 다운로드를 권장합니다.",
+      "zipTooLarge": "전체 용량이 4GB를 넘어 ZIP으로 묶을 수 없습니다. 조각을 개별로 다운로드하세요."
     },
     "pdf-esign": {
       "uploadPdf": "PDF 업로드",
@@ -3391,7 +3399,8 @@
       "windowTitle": "창 제목",
       "windowControls": "창 컨트롤(빨강/노랑/초록) 표시",
       "downloadPng": "PNG 다운로드",
-      "preview": "미리보기"
+      "preview": "미리보기",
+      "errorExport": "이미지 생성에 실패했습니다. 코드를 줄이고 다시 시도해 주세요."
     },
     "html-to-image": {
       "html": "HTML",
@@ -3399,7 +3408,8 @@
       "width": "너비 (px)",
       "preview": "미리보기",
       "downloadPng": "PNG 다운로드",
-      "samplePlaceholder": "여기에 HTML을 입력하세요"
+      "samplePlaceholder": "여기에 HTML을 입력하세요",
+      "errorExport": "이미지 생성에 실패했습니다. 외부 이미지를 사용했다면 제거하고 다시 시도해 주세요."
     },
     "svg-blob": {
       "complexity": "복잡도 (포인트 수)",
