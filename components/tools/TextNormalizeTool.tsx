@@ -12,6 +12,18 @@ const FULLWIDTH_PUNCT_DOT = /。/g;
 const FULLWIDTH_PUNCT_COMMA = /[，、]/g;
 const STRIP_PUNCT = /[.,!?;:'"·…—–\-()\[\]{}<>《》「」『』]/g;
 
+const PICTOGRAPHIC = /\p{Extended_Pictographic}/u;
+const EMOJI_MODIFIER = /[️\u{1F3FB}-\u{1F3FF}]/u;
+
+// U+200D(ZWJ)는 이모지 결합자이므로 이모지 사이에서는 지우지 않는다(가족 이모지 분해 방지).
+function isEmojiJoiner(str: string, off: number): boolean {
+  const before = Array.from(str.slice(Math.max(0, off - 8), off));
+  while (before.length && EMOJI_MODIFIER.test(before[before.length - 1])) before.pop();
+  const prev = before[before.length - 1];
+  const next = Array.from(str.slice(off + 1, off + 3))[0];
+  return !!prev && !!next && PICTOGRAPHIC.test(prev) && PICTOGRAPHIC.test(next);
+}
+
 export default function TextNormalizeTool() {
   const t = useTranslations("toolUI.text-normalize");
   const [input, setInput] = useState(
@@ -32,7 +44,10 @@ export default function TextNormalizeTool() {
   const result = useMemo(() => {
     let s = input;
     if (opts.nfc) s = s.normalize("NFC");
-    if (opts.nbsp) s = s.replace(SPECIAL_SPACES, " ").replace(ZERO_WIDTH, "");
+    if (opts.nbsp)
+      s = s
+        .replace(SPECIAL_SPACES, " ")
+        .replace(ZERO_WIDTH, (m: string, off: number, str: string) => (m === "‍" && isEmojiJoiner(str, off) ? m : ""));
     if (opts.quotes) {
       s = s.replace(SMART_DOUBLE_QUOTES, '"').replace(SMART_SINGLE_QUOTES, "'");
     }
@@ -41,7 +56,8 @@ export default function TextNormalizeTool() {
       s = s.replace(FULLWIDTH_PUNCT_DOT, ".").replace(FULLWIDTH_PUNCT_COMMA, ",");
     }
     if (opts.punctSpacing) {
-      s = s.replace(/\s+([.,!?;:])/g, "$1");
+      // 줄바꿈은 삼키지 않도록 수평 공백만 정리한다.
+      s = s.replace(/[ \t]+([.,!?;:])/g, "$1");
       // 숫자 사이 구분자(3.14 / 1,000), 도메인·약어(example.com), URL 스킴(https://)은
       // 문장부호가 아니므로 공백을 넣지 않는다.
       s = s.replace(/([.,!?;:])(?=\S)/g, (m, p: string, off: number, str: string) => {

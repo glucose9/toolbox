@@ -29,10 +29,17 @@ function encodeAll(s: string): string {
 }
 
 function decode(s: string): string {
-  return s
-    .replace(/&(amp|lt|gt|quot|#39|nbsp);/g, (m) => REVERSED[m] || m)
-    .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCodePoint(parseInt(h, 16)))
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(parseInt(n, 10)));
+  // Single pass: a multi-pass decode would re-decode text produced by an
+  // earlier pass (e.g. "&amp;#39;" -> "&#39;" -> "'").
+  return s.replace(/&(?:amp|lt|gt|quot|nbsp|#x[0-9a-fA-F]+|#\d+);/g, (m) => {
+    if (m[1] === "#") {
+      const body = m.slice(2, -1);
+      const cp = body[0] === "x" || body[0] === "X" ? parseInt(body.slice(1), 16) : parseInt(body, 10);
+      if (!Number.isFinite(cp) || cp > 0x10ffff) return m;
+      return String.fromCodePoint(cp);
+    }
+    return REVERSED[m] || m;
+  });
 }
 
 type Mode = "encode-basic" | "encode-all" | "decode";

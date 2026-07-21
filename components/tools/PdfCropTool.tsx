@@ -31,10 +31,18 @@ export default function PdfCropTool() {
     setBusy(true); setError("");
     try {
       const src = await PDFDocument.load(await readBytes(file));
-      const t = top * MM_TO_PT, b = bottom * MM_TO_PT, l = left * MM_TO_PT, r = right * MM_TO_PT;
+      const mTop = top * MM_TO_PT, mBottom = bottom * MM_TO_PT, mLeft = left * MM_TO_PT, mRight = right * MM_TO_PT;
       for (const page of src.getPages()) {
         const { width, height } = page.getSize();
-        page.setCropBox(l, b, width - l - r, height - t - b);
+        // CropBox lives in unrotated user space, so the sides the user sees on
+        // screen must be remapped through the page's /Rotate value first.
+        const rot = ((page.getRotation().angle % 360) + 360) % 360;
+        let t2 = mTop, b = mBottom, l = mLeft, r = mRight;
+        if (rot === 90) { l = mTop; t2 = mRight; r = mBottom; b = mLeft; }
+        else if (rot === 180) { l = mRight; r = mLeft; t2 = mBottom; b = mTop; }
+        else if (rot === 270) { l = mBottom; b = mRight; r = mTop; t2 = mLeft; }
+        if (l + r >= width || t2 + b >= height) throw new Error(t("errMarginTooLarge"));
+        page.setCropBox(l, b, width - l - r, height - t2 - b);
       }
       const out = await src.save();
       downloadBlob(new Blob([out.buffer as ArrayBuffer], { type: "application/pdf" }), file.name.replace(/\.pdf$/i, "") + "_cropped.pdf");

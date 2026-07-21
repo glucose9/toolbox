@@ -57,15 +57,19 @@ export default function PdfToHtmlTool() {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const it = item as any;
           if (!it.str || !it.transform) continue;
-          const tx: number[] = it.transform;
-          // PDF transform: [a, b, c, d, e, f] — [a,b] = horizontal scale + skew
-          const fontSize = Math.sqrt(tx[0] * tx[0] + tx[1] * tx[1]) * SCALE;
+          // Compose with the viewport transform so page /Rotate, the Y flip and a
+          // non-zero MediaBox origin are all accounted for (same as pdfjs TextLayer).
+          const tx: number[] = pdfjs.Util.transform(viewport.transform, it.transform);
+          // Font height comes from the vertical vector; the horizontal one carries Tz.
+          const fontSize = Math.hypot(tx[2], tx[3]);
           if (fontSize < 1) continue;
-          const x = tx[4] * SCALE;
-          // pdfjs origin bottom-left → canvas top-left. Flip Y, then subtract fontSize so baseline aligns.
-          const y = canvas.height - tx[5] * SCALE - fontSize;
+          const angle = Math.atan2(tx[1], tx[0]);
+          // Position the span's top-left so its baseline lands on (tx[4], tx[5]).
+          const x = angle === 0 ? tx[4] : tx[4] + fontSize * Math.sin(angle);
+          const y = angle === 0 ? tx[5] - fontSize : tx[5] - fontSize * Math.cos(angle);
+          const rotateCss = angle === 0 ? "" : `transform:rotate(${((angle * 180) / Math.PI).toFixed(2)}deg);`;
           spans.push(
-            `<span style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;font-size:${fontSize.toFixed(1)}px;">${escapeHtml(it.str)}</span>`
+            `<span style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;font-size:${fontSize.toFixed(1)}px;${rotateCss}">${escapeHtml(it.str)}</span>`
           );
         }
 

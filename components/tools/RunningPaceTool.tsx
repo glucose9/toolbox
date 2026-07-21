@@ -57,7 +57,7 @@ export default function RunningPaceTool() {
         </div>
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3 text-center">
           <div className="text-xs text-muted">{t("avgSpeed")}</div>
-          <div className="text-2xl font-bold mt-1">{kmh.toFixed(1)} km/h</div>
+          <div className="text-2xl font-bold mt-1">{isFinite(kmh) && kmh > 0 ? kmh.toFixed(1) : "—"} km/h</div>
         </div>
       </div>
       <div>

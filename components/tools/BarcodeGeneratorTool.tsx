@@ -16,6 +16,16 @@ const FORMATS: { key: Format; label: string; placeholder: string; sample: string
   { key: "codabar", label: "Codabar", placeholder: "digits + A/B/C/D", sample: "A1234B" },
 ];
 
+// ISBN-10 mod-11 check digit (weights 10..1, X = 10)
+function isbn10ChecksumOk(raw: string): boolean {
+  if (!/^\d{9}[\dXx]$/.test(raw)) return false;
+  let sum = 0;
+  for (let i = 0; i < 9; i++) sum += parseInt(raw[i], 10) * (10 - i);
+  const last = raw[9];
+  sum += last === "X" || last === "x" ? 10 : parseInt(last, 10);
+  return sum % 11 === 0;
+}
+
 function isbn10To13(isbn10: string): string {
   const digits = isbn10.replace(/[-\s]/g, "").slice(0, 9);
   if (!/^\d{9}$/.test(digits)) return "";
@@ -45,11 +55,17 @@ export default function BarcodeGeneratorTool({ config }: { config: Record<string
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const effectiveValue = isIsbn ? toIsbnInput(value) : value;
+  const isbnRaw = value.replace(/[-\s]/g, "");
+  const isbnInvalid = isIsbn && /^\d{9}[\dXx]$/.test(isbnRaw) && !isbn10ChecksumOk(isbnRaw);
 
   useEffect(() => {
     if (!svgRef.current) return;
     if (!effectiveValue) {
       setError("");
+      return;
+    }
+    if (isbnInvalid) {
+      setError(t("invalidIsbn"));
       return;
     }
     const opts = {
@@ -71,7 +87,7 @@ export default function BarcodeGeneratorTool({ config }: { config: Record<string
       const msg = e instanceof Error ? e.message : String(e);
       setError(msg);
     }
-  }, [effectiveValue, format, showText, bg, fg]);
+  }, [effectiveValue, isbnInvalid, format, showText, bg, fg, t]);
 
   function toIsbnInput(v: string): string {
     const raw = v.replace(/[-\s]/g, "");

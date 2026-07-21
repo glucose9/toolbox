@@ -188,19 +188,27 @@ export default function GraphCalcTool() {
     }
   };
   const onMouseUp = () => setDrag(null);
-  const onWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const factor = e.deltaY > 0 ? 1.2 : 1 / 1.2;
-    const rect = canvasRef.current!.getBoundingClientRect();
-    const cx = screenToX(e.clientX - rect.left);
-    const cy = screenToY(e.clientY - rect.top);
-    setView({
-      xMin: cx + (view.xMin - cx) * factor,
-      xMax: cx + (view.xMax - cx) * factor,
-      yMin: cy + (view.yMin - cy) * factor,
-      yMax: cy + (view.yMax - cy) * factor,
-    });
-  };
+
+  // React attaches wheel passively, so preventDefault only works on a native non-passive listener
+  useEffect(() => {
+    const c = canvasRef.current;
+    if (!c) return;
+    const handler = (e: WheelEvent) => {
+      e.preventDefault();
+      const factor = e.deltaY > 0 ? 1.2 : 1 / 1.2;
+      const rect = c.getBoundingClientRect();
+      const cx = screenToX(e.clientX - rect.left);
+      const cy = screenToY(e.clientY - rect.top);
+      setView({
+        xMin: cx + (view.xMin - cx) * factor,
+        xMax: cx + (view.xMax - cx) * factor,
+        yMin: cy + (view.yMin - cy) * factor,
+        yMax: cy + (view.yMax - cy) * factor,
+      });
+    };
+    c.addEventListener("wheel", handler, { passive: false });
+    return () => c.removeEventListener("wheel", handler);
+  }, [view, screenToX, screenToY]);
 
   const resetView = () => setView({ xMin: -10, xMax: 10, yMin: -10, yMax: 10 });
   const zoomBtn = (factor: number) => {
@@ -261,7 +269,6 @@ export default function GraphCalcTool() {
           onMouseMove={onMouseMove}
           onMouseUp={onMouseUp}
           onMouseLeave={() => { setCursor(null); setDrag(null); }}
-          onWheel={onWheel}
         />
         {cursorWorld && (
           <div className="absolute top-2 right-2 bg-white/95 dark:bg-gray-900/95 px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-xs font-mono shadow-sm">

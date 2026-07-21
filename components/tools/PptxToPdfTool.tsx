@@ -176,7 +176,10 @@ export default function PptxToPdfTool() {
           const canvas = await html2canvas(el, { backgroundColor: "#ffffff", scale: 2 });
           const img = canvas.toDataURL("image/jpeg", 0.92);
           if (i > 0) pdf.addPage("a4", "landscape");
-          pdf.addImage(img, "JPEG", 0, 0, A4_MM.w, A4_MM.h);
+          const ratio = canvas.width / canvas.height;
+          const drawW = Math.min(A4_MM.w, A4_MM.h * ratio);
+          const drawH = Math.min(A4_MM.h, A4_MM.w / ratio);
+          pdf.addImage(img, "JPEG", (A4_MM.w - drawW) / 2, (A4_MM.h - drawH) / 2, drawW, drawH);
         }
       } else if (fallback) {
         // Build a virtual slide per item

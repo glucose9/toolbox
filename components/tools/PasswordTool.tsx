@@ -9,17 +9,31 @@ const DIGITS = "0123456789";
 const SYMBOLS = "!@#$%^&*()-_=+[]{};:,.<>?";
 
 function generate(length: number, options: { lower: boolean; upper: boolean; digits: boolean; symbols: boolean }) {
-  let alphabet = "";
-  if (options.lower) alphabet += LOWER;
-  if (options.upper) alphabet += UPPER;
-  if (options.digits) alphabet += DIGITS;
-  if (options.symbols) alphabet += SYMBOLS;
-  if (!alphabet) return "";
+  const sets: string[] = [];
+  if (options.lower) sets.push(LOWER);
+  if (options.upper) sets.push(UPPER);
+  if (options.digits) sets.push(DIGITS);
+  if (options.symbols) sets.push(SYMBOLS);
+  if (!sets.length) return "";
+  const alphabet = sets.join("");
   const arr = new Uint32Array(length);
   crypto.getRandomValues(arr);
-  let out = "";
-  for (let i = 0; i < length; i++) out += alphabet[arr[i] % alphabet.length];
-  return out;
+  // The first slots take one character from each selected set so every
+  // selected set is guaranteed to appear, then the result is shuffled.
+  const chars: string[] = [];
+  for (let i = 0; i < length; i++) {
+    const set = i < sets.length ? sets[i] : alphabet;
+    chars.push(set[arr[i] % set.length]);
+  }
+  const swaps = new Uint32Array(length);
+  crypto.getRandomValues(swaps);
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = swaps[i] % (i + 1);
+    const tmp = chars[i];
+    chars[i] = chars[j];
+    chars[j] = tmp;
+  }
+  return chars.join("");
 }
 
 export default function PasswordTool() {

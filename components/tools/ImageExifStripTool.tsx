@@ -25,8 +25,13 @@ export default function ImageExifStripTool() {
       const c = document.createElement("canvas");
       c.width = img.naturalWidth;
       c.height = img.naturalHeight;
-      c.getContext("2d")!.drawImage(img, 0, 0);
       const mime = f.type === "image/png" ? "image/png" : "image/jpeg";
+      const ctx = c.getContext("2d")!;
+      if (mime === "image/jpeg") {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, c.width, c.height);
+      }
+      ctx.drawImage(img, 0, 0);
       const blob = await new Promise<Blob>((resolve, reject) =>
         c.toBlob((b) => (b ? resolve(b) : reject(new Error(t("errReencode")))), mime, mime === "image/jpeg" ? q : undefined)
       );

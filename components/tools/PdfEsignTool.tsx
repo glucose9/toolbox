@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, degrees } from "pdf-lib";
 
 type Mode = "draw" | "upload";
 
@@ -259,7 +259,16 @@ export default function PdfEsignTool() {
       for (const p of placements) {
         const page = pages[p.page - 1];
         if (!page) continue;
-        page.drawImage(sigImg, { x: p.x, y: p.y, width: p.w, height: p.h });
+        // Placements are stored in the coordinates of what the preview showed, i.e.
+        // the pdf.js viewport which already applies /Rotate. drawImage works in the
+        // unrotated content space, so map back and spin the stamp to match the view.
+        const rot = ((page.getRotation().angle % 360) + 360) % 360;
+        const { width: pw, height: ph } = page.getSize();
+        let x = p.x, y = p.y;
+        if (rot === 90) { x = pw - p.y; y = p.x; }
+        else if (rot === 180) { x = pw - p.x; y = ph - p.y; }
+        else if (rot === 270) { x = p.y; y = ph - p.x; }
+        page.drawImage(sigImg, { x, y, width: p.w, height: p.h, rotate: degrees(rot) });
       }
       const out = await doc.save();
       const blob = new Blob([out as unknown as BlobPart], { type: "application/pdf" });

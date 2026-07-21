@@ -442,7 +442,8 @@
       "noDiff": "差分なし"
     },
     "number-to-english": {
-      "copy": "コピー"
+      "copy": "コピー",
+      "outOfRange": "10^15 以上の数値には対応していません。"
     },
     "rot-all": {
       "copy": "コピー"
@@ -508,7 +509,8 @@
     },
     "text-similarity": {
       "editDistance": "編集距離",
-      "similarity": "類似度"
+      "similarity": "類似度",
+      "tooLong": "入力が長すぎます。それぞれ {max} 文字以下にしてください。"
     },
     "yaml-json": {
       "copy": "コピー",
@@ -726,6 +728,7 @@
       "fracNA": "分数で表せない値（無理数/整数）"
     },
     "text-hex": {
+      "modeAuto": "自動判定",
       "hexToText": "16進数 → テキスト",
       "textToHex": "テキスト → 16進数 (UTF-8)",
       "spaced": "スペース区切り",
@@ -932,6 +935,7 @@
       "sourceEncoding": "元のエンコーディング",
       "uploadFile": "ファイルアップロード",
       "reinterpret": "テキスト再解釈",
+      "reinterpretLossy": "このテキストにはバイトに戻せない文字 (� など) が含まれているため再解釈できません。元のファイルを再アップロードしてください。",
       "placeholder": "ファイルをアップロードするか、文字化けしたテキストを貼り付けてください",
       "copy": "コピー",
       "copied": "✓ コピー済み",
@@ -1265,6 +1269,7 @@
       "rightMm": "右(mm)",
       "processing": "処理中...",
       "crop": "切り抜き",
+      "errMarginTooLarge": "余白の合計がページサイズを超えています。",
       "otherFile": "別のファイル"
     },
     "pdf-extract": {
@@ -1323,7 +1328,8 @@
       "fileSize": "ファイルサイズ",
       "avgBitrate": "平均ビットレート",
       "fileType": "ファイルタイプ",
-      "otherFile": "別のファイル"
+      "otherFile": "別のファイル",
+      "unknownValue": "不明"
     },
     "video-thumbnail": {
       "errCaptureFailed": "キャプチャに失敗しました",
@@ -1795,7 +1801,8 @@
       "qualityLabel": "画質 ({percent}%) — 低いほど容量が小さくなります",
       "download": "ダウンロード",
       "otherFile": "別のファイル",
-      "pngToWebpNote": "PNGは品質指定の圧縮に対応していないため、出力はWebP形式で保存されます。透過はそのまま保持されます。"
+      "pngToWebpNote": "PNGは品質指定の圧縮に対応していないため、出力はWebP形式で保存されます。透過はそのまま保持されます。",
+      "errLoad": "画像を読み込めませんでした。別のファイルをお試しください。"
     },
     "images-to-pdf": {
       "errorSelectImage": "画像ファイルを選択してください。",
@@ -1976,6 +1983,7 @@
       "preview": "プレビュー",
       "result": "結果",
       "emptyPreview": "サイズを入力して「適用」を押してください",
+      "errInvalidSize": "幅と高さは1px以上にしてください。",
       "widthPx": "幅 (px)",
       "heightPx": "高さ (px)",
       "keepRatio": "縦横比を保持",
@@ -2058,7 +2066,8 @@
       "bitrateLabel": "音質 (kbps): {n}",
       "bitrateHint": "128kbps = 標準、192kbps = 良好、320kbps = 最高",
       "extracting": "抽出中...",
-      "extract": "MP3として抽出"
+      "extract": "MP3として抽出",
+      "errNoAudio": "この動画には音声トラックがありません"
     },
     "doi-lookup": {
       "errorIsbnNotFound": "ISBN情報が見つかりませんでした。",
@@ -2205,6 +2214,7 @@
       "formalOption": "公式表記 (일십, 일백, 일천)",
       "contractOption": "契約書形式 (일금 ~ 원정)",
       "hangulResult": "ハングル表記",
+      "outOfRange": "경(10^16) 単位までの対応です。整数部 20 桁以下の数値を入力してください。",
       "copied": "✓ コピー済み",
       "copy": "コピー"
     },
@@ -2223,7 +2233,10 @@
       "trimButton": "トリミング",
       "otherFile": "別のファイル",
       "result": "結果",
-      "downloadMp4": "MP4をダウンロード"
+      "downloadMp4": "MP4をダウンロード",
+      "statusReencoding": "ストリームコピーに失敗 — 再エンコードで再試行中（時間がかかります）...",
+      "keyframeNotice": "高速なストリームコピーのため、実際の開始・終了位置は最も近いキーフレーム（最大で数秒のずれ）に合わせられます。",
+      "downloadExt": "{ext}をダウンロード"
     },
     "wage-converter": {
       "krw": "ウォン",
@@ -3251,7 +3264,8 @@
       "background": "背景:",
       "downloadPng": "PNGダウンロード",
       "downloadSvg": "SVGダウンロード",
-      "invalidInput": "無効な入力です。"
+      "invalidInput": "無効な入力です。",
+      "invalidIsbn": "ISBN-10のチェックディジットが正しくありません。"
     },
     "barcode-reader": {
       "dropOrClick": "バーコード画像をドラッグまたはクリック",

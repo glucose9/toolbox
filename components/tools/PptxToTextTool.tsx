@@ -11,17 +11,23 @@ function slideNumber(path: string): number {
   return m ? parseInt(m[1], 10) : 0;
 }
 
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, "&");
+}
+
 function extractTexts(xml: string): string {
-  const matches = xml.match(/<a:t>([\s\S]*?)<\/a:t>/g) || [];
-  return matches
-    .map((m) => m.replace(/<a:t>/, "").replace(/<\/a:t>/, ""))
-    .map((s) =>
-      s
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/&amp;/g, "&")
-        .replace(/&quot;/g, '"')
-        .replace(/&apos;/g, "'")
+  const paragraphs = xml.match(/<a:p(?:\s[^>]*)?>[\s\S]*?<\/a:p>/g);
+  const blocks = paragraphs && paragraphs.length > 0 ? paragraphs : [xml];
+  return blocks
+    .map((block) =>
+      (block.match(/<a:t>([\s\S]*?)<\/a:t>/g) || [])
+        .map((m) => decodeEntities(m.replace(/<a:t>/, "").replace(/<\/a:t>/, "")))
+        .join("")
     )
     .join("\n");
 }
@@ -30,6 +36,7 @@ export default function PptxToTextTool() {
   const t = useTranslations("toolUI.pptx-to-text");
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState("");
+  const [srcFile, setSrcFile] = useState<File | null>(null);
   const [slides, setSlides] = useState<SlideText[]>([]);
   const [includeNotes, setIncludeNotes] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,6 +47,7 @@ export default function PptxToTextTool() {
     setError("");
     setLoading(true);
     setFileName(file.name);
+    setSrcFile(file);
     setSlides([]);
     try {
       const zip = await JSZip.loadAsync(file);
@@ -75,8 +83,8 @@ export default function PptxToTextTool() {
 
   const toggleNotes = (checked: boolean) => {
     setIncludeNotes(checked);
-    if (fileName && inputRef.current?.files?.[0]) {
-      process(inputRef.current.files[0], checked);
+    if (srcFile) {
+      process(srcFile, checked);
     }
   };
 

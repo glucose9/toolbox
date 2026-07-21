@@ -3,20 +3,37 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
+const PH = "\uE000";
+const PH2 = "\uE001";
+
 function minifySvg(svg: string): string {
-  return svg
+  const stripped = svg
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<\?xml.*?\?>/g, "")
     .replace(/<!DOCTYPE[\s\S]*?>/g, "")
     .replace(/\s+xmlns:(inkscape|sodipodi)=["'][^"']*["']/g, "")
-    .replace(/<(inkscape|sodipodi):[\s\S]*?<\/(inkscape|sodipodi):[^>]*>/g, "")
+    // Self-closing first, then paired tags matched by back-reference — an
+    // unpaired regex would swallow real elements between two namespaced tags.
+    .replace(/<(?:inkscape|sodipodi):[^>]*\/>/g, "")
+    .replace(/<((?:inkscape|sodipodi):[\w-]+)\b[\s\S]*?<\/\1>/g, "")
     .replace(/<metadata[\s\S]*?<\/metadata>/g, "")
     .replace(/<title[\s\S]*?<\/title>/g, "")
-    .replace(/<desc[\s\S]*?<\/desc>/g, "")
+    .replace(/<desc[\s\S]*?<\/desc>/g, "");
+
+  // <text> holds rendered content: whitespace and "=" inside it are significant.
+  const texts: string[] = [];
+  const guarded = stripped.replace(/<text\b[\s\S]*?<\/text>/gi, (m) => {
+    texts.push(m);
+    return PH + (texts.length - 1) + PH2;
+  });
+
+  const min = guarded
     .replace(/\s+/g, " ")
     .replace(/>\s+</g, "><")
     .replace(/\s*=\s*/g, "=")
     .trim();
+
+  return min.replace(new RegExp(PH + "(\\d+)" + PH2, "g"), (_, i) => texts[Number(i)]);
 }
 
 export default function SvgMinifierTool() {

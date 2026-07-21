@@ -31,11 +31,19 @@ function md5(input: Uint8Array): string {
   const padded = new Uint8Array(((n + 8) >>> 6) * 64 + 64);
   padded.set(input);
   padded[n] = 0x80;
+  // 64-bit length: bits can exceed 2^32 (>= 512MiB input), so split by
+  // division instead of 32-bit bitwise ops before writing both words.
   const bits = n * 8;
-  padded[padded.length - 8] = bits & 0xff;
-  padded[padded.length - 7] = (bits >>> 8) & 0xff;
-  padded[padded.length - 6] = (bits >>> 16) & 0xff;
-  padded[padded.length - 5] = (bits >>> 24) & 0xff;
+  const lo = bits % 4294967296;
+  const hi = Math.floor(bits / 4294967296);
+  padded[padded.length - 8] = lo & 0xff;
+  padded[padded.length - 7] = (lo >>> 8) & 0xff;
+  padded[padded.length - 6] = (lo >>> 16) & 0xff;
+  padded[padded.length - 5] = (lo >>> 24) & 0xff;
+  padded[padded.length - 4] = hi & 0xff;
+  padded[padded.length - 3] = (hi >>> 8) & 0xff;
+  padded[padded.length - 2] = (hi >>> 16) & 0xff;
+  padded[padded.length - 1] = (hi >>> 24) & 0xff;
 
   let a = 0x67452301;
   let b = 0xefcdab89;

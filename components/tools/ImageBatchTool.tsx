@@ -81,11 +81,11 @@ export default function ImageBatchTool() {
 
   const processAll = async () => {
     setBusy(true);
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].status === "done") continue;
-      setItems((cur) => cur.map((it, idx) => (idx === i ? { ...it, status: "processing" } : it)));
-      const result = await processOne(items[i]);
-      setItems((cur) => cur.map((it, idx) => (idx === i ? result : it)));
+    const queue = items.filter((it) => it.status !== "done");
+    for (const item of queue) {
+      setItems((cur) => cur.map((it) => (it.id === item.id ? { ...it, status: "processing" } : it)));
+      const result = await processOne(item);
+      setItems((cur) => cur.map((it) => (it.id === item.id ? result : it)));
     }
     setBusy(false);
   };

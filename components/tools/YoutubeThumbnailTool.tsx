@@ -35,13 +35,18 @@ export default function YoutubeThumbnailTool() {
   const t = useTranslations("toolUI.youtube-thumbnail");
   const [url, setUrl] = useState("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
   const videoId = useMemo(() => extractVideoId(url), [url]);
+  const [error, setError] = useState("");
 
   const download = async (size: { file: string; res: string }) => {
     if (!videoId) return;
+    setError("");
     const thumbUrl = `https://i.ytimg.com/vi/${videoId}/${size.file}`;
     try {
       const res = await fetch(thumbUrl);
-      if (!res.ok) throw new Error(t("errNotAvailable"));
+      if (!res.ok) {
+        setError(t("errNotAvailable"));
+        return;
+      }
       const blob = await res.blob();
       const dlUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -50,7 +55,7 @@ export default function YoutubeThumbnailTool() {
       a.click();
       URL.revokeObjectURL(dlUrl);
     } catch {
-      // Fallback: open in new tab
+      // Network/CORS failure only: fall back to opening the image directly
       window.open(thumbUrl, "_blank");
     }
   };
@@ -72,6 +77,8 @@ export default function YoutubeThumbnailTool() {
           <div className="text-xs text-red-600 mt-1">{t("invalidUrl")}</div>
         ) : null}
       </div>
+
+      {error && <div className="text-sm text-red-600">{error}</div>}
 
       {videoId && (
         <div className="space-y-3">

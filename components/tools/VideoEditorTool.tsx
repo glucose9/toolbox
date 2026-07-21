@@ -84,6 +84,10 @@ export default function VideoEditorTool() {
   const onPick = (f: File) => {
     setFile(f);
     setOutput(null);
+    setDuration(0);
+    setTrimEnabled(false);
+    setTrimStart(0);
+    setTrimEnd(0);
     const v = document.createElement("video");
     v.preload = "metadata";
     v.src = URL.createObjectURL(f);

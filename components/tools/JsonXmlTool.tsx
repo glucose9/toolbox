@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { XMLBuilder, XMLParser } from "fast-xml-parser";
+import { XMLBuilder, XMLParser, XMLValidator } from "fast-xml-parser";
 
 type Dir = "json-to-xml" | "xml-to-json";
 
@@ -36,7 +36,10 @@ export default function JsonXmlTool() {
         const builder = new XMLBuilder({ ignoreAttributes: false, format: true, indentBy: "  ", attributeNamePrefix: "@_" });
         return { output: builder.build(obj) as string, error: "" };
       } else {
-        const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "@_", parseTagValue: false, parseAttributeValue: false });
+        // XMLParser never throws on malformed input, so validate first.
+        const check = XMLValidator.validate(input, { allowBooleanAttributes: true });
+        if (check !== true) throw new Error(`${check.err.msg} (line ${check.err.line})`);
+        const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "@_", parseTagValue: false, parseAttributeValue: false, ignoreDeclaration: true });
         const obj = parser.parse(input);
         return { output: JSON.stringify(obj, null, 2), error: "" };
       }

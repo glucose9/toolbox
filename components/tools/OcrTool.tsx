@@ -41,13 +41,23 @@ export default function OcrTool() {
     setText("");
     try {
       const Tesseract = (await import("tesseract.js")).default;
-      const result = (await Tesseract.recognize(imgUrl, lang, {
-        logger: (m: { status: string; progress: number }) => {
-          if (m.status === "recognizing text") {
-            setProgress(Math.round(m.progress * 100));
-          }
-        },
-      })) as RecognizeResult;
+      // tesseract.js swallows worker failures other than core load (language pack
+      // fetch, initialize), leaving recognize() pending forever — surface them here.
+      let failWorker: (msg: string) => void = () => {};
+      const workerFailed = new Promise<never>((_, reject) => {
+        failWorker = (msg: string) => reject(new Error(msg));
+      });
+      const result = (await Promise.race([
+        Tesseract.recognize(imgUrl, lang, {
+          logger: (m: { status: string; progress: number }) => {
+            if (m.status === "recognizing text") {
+              setProgress(Math.round(m.progress * 100));
+            }
+          },
+          errorHandler: (err: unknown) => failWorker(err instanceof Error ? err.message : String(err)),
+        }),
+        workerFailed,
+      ])) as RecognizeResult;
       setText(result.data.text);
       setConfidence(result.data.confidence);
     } catch (e) {

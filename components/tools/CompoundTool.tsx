@@ -27,7 +27,7 @@ export default function CompoundTool() {
     const monthRate = rate / 100 / 12;
     const months = years * 12;
     // future value of annuity
-    total = monthly * ((Math.pow(1 + monthRate, months) - 1) / monthRate) * (1 + monthRate);
+    total = monthRate === 0 ? monthly * months : monthly * ((Math.pow(1 + monthRate, months) - 1) / monthRate) * (1 + monthRate);
     totalContrib = monthly * months;
   }
   const interest = total - totalContrib;

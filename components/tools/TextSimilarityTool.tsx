@@ -18,11 +18,16 @@ function levenshtein(a: string, b: string): number {
   return prev[n];
 }
 
+// O(m×n) 동기 계산이 메인스레드를 막지 않도록 입력 길이를 제한한다.
+const MAX_LEN = 5000;
+
 export default function TextSimilarityTool() {
   const t = useTranslations("toolUI.text-similarity");
   const [a, setA] = useState("hello world");
   const [b, setB] = useState("hallo word");
+  const tooLong = a.length > MAX_LEN || b.length > MAX_LEN;
   const { dist, sim } = useMemo(() => {
+    if (a.length > MAX_LEN || b.length > MAX_LEN) return { dist: null, sim: null };
     const d = levenshtein(a, b);
     const maxLen = Math.max(a.length, b.length) || 1;
     return { dist: d, sim: ((1 - d / maxLen) * 100).toFixed(1) };
@@ -33,9 +38,10 @@ export default function TextSimilarityTool() {
         <textarea value={a} onChange={(e) => setA(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />
         <textarea value={b} onChange={(e) => setB(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />
       </div>
+      {tooLong && <div className="text-sm text-red-600">{t("tooLong", { max: MAX_LEN })}</div>}
       <div className="grid grid-cols-2 gap-3">
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded text-center"><div className="text-xs text-muted">{t("editDistance")}</div><div className="text-2xl font-bold">{dist}</div></div>
-        <div className="p-3 bg-brand-50 dark:bg-brand-900/20 border border-brand-500 rounded text-center"><div className="text-xs text-muted">{t("similarity")}</div><div className="text-2xl font-bold">{sim}%</div></div>
+        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded text-center"><div className="text-xs text-muted">{t("editDistance")}</div><div className="text-2xl font-bold">{dist ?? "—"}</div></div>
+        <div className="p-3 bg-brand-50 dark:bg-brand-900/20 border border-brand-500 rounded text-center"><div className="text-xs text-muted">{t("similarity")}</div><div className="text-2xl font-bold">{sim === null ? "—" : `${sim}%`}</div></div>
       </div>
     </div>
   );

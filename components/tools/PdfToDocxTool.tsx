@@ -68,19 +68,38 @@ export default function PdfToDocxTool() {
         // Optional: include selectable text below each page image
         if (includeText) {
           const textContent = await page.getTextContent();
-          // Group items into lines by Y position, then join
-          const linesMap = new Map<number, string[]>();
+          // Collect runs with their baseline position, then rebuild lines: group by
+          // Y within a tolerance so super/subscripts stay on their own line instead
+          // of forming a separate one, and order each line left-to-right instead of
+          // by content-stream order.
+          const runs: { x: number; y: number; str: string }[] = [];
           for (const item of textContent.items) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const it = item as any;
             if (!it.str || !it.transform) continue;
-            const y = Math.round(it.transform[5]); // round to group lines on same y
-            if (!linesMap.has(y)) linesMap.set(y, []);
-            linesMap.get(y)!.push(it.str);
+            runs.push({ x: it.transform[4], y: it.transform[5], str: it.str });
           }
           // pdfjs Y is bottom-up; sort descending so visual top comes first
-          const ys = [...linesMap.keys()].sort((a, b) => b - a);
-          const lines = ys.map((y) => linesMap.get(y)!.join(" ").replace(/\s+/g, " ").trim()).filter(Boolean);
+          runs.sort((a, b) => b.y - a.y || a.x - b.x);
+          const Y_TOLERANCE = 4; // pt
+          const lines: string[] = [];
+          let lineY: number | null = null;
+          let cur: { x: number; str: string }[] = [];
+          const flushLine = () => {
+            if (cur.length === 0) return;
+            cur.sort((a, b) => a.x - b.x);
+            const text = cur.map((c) => c.str).join(" ").replace(/\s+/g, " ").trim();
+            if (text) lines.push(text);
+            cur = [];
+          };
+          for (const run of runs) {
+            if (lineY === null || Math.abs(run.y - lineY) > Y_TOLERANCE) {
+              flushLine();
+              lineY = run.y;
+            }
+            cur.push(run);
+          }
+          flushLine();
 
           if (lines.length > 0) {
             paragraphs.push(

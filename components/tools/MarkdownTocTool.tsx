@@ -16,7 +16,15 @@ function generateToc(md: string, maxLevel: number): string {
   const lines = md.split("\n");
   const out: string[] = [];
   const counts: Record<string, number> = {};
+  let fence: string | null = null;
   for (const line of lines) {
+    const f = line.match(/^\s{0,3}(```+|~~~+)/);
+    if (f) {
+      if (fence === null) fence = f[1][0];
+      else if (f[1][0] === fence) fence = null;
+      continue;
+    }
+    if (fence !== null) continue;
     const m = line.match(/^(#{1,6})\s+(.+?)\s*#*\s*$/);
     if (!m) continue;
     const level = m[1].length;

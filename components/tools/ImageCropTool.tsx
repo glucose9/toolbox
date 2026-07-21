@@ -61,7 +61,8 @@ export default function ImageCropTool() {
     const y = e.clientY - rect.top - offsetY;
     if (x < 0 || y < 0 || x > cs.w || y > cs.h) return;
     setDrag({ startX: x, startY: y });
-    setSel({ x, y, w: 0, h: 0 });
+    // sel is stored in original image pixels so a viewport resize cannot rescale it
+    setSel({ x: x / cs.scale, y: y / cs.scale, w: 0, h: 0 });
   };
 
   const onMouseMove = (e: React.MouseEvent) => {
@@ -91,21 +92,22 @@ export default function ImageCropTool() {
     }
     const sx = w < 0 ? drag.startX + w : drag.startX;
     const sy = h < 0 ? drag.startY + h : drag.startY;
-    setSel({ x: sx, y: sy, w: Math.abs(w), h: Math.abs(h) });
+    setSel({ x: sx / cs.scale, y: sy / cs.scale, w: Math.abs(w) / cs.scale, h: Math.abs(h) / cs.scale });
   };
 
   const onMouseUp = () => setDrag(null);
 
   useEffect(() => {
-    if (sel && RATIOS[ratio] !== null) {
+    if (sel && img && RATIOS[ratio] !== null) {
       const r = RATIOS[ratio]!;
-      const cs = containerSize();
+      const maxW = img.naturalWidth;
+      const maxH = img.naturalHeight;
       setSel((s) => {
         if (!s) return s;
         let w = s.w;
         let h = w / r;
-        if (h > cs.h - s.y) { h = cs.h - s.y; w = h * r; }
-        if (w > cs.w - s.x) { w = cs.w - s.x; h = w / r; }
+        if (h > maxH - s.y) { h = maxH - s.y; w = h * r; }
+        if (w > maxW - s.x) { w = maxW - s.x; h = w / r; }
         return { ...s, w, h };
       });
     }
@@ -117,11 +119,10 @@ export default function ImageCropTool() {
       return;
     }
     setError("");
-    const cs = containerSize();
-    const sx = Math.min(Math.max(0, sel.x / cs.scale), img.naturalWidth);
-    const sy = Math.min(Math.max(0, sel.y / cs.scale), img.naturalHeight);
-    const sw = Math.max(1, Math.min(sel.w / cs.scale, img.naturalWidth - sx));
-    const sh = Math.max(1, Math.min(sel.h / cs.scale, img.naturalHeight - sy));
+    const sx = Math.min(Math.max(0, sel.x), img.naturalWidth);
+    const sy = Math.min(Math.max(0, sel.y), img.naturalHeight);
+    const sw = Math.max(1, Math.min(sel.w, img.naturalWidth - sx));
+    const sh = Math.max(1, Math.min(sel.h, img.naturalHeight - sy));
     const c = document.createElement("canvas");
     c.width = Math.round(sw);
     c.height = Math.round(sh);
@@ -203,7 +204,7 @@ export default function ImageCropTool() {
           return (
             <div
               className="absolute border-2 border-brand-500 bg-brand-500/20 pointer-events-none"
-              style={{ left: offsetX + sel.x, top: offsetY + sel.y, width: sel.w, height: sel.h }}
+              style={{ left: offsetX + sel.x * cs.scale, top: offsetY + sel.y * cs.scale, width: sel.w * cs.scale, height: sel.h * cs.scale }}
             />
           );
         })()}
@@ -211,7 +212,7 @@ export default function ImageCropTool() {
 
       <div className="text-xs text-muted">
         {sel && img
-          ? `${t("selection")}: ${Math.round(sel.w / containerSize().scale)} × ${Math.round(sel.h / containerSize().scale)} px`
+          ? `${t("selection")}: ${Math.round(sel.w)} × ${Math.round(sel.h)} px`
           : t("dragHint")}
       </div>
 

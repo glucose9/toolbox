@@ -28,12 +28,15 @@ export function parsePageRanges(input: string, max: number): number[] {
   for (const p of parts) {
     const m = p.match(/^(\d+)\s*-\s*(\d+)$/);
     if (m) {
-      const a = Math.max(1, parseInt(m[1], 10));
-      const b = Math.min(max, parseInt(m[2], 10));
+      const a = parseInt(m[1], 10);
+      const b = parseInt(m[2], 10);
+      if (a > b) throw new Error(`잘못된 범위: "${p}" (시작 페이지가 끝 페이지보다 큽니다)`);
+      if (a < 1 || b > max) throw new Error(`범위를 벗어난 페이지: "${p}" (1-${max})`);
       for (let i = a; i <= b; i++) pages.add(i);
     } else if (/^\d+$/.test(p)) {
       const n = parseInt(p, 10);
-      if (n >= 1 && n <= max) pages.add(n);
+      if (n < 1 || n > max) throw new Error(`범위를 벗어난 페이지: "${p}" (1-${max})`);
+      pages.add(n);
     } else {
       throw new Error(`잘못된 범위 형식: "${p}"`);
     }
@@ -47,14 +50,17 @@ export function parsePageGroups(input: string, max: number): number[][] {
   for (const p of parts) {
     const m = p.match(/^(\d+)\s*-\s*(\d+)$/);
     if (m) {
-      const a = Math.max(1, parseInt(m[1], 10));
-      const b = Math.min(max, parseInt(m[2], 10));
+      const a = parseInt(m[1], 10);
+      const b = parseInt(m[2], 10);
+      if (a > b) throw new Error(`잘못된 범위: "${p}" (시작 페이지가 끝 페이지보다 큽니다)`);
+      if (a < 1 || b > max) throw new Error(`범위를 벗어난 페이지: "${p}" (1-${max})`);
       const range: number[] = [];
       for (let i = a; i <= b; i++) range.push(i);
-      if (range.length) groups.push(range);
+      groups.push(range);
     } else if (/^\d+$/.test(p)) {
       const n = parseInt(p, 10);
-      if (n >= 1 && n <= max) groups.push([n]);
+      if (n < 1 || n > max) throw new Error(`범위를 벗어난 페이지: "${p}" (1-${max})`);
+      groups.push([n]);
     } else {
       throw new Error(`잘못된 범위 형식: "${p}"`);
     }

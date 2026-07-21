@@ -101,14 +101,15 @@ export default function CiteFormatTool() {
       }
       return n;
     });
-    const a = list.length > 1 ? list.slice(0, -1).join(", ") + ", and " + list.slice(-1) : list[0];
+    const a = list.length > 1 ? list.slice(0, -1).join(", ") + ", and " + list.slice(-1) : (list[0] ?? "");
+    const pre = a ? `${a}, ` : "";
     if (type === "journal") {
-      return `${a}, "${title}," *${container}*, vol. ${volume}, no. ${issue}, pp. ${pages}, ${year}.`;
+      return `${pre}"${title}," *${container}*, vol. ${volume}, no. ${issue}, pp. ${pages}, ${year}.`;
     }
     if (type === "book") {
-      return `${a}, *${title}*. ${city}: ${publisher}, ${year}.`;
+      return `${pre}*${title}*. ${city}: ${publisher}, ${year}.`;
     }
-    return `${a}, "${title}." ${container} [Online]. Available: ${url}. [Accessed: ${accessed || "n.d."}].`;
+    return `${pre}"${title}." ${container} [Online]. Available: ${url}. [Accessed: ${accessed || "n.d."}].`;
   })();
 
   const styles = [

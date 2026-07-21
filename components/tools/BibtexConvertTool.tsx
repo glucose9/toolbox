@@ -28,20 +28,69 @@ function parseBibtex(input: string): Entry[] {
     const body = input.slice(re.lastIndex, depth === 0 ? i - 1 : input.length);
     re.lastIndex = i;
     const fields: Record<string, string> = {};
-    const fre = /(\w+)\s*=\s*(?:\{((?:[^{}]|\{[^{}]*\})*)\}|"([^"]*)")/g;
+    const fre = /(\w+)\s*=\s*(?:\{((?:[^{}]|\{[^{}]*\})*)\}|"([^"]*)"|([^,{}"\n]+))/g;
     let f: RegExpExecArray | null;
     while ((f = fre.exec(body)) !== null) {
-      fields[f[1].toLowerCase()] = (f[2] ?? f[3] ?? "").replace(/[{}]/g, "").trim();
+      const name = f[1].toLowerCase();
+      const raw = (f[2] ?? f[3] ?? f[4] ?? "").trim();
+      // author 는 중괄호를 남겨 둔다: {{Ernst and Young}} 같은 기관 저자를 분리하지 않기 위함
+      fields[name] = name === "author" ? raw : raw.replace(/[{}]/g, "").trim();
     }
     entries.push({ type, key, fields });
   }
   return entries;
 }
 
+// 중괄호 밖의 " and " 만 저자 구분자로 취급 (중괄호 안은 단일 리터럴 저자)
+function splitAuthorTokens(raw: string): string[] {
+  const out: string[] = [];
+  let buf = "";
+  let depth = 0;
+  for (let i = 0; i < raw.length; i++) {
+    const ch = raw[i];
+    if (ch === "{") depth++;
+    else if (ch === "}") {
+      if (depth > 0) depth--;
+    } else if (depth === 0 && /\s/.test(ch)) {
+      const m = /^\s+and\s+/i.exec(raw.slice(i));
+      if (m) {
+        out.push(buf);
+        buf = "";
+        i += m[0].length - 1;
+        continue;
+      }
+    }
+    buf += ch;
+  }
+  out.push(buf);
+  return out.map((s) => s.trim()).filter(Boolean);
+}
+
+function isLiteralAuthor(token: string): boolean {
+  return /^\{[\s\S]*\}$/.test(token);
+}
+
+function stripBraces(token: string): string {
+  return token.replace(/[{}]/g, "").trim();
+}
+
+// 'Family, Given' → 'Given Family' (MLA 둘째 이후 저자용)
+function naturalOrder(token: string): string {
+  const plain = stripBraces(token);
+  if (isLiteralAuthor(token)) return plain;
+  const ix = plain.indexOf(",");
+  if (ix < 0) return plain;
+  const family = plain.slice(0, ix).trim();
+  const given = plain.slice(ix + 1).trim();
+  return given ? `${given} ${family}` : family;
+}
+
 function formatAuthors(raw: string, style: "apa" | "mla" | "chicago"): string {
   if (!raw) return "";
-  const authors = raw.split(/\s+and\s+/i).map((a) => a.trim());
-  const formatted = authors.map((a) => {
+  const authors = splitAuthorTokens(raw);
+  const formatted = authors.map((token) => {
+    const a = stripBraces(token);
+    if (isLiteralAuthor(token)) return a;
     if (a.includes(",")) return a;
     const parts = a.split(/\s+/);
     if (parts.length < 2) return a;
@@ -58,7 +107,8 @@ function formatAuthors(raw: string, style: "apa" | "mla" | "chicago"): string {
   }
   if (style === "mla") {
     if (formatted.length === 1) return formatted[0];
-    if (formatted.length === 2) return `${formatted[0]}, and ${formatted[1]}`;
+    // MLA 9: 첫 저자만 역순, 둘째 저자는 정순
+    if (formatted.length === 2) return `${formatted[0]}, and ${naturalOrder(authors[1])}`;
     return `${formatted[0]}, et al.`;
   }
   return formatted.join(", ");

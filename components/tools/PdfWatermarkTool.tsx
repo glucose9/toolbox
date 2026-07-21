@@ -49,6 +49,10 @@ export default function PdfWatermarkTool() {
       // Rasterize such text on a canvas and embed it as a PNG instead (same
       // canvas→embedPng pattern the e-sign tool uses).
       const needsRaster = Array.from(text).some((c) => (c.codePointAt(0) ?? 0) > 0xff);
+      // pdf-lib rotates around the draw anchor, not the content's centre, so the
+      // anchor is offset by the rotated half-diagonal to keep the watermark centred.
+      const theta = (angle * Math.PI) / 180;
+      const cosT = Math.cos(theta), sinT = Math.sin(theta);
       if (needsRaster) {
         const SCALE = 4; // canvas px per PDF pt, for crisp glyphs
         const cv = document.createElement("canvas");
@@ -70,8 +74,8 @@ export default function PdfWatermarkTool() {
         for (const page of doc.getPages()) {
           const { width, height } = page.getSize();
           page.drawImage(img, {
-            x: (width - imgW) / 2,
-            y: height / 2 - imgH / 2,
+            x: width / 2 - (imgW / 2) * cosT + (imgH / 2) * sinT,
+            y: height / 2 - (imgW / 2) * sinT - (imgH / 2) * cosT,
             width: imgW,
             height: imgH,
             opacity,
@@ -84,8 +88,8 @@ export default function PdfWatermarkTool() {
           const { width, height } = page.getSize();
           const textWidth = font.widthOfTextAtSize(text, size);
           page.drawText(text, {
-            x: (width - textWidth) / 2,
-            y: height / 2 - size / 2,
+            x: width / 2 - (textWidth / 2) * cosT + (size / 2) * sinT,
+            y: height / 2 - (textWidth / 2) * sinT - (size / 2) * cosT,
             size,
             font,
             color: rgb(r, g, b),

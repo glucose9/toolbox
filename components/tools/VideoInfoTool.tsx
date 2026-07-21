@@ -20,7 +20,17 @@ export default function VideoInfoTool() {
     const v = document.createElement("video");
     v.preload = "metadata";
     v.src = URL.createObjectURL(f);
-    v.onloadedmetadata = () => setInfo({ width: v.videoWidth, height: v.videoHeight, duration: v.duration });
+    v.onloadedmetadata = () => {
+      setInfo({ width: v.videoWidth, height: v.videoHeight, duration: v.duration });
+      if (!isFinite(v.duration)) {
+        // MediaRecorder webm reports Infinity until seeked past the end
+        v.onseeked = () => {
+          v.onseeked = null;
+          setInfo({ width: v.videoWidth, height: v.videoHeight, duration: v.duration });
+        };
+        v.currentTime = 1e10;
+      }
+    };
   };
 
   return (
@@ -39,9 +49,9 @@ export default function VideoInfoTool() {
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 <tr><td className="py-2 pr-3 text-muted">{t("resolution")}</td><td className="font-mono">{info.width} × {info.height}px</td></tr>
                 <tr><td className="py-2 pr-3 text-muted">{t("aspectRatio")}</td><td className="font-mono">{(info.width / info.height).toFixed(3)}:1</td></tr>
-                <tr><td className="py-2 pr-3 text-muted">{t("duration")}</td><td className="font-mono">{fmtDur(info.duration)} ({t("seconds", { value: info.duration.toFixed(2) })})</td></tr>
+                <tr><td className="py-2 pr-3 text-muted">{t("duration")}</td><td className="font-mono">{isFinite(info.duration) && info.duration > 0 ? `${fmtDur(info.duration)} (${t("seconds", { value: info.duration.toFixed(2) })})` : t("unknownValue")}</td></tr>
                 <tr><td className="py-2 pr-3 text-muted">{t("fileSize")}</td><td className="font-mono">{fmt(file.size)}</td></tr>
-                <tr><td className="py-2 pr-3 text-muted">{t("avgBitrate")}</td><td className="font-mono">{Math.round((file.size * 8) / info.duration / 1000)} kbps</td></tr>
+                <tr><td className="py-2 pr-3 text-muted">{t("avgBitrate")}</td><td className="font-mono">{isFinite(info.duration) && info.duration > 0 ? `${Math.round((file.size * 8) / info.duration / 1000)} kbps` : t("unknownValue")}</td></tr>
                 <tr><td className="py-2 pr-3 text-muted">{t("fileType")}</td><td className="font-mono">{file.type || "unknown"}</td></tr>
               </tbody>
             </table>

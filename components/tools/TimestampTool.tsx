@@ -10,7 +10,11 @@ function detectUnit(s: string): "s" | "ms" {
 export default function TimestampTool() {
   const t = useTranslations("toolUI.timestamp-converter");
   const [tsInput, setTsInput] = useState(() => Math.floor(Date.now() / 1000).toString());
-  const [dateInput, setDateInput] = useState(() => new Date().toISOString().slice(0, 16));
+  // datetime-local reads its value as local time, so shift by the offset
+  // before serializing with toISOString (which emits UTC).
+  const [dateInput, setDateInput] = useState(() =>
+    new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+  );
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {

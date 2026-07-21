@@ -4,9 +4,10 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
 function hexToRgb(hex: string): [number, number, number] | null {
-  const m = hex.match(/^#?([0-9a-f]{6})$/i);
+  const m = hex.match(/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i);
   if (!m) return null;
-  const n = parseInt(m[1], 16);
+  const full = m[1].length === 3 ? m[1].split("").map((c) => c + c).join("") : m[1];
+  const n = parseInt(full, 16);
   return [(n >> 16) & 0xff, (n >> 8) & 0xff, n & 0xff];
 }
 

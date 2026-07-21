@@ -10,11 +10,22 @@ function fmt(d: Date): string {
   return d.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 }
 
+function ymd(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+// calendar-day arithmetic: ms addition drifts across DST transitions
+function addDays(d: Date, n: number): Date {
+  const out = new Date(d);
+  out.setDate(out.getDate() + n);
+  return out;
+}
+
 export default function DueDateTool() {
   const t = useTranslations("toolUI.due-date");
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = ymd(today);
 
   const [mode, setMode] = useState<Mode>("lmp");
   const [date, setDate] = useState(todayStr);
@@ -30,11 +41,11 @@ export default function DueDateTool() {
     if (isNaN(d.getTime())) return null;
     let conceptionDate: Date, dueDate: Date;
     if (mode === "lmp") {
-      conceptionDate = new Date(d.getTime() + 14 * DAY_MS);
-      dueDate = new Date(d.getTime() + 280 * DAY_MS);
+      conceptionDate = addDays(d, 14);
+      dueDate = addDays(d, 280);
     } else {
       conceptionDate = d;
-      dueDate = new Date(d.getTime() + 266 * DAY_MS);
+      dueDate = addDays(d, 266);
     }
     const daysFromConception = Math.floor((today.getTime() - conceptionDate.getTime()) / DAY_MS);
     const totalDaysPreg = mode === "lmp" ? Math.floor((today.getTime() - d.getTime()) / DAY_MS) : daysFromConception + 14;

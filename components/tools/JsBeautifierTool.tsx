@@ -6,16 +6,22 @@ function beautify(code: string): string {
   let depth = 0;
   let out = "";
   let i = 0;
-  let inStr: string | null = null;
+  // String literals are held out of the emitted text so the final blank-line
+  // cleanup cannot rewrite their contents.
+  const literals: string[] = [];
   while (i < code.length) {
     const c = code[i];
-    if (inStr) {
-      out += c;
-      if (c === "\\") { out += code[++i]; }
-      else if (c === inStr) inStr = null;
-      i++; continue;
+    if (c === '"' || c === "'" || c === "`") {
+      let j = i + 1;
+      while (j < code.length) {
+        if (code[j] === "\\") { j += 2; continue; }
+        if (code[j] === c) { j++; break; }
+        j++;
+      }
+      literals.push(code.slice(i, j));
+      out += "\u0000" + (literals.length - 1) + "\u0000";
+      i = j; continue;
     }
-    if (c === '"' || c === "'" || c === "`") { inStr = c; out += c; i++; continue; }
     if (c === "/" && code[i + 1] === "/") {
       let j = i;
       while (j < code.length && code[j] !== "\n") j++;
@@ -74,7 +80,10 @@ function beautify(code: string): string {
     }
     i++;
   }
-  return out.replace(/\n\s*\n/g, "\n").trim();
+  return out
+    .replace(/\n\s*\n/g, "\n")
+    .trim()
+    .replace(/\u0000(\d+)\u0000/g, (_m, n: string) => literals[Number(n)]);
 }
 
 export default function JsBeautifierTool() {

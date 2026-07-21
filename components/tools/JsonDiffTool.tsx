@@ -19,6 +19,10 @@ function diff(a: unknown, b: unknown, path = "$"): Change[] {
     changes.push({ path, type: "changed", before: a, after: b });
     return changes;
   }
+  if (Array.isArray(a) !== Array.isArray(b)) {
+    changes.push({ path, type: "changed", before: a, after: b });
+    return changes;
+  }
   if (Array.isArray(a) && Array.isArray(b)) {
     const max = Math.max(a.length, b.length);
     for (let i = 0; i < max; i++) {

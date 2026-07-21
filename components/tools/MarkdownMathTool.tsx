@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { marked } from "marked";
+import { Marked } from "marked";
 import DOMPurify from "dompurify";
 import katex from "katex";
 import "katex/dist/katex.min.css";
@@ -78,8 +78,9 @@ const blockMathExt = {
   },
 };
 
-marked.use({ extensions: [blockMathExt, inlineMathExt] });
-marked.setOptions({ gfm: true, breaks: true });
+// Local instance: registering the math extensions on the shared `marked`
+// singleton would apply them to every other markdown tool in the session.
+const mathMarked = new Marked({ gfm: true, breaks: true, extensions: [blockMathExt, inlineMathExt] });
 
 // KaTeX emits MathML alongside its HTML output; allow those tags/attrs so
 // DOMPurify doesn't strip the rendered math.
@@ -116,7 +117,7 @@ export default function MarkdownMathTool() {
   const html = useMemo(() => {
     let raw: string;
     try {
-      raw = marked.parse(md) as string;
+      raw = mathMarked.parse(md) as string;
     } catch (e) {
       raw = `<p style="color:red">${(e as Error).message}</p>`;
     }

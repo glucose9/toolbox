@@ -23,15 +23,18 @@ export default function JsonFormatterTool() {
   const [indent, setIndent] = useState<"2" | "4" | "tab">("2");
   const [doSort, setDoSort] = useState(false);
   const [error, setError] = useState("");
+  const [validated, setValidated] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const parse = (): { ok: boolean; value: unknown } => {
     try {
       const value = JSON.parse(text);
       setError("");
+      setValidated(true);
       return { ok: true, value };
     } catch (e) {
       setError((e as Error).message);
+      setValidated(false);
       return { ok: false, value: null };
     }
   };
@@ -61,6 +64,7 @@ export default function JsonFormatterTool() {
         onChange={(e) => {
           setText(e.target.value);
           setError("");
+          setValidated(false);
         }}
         placeholder='{"hello": "world"}'
         className="w-full h-72 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y font-mono"
@@ -87,7 +91,7 @@ export default function JsonFormatterTool() {
       </div>
       {error ? (
         <div className="text-sm text-red-600">❌ {error}</div>
-      ) : text ? (
+      ) : validated && text ? (
         <div className="text-sm text-green-600">✓ {t("validJson")}</div>
       ) : null}
     </div>

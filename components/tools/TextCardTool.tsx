@@ -71,14 +71,16 @@ export default function TextCardTool() {
 }
 
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
-  const words = text.split(/(\s+)/);
   const lines: string[] = [];
-  let cur = "";
-  for (const w of words) {
-    const test = cur + w;
-    if (ctx.measureText(test).width > maxWidth && cur) { lines.push(cur.trim()); cur = w; }
-    else cur = test;
+  for (const para of text.split("\n")) {
+    let cur = "";
+    for (const w of para.split(/(\s+)/)) {
+      const test = cur + w;
+      if (ctx.measureText(test).width > maxWidth && cur) { lines.push(cur.trim()); cur = w; }
+      else cur = test;
+    }
+    lines.push(cur.trim());
   }
-  if (cur.trim()) lines.push(cur.trim());
+  while (lines.length && !lines[lines.length - 1]) lines.pop();
   return lines;
 }

@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, degrees } from "pdf-lib";
 import { useTranslations } from "next-intl";
 import { downloadBlob, isPdfFile, readBytes } from "@/lib/pdf";
 
@@ -26,10 +26,23 @@ export default function PdfPageSizeTool() {
       for (const p of src.getPages()) {
         const newPage = out.addPage(target);
         const { width, height } = p.getSize();
+        // embedPage ignores the source page's /Rotate, so bake it in here:
+        // swap the on-screen dimensions and rotate the drawn content back.
+        const rot = ((p.getRotation().angle % 360) + 360) % 360;
+        const swap = rot === 90 || rot === 270;
+        const effW = swap ? height : width;
+        const effH = swap ? width : height;
         const embedded = await out.embedPage(p);
-        const scale = Math.min(target[0] / width, target[1] / height);
-        const w = width * scale, h = height * scale;
-        newPage.drawPage(embedded, { x: (target[0] - w) / 2, y: (target[1] - h) / 2, width: w, height: h });
+        const scale = Math.min(target[0] / effW, target[1] / effH);
+        const w = effW * scale, h = effH * scale;
+        const x = (target[0] - w) / 2, y = (target[1] - h) / 2;
+        newPage.drawPage(embedded, {
+          x: rot === 180 || rot === 270 ? x + w : x,
+          y: rot === 90 || rot === 180 ? y + h : y,
+          width: width * scale,
+          height: height * scale,
+          rotate: degrees(-rot),
+        });
       }
       const result = await out.save();
       downloadBlob(new Blob([result.buffer as ArrayBuffer], { type: "application/pdf" }), file.name.replace(/\.pdf$/i, "") + `_${size}.pdf`);

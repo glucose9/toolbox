@@ -10,6 +10,24 @@ const BASES = [
   { key: "hex", base: 16 },
 ] as const;
 
+const DIGIT_SET = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+function isValidDigits(s: string, base: number): boolean {
+  if (!s) return false;
+  const allowed = DIGIT_SET.slice(0, base);
+  for (const ch of s.toLowerCase()) {
+    if (!allowed.includes(ch)) return false;
+  }
+  return true;
+}
+
+function bigFromBase(s: string, base: number): bigint {
+  const b = BigInt(base);
+  let v = 0n;
+  for (const ch of s.toLowerCase()) v = v * b + BigInt(DIGIT_SET.indexOf(ch));
+  return v;
+}
+
 function toBase(n: number, base: number): string {
   if (!isFinite(n)) return "";
   if (Number.isInteger(n)) return n.toString(base).toUpperCase();
@@ -32,6 +50,7 @@ function fromBase(s: string, base: number): number | null {
   s = s.replace(/^[-+]/, "");
   const [intStr, fracStr = ""] = s.split(".");
   if (!intStr && !fracStr) return null;
+  if (intStr && !isValidDigits(intStr, base)) return null;
   const intVal = intStr ? parseInt(intStr, base) : 0;
   if (Number.isNaN(intVal)) return null;
   let fracVal = 0;
@@ -56,12 +75,28 @@ export default function BaseConverterTool() {
       setValues(cleared);
       return;
     }
+    const next: Record<number, string> = { ...values, [fromBaseN]: raw };
+    const body = raw.trim().replace(/^[-+]/, "");
+    if (!body.includes(".")) {
+      // Integers go through BigInt: Number loses precision past 2^53 and
+      // switches to exponent notation at 1e21.
+      if (!isValidDigits(body, fromBaseN)) {
+        setError({ [fromBaseN]: t("invalidFormat") });
+        return;
+      }
+      const neg = raw.trim().startsWith("-");
+      const big = bigFromBase(body, fromBaseN) * (neg ? -1n : 1n);
+      for (const { base } of BASES) {
+        if (base !== fromBaseN) next[base] = big.toString(base).toUpperCase();
+      }
+      setValues(next);
+      return;
+    }
     const num = fromBase(raw, fromBaseN);
     if (num === null) {
       setError({ [fromBaseN]: t("invalidFormat") });
       return;
     }
-    const next: Record<number, string> = { ...values, [fromBaseN]: raw };
     for (const { base } of BASES) {
       if (base !== fromBaseN) next[base] = toBase(num, base);
     }

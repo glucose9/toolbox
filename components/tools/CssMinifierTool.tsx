@@ -11,9 +11,30 @@ function minify(css: string): string {
     sheltered.push(s);
     return "__CSSMIN" + (sheltered.length - 1) + "__";
   };
-  let out = css
-    .replace(/\/\*[\s\S]*?\*\//g, "")
-    .replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, shelter);
+  // Single pass so a comment marker inside a string is not stripped as a
+  // comment and a quote inside a comment does not start a string.
+  let out = "";
+  for (let i = 0; i < css.length; ) {
+    const c = css[i];
+    if (c === "/" && css[i + 1] === "*") {
+      const end = css.indexOf("*/", i + 2);
+      i = end === -1 ? css.length : end + 2;
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      let j = i + 1;
+      while (j < css.length) {
+        if (css[j] === "\\") { j += 2; continue; }
+        if (css[j] === c) { j++; break; }
+        j++;
+      }
+      out += shelter(css.slice(i, j));
+      i = j;
+      continue;
+    }
+    out += c;
+    i++;
+  }
   let prev = "";
   while (prev !== out) {
     prev = out;

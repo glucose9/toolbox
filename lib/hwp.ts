@@ -24,6 +24,9 @@ async function loadModule(): Promise<Rhwp> {
     }
     return mod;
   })();
+  modulePromise.catch(() => {
+    modulePromise = null;
+  });
   return modulePromise;
 }
 

@@ -25,14 +25,26 @@ export default function QrTextTool() {
     QRCode.toCanvas(c, content, { width: size, errorCorrectionLevel: "H", margin: 2 }).then(() => {
       if (!centerText) return;
       const ctx = c.getContext("2d")!;
-      ctx.font = `${bold ? "bold " : ""}${textSize}px system-ui, "Pretendard", sans-serif`;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
-      const metrics = ctx.measureText(centerText);
-      const textW = metrics.width;
-      const textH = textSize;
-      const boxW = textW + bgPadding * 2;
-      const boxH = textH + bgPadding * 2;
+      // ECC H recovers ~30%: keep the covered area under 25% of the QR and the box
+      // under 60% of the width so it cannot become a full-width band.
+      const maxArea = size * size * 0.25;
+      const maxW = size * 0.6;
+      let fs = textSize;
+      let pad = bgPadding;
+      let boxW = 0;
+      let boxH = 0;
+      for (let i = 0; i < 6; i++) {
+        ctx.font = `${bold ? "bold " : ""}${fs}px system-ui, "Pretendard", sans-serif`;
+        boxW = ctx.measureText(centerText).width + pad * 2;
+        boxH = fs + pad * 2;
+        const covered = shape === "circle" ? Math.PI * (Math.max(boxW, boxH) / 2) ** 2 : boxW * boxH;
+        const k = Math.min(covered > maxArea ? Math.sqrt(maxArea / covered) : 1, boxW > maxW ? maxW / boxW : 1);
+        if (k >= 1 || fs <= 6) break;
+        fs = Math.max(6, fs * k);
+        pad = pad * k;
+      }
       const cx = size / 2;
       const cy = size / 2;
       ctx.fillStyle = bgColor;
@@ -42,7 +54,7 @@ export default function QrTextTool() {
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
         ctx.fill();
       } else if (shape === "rounded") {
-        const r = 12;
+        const r = Math.min(12, boxW / 2, boxH / 2);
         const x = cx - boxW / 2;
         const y = cy - boxH / 2;
         ctx.beginPath();

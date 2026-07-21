@@ -9,10 +9,12 @@ export default function ImageCompressTool() {
   const [input, setInput] = useState<{ name: string; size: number; url: string; type: string } | null>(null);
   const [output, setOutput] = useState<{ url: string; size: number } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const process = (file: File, q: number) => {
     setBusy(true);
+    setError("");
     const url = URL.createObjectURL(file);
     const inputType = file.type || "image/jpeg";
     setInput({ name: file.name, size: file.size, url, type: inputType });
@@ -34,6 +36,7 @@ export default function ImageCompressTool() {
         (blob) => {
           if (!blob) {
             setBusy(false);
+            setError(t("errLoad"));
             return;
           }
           setOutput({ url: URL.createObjectURL(blob), size: blob.size });
@@ -42,6 +45,11 @@ export default function ImageCompressTool() {
         outType,
         q
       );
+    };
+    img.onerror = () => {
+      setBusy(false);
+      setOutput(null);
+      setError(t("errLoad"));
     };
     img.src = url;
   };
@@ -115,6 +123,8 @@ export default function ImageCompressTool() {
               ) : null}
             </div>
           </div>
+
+          {error && <div className="text-sm text-red-600">{error}</div>}
 
           <div>
             <label className="label">{t("qualityLabel", { percent: Math.round(quality * 100) })}</label>

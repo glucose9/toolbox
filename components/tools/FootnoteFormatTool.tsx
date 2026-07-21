@@ -28,9 +28,22 @@ export default function FootnoteFormatTool() {
       return `${authors}, "${title}," ${journal || "Website"}, accessed ${accessed || "n.d."}, ${url}.`;
     }
     if (style === "chicago-short") {
-      const lastName = authors.split(",")[0].split(/\s+/).pop() || authors;
+      const surnames = authors
+        .split(",")
+        .map((a) => a.trim())
+        .filter(Boolean)
+        .map((a) => a.split(/\s+/).pop() || a);
+      const lastName =
+        surnames.length === 0
+          ? authors
+          : surnames.length === 1
+            ? surnames[0]
+            : surnames.length === 2
+              ? `${surnames[0]} and ${surnames[1]}`
+              : `${surnames[0]} et al.`;
       const shortTitle = title.split(":")[0].split(" ").slice(0, 3).join(" ");
-      return `${lastName}, *${shortTitle}*, ${pages}.`;
+      if (type === "book") return `${lastName}, *${shortTitle}*, ${pages}.`;
+      return `${lastName}, "${shortTitle}," ${pages}.`;
     }
     if (style === "korean-1") {
       if (type === "book") return `${authors}, 《${title}》, ${publisher}, ${year}, ${pages}쪽.`;
@@ -38,6 +51,7 @@ export default function FootnoteFormatTool() {
       return `${authors}, 「${title}」, ${journal || "웹사이트"}, ${url} (${accessed || "검색일 없음"}).`;
     }
     if (type === "book") return `${authors}, *${title}* (${publisher}, ${year}) ${pages}.`;
+    if (type === "web") return `${authors}, "${title}," ${journal || "Website"}, ${year}, ${url}. Accessed ${accessed || "n.d."}.`;
     return `${authors}, "${title}," *${journal}*, vol. ${volume}, no. ${issue}, ${year}, p. ${pages}.`;
   })();
 

@@ -63,7 +63,11 @@ export default function HwpToPdfTool() {
       setError(t("errorPopup"));
       return;
     }
-    const safeName = fileName.replace(/\.(hwp|hwpx)$/i, "");
+    const safeName = fileName
+      .replace(/\.(hwp|hwpx)$/i, "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
     const html = `<!doctype html>
 <html><head>
 <meta charset="utf-8">

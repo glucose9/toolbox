@@ -16,15 +16,17 @@ export default function NumberFormatTool() {
     const space = s.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     // Korean style
     let kor = s;
-    if (s.length > 4) {
+    const sign = s.startsWith("-") ? "-" : "";
+    const digits = sign ? s.slice(1) : s;
+    if (digits.length > 4) {
       const groups: string[] = [];
-      let rest = s;
+      let rest = digits;
       while (rest.length > 0) {
         groups.unshift(rest.slice(-4));
         rest = rest.slice(0, -4);
       }
       const units = ["", t("unitMan"), t("unitEok"), t("unitJo"), t("unitGyeong")];
-      kor = groups.map((g, i) => g + (units[groups.length - 1 - i] || "")).join(" ");
+      kor = sign + groups.map((g, i) => g + (units[groups.length - 1 - i] || "")).join(" ");
     }
     return { comma, under, space, kor };
   }, [num, t]);

@@ -17,6 +17,17 @@ const LIAISON: Record<string, [string, string]> = {
   "22-h": ["", "ch"], // ㅈ + ㅎ
 };
 
+// 국어의 로마자 표기법 붙임: 자음 사이 동화 작용 ("종성로마자-초성로마자" → [종성, 초성])
+// ㄴ+ㄹ 은 유음화(ll)를 기본으로 한다(신라 Silla, 선릉 Seolleung). 신문로(Sinmunno)류
+// 형태소 경계 예외는 사전 없이는 판별할 수 없어 적용하지 않는다.
+const ASSIMILATION: Record<string, [string, string]> = {
+  "k-n": ["ng", "n"], "k-r": ["ng", "n"], "k-m": ["ng", "m"],
+  "t-n": ["n", "n"], "t-r": ["n", "n"], "t-m": ["n", "m"],
+  "p-n": ["m", "n"], "p-r": ["m", "n"], "p-m": ["m", "m"],
+  "n-r": ["l", "l"], "l-n": ["l", "l"], "l-r": ["l", "l"],
+  "m-r": ["m", "n"], "ng-r": ["ng", "n"],
+};
+
 function romanizeChar(prevJong: number, nextCho: number): { jongRom: string; choRom: string } {
   const choIdx = nextCho;
   // We're processing prev syllable's jong with current syllable's cho
@@ -32,6 +43,8 @@ function romanizeChar(prevJong: number, nextCho: number): { jongRom: string; cho
       return { jongRom: "", choRom: finals[prevJong] };
     }
   }
+  const assimilated = ASSIMILATION[`${jongRom}-${choRom}`];
+  if (assimilated) return { jongRom: assimilated[0], choRom: assimilated[1] };
   return { jongRom, choRom };
 }
 

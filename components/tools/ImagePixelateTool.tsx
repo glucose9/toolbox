@@ -99,9 +99,9 @@ export default function ImagePixelateTool() {
     c.height = img.naturalHeight;
     const ctx = c.getContext("2d")!;
     ctx.drawImage(img, 0, 0);
-    const px = Math.max(2, pixelSize / scale);
     const pixelate = (x: number, y: number, w: number, h: number) => {
       if (w <= 0 || h <= 0) return;
+      const px = Math.max(2, Math.min(pixelSize / scale, Math.min(w, h) / 2));
       const tmp = document.createElement("canvas");
       const tw = Math.max(1, Math.floor(w / px));
       const th = Math.max(1, Math.floor(h / px));

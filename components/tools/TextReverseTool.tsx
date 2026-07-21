@@ -5,6 +5,15 @@ import { useTranslations } from "next-intl";
 
 type Mode = "chars" | "words" | "lines";
 
+// 국기·ZWJ 이모지·결합 자모가 깨지지 않도록 코드포인트가 아닌 grapheme 단위로 분할한다.
+function splitGraphemes(s: string): string[] {
+  if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
+    const seg = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+    return Array.from(seg.segment(s), (x) => x.segment);
+  }
+  return Array.from(s);
+}
+
 export default function TextReverseTool() {
   const t = useTranslations("toolUI.text-reverse");
   const [text, setText] = useState("안녕 Hello World\n두번째 줄\n세번째 줄");
@@ -12,7 +21,7 @@ export default function TextReverseTool() {
   const [copied, setCopied] = useState(false);
 
   const output = useMemo(() => {
-    if (mode === "chars") return Array.from(text).reverse().join("");
+    if (mode === "chars") return splitGraphemes(text).reverse().join("");
     if (mode === "words") return text.split(" ").reverse().join(" ");
     return text.split("\n").reverse().join("\n");
   }, [text, mode]);

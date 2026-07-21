@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 function mask(text: string): string {
   return text
     .replace(/\b(\d{4})[-\s]?(\d{4})[-\s]?(\d{4})[-\s]?(\d{4})\b/g, "$1-****-****-$4")
+    // American Express is 15 digits in 4-6-5 groups
+    .replace(/\b(3[47]\d{2})[-\s]?\d{6}[-\s]?\d(\d{4})\b/g, "$1-******-*$2")
     .replace(/\b(\d{6})[-\s]?(\d{7})\b/g, "$1-*******")
     .replace(/\b(01[016-9])[-\s]?(\d{3,4})[-\s]?(\d{4})\b/g, "$1-****-$3")
     .replace(/\b(0[2-6][0-5]?)[-\s]?(\d{3,4})[-\s]?(\d{4})\b/g, "$1-****-$3")

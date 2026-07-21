@@ -35,14 +35,26 @@ export default function VideoToMp3Tool() {
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
       setStatus(t("statusExtracting"));
       const outName = `out_${Date.now()}.mp3`;
-      await ff.exec([
-        "-y",
-        "-i", inputName,
-        "-vn",
-        "-acodec", "libmp3lame",
-        "-b:a", `${bitrate}k`,
-        outName,
-      ]);
+      const logs: string[] = [];
+      const onLog = ({ message }: { message: string }) => { logs.push(message); };
+      ff.on("log", onLog);
+      let ret: number;
+      try {
+        ret = await ff.exec([
+          "-y",
+          "-i", inputName,
+          "-vn",
+          "-acodec", "libmp3lame",
+          "-b:a", `${bitrate}k`,
+          outName,
+        ]);
+      } finally {
+        ff.off("log", onLog);
+      }
+      if (ret !== 0) {
+        const noAudio = logs.some((l) => /does not contain any stream|Output file is empty/i.test(l));
+        throw new Error(noAudio ? t("errNoAudio") : logs.slice(-2).join(" ") || `exit ${ret}`);
+      }
       const data = (await ff.readFile(outName)) as Uint8Array;
       try { await ff.deleteFile(outName); } catch {}
       const blob = new Blob([data as BlobPart], { type: "audio/mp3" });

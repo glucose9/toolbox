@@ -33,8 +33,10 @@ export default function HtmlToImageTool() {
   const t = useTranslations("toolUI.html-to-image");
   const [html, setHtml] = useState<string>(SAMPLE_HTML);
   const [css, setCss] = useState<string>(SAMPLE_CSS);
-  const [width, setWidth] = useState<number>(800);
+  const [width, setWidth] = useState<string>("800");
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  // clamp only for rendering so that typing intermediate values stays possible
+  const widthPx = Math.max(100, Math.min(3000, Number(width) || 800));
 
   const srcDoc = useMemo(() => {
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${css}</style></head><body>${html}</body></html>`;
@@ -54,8 +56,8 @@ export default function HtmlToImageTool() {
     if (!doc || !body) return;
     const html2canvas = (await import("html2canvas")).default;
     const canvas = await html2canvas(body, {
-      width,
-      windowWidth: width,
+      width: widthPx,
+      windowWidth: widthPx,
       scale: 2,
       useCORS: true,
       logging: false,
@@ -99,7 +101,8 @@ export default function HtmlToImageTool() {
                 min={100}
                 max={3000}
                 value={width}
-                onChange={(e) => setWidth(Math.max(100, Math.min(3000, Number(e.target.value) || 800)))}
+                onChange={(e) => setWidth(e.target.value)}
+                onBlur={() => setWidth(String(widthPx))}
                 className="input"
               />
             </div>
@@ -119,7 +122,7 @@ export default function HtmlToImageTool() {
               ref={iframeRef}
               title="html-preview"
               sandbox="allow-same-origin"
-              style={{ width, border: 0, display: "block", background: "white" }}
+              style={{ width: widthPx, border: 0, display: "block", background: "white" }}
               className="min-h-[300px]"
             />
           </div>

@@ -28,10 +28,9 @@ export default function TeleprompterTool() {
 
   // pick locale-appropriate sample on mount
   useEffect(() => {
-    if (script) return;
     const lang = document.documentElement.lang || "ko";
     setScript(SAMPLE_SCRIPTS[lang] || SAMPLE_SCRIPTS.ko);
-  }, [script]);
+  }, []);
 
   const step = useCallback((ts: number) => {
     if (!playing) {

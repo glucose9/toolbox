@@ -3,6 +3,10 @@
 import { useMemo, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 
+function ymd(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 function calcAges(birthStr: string, refStr: string) {
   const b = new Date(birthStr + "T00:00:00");
   const r = new Date(refStr + "T00:00:00");
@@ -52,7 +56,7 @@ export default function KoreanAgeTool() {
   const locale = useLocale();
   const t = useTranslations("toolUI.korean-age");
   const today = new Date();
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = ymd(today);
   const [birth, setBirth] = useState("1995-01-15");
   const [ref, setRef] = useState(todayStr);
 

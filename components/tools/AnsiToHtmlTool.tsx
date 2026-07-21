@@ -5,9 +5,70 @@ import { useTranslations } from "next-intl";
 
 const COLORS = ["#000","#cd0000","#00cd00","#cdcd00","#0000ee","#cd00cd","#00cdcd","#e5e5e5","#7f7f7f","#ff0000","#00ff00","#ffff00","#5c5cff","#ff00ff","#00ffff","#ffffff"];
 
+const CUBE = [0, 95, 135, 175, 215, 255];
+
+function xterm256(n: number): string | undefined {
+  if (!Number.isInteger(n) || n < 0 || n > 255) return undefined;
+  if (n < 16) return COLORS[n];
+  if (n < 232) {
+    const i = n - 16;
+    return `rgb(${CUBE[Math.floor(i / 36)]},${CUBE[Math.floor(i / 6) % 6]},${CUBE[i % 6]})`;
+  }
+  const v = 8 + (n - 232) * 10;
+  return `rgb(${v},${v},${v})`;
+}
+
+function rgbOf(n: number): number {
+  return Number.isInteger(n) && n >= 0 && n <= 255 ? n : 0;
+}
+
+type SgrState = { fg?: string; bg?: string; bold?: boolean; italic?: boolean; underline?: boolean };
+
+function applyCodes(state: SgrState, codes: number[]): SgrState {
+  let st: SgrState = { ...state };
+  for (let i = 0; i < codes.length; i++) {
+    const c = codes[i];
+    if (!Number.isFinite(c)) continue;
+    if (c === 0) st = {};
+    else if (c === 1) st.bold = true;
+    else if (c === 3) st.italic = true;
+    else if (c === 4) st.underline = true;
+    else if (c === 22) st.bold = false;
+    else if (c === 23) st.italic = false;
+    else if (c === 24) st.underline = false;
+    else if (c === 38 || c === 48) {
+      // Extended color: consume its parameters so they are not read as SGR codes.
+      const mode = codes[i + 1];
+      let col: string | undefined;
+      if (mode === 5) { col = xterm256(codes[i + 2]); i += 2; }
+      else if (mode === 2) { col = `rgb(${rgbOf(codes[i + 2])},${rgbOf(codes[i + 3])},${rgbOf(codes[i + 4])})`; i += 4; }
+      else { i = codes.length; }
+      if (col) { if (c === 38) st.fg = col; else st.bg = col; }
+    }
+    else if (c === 39) st.fg = undefined;
+    else if (c === 49) st.bg = undefined;
+    else if (c >= 30 && c <= 37) st.fg = COLORS[c - 30];
+    else if (c >= 40 && c <= 47) st.bg = COLORS[c - 40];
+    else if (c >= 90 && c <= 97) st.fg = COLORS[c - 90 + 8];
+    else if (c >= 100 && c <= 107) st.bg = COLORS[c - 100 + 8];
+  }
+  return st;
+}
+
+function styleOf(st: SgrState): string {
+  const styles: string[] = [];
+  if (st.fg) styles.push(`color:${st.fg}`);
+  if (st.bg) styles.push(`background:${st.bg}`);
+  if (st.bold) styles.push("font-weight:bold");
+  if (st.italic) styles.push("font-style:italic");
+  if (st.underline) styles.push("text-decoration:underline");
+  return styles.join(";");
+}
+
 function ansiToHtml(input: string): string {
   let out = '<pre style="background:#000;color:#e5e5e5;padding:1em;font-family:monospace;white-space:pre-wrap">';
   let openSpan = false;
+  let state: SgrState = {};
   // eslint-disable-next-line no-control-regex
   const parts = input.split(/\[([\d;]*)m/);
   for (let i = 0; i < parts.length; i++) {
@@ -15,19 +76,10 @@ function ansiToHtml(input: string): string {
       out += parts[i].replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     } else {
       if (openSpan) { out += "</span>"; openSpan = false; }
-      const codes = parts[i].split(";").map(Number);
-      if (codes.length === 1 && codes[0] === 0) continue;
-      const styles: string[] = [];
-      for (const c of codes) {
-        if (c >= 30 && c <= 37) styles.push(`color:${COLORS[c - 30]}`);
-        else if (c >= 90 && c <= 97) styles.push(`color:${COLORS[c - 90 + 8]}`);
-        else if (c >= 40 && c <= 47) styles.push(`background:${COLORS[c - 40]}`);
-        else if (c === 1) styles.push("font-weight:bold");
-        else if (c === 3) styles.push("font-style:italic");
-        else if (c === 4) styles.push("text-decoration:underline");
-      }
-      if (styles.length) {
-        out += `<span style="${styles.join(";")}">`;
+      state = applyCodes(state, parts[i].split(";").map(Number));
+      const style = styleOf(state);
+      if (style) {
+        out += `<span style="${style}">`;
         openSpan = true;
       }
     }

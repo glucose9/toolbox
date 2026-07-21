@@ -29,7 +29,7 @@ export default function DoiLookupTool() {
     setMeta(null);
     try {
       const q = query.trim().replace(/^https?:\/\/(dx\.)?doi\.org\//, "");
-      const isISBN = /^[0-9-]{10,17}$/.test(q.replace(/\s/g, ""));
+      const isISBN = /^[0-9-]{9,16}[0-9Xx]$/.test(q.replace(/\s/g, ""));
       if (isISBN) {
         const isbn = q.replace(/[^0-9X]/gi, "");
         const r = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
@@ -105,7 +105,15 @@ export default function DoiLookupTool() {
 
   const mla = meta && (() => {
     const list = meta.authors;
-    const a = list.length === 0 ? "" : list.length === 1 ? list[0] : list.length === 2 ? `${list[0]}, and ${list[1]}` : `${list[0]}, et al.`;
+    // MLA 9: 첫 저자만 'Family, Given' 역순, 둘째부터는 정순
+    const natural = (n: string) => {
+      const ix = n.indexOf(",");
+      if (ix < 0) return n.trim();
+      const family = n.slice(0, ix).trim();
+      const given = n.slice(ix + 1).trim();
+      return given ? `${given} ${family}` : family;
+    };
+    const a = list.length === 0 ? "" : list.length === 1 ? list[0] : list.length === 2 ? `${list[0]}, and ${natural(list[1])}` : `${list[0]}, et al.`;
     if (meta.type === "book") return `${a}. ${meta.title}. ${meta.publisher}, ${meta.year}.`;
     return `${a}. "${meta.title}." ${meta.container}, vol. ${meta.volume}, no. ${meta.issue}, ${meta.year}, pp. ${meta.pages}.`;
   })();

@@ -39,7 +39,7 @@ export default function TimeCalcTool() {
     if (mode === "add") v = a + b;
     else if (mode === "sub") v = a - b;
     else v = b - a;
-    const days = Math.floor(v / 86400);
+    const days = Math.trunc(v / 86400);
     return {
       total: v,
       formatted: fmtSec(v),

@@ -442,7 +442,8 @@
       "noDiff": "No differences"
     },
     "number-to-english": {
-      "copy": "Copy"
+      "copy": "Copy",
+      "outOfRange": "Numbers of 10^15 or larger are not supported."
     },
     "rot-all": {
       "copy": "Copy"
@@ -508,7 +509,8 @@
     },
     "text-similarity": {
       "editDistance": "Edit Distance",
-      "similarity": "Similarity"
+      "similarity": "Similarity",
+      "tooLong": "Input is too long. Keep each side under {max} characters."
     },
     "yaml-json": {
       "copy": "Copy",
@@ -726,6 +728,7 @@
       "fracNA": "Cannot express as a fraction (irrational/integer)"
     },
     "text-hex": {
+      "modeAuto": "Auto detect",
       "hexToText": "Hex → Text",
       "textToHex": "Text → Hex (UTF-8)",
       "spaced": "Space separated",
@@ -932,6 +935,7 @@
       "sourceEncoding": "Source encoding",
       "uploadFile": "Upload file",
       "reinterpret": "Reinterpret text",
+      "reinterpretLossy": "This text contains characters that cannot be converted back to bytes (such as �), so it cannot be reinterpreted. Please upload the original file again.",
       "placeholder": "Upload a file or paste garbled text",
       "copy": "Copy",
       "copied": "✓ Copied",
@@ -1265,6 +1269,7 @@
       "rightMm": "Right (mm)",
       "processing": "Processing...",
       "crop": "Crop",
+      "errMarginTooLarge": "The margins add up to more than the page size.",
       "otherFile": "Other file"
     },
     "pdf-extract": {
@@ -1323,7 +1328,8 @@
       "fileSize": "File size",
       "avgBitrate": "Average bitrate",
       "fileType": "File type",
-      "otherFile": "Other file"
+      "otherFile": "Other file",
+      "unknownValue": "Unknown"
     },
     "video-thumbnail": {
       "errCaptureFailed": "Capture failed",
@@ -1795,7 +1801,8 @@
       "qualityLabel": "Quality ({percent}%) — lower means smaller file",
       "download": "Download",
       "otherFile": "Other file",
-      "pngToWebpNote": "PNG doesn't support quality-based compression, so the output is saved as WebP. Transparency is preserved."
+      "pngToWebpNote": "PNG doesn't support quality-based compression, so the output is saved as WebP. Transparency is preserved.",
+      "errLoad": "Could not load this image. Please try another file."
     },
     "images-to-pdf": {
       "errorSelectImage": "Please select image files.",
@@ -1976,6 +1983,7 @@
       "preview": "Preview",
       "result": "Result",
       "emptyPreview": "Enter dimensions and click Apply",
+      "errInvalidSize": "Width and height must be at least 1px.",
       "widthPx": "Width (px)",
       "heightPx": "Height (px)",
       "keepRatio": "Keep aspect ratio",
@@ -2058,7 +2066,8 @@
       "bitrateLabel": "Bitrate (kbps): {n}",
       "bitrateHint": "128kbps = standard, 192kbps = good, 320kbps = best",
       "extracting": "Extracting...",
-      "extract": "Extract to MP3"
+      "extract": "Extract to MP3",
+      "errNoAudio": "This video has no audio track"
     },
     "doi-lookup": {
       "errorIsbnNotFound": "ISBN information not found.",
@@ -2205,6 +2214,7 @@
       "formalOption": "Formal style (일십, 일백, 일천)",
       "contractOption": "Contract style (일금 ~ 원정)",
       "hangulResult": "Hangul notation",
+      "outOfRange": "Only up to 경 (10^16) is supported. Enter a number with 20 or fewer integer digits.",
       "copied": "✓ Copied",
       "copy": "Copy"
     },
@@ -2223,7 +2233,10 @@
       "trimButton": "Trim",
       "otherFile": "Other file",
       "result": "Result",
-      "downloadMp4": "Download MP4"
+      "downloadMp4": "Download MP4",
+      "statusReencoding": "Stream copy failed — retrying with re-encoding (this takes longer)...",
+      "keyframeNotice": "Fast stream copy is used, so the actual cut points snap to the nearest keyframe (up to a few seconds off).",
+      "downloadExt": "Download {ext}"
     },
     "wage-converter": {
       "krw": "KRW",
@@ -3251,7 +3264,8 @@
       "background": "Background:",
       "downloadPng": "Download PNG",
       "downloadSvg": "Download SVG",
-      "invalidInput": "Invalid input."
+      "invalidInput": "Invalid input.",
+      "invalidIsbn": "Invalid ISBN-10 check digit."
     },
     "barcode-reader": {
       "dropOrClick": "Drag or click to upload a barcode image",

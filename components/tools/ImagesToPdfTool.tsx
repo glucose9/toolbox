@@ -58,23 +58,43 @@ export default function ImagesToPdfTool() {
     });
   };
 
-  const convertToPngBytes = (src: string): Promise<Uint8Array> =>
+  // Drawing an <img> to a canvas applies EXIF orientation, so this doubles as the
+  // orientation-correcting path for JPEGs that pdf-lib would otherwise embed as-is.
+  const reencode = (src: string, type: "image/png" | "image/jpeg"): Promise<Uint8Array> =>
     new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
         const c = document.createElement("canvas");
         c.width = img.naturalWidth;
         c.height = img.naturalHeight;
-        c.getContext("2d")!.drawImage(img, 0, 0);
-        c.toBlob(async (blob) => {
-          if (!blob) return reject(new Error(t("errorPngConvert")));
-          const ab = await blob.arrayBuffer();
-          resolve(new Uint8Array(ab));
-        }, "image/png");
+        const cx = c.getContext("2d")!;
+        if (type === "image/jpeg") {
+          cx.fillStyle = "#ffffff";
+          cx.fillRect(0, 0, c.width, c.height);
+        }
+        cx.drawImage(img, 0, 0);
+        c.toBlob(
+          async (blob) => {
+            if (!blob) return reject(new Error(t("errorPngConvert")));
+            const ab = await blob.arrayBuffer();
+            resolve(new Uint8Array(ab));
+          },
+          type,
+          type === "image/jpeg" ? 0.92 : undefined
+        );
       };
       img.onerror = () => reject(new Error(t("errorImageLoad")));
       img.src = src;
     });
+
+  const jpegOrientation = async (f: File): Promise<number> => {
+    try {
+      const exifr = (await import("exifr")).default;
+      return (await exifr.orientation(f)) ?? 1;
+    } catch {
+      return 1;
+    }
+  };
 
   const convert = async () => {
     if (items.length === 0) return;
@@ -90,18 +110,24 @@ export default function ImagesToPdfTool() {
         if (isPng) {
           embedded = await doc.embedPng(bytes);
         } else if (it.file.type === "image/jpeg" || /\.jpe?g$/i.test(it.file.name)) {
-          embedded = await doc.embedJpg(bytes);
+          // pdf-lib ignores EXIF Orientation, so re-encode only rotated/flipped
+          // photos through the canvas (which applies it) and keep the rest lossless.
+          const orientation = await jpegOrientation(it.file);
+          embedded = await doc.embedJpg(orientation > 1 ? await reencode(it.src, "image/jpeg") : bytes);
         } else {
-          const png = await convertToPngBytes(it.src);
+          const png = await reencode(it.src, "image/png");
           embedded = await doc.embedPng(png);
         }
 
-        let w = embedded.width;
-        let h = embedded.height;
+        const w = embedded.width;
+        const h = embedded.height;
         const targetDims = pageSize === "auto" ? [w, h] : PAGE_DIMS[pageSize];
         const page = doc.addPage(targetDims as [number, number]);
-        const usableW = page.getWidth() - margin * 2;
-        const usableH = page.getHeight() - margin * 2;
+        // Clamp so an oversized margin can never make the usable area negative
+        // (which would flip the image through a negative scale).
+        const m = Math.min(margin, page.getWidth() * 0.45, page.getHeight() * 0.45);
+        const usableW = page.getWidth() - m * 2;
+        const usableH = page.getHeight() - m * 2;
         const scale = Math.min(usableW / w, usableH / h, 1);
         const drawW = w * scale;
         const drawH = h * scale;

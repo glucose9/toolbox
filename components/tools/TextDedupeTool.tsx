@@ -14,9 +14,12 @@ export default function TextDedupeTool() {
   const lines = text ? text.split(/\r?\n/) : [];
   const seen = new Set<string>();
   let removed = 0;
-  const result = lines
+  const keptLines = lines
     .filter((line) => {
-      if (removeEmpty && line.trim() === "") return false;
+      if (removeEmpty && line.trim() === "") {
+        removed++;
+        return false;
+      }
       let key = line;
       if (ignoreCase) key = key.toLowerCase();
       if (ignoreSpace) key = key.replace(/\s+/g, "");
@@ -26,8 +29,8 @@ export default function TextDedupeTool() {
       }
       seen.add(key);
       return true;
-    })
-    .join("\n");
+    });
+  const result = keptLines.join("\n");
 
   const copy = async () => {
     if (!result) return;
@@ -64,7 +67,7 @@ export default function TextDedupeTool() {
         className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono"
       />
       <div className="text-xs text-muted">
-        {t("stats", { total: lines.length, unique: lines.length - removed, removed })}
+        {t("stats", { total: lines.length, unique: keptLines.length, removed })}
       </div>
       <button onClick={copy} disabled={!result} className="btn btn-primary disabled:opacity-50">
         {copied ? t("copied") : t("copy")}

@@ -21,7 +21,7 @@ export default function VideoTrimTool() {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
   const [progress, setProgress] = useState(0);
-  const [output, setOutput] = useState<{ url: string; size: number } | null>(null);
+  const [output, setOutput] = useState<{ url: string; size: number; ext: string } | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const fileUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
@@ -57,8 +57,8 @@ export default function VideoTrimTool() {
       setStatus(t("statusLoading"));
       await ff.writeFile(inputName, await ffmpegFetchFile(file));
       setStatus(t("statusTrimming", { start: fmtTime(start), end: fmtTime(end) }));
-      const outName = `out_${Date.now()}.mp4`;
-      await ff.exec([
+      let outName = `out_${Date.now()}.${ext === "webm" ? "webm" : "mp4"}`;
+      const ret = await ff.exec([
         "-y",
         "-ss", String(start),
         "-to", String(end),
@@ -66,10 +66,29 @@ export default function VideoTrimTool() {
         "-c", "copy",
         outName,
       ]);
+      if (ret !== 0) {
+        // stream copy can fail when the source codec has no mp4 container tag (e.g. VP8)
+        try { await ff.deleteFile(outName); } catch {}
+        outName = `out_${Date.now()}_re.mp4`;
+        setStatus(t("statusReencoding"));
+        await ff.exec([
+          "-y",
+          "-ss", String(start),
+          "-to", String(end),
+          "-i", inputName,
+          "-c:v", "libx264",
+          "-preset", "veryfast",
+          "-crf", "23",
+          "-c:a", "aac",
+          "-b:a", "128k",
+          outName,
+        ]);
+      }
+      const outExt = outName.endsWith(".webm") ? "webm" : "mp4";
       const data = (await ff.readFile(outName)) as Uint8Array;
       try { await ff.deleteFile(outName); } catch {}
-      const blob = new Blob([data as BlobPart], { type: "video/mp4" });
-      setOutput({ url: URL.createObjectURL(blob), size: blob.size });
+      const blob = new Blob([data as BlobPart], { type: `video/${outExt}` });
+      setOutput({ url: URL.createObjectURL(blob), size: blob.size, ext: outExt });
       setStatus(t("statusDone"));
     } catch (e) {
       setStatus(t("statusFailed") + ": " + (e as Error).message);
@@ -82,7 +101,7 @@ export default function VideoTrimTool() {
     if (!output || !file) return;
     const a = document.createElement("a");
     a.href = output.url;
-    a.download = file.name.replace(/\.[^.]+$/, "") + "-trimmed.mp4";
+    a.download = file.name.replace(/\.[^.]+$/, "") + "-trimmed." + output.ext;
     a.click();
   };
 
@@ -146,6 +165,7 @@ export default function VideoTrimTool() {
                 />
               </div>
               <div className="text-sm text-gray-600" dangerouslySetInnerHTML={{ __html: t("trimLength", { trim: fmtTime(end - start), total: fmtTime(duration) }) }} />
+              <div className="text-xs text-gray-500">{t("keyframeNotice")}</div>
             </>
           )}
 
@@ -164,7 +184,7 @@ export default function VideoTrimTool() {
             <div>
               <div className="text-sm font-medium mb-2">{t("result")} ({fmtBytes(output.size)})</div>
               <video src={output.url} controls className="w-full max-h-60 rounded border border-gray-200" />
-              <button onClick={download} className="btn btn-primary mt-3">{t("downloadMp4")}</button>
+              <button onClick={download} className="btn btn-primary mt-3">{t("downloadExt", { ext: output.ext.toUpperCase() })}</button>
             </div>
           )}
         </div>

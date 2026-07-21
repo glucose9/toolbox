@@ -17,6 +17,12 @@ export default function PomodoroTool() {
   const [cyclesDone, setCyclesDone] = useState(0);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef<number | null>(null);
+  const remainingRef = useRef(remaining);
+
+  // must stay declared before the timer effect so the deadline is rebuilt from a fresh value
+  useEffect(() => {
+    remainingRef.current = remaining;
+  });
 
   useEffect(() => {
     if (phase === "idle") setRemaining(workMin * 60);
@@ -24,32 +30,37 @@ export default function PomodoroTool() {
 
   useEffect(() => {
     if (!running) return;
-    intervalRef.current = window.setInterval(() => {
-      setRemaining((r) => {
-        if (r <= 1) {
-          if (intervalRef.current) clearInterval(intervalRef.current);
-          if (phase === "work") {
-            const newCount = cyclesDone + 1;
-            setCyclesDone(newCount);
-            playSound();
-            if (newCount % cyclesUntilLong === 0) {
-              setPhase("longBreak");
-              return longBreakMin * 60;
-            } else {
-              setPhase("break");
-              return breakMin * 60;
-            }
-          } else {
-            playSound();
-            setPhase("work");
-            return workMin * 60;
-          }
+    // wall-clock deadline: background tabs throttle interval ticks to ~1/min
+    const deadline = Date.now() + remainingRef.current * 1000;
+    const tick = () => {
+      const left = Math.max(0, Math.round((deadline - Date.now()) / 1000));
+      if (left > 0) {
+        setRemaining(left);
+        return;
+      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (phase === "work") {
+        const newCount = cyclesDone + 1;
+        setCyclesDone(newCount);
+        playSound();
+        if (newCount % cyclesUntilLong === 0) {
+          setPhase("longBreak");
+          setRemaining(longBreakMin * 60);
+        } else {
+          setPhase("break");
+          setRemaining(breakMin * 60);
         }
-        return r - 1;
-      });
-    }, 1000);
+      } else {
+        playSound();
+        setPhase("work");
+        setRemaining(workMin * 60);
+      }
+    };
+    intervalRef.current = window.setInterval(tick, 1000);
+    document.addEventListener("visibilitychange", tick);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      document.removeEventListener("visibilitychange", tick);
     };
   }, [running, phase, cyclesDone, cyclesUntilLong, workMin, breakMin, longBreakMin]);
 

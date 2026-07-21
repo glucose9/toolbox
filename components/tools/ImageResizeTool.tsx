@@ -10,6 +10,7 @@ export default function ImageResizeTool() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [keepRatio, setKeepRatio] = useState(true);
+  const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (file: File) => {
@@ -27,18 +28,23 @@ export default function ImageResizeTool() {
   const updateWidth = (w: number) => {
     setWidth(w);
     if (keepRatio && input) {
-      setHeight(Math.round((w * input.h) / input.w));
+      setHeight(Math.max(1, Math.round((w * input.h) / input.w)));
     }
   };
   const updateHeight = (h: number) => {
     setHeight(h);
     if (keepRatio && input) {
-      setWidth(Math.round((h * input.w) / input.h));
+      setWidth(Math.max(1, Math.round((h * input.w) / input.h)));
     }
   };
 
   const resize = () => {
     if (!input) return;
+    if (!(width >= 1) || !(height >= 1)) {
+      setError(t("errInvalidSize"));
+      return;
+    }
+    setError("");
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement("canvas");
@@ -137,6 +143,8 @@ export default function ImageResizeTool() {
             <input type="checkbox" checked={keepRatio} onChange={(e) => setKeepRatio(e.target.checked)} />
             {t("keepRatio")}
           </label>
+
+          {error && <div className="text-sm text-red-600">{error}</div>}
 
           <div className="flex gap-2">
             <button onClick={resize} className="btn btn-primary">{t("apply")}</button>

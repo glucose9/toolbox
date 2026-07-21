@@ -50,7 +50,7 @@ export default function BackgroundRemoverTool() {
   return (
     <div className="card space-y-4">
       <div
-        onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]); }}
+        onDrop={(e) => { e.preventDefault(); if (busy) return; if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]); }}
         onDragOver={(e) => e.preventDefault()}
         onClick={() => !busy && inputRef.current?.click()}
         className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-8 text-center cursor-pointer hover:border-brand-500 transition-colors"

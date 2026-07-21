@@ -5,13 +5,14 @@ import { useTranslations } from "next-intl";
 function parse(ua: string) {
   const browsers = [
     { name: "Edge", re: /Edg\/([\d.]+)/ },
+    { name: "Opera", re: /OPR\/([\d.]+)/ },
     { name: "Chrome", re: /Chrome\/([\d.]+)/ },
     { name: "Firefox", re: /Firefox\/([\d.]+)/ },
     { name: "Safari", re: /Version\/([\d.]+).*Safari/ },
-    { name: "Opera", re: /OPR\/([\d.]+)/ },
   ];
   const oss = [
-    { name: "Windows 11", re: /Windows NT 10.0/ },
+    // Windows 10 and 11 both report "Windows NT 10.0" (UA freeze).
+    { name: "Windows 10/11", re: /Windows NT 10.0/ },
     { name: "macOS", re: /Mac OS X ([\d_]+)/ },
     { name: "Android", re: /Android ([\d.]+)/ },
     { name: "iOS", re: /OS ([\d_]+) like Mac/ },

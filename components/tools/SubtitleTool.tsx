@@ -31,9 +31,9 @@ function parseSrtOrVtt(text: string): Cue[] {
   for (const block of blocks) {
     const lines = block.trim().split(/\n/);
     if (lines.length < 2) continue;
-    let timeIdx = 0;
-    // First line might be an index number
-    if (/^\d+$/.test(lines[0].trim())) timeIdx = 1;
+    // Lines before the timing line are an SRT index or a VTT cue identifier
+    const timeIdx = lines.findIndex((l) => l.includes("-->"));
+    if (timeIdx === -1) continue;
     const timeLine = lines[timeIdx];
     const m = timeLine.match(/(.+)\s+-->\s+(.+)/);
     if (!m) continue;

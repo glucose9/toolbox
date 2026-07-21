@@ -46,6 +46,7 @@ export default function VideoCompressTool() {
         "-y",
         "-i", inputName,
         "-vcodec", "libx264",
+        "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2",
         "-crf", String(crf),
         "-preset", "veryfast",
         "-acodec", "aac",

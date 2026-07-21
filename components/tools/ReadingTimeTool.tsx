@@ -6,8 +6,9 @@ import { useTranslations } from "next-intl";
 export default function ReadingTimeTool() {
   const t = useTranslations("toolUI.reading-time");
   const fmtTime = (seconds: number): string => {
-    const m = Math.floor(seconds / 60);
-    const s = Math.round(seconds % 60);
+    const total = Math.round(seconds);
+    const m = Math.floor(total / 60);
+    const s = total % 60;
     if (m === 0) return t("secOnly", { sec: s });
     return t("minSec", { min: m, sec: s });
   };

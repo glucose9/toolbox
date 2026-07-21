@@ -442,7 +442,8 @@
       "noDiff": "无差异"
     },
     "number-to-english": {
-      "copy": "复制"
+      "copy": "复制",
+      "outOfRange": "不支持 10^15 及以上的数字。"
     },
     "rot-all": {
       "copy": "复制"
@@ -508,7 +509,8 @@
     },
     "text-similarity": {
       "editDistance": "编辑距离",
-      "similarity": "相似度"
+      "similarity": "相似度",
+      "tooLong": "输入过长。请将每侧控制在 {max} 个字符以内。"
     },
     "yaml-json": {
       "copy": "复制",
@@ -726,6 +728,7 @@
       "fracNA": "无法表示为分数（无理数/整数）"
     },
     "text-hex": {
+      "modeAuto": "自动检测",
       "hexToText": "十六进制 → 文本",
       "textToHex": "文本 → 十六进制 (UTF-8)",
       "spaced": "空格分隔",
@@ -932,6 +935,7 @@
       "sourceEncoding": "源编码",
       "uploadFile": "上传文件",
       "reinterpret": "重新解释文本",
+      "reinterpretLossy": "此文本包含无法还原为字节的字符（如 �），无法重新解释。请重新上传原始文件。",
       "placeholder": "上传文件或粘贴乱码文本",
       "copy": "复制",
       "copied": "✓ 已复制",
@@ -1265,6 +1269,7 @@
       "rightMm": "右侧 (mm)",
       "processing": "处理中...",
       "crop": "裁剪",
+      "errMarginTooLarge": "边距总和超过了页面尺寸。",
       "otherFile": "其他文件"
     },
     "pdf-extract": {
@@ -1323,7 +1328,8 @@
       "fileSize": "文件大小",
       "avgBitrate": "平均码率",
       "fileType": "文件类型",
-      "otherFile": "其他文件"
+      "otherFile": "其他文件",
+      "unknownValue": "未知"
     },
     "video-thumbnail": {
       "errCaptureFailed": "捕获失败",
@@ -1795,7 +1801,8 @@
       "qualityLabel": "画质 ({percent}%) — 越低越小",
       "download": "下载",
       "otherFile": "其他文件",
-      "pngToWebpNote": "PNG 不支持按质量压缩，因此输出将保存为 WebP 格式。透明度保持不变。"
+      "pngToWebpNote": "PNG 不支持按质量压缩，因此输出将保存为 WebP 格式。透明度保持不变。",
+      "errLoad": "无法加载该图片，请换一个文件。"
     },
     "images-to-pdf": {
       "errorSelectImage": "请选择图片文件。",
@@ -1976,6 +1983,7 @@
       "preview": "预览",
       "result": "结果",
       "emptyPreview": "输入尺寸后点击应用",
+      "errInvalidSize": "宽度和高度必须至少为 1px。",
       "widthPx": "宽 (px)",
       "heightPx": "高 (px)",
       "keepRatio": "保持比例",
@@ -2058,7 +2066,8 @@
       "bitrateLabel": "音质 (kbps): {n}",
       "bitrateHint": "128kbps = 普通，192kbps = 良好，320kbps = 最佳",
       "extracting": "提取中...",
-      "extract": "提取为 MP3"
+      "extract": "提取为 MP3",
+      "errNoAudio": "此视频没有音频轨道"
     },
     "doi-lookup": {
       "errorIsbnNotFound": "未找到 ISBN 信息。",
@@ -2205,6 +2214,7 @@
       "formalOption": "正式写法 (일십, 일백, 일천)",
       "contractOption": "合同写法 (일금 ~ 원정)",
       "hangulResult": "韩文写法",
+      "outOfRange": "仅支持到 경(10^16) 单位。请输入整数部分不超过 20 位的数字。",
       "copied": "✓ 已复制",
       "copy": "复制"
     },
@@ -2223,7 +2233,10 @@
       "trimButton": "裁剪",
       "otherFile": "其他文件",
       "result": "结果",
-      "downloadMp4": "下载 MP4"
+      "downloadMp4": "下载 MP4",
+      "statusReencoding": "流复制失败 — 正在使用重新编码重试（需要较长时间）...",
+      "keyframeNotice": "采用快速流复制，实际起止位置会对齐到最近的关键帧（最多相差几秒）。",
+      "downloadExt": "下载 {ext}"
     },
     "wage-converter": {
       "krw": "韩元",
@@ -3251,7 +3264,8 @@
       "background": "背景:",
       "downloadPng": "下载PNG",
       "downloadSvg": "下载SVG",
-      "invalidInput": "输入无效。"
+      "invalidInput": "输入无效。",
+      "invalidIsbn": "ISBN-10 校验位不正确。"
     },
     "barcode-reader": {
       "dropOrClick": "拖放或点击上传条码图片",

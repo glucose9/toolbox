@@ -113,7 +113,7 @@ export default function MdToPdfTool() {
 
       let canvas: HTMLCanvasElement;
       try {
-        canvas = await html2canvas(wrap, { backgroundColor: "#ffffff", scale: 2 });
+        canvas = await html2canvas(wrap, { backgroundColor: "#ffffff", scale: 2, useCORS: true });
       } finally {
         document.body.removeChild(wrap);
       }

@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, degrees } from "pdf-lib";
 import { useTranslations } from "next-intl";
 import { downloadBlob, isPdfFile, readBytes } from "@/lib/pdf";
 
@@ -30,13 +30,27 @@ export default function PdfNUpTool() {
         for (let j = 0; j < perPage && i + j < total; j++) {
           const srcPage = pages[i + j];
           const { width, height } = srcPage.getSize();
+          // embedPage ignores the source page's /Rotate, so bake it in here:
+          // swap the on-screen dimensions and rotate the drawn content back.
+          const rot = ((srcPage.getRotation().angle % 360) + 360) % 360;
+          const swap = rot === 90 || rot === 270;
+          const effW = swap ? height : width;
+          const effH = swap ? width : height;
           const embedded = await out.embedPage(srcPage);
           const r = Math.floor(j / cols), col = j % cols;
-          const scale = Math.min(cellW / width, cellH / height) * 0.95;
-          const w = width * scale, h = height * scale;
+          const scale = Math.min(cellW / effW, cellH / effH) * 0.95;
+          const w = effW * scale, h = effH * scale;
           const x = col * cellW + (cellW - w) / 2;
           const y = A4[1] - (r + 1) * cellH + (cellH - h) / 2;
-          page.drawPage(embedded, { x, y, width: w, height: h });
+          const ax = rot === 180 || rot === 270 ? x + w : x;
+          const ay = rot === 90 || rot === 180 ? y + h : y;
+          page.drawPage(embedded, {
+            x: ax,
+            y: ay,
+            width: width * scale,
+            height: height * scale,
+            rotate: degrees(-rot),
+          });
         }
       }
       const result = await out.save();

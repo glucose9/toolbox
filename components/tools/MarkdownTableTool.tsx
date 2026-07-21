@@ -7,8 +7,10 @@ type Align = "left" | "center" | "right";
 
 function buildMd(headers: string[], rows: string[][], aligns: Align[]): string {
   if (headers.length === 0) return "";
-  const w = headers.map((h, i) => Math.max(3, h.length, ...rows.map((r) => (r[i] || "").length)));
-  const fmt = (s: string, i: number) => " " + (s || "").padEnd(w[i], " ") + " ";
+  // GFM treats a bare "|" inside a cell as a column separator — escape it.
+  const esc = (s: string) => (s || "").replace(/\|/g, "\\|").replace(/[\r\n]+/g, "<br>");
+  const w = headers.map((h, i) => Math.max(3, esc(h).length, ...rows.map((r) => esc(r[i] || "").length)));
+  const fmt = (s: string, i: number) => " " + esc(s).padEnd(w[i], " ") + " ";
   const sep = aligns.map((a, i) => {
     const dash = "-".repeat(w[i]);
     if (a === "center") return ":" + dash.slice(0, -1) + ":";

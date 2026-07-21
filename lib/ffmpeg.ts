@@ -23,7 +23,10 @@ export async function getFFmpeg(onProgress?: (msg: string) => void): Promise<FFm
     cached = f;
     onProgress?.("ffmpeg.wasm 로드 완료");
     return f;
-  })();
+  })().catch((e) => {
+    loading = null;
+    throw e;
+  });
   return loading;
 }
 

@@ -14,6 +14,7 @@ export default function HtmlToMarkdownTool() {
     try {
       const TurndownService = (await import("turndown")).default;
       const ts = new TurndownService({ headingStyle: "atx", codeBlockStyle: "fenced" });
+      ts.remove(["script", "style", "noscript"]);
       setMd(ts.turndown(html));
     } finally { setBusy(false); }
   };

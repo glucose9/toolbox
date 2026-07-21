@@ -67,6 +67,10 @@ export default function TxtToPdfTool() {
         wrap.style.wordBreak = "break-word";
         wrap.textContent = text;
         document.body.appendChild(wrap);
+        // Line box height as actually laid out, so page breaks can snap to the text
+        // grid instead of slicing horizontally through the middle of a line.
+        const cssLineHeight =
+          parseFloat(getComputedStyle(wrap).lineHeight) || fontSize * (96 / 72) * lineHeight;
 
         let canvas: HTMLCanvasElement;
         try {
@@ -77,32 +81,32 @@ export default function TxtToPdfTool() {
 
         const pdf = new jsPDF({ orientation, unit: "mm", format: "a4", compress: true });
         const renderPxPerMm = canvas.width / pageW;
+        const renderScale = canvas.width / widthPx;
         const pageHeightPx = Math.floor(pageH * renderPxPerMm);
+        const lineH = cssLineHeight * renderScale;
+        const gridOrigin = paddingPx * renderScale;
         let yOffset = 0;
         let pageIndex = 0;
-        while (yOffset < canvas.height) {
-          const sliceHeight = Math.min(pageHeightPx, canvas.height - yOffset);
+        while (yOffset < canvas.height - 0.5) {
+          const remaining = canvas.height - yOffset;
+          let sliceHeight = Math.min(pageHeightPx, remaining);
+          if (sliceHeight < remaining && lineH >= 1) {
+            const boundary = gridOrigin + Math.floor((yOffset + sliceHeight - gridOrigin) / lineH) * lineH;
+            if (boundary - yOffset >= lineH) sliceHeight = boundary - yOffset;
+          }
+          const sy = Math.round(yOffset);
+          const sh = Math.min(Math.max(1, Math.round(sliceHeight)), canvas.height - sy);
           const pageCanvas = document.createElement("canvas");
           pageCanvas.width = canvas.width;
-          pageCanvas.height = sliceHeight;
+          pageCanvas.height = sh;
           const ctx = pageCanvas.getContext("2d");
           if (!ctx) break;
           ctx.fillStyle = "#ffffff";
           ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-          ctx.drawImage(
-            canvas,
-            0,
-            yOffset,
-            canvas.width,
-            sliceHeight,
-            0,
-            0,
-            canvas.width,
-            sliceHeight
-          );
+          ctx.drawImage(canvas, 0, sy, canvas.width, sh, 0, 0, canvas.width, sh);
           const img = pageCanvas.toDataURL("image/jpeg", 0.92);
           if (pageIndex > 0) pdf.addPage("a4", orientation);
-          const mmHeight = sliceHeight / renderPxPerMm;
+          const mmHeight = sh / renderPxPerMm;
           pdf.addImage(img, "JPEG", 0, 0, pageW, mmHeight);
           yOffset += sliceHeight;
           pageIndex++;

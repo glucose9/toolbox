@@ -60,14 +60,15 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
           "BEGIN:VCARD",
           "VERSION:3.0",
           `FN:${escapeVcard(values.name)}`,
+          `N:${escapeVcard(values.name)};;;;`,
           values.org && `ORG:${escapeVcard(values.org)}`,
           values.title && `TITLE:${escapeVcard(values.title)}`,
-          values.phone && `TEL;TYPE=CELL:${values.phone}`,
-          values.email && `EMAIL:${values.email}`,
-          values.website && `URL:${values.website}`,
+          values.phone && `TEL;TYPE=CELL:${escapeVcard(values.phone)}`,
+          values.email && `EMAIL:${escapeVcard(values.email)}`,
+          values.website && `URL:${escapeVcard(values.website)}`,
           "END:VCARD",
         ].filter(Boolean) as string[];
-        return lines.join("\n");
+        return lines.join("\r\n");
       }
     }
   }, [tab, values]);
