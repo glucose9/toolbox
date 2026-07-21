@@ -574,8 +574,8 @@
     ],
     "faq": [
       {
-        "q": "Does it extract text from tables?",
-        "a": "Yes. Table cells, headers/footers, and footnotes are all extracted."
+        "q": "Is text inside tables extracted too?",
+        "a": "No. Only body paragraph text is extracted right now. Text inside table cells, headers/footers, footnotes, and text boxes is skipped because the HWP parser library in use does not expose a way to read it. If you need table contents, convert with the [HWP → PDF] tool and then run [PDF text extract], or use “Save As → Text Document” in Hancom Office."
       },
       {
         "q": "What about images or shapes?",
@@ -739,8 +739,8 @@
         "a": "EVs have no engine displacement, so a flat 130,000 won/year applies regardless of model. It's an eco-friendly vehicle benefit."
       },
       {
-        "q": "How long does the 50% hybrid reduction last?",
-        "a": "The 50% hybrid reduction is in effect as of 2026. Policies can change — check with your local government for updates."
+        "q": "Do hybrids get an annual vehicle tax discount?",
+        "a": "No. A hybrid passenger car's annual ownership tax is assessed on engine displacement exactly like a gasoline car. Hybrid/EV incentives apply to other items such as acquisition tax, not to the annual vehicle tax. EVs have no displacement, so they pay a flat 100,000 KRW per year (130,000 KRW including education tax) for non-commercial passenger use."
       },
       {
         "q": "Why is the business-use rate lower?",
@@ -905,7 +905,7 @@
   },
   "pdf-unlock": {
     "h1": "PDF Unlock",
-    "description": "Unlock password-protected PDFs (PDFs you own or have rights to). Removes edit/print/copy restrictions; supplying the correct password unlocks open-restricted files.",
+    "description": "Check whether a PDF is password-protected, right in your browser. Browser PDF libraries cannot decrypt files, so removing a password is not possible here — encrypted files are reported as such. PDFs without a password can be re-saved in a standard form to clean up viewer errors.",
     "metaDescription": "Free PDF unlock. Open password-locked PDFs, pdf-lib based, processed in your browser.",
     "howTo": [
       "Upload a locked PDF file.",
@@ -915,16 +915,16 @@
     ],
     "faq": [
       {
-        "q": "Can I unlock without the password?",
-        "a": "PDFs with only edit/print/copy restrictions (owner password) can sometimes be bypassed, but user passwords that block opening require the actual password."
+        "q": "Can this remove a PDF password?",
+        "a": "No. The browser PDF library (pdf-lib) does not support decryption. It used to produce a file that looked unlocked but was actually corrupt, so now encryption is detected and reported honestly. To truly remove a password, use Adobe Acrobat, Hancom Office, or a similar desktop application with the correct password."
       },
       {
         "q": "Does it support brute-force cracking?",
         "a": "No. This tool doesn't crack passwords. It's intended for legitimate unlocking of PDFs you own."
       },
       {
-        "q": "What about AES-256 strong encryption?",
-        "a": "The pdf-lib library has limits, so some strong encryption can't be processed. Use Hancom Office or Adobe Acrobat's built-in unlock feature for those."
+        "q": "Then what is this tool for?",
+        "a": "(1) To check whether a PDF you received is encrypted or permission-restricted, and (2) to re-save a non-encrypted PDF in a standard form, which can clear up open errors in some viewers. If you need to remove a password, use a desktop application."
       },
       {
         "q": "Is this legal?",
