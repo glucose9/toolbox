@@ -6145,8 +6145,10 @@
     "description": "Calculates the pure alcohol in grams for each drink and converts it into equivalent glasses of other drinks. Shows standard-drink counts (Korea 7g, WHO 10g, UK 8g, US 14g) and compares against low-risk drinking limits. Glass sizes follow Korea's National Forensic Service guideline; ABV can be entered manually.",
     "metaDescription": "Free alcohol converter. Soju ↔ beer ↔ wine, strength and total volume.",
     "howTo": [
-      "Pick a reference drink and number of glasses.",
-      "See equivalents in other drinks."
+      "Pick what you drank and how many glasses. Use \"Enter ABV and volume\" when the product's strength differs.",
+      "Pure alcohol is calculated in grams and converted into standard drinks under the Korean, WHO, UK and US definitions.",
+      "Choose a sex to see the result as a percentage of the low-risk amount per occasion (40g men, 20g women).",
+      "Check the list below for how many glasses of other drinks carry the same alcohol."
     ],
     "faq": [
       {
