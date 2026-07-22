@@ -6142,7 +6142,7 @@
   },
   "alcohol-converter": {
     "h1": "Alcohol Strength & Volume Converter",
-    "description": "Convert alcohol amounts across drink types — soju, beer, wine, whiskey, and more — for equivalent comparison. Useful for gauging your limit at hweshik, calculating sober-up time, and comparing drinks.",
+    "description": "Calculates the pure alcohol in grams for each drink and converts it into equivalent glasses of other drinks. Shows standard-drink counts (Korea 7g, WHO 10g, UK 8g, US 14g) and compares against low-risk drinking limits. Glass sizes follow Korea's National Forensic Service guideline; ABV can be entered manually.",
     "metaDescription": "Free alcohol converter. Soju ↔ beer ↔ wine, strength and total volume.",
     "howTo": [
       "Pick a reference drink and number of glasses.",
@@ -6150,28 +6150,36 @@
     ],
     "faq": [
       {
-        "q": "Can I drive after?",
-        "a": "Korea's legal limit is BAC 0.03%. Even one drink (a shot of soju or 200ml beer) is risky — don't drink and drive."
+        "q": "Why measure alcohol in grams instead of millilitres?",
+        "a": "Volumes aren't comparable across drinks with different strengths. WHO and national health authorities all express alcohol intake in grams. The formula is volume(ml) × ABV(%) ÷ 100 × 0.789 (ethanol density) — the same 0.789 used in Korea's National Forensic Service guideline."
       },
       {
-        "q": "Same alcohol in a shot of soju and a glass of beer?",
-        "a": "Soju 50ml at 17% ≈ 8.5g alcohol. Beer 200ml at 5% ≈ 10g. Roughly equal. A 500ml draft = about 3 shots of soju."
+        "q": "Does a shot of soju contain the same alcohol as a glass of beer?",
+        "a": "Almost. A soju shot (48ml, 15.7%) is about 5.9g of pure alcohol; a beer glass (168ml, 4.5%) is about 6.0g. A 500cc draft glass actually holds 425ml, so it is about 15.1g — roughly 2.5 shots of soju."
       },
       {
-        "q": "How long until I'm sober?",
-        "a": "Adult males metabolize ~0.015% BAC per hour. From 0.05%, ~3 hours to 0%. Varies by person and whether you ate."
+        "q": "Why is a soju shot 48ml rather than 50ml?",
+        "a": "Korea's National Forensic Service BAC guideline (2024) puts the soju glass capacity at 62.5ml and the amount actually poured at 48ml. The familiar 50ml is a rounded figure closer to glass size. This tool uses actual pour amounts: soju 48ml, beer glass 168ml, 500cc draft glass 425ml."
       },
       {
-        "q": "Bottle of wine = how much soju?",
-        "a": "Wine 750ml at 12% ≈ 90g alcohol. Soju bottle (360ml, 17%) ≈ 60g. One wine bottle ≈ 1.5 soju bottles."
+        "q": "Does a standard drink differ by country?",
+        "a": "Yes. One standard drink is 7g of pure alcohol in Korea, 10g under WHO, 8g in the UK (one unit) and 14g in the US. The same drink yields different counts depending on the standard, so this tool shows all four."
       },
       {
-        "q": "Makgeolli, sake, whiskey too?",
-        "a": "Supports makgeolli (6%), cheongju (15%), sake (15%), whiskey (40%), vodka (40%), and other major types."
+        "q": "How much is considered low risk?",
+        "a": "The Korea Health Promotion Institute recommends no more than 40g of pure alcohol per occasion for men and 20g for women. Note that Korea's national cancer prevention guideline was revised in 2016 to advise avoiding even one or two drinks a day. If your face flushes when drinking, you likely lack the enzyme that breaks alcohol down and should halve these limits or abstain."
       },
       {
-        "q": "Does it estimate blood alcohol?",
-        "a": "Rough estimates by body weight and gender are possible, but a breathalyzer is the only accurate measure. Never drink and drive."
+        "q": "My bottle has a different ABV.",
+        "a": "Tap \"Enter ABV and volume\" to type the actual strength and glass size. Soju alone ranges from 15.7% (Chamisul Fresh) to 16.0% (Chum Churum) to 20.1% (original), and drinks like highballs have no standard strength at all."
+      },
+      {
+        "q": "Does it estimate blood alcohol concentration or sober-up time?",
+        "a": "No. This tool only calculates how much alcohol you drank; it does not estimate blood alcohol concentration. BAC depends heavily on body water, metabolism, food and elapsed time, and Korea's forensic guideline forbids applying its formula within 1.5 hours of the last drink or below 0.02%. Only a breathalyser or blood test can tell you the real figure, and no calculation may be used to decide whether you can drive."
+      },
+      {
+        "q": "How many bottles of soju equal a bottle of wine?",
+        "a": "A 750ml bottle of wine at 12% contains about 71g of pure alcohol; a 360ml bottle of soju at 15.7% contains about 44.6g. So one bottle of wine is roughly 1.6 bottles of soju."
       }
     ]
   },
