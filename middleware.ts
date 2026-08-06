@@ -36,5 +36,11 @@ export default function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+  // Exclude Next.js metadata routes (icon / apple-icon / opengraph-image /
+  // twitter-image) so next-intl's locale routing doesn't swallow them into a
+  // 404. These have no file extension, so the `.*\\..*` guard (which covers
+  // robots.txt / sitemap.xml) misses them and they must be listed explicitly.
+  // `.*opengraph-image` / `.*twitter-image` also cover the per-tool image
+  // routes under /[locale]/tools/[slug]/…
+  matcher: ["/((?!api|_next|_vercel|icon|apple-icon|.*opengraph-image|.*twitter-image|.*\\..*).*)"],
 };
