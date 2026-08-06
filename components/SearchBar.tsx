@@ -43,18 +43,30 @@ export default function SearchBar() {
 
   const results = useMemo(() => searchTools(index, query, 20, 6), [query, index]);
 
+  const listboxId = "searchbar-results";
+
   return (
-    <div ref={wrapperRef} className="relative w-full max-w-sm">
+    <div ref={wrapperRef} role="search" className="relative w-full max-w-sm">
       <input
         type="text"
         placeholder={t("nav.search")}
+        aria-label={t("nav.search")}
+        role="combobox"
+        aria-expanded={open}
+        aria-controls={open ? listboxId : undefined}
+        aria-autocomplete="list"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => setOpen(true)}
         className="input text-sm py-1.5"
       />
       {open && (
-        <div className="absolute top-full mt-1 left-0 right-0 max-h-80 overflow-y-auto rounded-lg border bg-white dark:bg-gray-800 dark:border-gray-700 shadow-lg z-50">
+        <div
+          id={listboxId}
+          role="listbox"
+          aria-label={t("nav.search")}
+          className="absolute top-full mt-1 left-0 right-0 max-h-80 overflow-y-auto rounded-lg border bg-white dark:bg-gray-800 dark:border-gray-700 shadow-lg z-50"
+        >
           {results.length === 0 ? (
             <div className="p-4 text-sm text-muted text-center">{t("common.noResults")}</div>
           ) : (
@@ -62,6 +74,8 @@ export default function SearchBar() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
+                role="option"
+                aria-selected={false}
                 onClick={() => {
                   setOpen(false);
                   setQuery("");

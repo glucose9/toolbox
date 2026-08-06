@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     alternates: {
       canonical: url,
       languages: {
+        "x-default": `${SITE_URL}/kits/${kit.slug}`,
         ko: `${SITE_URL}/kits/${kit.slug}`,
         en: `${SITE_URL}/en/kits/${kit.slug}`,
         ja: `${SITE_URL}/ja/kits/${kit.slug}`,
@@ -68,7 +69,7 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: t("nav.home"), item: SITE_URL },
+      { "@type": "ListItem", position: 1, name: t("nav.home"), item: `${SITE_URL}${loc === "ko" ? "" : "/" + loc}` },
       { "@type": "ListItem", position: 2, name: safeT(t, "kits.title", "Kits"), item: `${SITE_URL}${loc === "ko" ? "" : "/" + loc}/kits` },
       { "@type": "ListItem", position: 3, name: c.title, item: `${SITE_URL}${loc === "ko" ? "" : "/" + loc}/kits/${kit.slug}` },
     ],

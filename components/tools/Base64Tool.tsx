@@ -41,16 +41,16 @@ export default function Base64Tool() {
   return (
     <div className="card space-y-4">
       <div className="flex items-center gap-4">
-        <div className="inline-flex bg-gray-100 rounded-lg p-1">
+        <div className="inline-flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
           <button
             onClick={() => setMode("encode")}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium ${mode === "encode" ? "bg-white shadow-sm" : "text-gray-600"}`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium ${mode === "encode" ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm" : "text-gray-600 dark:text-gray-400"}`}
           >
             {t("encode")}
           </button>
           <button
             onClick={() => setMode("decode")}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium ${mode === "decode" ? "bg-white shadow-sm" : "text-gray-600"}`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium ${mode === "decode" ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm" : "text-gray-600 dark:text-gray-400"}`}
           >
             {t("decode")}
           </button>

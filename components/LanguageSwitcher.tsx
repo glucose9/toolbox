@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { useState } from "react";
 
@@ -13,6 +13,7 @@ const LANGS: { code: "ko" | "en" | "ja" | "zh"; label: string; flag: string }[] 
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
+  const t = useTranslations();
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -23,6 +24,9 @@ export default function LanguageSwitcher() {
     <div className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={t("nav.language")}
         className="px-2 py-1 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-1"
       >
         <span>{current.flag}</span>
@@ -32,10 +36,12 @@ export default function LanguageSwitcher() {
       {open && (
         <>
           <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-40 min-w-32">
+          <div role="menu" aria-label={t("nav.language")} className="absolute right-0 mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-40 min-w-32">
             {LANGS.map((l) => (
               <button
                 key={l.code}
+                role="menuitem"
+                aria-current={l.code === locale ? "true" : undefined}
                 onClick={() => {
                   router.replace(pathname, { locale: l.code });
                   setOpen(false);

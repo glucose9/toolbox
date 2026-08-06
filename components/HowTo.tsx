@@ -9,7 +9,7 @@ export default function HowTo({ steps, title }: { steps: string[]; title: string
             <span className="flex-shrink-0 w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center text-sm font-semibold">
               {i + 1}
             </span>
-            <span className="pt-0.5 text-gray-700">{step}</span>
+            <span className="pt-0.5 text-gray-700 dark:text-gray-300">{step}</span>
           </li>
         ))}
       </ol>

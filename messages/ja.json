@@ -1,4 +1,9 @@
 {
+  "notFound": {
+    "title": "ページが見つかりません",
+    "description": "お探しのページは存在しないか、移動されました。",
+    "cta": "ホームに戻る"
+  },
   "site": {
     "name": "Barokit",
     "tagline": "無料オンラインツール集 — QR · 画像 · 動画 · PDF",
@@ -22,7 +27,8 @@
     "dragOrClick": "ドラッグまたはクリック",
     "other": "別のファイル",
     "noResults": "結果なし",
-    "close": "閉じる"
+    "close": "閉じる",
+    "skipToContent": "本文へスキップ"
   },
   "categories": {
     "qr": "QRコード",

@@ -12,7 +12,7 @@ export default function FAQ({ items, title }: { items: FAQItem[]; title: string 
               <span>{item.q}</span>
               <span className="text-gray-400">+</span>
             </summary>
-            <p className="mt-3 text-gray-700 leading-relaxed">{item.a}</p>
+            <p className="mt-3 text-gray-700 dark:text-gray-300 leading-relaxed">{item.a}</p>
           </details>
         ))}
       </div>

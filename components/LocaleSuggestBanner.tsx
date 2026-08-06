@@ -15,11 +15,11 @@ type Loc = (typeof SUPPORTED)[number];
 
 // Copy is written in the TARGET language — it must be readable by the visitor
 // we're suggesting it to, regardless of the page's current language.
-const COPY: Record<Loc, { text: string; cta: string }> = {
-  ko: { text: "이 페이지를 한국어로 볼 수 있습니다.", cta: "한국어로 보기" },
-  en: { text: "This page is also available in English.", cta: "View in English" },
-  ja: { text: "このページは日本語でもご覧いただけます。", cta: "日本語で見る" },
-  zh: { text: "本页面也提供中文版本。", cta: "查看中文" },
+const COPY: Record<Loc, { text: string; cta: string; close: string }> = {
+  ko: { text: "이 페이지를 한국어로 볼 수 있습니다.", cta: "한국어로 보기", close: "닫기" },
+  en: { text: "This page is also available in English.", cta: "View in English", close: "Dismiss" },
+  ja: { text: "このページは日本語でもご覧いただけます。", cta: "日本語で見る", close: "閉じる" },
+  zh: { text: "本页面也提供中文版本。", cta: "查看中文", close: "关闭" },
 };
 
 const DISMISS_KEY = "barokit-locale-suggest-dismissed";
@@ -74,7 +74,7 @@ export default function LocaleSuggestBanner() {
         <button onClick={accept} className="shrink-0 font-medium text-brand-700 dark:text-brand-300 hover:underline">
           {copy.cta}
         </button>
-        <button onClick={dismiss} aria-label="dismiss" className="shrink-0 text-muted hover:text-gray-700 dark:hover:text-gray-300 px-1">
+        <button onClick={dismiss} aria-label={copy.close} className="shrink-0 text-muted hover:text-gray-700 dark:hover:text-gray-300 px-1">
           ×
         </button>
       </div>

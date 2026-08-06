@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     alternates: {
       canonical: url,
       languages: {
+        "x-default": `${SITE_URL}/category/${cat}`,
         ko: `${SITE_URL}/category/${cat}`,
         en: `${SITE_URL}/en/category/${cat}`,
         ja: `${SITE_URL}/ja/category/${cat}`,
@@ -59,8 +60,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ local
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: t("nav.home"), item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: c.title, item: `${SITE_URL}/category/${cat}` },
+      { "@type": "ListItem", position: 1, name: t("nav.home"), item: `${SITE_URL}${loc === "ko" ? "" : "/" + loc}` },
+      { "@type": "ListItem", position: 2, name: c.title, item: `${SITE_URL}${loc === "ko" ? "" : "/" + loc}/category/${cat}` },
     ],
   };
   const itemListJsonLd = {

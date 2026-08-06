@@ -1,4 +1,9 @@
 {
+  "notFound": {
+    "title": "找不到页面",
+    "description": "您访问的页面不存在或已被移动。",
+    "cta": "返回首页"
+  },
   "site": {
     "name": "Barokit",
     "tagline": "免费在线工具集 — QR · 图像 · 视频 · PDF",
@@ -22,7 +27,8 @@
     "dragOrClick": "拖拽或点击",
     "other": "其他文件",
     "noResults": "无结果",
-    "close": "关闭"
+    "close": "关闭",
+    "skipToContent": "跳到主要内容"
   },
   "categories": {
     "qr": "QR码",

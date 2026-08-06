@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { tools } from "@/lib/tools";
@@ -9,19 +9,58 @@ export default function MobileNav() {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
 
-  // Lock body scroll + Esc to close
+  // Lock body scroll, Esc to close, and manage dialog focus (move in, trap, restore).
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
+    const dialog = dialogRef.current;
+    const focusable = () =>
+      dialog
+        ? Array.from(
+            dialog.querySelectorAll<HTMLElement>(
+              'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+            )
+          ).filter((el) => el.offsetParent !== null)
+        : [];
+
+    // Move focus into the dialog when it opens.
+    dialog?.focus();
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !dialog) return;
+      const items = focusable();
+      if (items.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey) {
+        if (active === first || active === dialog || !dialog.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || !dialog.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
+      // Restore focus to the trigger when the dialog closes.
+      triggerRef.current?.focus();
     };
   }, [open]);
 
@@ -34,8 +73,11 @@ export default function MobileNav() {
   return (
     <>
       <button
+        ref={triggerRef}
         onClick={() => setOpen(true)}
         aria-label={t("nav.menu")}
+        aria-haspopup="dialog"
+        aria-expanded={open}
         className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-xl"
       >
         ☰
@@ -49,9 +91,12 @@ export default function MobileNav() {
             aria-hidden
           />
           <aside
+            ref={dialogRef}
             role="dialog"
+            aria-modal="true"
             aria-label={t("nav.allTools")}
-            className="fixed left-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white dark:bg-gray-900 z-50 shadow-2xl flex flex-col"
+            tabIndex={-1}
+            className="fixed left-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white dark:bg-gray-900 z-50 shadow-2xl flex flex-col outline-none"
           >
             <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-800">
               <Link href="/" onClick={close} className="font-bold text-lg">

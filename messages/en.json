@@ -1,4 +1,9 @@
 {
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "cta": "Back to home"
+  },
   "site": {
     "name": "Barokit",
     "tagline": "Free Online Tools — QR · Image · Video · PDF",
@@ -22,7 +27,8 @@
     "dragOrClick": "Drag or click",
     "other": "Different file",
     "noResults": "No results",
-    "close": "Close"
+    "close": "Close",
+    "skipToContent": "Skip to content"
   },
   "categories": {
     "qr": "QR Code",

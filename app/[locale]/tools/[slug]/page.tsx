@@ -11,6 +11,13 @@ import HowTo from "@/components/HowTo";
 import TrustBadges from "@/components/TrustBadges";
 import FavoriteButton from "@/components/FavoriteButton";
 
+const OG_LOCALE: Record<string, string> = {
+  ko: "ko_KR",
+  en: "en_US",
+  ja: "ja_JP",
+  zh: "zh_CN",
+};
+
 export function generateStaticParams() {
   const params: { locale: string; slug: string }[] = [];
   for (const locale of routing.locales) {
@@ -56,11 +63,12 @@ export async function generateMetadata({
   const localizedDesc = safeT(t, `toolMeta.${slug}.metaDescription`, safeT(t, `toolMeta.${slug}.description`, tool.metaDescription));
   const url = `${SITE_URL}${locale === "ko" ? "" : "/" + locale}/tools/${tool.slug}`;
   return {
-    title: `${localizedName} | ${t("site.name")}`,
+    title: localizedName,
     description: localizedDesc,
     alternates: {
       canonical: url,
       languages: {
+        "x-default": `${SITE_URL}/tools/${tool.slug}`,
         ko: `${SITE_URL}/tools/${tool.slug}`,
         en: `${SITE_URL}/en/tools/${tool.slug}`,
         ja: `${SITE_URL}/ja/tools/${tool.slug}`,
@@ -72,6 +80,8 @@ export async function generateMetadata({
       description: localizedDesc,
       url,
       type: "website",
+      siteName: t("site.name"),
+      locale: OG_LOCALE[locale] || "ko_KR",
     },
   };
 }
@@ -141,13 +151,14 @@ export default async function ToolPage({
     })),
   };
 
+  const localePrefix = locale === "ko" ? "" : `/${locale}`;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: t("nav.home"), item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: categoryLabel, item: `${SITE_URL}/category/${tool.category}` },
-      { "@type": "ListItem", position: 3, name: navTitle, item: `${SITE_URL}/tools/${tool.slug}` },
+      { "@type": "ListItem", position: 1, name: t("nav.home"), item: `${SITE_URL}${localePrefix}` },
+      { "@type": "ListItem", position: 2, name: categoryLabel, item: `${SITE_URL}${localePrefix}/category/${tool.category}` },
+      { "@type": "ListItem", position: 3, name: navTitle, item: `${SITE_URL}${localePrefix}/tools/${tool.slug}` },
     ],
   };
 
@@ -190,7 +201,7 @@ export default async function ToolPage({
         <span className="mx-2">›</span>
         <Link href={`/category/${tool.category}`} className="hover:text-brand-600">{categoryLabel}</Link>
         <span className="mx-2">›</span>
-        <span className="text-gray-900">{navTitle}</span>
+        <span className="text-gray-900 dark:text-gray-100">{navTitle}</span>
       </nav>
 
       <header className="mb-6">

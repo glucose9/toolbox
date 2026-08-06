@@ -3,7 +3,7 @@ import Script from "next/script";
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import "../globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -52,6 +52,7 @@ export async function generateMetadata({
     alternates: {
       canonical: `${SITE_URL}${locale === "ko" ? "" : "/" + locale}`,
       languages: {
+        "x-default": SITE_URL,
         ko: SITE_URL,
         en: `${SITE_URL}/en`,
         ja: `${SITE_URL}/ja`,
@@ -75,6 +76,27 @@ try {
 } catch (e) {}
 `;
 
+// Perf: keep the heavy toolMeta fields out of every page's HTML/RSC payload.
+// The full `toolMeta` namespace (per-tool howTo[]/faq[], ~360KB minified) is
+// read only by Server Components (tool/category/home SSR via getTranslations).
+// Its sole client consumer is the header/home search index (lib/search-client),
+// which reads just `.h1` and `.description`. Passing the full messages to
+// NextIntlClientProvider inlines all of toolMeta into the client payload of
+// every page, so we hand the client a copy narrowed to h1+description. Server
+// getTranslations continues to read the full request-config messages.
+function withSlimToolMeta<T extends Record<string, unknown>>(messages: T): T {
+  const toolMeta = messages.toolMeta;
+  if (!toolMeta || typeof toolMeta !== "object") return messages;
+  const slim: Record<string, Record<string, string>> = {};
+  for (const [slug, meta] of Object.entries(toolMeta as Record<string, Record<string, unknown>>)) {
+    const entry: Record<string, string> = {};
+    if (typeof meta.h1 === "string") entry.h1 = meta.h1;
+    if (typeof meta.description === "string") entry.description = meta.description;
+    slim[slug] = entry;
+  }
+  return { ...messages, toolMeta: slim } as T;
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -85,6 +107,8 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "common" });
+  const clientMessages = withSlimToolMeta(await getMessages());
 
   return (
     <html lang={locale}>
@@ -92,10 +116,16 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
-        <NextIntlClientProvider>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-gray-900 focus:shadow-lg dark:focus:bg-gray-800 dark:focus:text-gray-100"
+        >
+          {t("skipToContent")}
+        </a>
+        <NextIntlClientProvider messages={clientMessages}>
           <LocaleSuggestBanner />
           <Header />
-          <main className="flex-1">{children}</main>
+          <main id="main" className="flex-1">{children}</main>
           <Footer />
         </NextIntlClientProvider>
         <Analytics />

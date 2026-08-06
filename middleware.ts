@@ -12,9 +12,10 @@ export default function middleware(req: NextRequest) {
   //
   // Never promote any other redirect: locale-detection style redirects are
   // request-dependent, and browsers cache 308s aggressively — a cached
-  // "/kits/x → /en/kits/x" permanently stuck Korean users in English.
-  // (Detection is now disabled in i18n/routing.ts, but keep this guard so a
-  // future config change can't reintroduce the bug.)
+  // "/kits/x → /en/kits/x" would permanently stick Korean users in English.
+  // (localeDetection is ENABLED in i18n/routing.ts, so those detection
+  // redirects are actively emitted as 307 — this guard keeps them from ever
+  // being promoted to 308.)
   if (res && res.status === 307) {
     const location = res.headers.get("location");
     if (location) {
