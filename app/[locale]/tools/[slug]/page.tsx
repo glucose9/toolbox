@@ -8,6 +8,8 @@ import { routing } from "@/i18n/routing";
 import ToolRenderer from "@/components/ToolRenderer";
 import FAQ from "@/components/FAQ";
 import HowTo from "@/components/HowTo";
+import ToolArticleView from "@/components/ToolArticle";
+import { TOOL_ARTICLES } from "@/lib/tool-articles";
 import TrustBadges from "@/components/TrustBadges";
 import FavoriteButton from "@/components/FavoriteButton";
 
@@ -219,6 +221,7 @@ export default async function ToolPage({
       <ToolRenderer tool={tool} />
 
       <HowTo steps={localizedHowTo} title={howToTitle} />
+      {locale === "ko" && TOOL_ARTICLES[slug] && <ToolArticleView article={TOOL_ARTICLES[slug]} />}
       <FAQ items={localizedFaq} title={faqTitle} />
 
       {related.length > 0 && (
