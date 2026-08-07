@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { loadKrWebFonts } from "@/lib/kr-fonts";
+import { canRenderAsKrTextPdf, fetchKrPdfFontBytes, breakIntoLines } from "@/lib/pdf-font";
 
 const A4_MM = { portrait: { w: 210, h: 297 }, landscape: { w: 297, h: 210 } };
 
@@ -43,7 +44,56 @@ export default function TxtToPdfTool() {
       const pageW = A4_MM[orientation].w;
       const pageH = A4_MM[orientation].h;
 
-      // Non-WinAnsi text → fall back to html2canvas for correct glyphs.
+      // Non-WinAnsi text: preferred path is a REAL text PDF (selectable,
+      // searchable, small, crisp) via pdf-lib + the self-hosted Korean subset
+      // font. Falls back to rasterization for uncovered glyphs (rare hanja,
+      // emoji) or when the monospace look is requested.
+      if (NON_LATIN1_RE.test(text) && !monospace && canRenderAsKrTextPdf(text)) {
+        try {
+          const [{ PDFDocument, rgb }, fontkit, fontBytes] = await Promise.all([
+            import("pdf-lib"),
+            import("@pdf-lib/fontkit"),
+            fetchKrPdfFontBytes(),
+          ]);
+          const pdf = await PDFDocument.create();
+          pdf.registerFontkit(fontkit.default);
+          // subset:false is deliberate — fontkit's subsetter emits glyf data
+          // that pdf.js (Firefox, our own PDF tools) renders as blank glyphs.
+          // Full embed costs ~730KB/PDF but renders correctly everywhere.
+          const font = await pdf.embedFont(fontBytes, { subset: false });
+          const PT_PER_MM = 72 / 25.4;
+          const pageWpt = pageW * PT_PER_MM;
+          const pageHpt = pageH * PT_PER_MM;
+          const marginPt = margin * PT_PER_MM;
+          const usableW = pageWpt - 2 * marginPt;
+          const lineAdvance = fontSize * lineHeight;
+          const lines = breakIntoLines(text, usableW, fontSize, {
+            widthOf: (s, sz) => font.widthOfTextAtSize(s, sz),
+          });
+          let page = pdf.addPage([pageWpt, pageHpt]);
+          let y = pageHpt - marginPt - fontSize;
+          for (const line of lines) {
+            if (y < marginPt) {
+              page = pdf.addPage([pageWpt, pageHpt]);
+              y = pageHpt - marginPt - fontSize;
+            }
+            if (line) page.drawText(line, { x: marginPt, y, size: fontSize, font, color: rgb(0.066, 0.094, 0.153) });
+            y -= lineAdvance;
+          }
+          const bytes = await pdf.save();
+          const ab = new ArrayBuffer(bytes.byteLength);
+          new Uint8Array(ab).set(bytes);
+          const url = URL.createObjectURL(new Blob([ab], { type: "application/pdf" }));
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "text.pdf";
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(url), 10_000);
+          return;
+        } catch {
+          // fall through to the raster path below
+        }
+      }
       if (NON_LATIN1_RE.test(text)) {
         const { default: html2canvas } = await import("html2canvas");
         const pxPerMm = 96 / 25.4;
