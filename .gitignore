@@ -11,3 +11,5 @@ tsconfig.tsbuildinfo
 
 .vercel
 .env*.local
+scripts/fixtures/sample.hwp
+.harness-downloads/

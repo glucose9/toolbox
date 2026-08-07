@@ -76,7 +76,19 @@ export default function MermaidTool() {
     (async () => {
       try {
         const mermaid = (await import("mermaid")).default;
-        mermaid.initialize({ startOnLoad: false, theme: "default", securityLevel: "loose", fontFamily: "system-ui, Pretendard, sans-serif" });
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: "default",
+          securityLevel: "loose",
+          fontFamily: "system-ui, Pretendard, sans-serif",
+          // HTML labels render via <foreignObject>, which taints the canvas and
+          // makes the PNG export throw. Pure-SVG labels keep the canvas clean
+          // (and the downloaded SVG displays in more viewers).
+          htmlLabels: false,
+          flowchart: { htmlLabels: false },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          class: { htmlLabels: false } as any,
+        });
         const { svg } = await mermaid.render(`mermaid-${Date.now()}`, code);
         if (cancelled) return;
         setSvgString(svg);
@@ -105,33 +117,52 @@ export default function MermaidTool() {
 
   const downloadPng = async () => {
     if (!svgString) return;
-    const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-    const url = URL.createObjectURL(svgBlob);
-    const img = new Image();
-    await new Promise<void>((resolve, reject) => {
-      img.onload = () => resolve();
-      img.onerror = () => reject(new Error(t("imageLoadFailed")));
-      img.src = url;
-    });
-    const c = document.createElement("canvas");
-    const scale = 2;
-    c.width = img.width * scale;
-    c.height = img.height * scale;
-    const ctx = c.getContext("2d")!;
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, c.width, c.height);
-    ctx.scale(scale, scale);
-    ctx.drawImage(img, 0, 0);
-    URL.revokeObjectURL(url);
-    c.toBlob((blob) => {
-      if (!blob) return;
-      const dlUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = dlUrl;
-      a.download = `diagram-${Date.now()}.png`;
-      a.click();
-      URL.revokeObjectURL(dlUrl);
-    });
+    try {
+      // Mermaid emits width="100%", so the Image gets a bogus intrinsic size
+      // and the raster comes out cropped. Stamp explicit pixel dimensions from
+      // the viewBox before rasterizing.
+      const doc = new DOMParser().parseFromString(svgString, "image/svg+xml");
+      const svgEl = doc.documentElement;
+      const vb = (svgEl.getAttribute("viewBox") || "").split(/[\s,]+/).map(Number);
+      const w = Math.ceil(vb.length === 4 && vb[2] > 0 ? vb[2] : 800);
+      const h = Math.ceil(vb.length === 4 && vb[3] > 0 ? vb[3] : 600);
+      svgEl.setAttribute("width", String(w));
+      svgEl.setAttribute("height", String(h));
+      svgEl.style.maxWidth = "none";
+      const sized = new XMLSerializer().serializeToString(svgEl);
+      const svgBlob = new Blob([sized], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error(t("imageLoadFailed")));
+        img.src = url;
+      });
+      const c = document.createElement("canvas");
+      const scale = 2;
+      c.width = w * scale;
+      c.height = h * scale;
+      const ctx = c.getContext("2d")!;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      c.toBlob((blob) => {
+        if (!blob) {
+          setError(t("imageLoadFailed"));
+          return;
+        }
+        const dlUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = dlUrl;
+        a.download = `diagram-${Date.now()}.png`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(dlUrl), 10_000);
+      });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : t("imageLoadFailed"));
+    }
   };
 
   return (
