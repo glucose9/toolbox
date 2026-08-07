@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const CHO = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
 const JUNG = ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"];
@@ -20,12 +21,24 @@ function decompose(text: string): string {
 
 export default function JamoDecomposeTool() {
   const t = useTranslations("toolUI.jamo-decompose");
+  const tc = useTranslations("common");
   const [text, setText] = useState("안녕하세요");
+  const [copied, setCopied] = useState(false);
   const decomposed = useMemo(() => decompose(text), [text]);
+  const copy = async () => {
+    const ok = await copyText(decomposed);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
+  };
   return (
     <div className="card space-y-3">
-      <input type="text" value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-base" />
+      <textarea rows={3} value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-base resize-y" />
       <div className="p-4 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded text-2xl font-mono break-all text-center">{decomposed}</div>
+      <button onClick={copy} disabled={!decomposed} className="btn btn-secondary disabled:opacity-50">
+        {copied ? tc("copied") : tc("copy")}
+      </button>
       <div className="text-xs text-muted">{t("hint")}</div>
     </div>
   );

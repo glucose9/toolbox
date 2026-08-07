@@ -110,6 +110,7 @@ function extractTexts(xml: string): string {
 
 export default function PptxToTextTool() {
   const t = useTranslations("toolUI.pptx-to-text");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState("");
   const [srcFile, setSrcFile] = useState<File | null>(null);
@@ -185,48 +186,58 @@ export default function PptxToTextTool() {
 
   return (
     <div className="card space-y-4">
-      <div
-        onDrop={(e) => {
-          e.preventDefault();
-          if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]);
-        }}
-        onDragOver={(e) => e.preventDefault()}
-        onClick={() => inputRef.current?.click()}
-        className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-10 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
-      >
-        <div className="text-5xl mb-3">📄</div>
-        <div className="font-medium">{t("dropFile")}</div>
-        {fileName && <div className="mt-1 text-sm text-muted truncate">{fileName}</div>}
-        <input
-          ref={inputRef}
-          type="file"
-          accept=".pptx"
-          className="hidden"
-          onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
-        />
-      </div>
-
-      <label className="label flex items-center gap-2 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={includeNotes}
-          onChange={(e) => toggleNotes(e.target.checked)}
-        />
-        {t("includeNotes")}
-      </label>
+      {srcFile ? (
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="text-sm truncate font-medium">{fileName}</div>
+          <button
+            onClick={() => inputRef.current?.click()}
+            className="text-sm text-brand-600 hover:underline"
+          >
+            {tc("other")}
+          </button>
+        </div>
+      ) : (
+        <div
+          onDrop={(e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]);
+          }}
+          onDragOver={(e) => e.preventDefault()}
+          onClick={() => inputRef.current?.click()}
+          className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-10 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          <div className="text-5xl mb-3">📄</div>
+          <div className="font-medium">{t("dropFile")}</div>
+        </div>
+      )}
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pptx"
+        className="hidden"
+        onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
+      />
 
       {loading && <div className="text-sm text-muted">{t("processing")}</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       {!loading && slides.length > 0 && (
         <>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button onClick={copyAll} className="btn btn-primary">
               {copied ? `✓ ${t("copied")}` : t("copyAll")}
             </button>
             <button onClick={download} className="btn btn-secondary">
               {t("downloadTxt")}
             </button>
+            <label className="label flex items-center gap-2 cursor-pointer mb-0 ml-auto">
+              <input
+                type="checkbox"
+                checked={includeNotes}
+                onChange={(e) => toggleNotes(e.target.checked)}
+              />
+              {t("includeNotes")}
+            </label>
           </div>
           <div className="space-y-3">
             {slides.map((s) => (

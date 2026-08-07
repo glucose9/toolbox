@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { copyText } from "@/lib/clipboard";
 
@@ -39,6 +39,12 @@ export default function RandomStringTool() {
     }
     setResults(out);
   };
+
+  // Fill results once on mount with the defaults; option changes keep the button flow.
+  useEffect(() => {
+    generate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="card space-y-3">

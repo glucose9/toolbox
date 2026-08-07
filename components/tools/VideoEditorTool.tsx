@@ -54,6 +54,7 @@ function fmtTime(s: number): string {
 
 export default function VideoEditorTool() {
   const t = useTranslations("toolUI.video-editor");
+  const tc = useTranslations("common");
   const [file, setFile] = useState<File | null>(null);
   const [duration, setDuration] = useState(0);
 
@@ -288,23 +289,29 @@ export default function VideoEditorTool() {
               ))}
             </select>
           </label>
-          <label>
-            🗜️ {t("crf")}
-            <select value={crf} onChange={(e) => setCrf(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-              {CRF_PRESETS.map((p) => (
-                <option key={p.value} value={p.value}>{t(`crfOpt.${p.key}`)}</option>
-              ))}
-            </select>
-          </label>
           <label className="flex items-center gap-2">
             <input type="checkbox" checked={mute} onChange={(e) => setMute(e.target.checked)} />
             🔇 {t("mute")}
           </label>
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={reencode} onChange={(e) => setReencode(e.target.checked)} />
-            {t("forceReencode")}
-          </label>
         </div>
+
+        <details className="rounded border border-gray-200 dark:border-gray-700">
+          <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+          <div className="p-3 pt-1 space-y-3 text-sm">
+            <label className="block">
+              🗜️ {t("crf")}
+              <select value={crf} onChange={(e) => setCrf(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
+                {CRF_PRESETS.map((p) => (
+                  <option key={p.value} value={p.value}>{t(`crfOpt.${p.key}`)}</option>
+                ))}
+              </select>
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="checkbox" checked={reencode} onChange={(e) => setReencode(e.target.checked)} />
+              {t("forceReencode")}
+            </label>
+          </div>
+        </details>
       </div>
 
       <button onClick={run} disabled={busy} className="btn btn-primary w-full">

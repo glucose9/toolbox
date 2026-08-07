@@ -52,7 +52,7 @@ function convert(text: string): string {
 export default function HanjaToHangulTool() {
   const t = useTranslations("toolUI.hanja-to-hangul");
   const [text, setText] = useState("韓國 (한國) 文字: 漢字 → 한글");
-  const [showOriginal, setShowOriginal] = useState(true);
+  const [showOriginal, setShowOriginal] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const output = useMemo(() => convert(text), [text]);

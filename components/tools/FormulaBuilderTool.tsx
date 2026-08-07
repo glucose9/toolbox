@@ -122,6 +122,8 @@ const GROUPS: Group[] = [
   },
 ];
 
+const COLLAPSED_GROUPS = new Set(["greek", "relations", "matrix", "calculus"]);
+
 const TEMPLATES = [
   { key: "quadratic", latex: "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}" },
   { key: "pythagoras", latex: "a^2 + b^2 = c^2" },
@@ -239,9 +241,8 @@ export default function FormulaBuilderTool() {
         </div>
       </details>
 
-      {GROUPS.map((g) => (
-        <div key={g.key}>
-          <div className="text-xs font-semibold text-muted mb-1">{tg(`group.${g.key}`)}</div>
+      {GROUPS.map((g) => {
+        const grid = (
           <div
             className="grid gap-1"
             style={{ gridTemplateColumns: `repeat(${g.cols}, minmax(0, 1fr))` }}
@@ -257,8 +258,22 @@ export default function FormulaBuilderTool() {
               </button>
             ))}
           </div>
-        </div>
-      ))}
+        );
+        if (COLLAPSED_GROUPS.has(g.key)) {
+          return (
+            <details key={g.key} className="rounded border border-gray-200 dark:border-gray-700">
+              <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tg(`group.${g.key}`)}</summary>
+              <div className="p-3 pt-1">{grid}</div>
+            </details>
+          );
+        }
+        return (
+          <div key={g.key}>
+            <div className="text-xs font-semibold text-muted mb-1">{tg(`group.${g.key}`)}</div>
+            {grid}
+          </div>
+        );
+      })}
 
       <div className="text-xs text-muted leading-relaxed">
         💡 {tg("hint")}

@@ -10,6 +10,7 @@ export default function ImageWatermarkImgTool() {
   const wmRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [base, setBase] = useState<HTMLImageElement | null>(null);
+  const [baseName, setBaseName] = useState("image");
   const [wm, setWm] = useState<HTMLImageElement | null>(null);
   const [position, setPosition] = useState<typeof POSITIONS[number]>("bottom-right");
   const [size, setSize] = useState(20);
@@ -50,7 +51,7 @@ export default function ImageWatermarkImgTool() {
     canvasRef.current!.toBlob((blob) => {
       if (!blob) return;
       const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob); a.download = `watermarked-${Date.now()}.png`; a.click();
+      a.href = URL.createObjectURL(blob); a.download = `${baseName}_watermark.png`; a.click();
       URL.revokeObjectURL(a.href);
     });
   };
@@ -60,7 +61,7 @@ export default function ImageWatermarkImgTool() {
       <div className="grid grid-cols-2 gap-3">
         <button onClick={() => baseRef.current?.click()} className="btn btn-secondary">{base ? t("changeBg") : t("bgImage")}</button>
         <button onClick={() => wmRef.current?.click()} className="btn btn-secondary">{wm ? t("changeWatermark") : t("watermarkImage")}</button>
-        <input ref={baseRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && load(e.target.files[0], setBase)} className="hidden" />
+        <input ref={baseRef} type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) { setBaseName(f.name.replace(/\.[^.]+$/, "") || "image"); load(f, setBase); } }} className="hidden" />
         <input ref={wmRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && load(e.target.files[0], setWm)} className="hidden" />
       </div>
       {base && (

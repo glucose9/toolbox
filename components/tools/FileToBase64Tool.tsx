@@ -10,6 +10,7 @@ function fmt(n: number) {
 
 export default function FileToBase64Tool() {
   const t = useTranslations("toolUI.file-to-base64");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [dataUrl, setDataUrl] = useState("");
@@ -32,28 +33,40 @@ export default function FileToBase64Tool() {
     a.click();
   };
 
-  return (
-    <div className="card space-y-3">
-      {!file ? (
-        <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
-          <div className="text-5xl mb-3">📂</div>
-          <div className="font-medium">{t("dropOrClick")}</div>
-          <input ref={inputRef} type="file" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-between text-sm">
-            <div><div className="font-medium truncate">{file.name}</div><div className="text-xs text-muted">{fmt(file.size)} · Base64: {fmt(dataUrl.length)}</div></div>
-            <button onClick={() => { setFile(null); setDataUrl(""); }} className="text-brand-600 hover:underline">{t("otherFile")}</button>
-          </div>
-        </>
-      )}
+  const outputSection = (
+    <>
       <label className="label">Base64 data URL</label>
       <textarea value={dataUrl} onChange={(e) => setDataUrl(e.target.value)} placeholder="data:application/octet-stream;base64,..." className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono resize-y break-all" />
       <div className="flex gap-2">
         <button onClick={copy} disabled={!dataUrl} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
         <button onClick={downloadFromUrl} disabled={!dataUrl.startsWith("data:")} className="btn btn-secondary disabled:opacity-50">{t("dataUrlToFile")}</button>
       </div>
+    </>
+  );
+
+  return (
+    <div className="card space-y-3">
+      {!file ? (
+        <>
+          <div onClick={() => inputRef.current?.click()} className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500">
+            <div className="text-5xl mb-3">📂</div>
+            <div className="font-medium">{t("dropOrClick")}</div>
+            <input ref={inputRef} type="file" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
+          </div>
+          <details className="rounded border border-gray-200 dark:border-gray-700">
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+            <div className="p-3 pt-1 space-y-3">{outputSection}</div>
+          </details>
+        </>
+      ) : (
+        <>
+          <div className="flex items-center justify-between text-sm">
+            <div><div className="font-medium truncate">{file.name}</div><div className="text-xs text-muted">{fmt(file.size)} · Base64: {fmt(dataUrl.length)}</div></div>
+            <button onClick={() => { setFile(null); setDataUrl(""); }} className="text-brand-600 hover:underline">{t("otherFile")}</button>
+          </div>
+          {outputSection}
+        </>
+      )}
     </div>
   );
 }

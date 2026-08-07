@@ -19,6 +19,7 @@ const CP1252_REVERSE: Record<string, number> = {
 
 export default function EncodingConvertTool() {
   const t = useTranslations("toolUI.encoding-convert");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const [encoding, setEncoding] = useState("euc-kr");
   const [text, setText] = useState("");
@@ -64,17 +65,29 @@ export default function EncodingConvertTool() {
 
   return (
     <div className="card space-y-3">
-      <div className="flex flex-wrap items-center gap-3 text-sm">
-        <label>{t("sourceEncoding")} <select value={encoding} onChange={(e) => setEncoding(e.target.value)} className="ml-1 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-          {ENCODINGS.map((e) => <option key={e} value={e}>{e}</option>)}
-        </select></label>
-        <button onClick={() => inputRef.current?.click()} className="btn btn-primary text-xs">{t("uploadFile")}</button>
-        <input ref={inputRef} type="file" accept=".txt,.csv,.log,text/*" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) decodeFile(f); }} className="hidden" />
-        <button onClick={reencode} className="btn btn-secondary text-xs">{t("reinterpret")}</button>
+      <label className="flex flex-wrap items-center gap-2 text-sm">{t("sourceEncoding")} <select value={encoding} onChange={(e) => setEncoding(e.target.value)} className="px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
+        {ENCODINGS.map((e) => <option key={e} value={e}>{e}</option>)}
+      </select></label>
+      <div
+        onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) decodeFile(f); }}
+        onDragOver={(e) => e.preventDefault()}
+        onClick={() => inputRef.current?.click()}
+        className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-10 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
+      >
+        <div className="text-5xl mb-3">📄</div>
+        <div className="font-medium">{t("uploadFile")}</div>
+        <div className="mt-1 text-sm text-muted">{tc("dragOrClick")}</div>
       </div>
+      <input ref={inputRef} type="file" accept=".txt,.csv,.log,text/*" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) decodeFile(f); }} className="hidden" />
       <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder={t("placeholder")} className="w-full h-64 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />
       {error && <div className="text-sm text-red-600">{error}</div>}
       <button onClick={copy} disabled={!text} className="btn btn-primary disabled:opacity-50">{copied ? t("copied") : t("copy")}</button>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <button onClick={reencode} className="btn btn-secondary text-xs">{t("reinterpret")}</button>
+        </div>
+      </details>
       <div className="text-xs text-muted">{t("note")}</div>
     </div>
   );

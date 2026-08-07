@@ -21,6 +21,7 @@ function intToIp(n: number): string {
 
 export default function CidrCalcTool() {
   const t = useTranslations("toolUI.cidr-calc");
+  const tc = useTranslations("common");
   const [input, setInput] = useState("192.168.0.0/24");
 
   const result = useMemo(() => {
@@ -67,19 +68,30 @@ export default function CidrCalcTool() {
       {result.error ? (
         <div className="text-sm text-red-600">{result.error}</div>
       ) : (
-        <table className="w-full text-sm">
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            <tr><td className="py-2 pr-3 text-muted">{t("network")}</td><td className="font-mono">{result.network}/{result.prefix}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("broadcast")}</td><td className="font-mono">{result.broadcast}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("subnetMask")}</td><td className="font-mono">{result.mask}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("wildcard")}</td><td className="font-mono">{result.wildcard}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("maskBinary")}</td><td className="font-mono text-xs">{result.binary}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("firstHost")}</td><td className="font-mono">{result.firstHost}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("lastHost")}</td><td className="font-mono">{result.lastHost}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("totalAddresses")}</td><td className="font-mono">{result.total!.toLocaleString()}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("usableHosts")}</td><td className="font-mono">{result.usable!.toLocaleString()}</td></tr>
-          </tbody>
-        </table>
+        <>
+          <table className="w-full text-sm">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tr><td className="py-2 pr-3 text-muted">{t("network")}</td><td className="font-mono font-semibold">{result.network}/{result.prefix}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("firstHost")}</td><td className="font-mono font-semibold">{result.firstHost}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("lastHost")}</td><td className="font-mono font-semibold">{result.lastHost}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("usableHosts")}</td><td className="font-mono font-semibold">{result.usable!.toLocaleString()}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("totalAddresses")}</td><td className="font-mono">{result.total!.toLocaleString()}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("broadcast")}</td><td className="font-mono">{result.broadcast}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("subnetMask")}</td><td className="font-mono">{result.mask}</td></tr>
+            </tbody>
+          </table>
+          <details className="rounded border border-gray-200 dark:border-gray-700">
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+            <div className="p-3 pt-1">
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  <tr><td className="py-2 pr-3 text-muted">{t("wildcard")}</td><td className="font-mono">{result.wildcard}</td></tr>
+                  <tr><td className="py-2 pr-3 text-muted">{t("maskBinary")}</td><td className="font-mono text-xs">{result.binary}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </>
       )}
     </div>
   );

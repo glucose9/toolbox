@@ -26,6 +26,7 @@ function isImage(name: string): boolean {
 
 export default function PptxImagesTool() {
   const t = useTranslations("toolUI.pptx-images");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState("");
   const [images, setImages] = useState<MediaItem[]>([]);
@@ -62,6 +63,13 @@ export default function PptxImagesTool() {
     }
   };
 
+  const resetFile = () => {
+    images.forEach((i) => URL.revokeObjectURL(i.url));
+    setImages([]);
+    setFileName("");
+    setError("");
+  };
+
   const downloadOne = (item: MediaItem) => {
     const a = document.createElement("a");
     a.href = item.url;
@@ -85,26 +93,35 @@ export default function PptxImagesTool() {
 
   return (
     <div className="card space-y-4">
-      <div
-        onDrop={(e) => {
-          e.preventDefault();
-          if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]);
-        }}
-        onDragOver={(e) => e.preventDefault()}
-        onClick={() => inputRef.current?.click()}
-        className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-10 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
-      >
-        <div className="text-5xl mb-3">🖼️</div>
-        <div className="font-medium">{t("dropFile")}</div>
-        {fileName && <div className="mt-1 text-sm text-muted truncate">{fileName}</div>}
-        <input
-          ref={inputRef}
-          type="file"
-          accept=".pptx"
-          className="hidden"
-          onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
-        />
-      </div>
+      {images.length === 0 ? (
+        <div
+          onDrop={(e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]);
+          }}
+          onDragOver={(e) => e.preventDefault()}
+          onClick={() => inputRef.current?.click()}
+          className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-10 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          <div className="text-5xl mb-3">🖼️</div>
+          <div className="font-medium">{t("dropFile")}</div>
+          {fileName && <div className="mt-1 text-sm text-muted truncate">{fileName}</div>}
+          <input
+            ref={inputRef}
+            type="file"
+            accept=".pptx"
+            className="hidden"
+            onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
+          />
+        </div>
+      ) : (
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="text-sm font-medium truncate min-w-0">{fileName}</div>
+          <button onClick={resetFile} className="text-sm text-brand-600 hover:underline">
+            {tc("other")}
+          </button>
+        </div>
+      )}
 
       {loading && <div className="text-sm text-muted">{t("processing")}</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}

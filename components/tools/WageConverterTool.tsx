@@ -27,18 +27,40 @@ export default function WageConverterTool() {
     else if (kind === "y") setHourly(val / (monthlyHours * 12));
   };
 
-  const row = (label: string, value: number, kind: "h" | "d" | "w" | "m" | "y", note?: string) => (
-    <div className="grid grid-cols-3 items-center gap-2 py-2 border-b border-gray-200 dark:border-gray-700">
-      <div className="text-sm font-medium">{label}</div>
-      <input
-        type="number"
-        value={Math.round(value) || ""}
-        onChange={(e) => setFrom(+e.target.value, kind)}
-        className="col-span-1 px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-right font-mono"
-      />
-      <div className="text-xs text-muted">{note || t("krw")}</div>
-    </div>
-  );
+  const row = (
+    label: string,
+    value: number,
+    kind: "h" | "d" | "w" | "m" | "y",
+    note?: string,
+    variant: "input" | "result" | "highlight" = "result",
+  ) => {
+    const rowClass =
+      variant === "highlight"
+        ? "grid grid-cols-3 items-center gap-2 py-2 px-2 -mx-2 my-1 rounded border border-brand-500/40 bg-brand-50 dark:bg-brand-600/10"
+        : "grid grid-cols-3 items-center gap-2 py-2 border-b border-gray-200 dark:border-gray-700";
+    const labelClass =
+      variant === "highlight"
+        ? "text-sm font-semibold text-brand-700 dark:text-brand-500"
+        : "text-sm font-medium";
+    const inputClass =
+      variant === "input"
+        ? "col-span-1 px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-900 text-right font-mono focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+        : variant === "highlight"
+          ? "col-span-1 px-3 py-1.5 border border-transparent rounded bg-transparent text-right font-mono font-semibold text-brand-700 dark:text-brand-500 focus:outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900"
+          : "col-span-1 px-3 py-1.5 border border-transparent rounded bg-transparent text-right font-mono focus:outline-none focus:border-gray-300 dark:focus:border-gray-600 focus:bg-white dark:focus:bg-gray-900";
+    return (
+      <div className={rowClass}>
+        <div className={labelClass}>{label}</div>
+        <input
+          type="number"
+          value={Math.round(value) || ""}
+          onChange={(e) => setFrom(+e.target.value, kind)}
+          className={inputClass}
+        />
+        <div className="text-xs text-muted">{note || t("krw")}</div>
+      </div>
+    );
+  };
 
   return (
     <div className="card space-y-3">
@@ -51,10 +73,10 @@ export default function WageConverterTool() {
       </div>
 
       <div>
-        {row(t("hourly"), hourly, "h")}
+        {row(t("hourly"), hourly, "h", undefined, "input")}
         {row(t("daily"), daily, "d", t("krwDaily"))}
         {row(t("weekly"), weekly, "w", t("krwWeekly", { n: Math.round(paidWeeklyHours) }))}
-        {row(t("monthly"), monthly, "m", t("krwMonthly", { n: Math.round(monthlyHours) }))}
+        {row(t("monthly"), monthly, "m", t("krwMonthly", { n: Math.round(monthlyHours) }), "highlight")}
         {row(t("annual"), annual, "y", t("krw"))}
       </div>
 

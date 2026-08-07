@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { copyText } from "@/lib/clipboard";
 
@@ -48,9 +48,26 @@ export default function JsonFormatterTool() {
     setText(JSON.stringify(target, null, indentStr as never));
   };
 
-  const validate = () => {
-    parse();
-  };
+  // Auto-validate on input change (debounced). Only reads `text` and writes
+  // error/validated state, so it cannot re-trigger itself.
+  useEffect(() => {
+    const id = setTimeout(() => {
+      if (!text.trim()) {
+        setError("");
+        setValidated(false);
+        return;
+      }
+      try {
+        JSON.parse(text);
+        setError("");
+        setValidated(true);
+      } catch (e) {
+        setError((e as Error).message);
+        setValidated(false);
+      }
+    }, 300);
+    return () => clearTimeout(id);
+  }, [text]);
 
   const copy = async () => {
     const ok = await copyText(text);
@@ -89,7 +106,6 @@ export default function JsonFormatterTool() {
       <div className="flex flex-wrap gap-2">
         <button onClick={() => format(false)} className="btn btn-primary">{t("format")}</button>
         <button onClick={() => format(true)} className="btn btn-secondary">{t("minify")}</button>
-        <button onClick={validate} className="btn btn-secondary">{t("validateOnly")}</button>
         <button onClick={copy} className="btn btn-secondary">{t("copy")}{copied ? " ✓" : ""}</button>
       </div>
       {error ? (

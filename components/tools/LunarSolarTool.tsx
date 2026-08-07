@@ -44,20 +44,38 @@ export default function LunarSolarTool() {
         <button onClick={() => setDir("lunar-to-solar")} className={`btn ${dir === "lunar-to-solar" ? "btn-primary" : "btn-secondary"}`}>{t("lunarToSolar")}</button>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
-        <div>
-          <label className="label">{t("year")}</label>
-          <input type="number" min="1391" max="2050" value={year} onChange={(e) => setYear(+e.target.value)} className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
+      {dir === "solar-to-lunar" ? (
+        <input
+          type="date"
+          min="1391-01-01"
+          max="2050-12-31"
+          value={fmt({ year, month, day })}
+          onChange={(e) => {
+            const [y, m, d] = e.target.value.split("-").map(Number);
+            if (y && m && d) {
+              setYear(y);
+              setMonth(m);
+              setDay(d);
+            }
+          }}
+          className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm"
+        />
+      ) : (
+        <div className="grid grid-cols-3 gap-2">
+          <div>
+            <label className="label">{t("year")}</label>
+            <input type="number" min="1391" max="2050" value={year} onChange={(e) => setYear(+e.target.value)} className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
+          </div>
+          <div>
+            <label className="label">{t("month")}</label>
+            <input type="number" min="1" max="12" value={month} onChange={(e) => setMonth(+e.target.value)} className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
+          </div>
+          <div>
+            <label className="label">{t("day")}</label>
+            <input type="number" min="1" max="31" value={day} onChange={(e) => setDay(+e.target.value)} className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
+          </div>
         </div>
-        <div>
-          <label className="label">{t("month")}</label>
-          <input type="number" min="1" max="12" value={month} onChange={(e) => setMonth(+e.target.value)} className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
-        </div>
-        <div>
-          <label className="label">{t("day")}</label>
-          <input type="number" min="1" max="31" value={day} onChange={(e) => setDay(+e.target.value)} className="w-full px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
-        </div>
-      </div>
+      )}
 
       {dir === "lunar-to-solar" && (
         <label className="flex items-center gap-2 text-sm">

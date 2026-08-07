@@ -9,22 +9,30 @@ const COLORS: { name: string; hex: string }[] = [
 
 export default function CssColorsTool() {
   const t = useTranslations("toolUI.css-colors");
+  const tc = useTranslations("common");
   const [q, setQ] = useState("");
+  const [copied, setCopied] = useState<string | null>(null);
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
     if (!query) return COLORS;
     return COLORS.filter((c) => c.name.includes(query) || c.hex.includes(query));
   }, [q]);
+  const copy = async (c: { name: string; hex: string }) => {
+    const ok = await copyText(c.hex);
+    if (!ok) return;
+    setCopied(c.name);
+    setTimeout(() => setCopied(null), 1500);
+  };
   return (
     <div className="card space-y-3">
       <input type="text" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("searchPlaceholder")} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 max-h-96 overflow-y-auto">
         {filtered.map((c) => (
-          <button key={c.name} onClick={() => void copyText(c.hex)} className="flex items-center gap-2 p-2 border border-gray-200 dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-900">
+          <button key={c.name} onClick={() => void copy(c)} className="flex items-center gap-2 p-2 border border-gray-200 dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-900">
             <div className="w-8 h-8 rounded border border-gray-200 dark:border-gray-700" style={{ background: c.hex }} />
             <div className="text-left text-xs flex-1">
               <div className="font-medium truncate">{c.name}</div>
-              <div className="text-muted font-mono">{c.hex.toUpperCase()}</div>
+              <div className="text-muted font-mono">{copied === c.name ? tc("copied") : c.hex.toUpperCase()}</div>
             </div>
           </button>
         ))}

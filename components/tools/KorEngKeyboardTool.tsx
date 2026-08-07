@@ -131,8 +131,8 @@ export default function KorEngKeyboardTool() {
   return (
     <div className="card space-y-3">
       <div className="flex flex-wrap gap-2 text-sm">
-        <button onClick={() => { setDir("eng-to-kor"); setInput("dkssudgktpdy"); }} className={`btn ${dir === "eng-to-kor" ? "btn-primary" : "btn-secondary"}`}>{t("engToKor")}</button>
-        <button onClick={() => { setDir("kor-to-eng"); setInput("안녕하세요"); }} className={`btn ${dir === "kor-to-eng" ? "btn-primary" : "btn-secondary"}`}>{t("korToEng")}</button>
+        <button onClick={() => { setDir("eng-to-kor"); if (input === "" || input === "안녕하세요") setInput("dkssudgktpdy"); }} className={`btn ${dir === "eng-to-kor" ? "btn-primary" : "btn-secondary"}`}>{t("engToKor")}</button>
+        <button onClick={() => { setDir("kor-to-eng"); if (input === "" || input === "dkssudgktpdy") setInput("안녕하세요"); }} className={`btn ${dir === "kor-to-eng" ? "btn-primary" : "btn-secondary"}`}>{t("korToEng")}</button>
       </div>
       <textarea
         value={input}

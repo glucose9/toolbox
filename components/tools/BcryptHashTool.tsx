@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 
 export default function BcryptHashTool() {
   const t = useTranslations("toolUI.bcrypt-hash");
+  const tc = useTranslations("common");
   const [password, setPassword] = useState("");
   const [hash, setHash] = useState("");
   const [verifyHash, setVerifyHash] = useState("");
@@ -36,29 +37,32 @@ export default function BcryptHashTool() {
         <label className="label">{t("password")}</label>
         <input type="text" value={password} onChange={(e) => { setPassword(e.target.value); setVerifyResult(null); }} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
       </div>
-      <div className="grid grid-cols-2 gap-3 items-end">
-        <label className="text-sm">cost factor ({rounds})<input type="range" min="4" max="14" value={rounds} onChange={(e) => setRounds(+e.target.value)} className="w-full" /></label>
-        <button onClick={generate} disabled={busy} className="btn btn-primary disabled:opacity-50">{t("generate")}</button>
-      </div>
-      {rounds >= 13 && (
-        <div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 p-2 rounded border border-amber-200 dark:border-amber-800">
-          {t("highCostWarning")}
-        </div>
-      )}
+      <button onClick={generate} disabled={busy} className="btn btn-primary disabled:opacity-50">{t("generate")}</button>
       {hash && (
         <div><label className="label">{t("hash")}</label><textarea readOnly value={hash} className="w-full h-20 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-xs font-mono resize-y" /></div>
       )}
-      <hr className="border-gray-200 dark:border-gray-700" />
-      <div>
-        <label className="label">{t("verifyHash")}</label>
-        <textarea value={verifyHash} onChange={(e) => { setVerifyHash(e.target.value); setVerifyResult(null); }} className="w-full h-20 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono resize-y" />
-      </div>
-      <button onClick={verify} disabled={busy} className="btn btn-secondary disabled:opacity-50">{t("verify")}</button>
-      {verifyResult !== null && (
-        <div className={`p-3 rounded text-center ${verifyResult ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300" : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"}`}>
-          {verifyResult ? t("match") : t("mismatch")}
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1 space-y-3">
+          <label className="block text-sm">cost factor ({rounds})<input type="range" min="4" max="14" value={rounds} onChange={(e) => setRounds(+e.target.value)} className="w-full" /></label>
+          {rounds >= 13 && (
+            <div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 p-2 rounded border border-amber-200 dark:border-amber-800">
+              {t("highCostWarning")}
+            </div>
+          )}
+          <hr className="border-gray-200 dark:border-gray-700" />
+          <div>
+            <label className="label">{t("verifyHash")}</label>
+            <textarea value={verifyHash} onChange={(e) => { setVerifyHash(e.target.value); setVerifyResult(null); }} className="w-full h-20 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono resize-y" />
+          </div>
+          <button onClick={verify} disabled={busy} className="btn btn-secondary disabled:opacity-50">{t("verify")}</button>
+          {verifyResult !== null && (
+            <div className={`p-3 rounded text-center ${verifyResult ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300" : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"}`}>
+              {verifyResult ? t("match") : t("mismatch")}
+            </div>
+          )}
         </div>
-      )}
+      </details>
     </div>
   );
 }

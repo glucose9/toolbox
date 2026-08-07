@@ -31,7 +31,6 @@ export default function OgCardMakerTool() {
   const [tag, setTag] = useState("BAROKIT");
   const [preset, setPreset] = useState(0);
   const [size, setSize] = useState(0);
-  const [useGradient, setUseGradient] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -43,7 +42,7 @@ export default function OgCardMakerTool() {
     const p = PRESETS[preset];
     const ctx = c.getContext("2d")!;
 
-    if (useGradient && p.gradient) {
+    if (p.gradient) {
       const grad = ctx.createLinearGradient(0, 0, s.w, s.h);
       grad.addColorStop(0, p.gradient[0]);
       grad.addColorStop(1, p.gradient[1]);
@@ -91,7 +90,7 @@ export default function OgCardMakerTool() {
       ctx.globalAlpha = 1;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, subtitle, tag, preset, size, useGradient]);
+  }, [title, subtitle, tag, preset, size]);
 
   const download = () => {
     const c = canvasRef.current;
@@ -145,10 +144,6 @@ export default function OgCardMakerTool() {
               />
             ))}
           </div>
-        </label>
-        <label className="flex items-center gap-2 sm:col-span-2">
-          <input type="checkbox" checked={useGradient} onChange={(e) => setUseGradient(e.target.checked)} />
-          {t("useGradient")}
         </label>
       </div>
 

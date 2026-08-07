@@ -16,6 +16,7 @@ const SAMPLE = `select u.id, u.name, count(o.id) as cnt from users u left join o
 
 export default function SqlFormatterTool() {
   const t = useTranslations("toolUI.sql-formatter");
+  const tc = useTranslations("common");
   const [input, setInput] = useState(SAMPLE);
   const [dialect, setDialect] = useState<Dialect>("sql");
   const [tabWidth, setTabWidth] = useState(2);
@@ -43,30 +44,6 @@ export default function SqlFormatterTool() {
 
   return (
     <div className="card space-y-3">
-      <div className="flex flex-wrap gap-3 items-end text-sm">
-        <label>
-          dialect
-          <select value={dialect} onChange={(e) => setDialect(e.target.value as Dialect)} className="ml-2 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            {DIALECTS.map((d) => <option key={d} value={d}>{d}</option>)}
-          </select>
-        </label>
-        <label>
-          {t("indent")}
-          <select value={tabWidth} onChange={(e) => setTabWidth(+e.target.value)} className="ml-2 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value="2">{t("twoSpaces")}</option>
-            <option value="4">{t("fourSpaces")}</option>
-          </select>
-        </label>
-        <label>
-          {t("keywords")}
-          <select value={keywordCase} onChange={(e) => setKeywordCase(e.target.value as "upper" | "lower" | "preserve")} className="ml-2 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value="upper">{t("upper")}</option>
-            <option value="lower">{t("lower")}</option>
-            <option value="preserve">{t("preserve")}</option>
-          </select>
-        </label>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
           <label className="label">{t("input")}</label>
@@ -85,6 +62,35 @@ export default function SqlFormatterTool() {
           />
         </div>
       </div>
+
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <div className="flex flex-wrap gap-3 items-end text-sm">
+            <label>
+              dialect
+              <select value={dialect} onChange={(e) => setDialect(e.target.value as Dialect)} className="ml-2 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
+                {DIALECTS.map((d) => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </label>
+            <label>
+              {t("indent")}
+              <select value={tabWidth} onChange={(e) => setTabWidth(+e.target.value)} className="ml-2 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
+                <option value="2">{t("twoSpaces")}</option>
+                <option value="4">{t("fourSpaces")}</option>
+              </select>
+            </label>
+            <label>
+              {t("keywords")}
+              <select value={keywordCase} onChange={(e) => setKeywordCase(e.target.value as "upper" | "lower" | "preserve")} className="ml-2 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
+                <option value="upper">{t("upper")}</option>
+                <option value="lower">{t("lower")}</option>
+                <option value="preserve">{t("preserve")}</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </details>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
       <button onClick={copy} disabled={!output} className="btn btn-primary disabled:opacity-50">{copied ? `✓ ${t("copied")}` : t("copy")}</button>

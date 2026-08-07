@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-const fmt = (n: number) => isFinite(n) ? n.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "—";
-
 export default function ExchangeRateTool() {
   const t = useTranslations("toolUI.exchange-rate");
   const [rate, setRate] = useState(1380); // 1 USD = ? KRW
@@ -17,18 +15,15 @@ export default function ExchangeRateTool() {
 
   return (
     <div className="card space-y-3">
-      <div>
-        <label className="label">{t("rateLabel")}</label>
-        <input type="number" step="0.01" value={rate} onChange={(e) => updateRate(+e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
-        <div className="text-xs text-muted mt-1">{t("rateHint")}</div>
-        {!(rate > 0) && <div className="text-xs text-amber-600 mt-1">{t("rateRequired")}</div>}
-      </div>
       <div className="grid grid-cols-2 gap-3">
         <div><label className="label">USD</label><input type="number" value={usd} onChange={(e) => { setActive("usd"); updateUsd(+e.target.value); }} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" /></div>
         <div><label className="label">KRW</label><input type="number" value={Math.round(krw)} onChange={(e) => { setActive("krw"); updateKrw(+e.target.value); }} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" /></div>
       </div>
-      <div className="text-sm bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded p-3">
-        ${fmt(usd)} = ₩{fmt(krw)}
+      <div>
+        <label className="label text-xs">{t("rateLabel")}</label>
+        <input type="number" step="0.01" value={rate} onChange={(e) => updateRate(+e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono text-sm" />
+        <div className="text-xs text-muted mt-1">{t("rateHint")}</div>
+        {!(rate > 0) && <div className="text-xs text-amber-600 mt-1">{t("rateRequired")}</div>}
       </div>
     </div>
   );

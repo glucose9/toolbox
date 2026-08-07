@@ -98,6 +98,7 @@ const MIME: Record<string, string> = {
 
 export default function PptxViewerTool() {
   const t = useTranslations("toolUI.pptx-viewer");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileName, setFileName] = useState("");
@@ -189,28 +190,39 @@ export default function PptxViewerTool() {
 
   return (
     <div className="card space-y-4">
-      <div
-        onDrop={(e) => {
-          e.preventDefault();
-          if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]);
-        }}
-        onDragOver={(e) => e.preventDefault()}
-        onClick={() => inputRef.current?.click()}
-        className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-10 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
-      >
-        <div className="text-5xl mb-3">📊</div>
-        <div className="font-medium">{t("dropFile")}</div>
-        {fileName && <div className="mt-1 text-sm text-muted truncate">{fileName}</div>}
-        <input
-          ref={inputRef}
-          type="file"
-          accept=".pptx"
-          className="hidden"
-          onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
-        />
-      </div>
+      {!fileName ? (
+        <div
+          onDrop={(e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]);
+          }}
+          onDragOver={(e) => e.preventDefault()}
+          onClick={() => inputRef.current?.click()}
+          className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-10 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          <div className="text-5xl mb-3">📊</div>
+          <div className="font-medium">{t("dropFile")}</div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="min-w-0 truncate text-sm font-medium">{fileName}</div>
+          <button
+            onClick={() => inputRef.current?.click()}
+            className="text-sm text-brand-600 hover:underline"
+          >
+            {tc("other")}
+          </button>
+        </div>
+      )}
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pptx"
+        className="hidden"
+        onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
+      />
 
-      <div className="text-xs text-muted">{t("fidelityNote")}</div>
+      {fileName && <div className="text-xs text-muted">{t("fidelityNote")}</div>}
 
       {loading && <div className="text-sm text-muted">{t("processing")}</div>}
       {error && <div className="text-sm text-red-600">{error}</div>}

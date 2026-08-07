@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { copyText } from "@/lib/clipboard";
 
@@ -45,12 +45,18 @@ export default function DataUriTool() {
     setResult(`data:${m};base64,${b64}`);
   };
 
-  const encodeText = () => {
-    const bytes = new TextEncoder().encode(textContent);
-    setOriginalBytes(bytes.length);
-    const b64 = bytesToBase64(bytes);
-    setResult(`data:${mime || "text/plain"};base64,${b64}`);
-  };
+  // Auto-encode on the text tab (debounced). Only reads textContent/mime and
+  // writes result/originalBytes, which are not dependencies — no re-run loop.
+  useEffect(() => {
+    if (tab !== "text") return;
+    const id = setTimeout(() => {
+      const bytes = new TextEncoder().encode(textContent);
+      setOriginalBytes(bytes.length);
+      const b64 = bytesToBase64(bytes);
+      setResult(`data:${mime || "text/plain"};base64,${b64}`);
+    }, 300);
+    return () => clearTimeout(id);
+  }, [tab, textContent, mime]);
 
   const stats = useMemo(() => {
     const uriLen = utf8ByteLength(result);
@@ -137,9 +143,6 @@ export default function DataUriTool() {
               spellCheck={false}
             />
           </div>
-          <button onClick={encodeText} className="btn btn-primary">
-            {t("result")}
-          </button>
         </div>
       )}
 

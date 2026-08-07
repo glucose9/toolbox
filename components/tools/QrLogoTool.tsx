@@ -6,6 +6,7 @@ import QRCode from "qrcode";
 
 export default function QrLogoTool() {
   const t = useTranslations("toolUI.qr-logo");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [text, setText] = useState("https://barokit.com");
@@ -71,10 +72,15 @@ export default function QrLogoTool() {
           className="hidden"
         />
         {logo && <button onClick={() => setLogo(null)} className="btn btn-secondary text-xs">{t("removeLogo")}</button>}
-        <label>{t("logoSize")} ({logoSize}%)<input type="range" min="10" max="30" value={logoSize} onChange={(e) => setLogoSize(+e.target.value)} className="w-full" /></label>
-        <label>{t("qrSize")} ({size}px)<input type="range" min="200" max="800" step="50" value={size} onChange={(e) => setSize(+e.target.value)} className="w-full" /></label>
-        <label>{t("logoBg")}<input type="color" value={logoBg} onChange={(e) => setLogoBg(e.target.value)} className="w-full h-7" /></label>
+        {logo && <label>{t("logoSize")} ({logoSize}%)<input type="range" min="10" max="30" value={logoSize} onChange={(e) => setLogoSize(+e.target.value)} className="w-full" /></label>}
+        {logo && <label>{t("logoBg")}<input type="color" value={logoBg} onChange={(e) => setLogoBg(e.target.value)} className="w-full h-7" /></label>}
       </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1 text-sm">
+          <label className="block">{t("qrSize")} ({size}px)<input type="range" min="200" max="800" step="50" value={size} onChange={(e) => setSize(+e.target.value)} className="w-full" /></label>
+        </div>
+      </details>
       <canvas ref={canvasRef} className="max-w-full mx-auto" />
       <button onClick={download} disabled={!text} className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed">{t("downloadPng")}</button>
     </div>

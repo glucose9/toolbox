@@ -26,7 +26,13 @@ const MIMES: { ext: string; mime: string }[] = [
 
 export default function MimeTypesTool() {
   const t = useTranslations("toolUI.mime-types");
+  const tc = useTranslations("common");
   const [q, setQ] = useState("");
+  const [copied, setCopied] = useState("");
+  const copy = async (key: string, mime: string) => {
+    const ok = await copyText(mime);
+    if (ok) { setCopied(key); setTimeout(() => setCopied(""), 1500); }
+  };
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
     if (!query) return MIMES;
@@ -40,7 +46,7 @@ export default function MimeTypesTool() {
           <div key={m.ext + m.mime} className="flex justify-between p-2 text-sm">
             <span className="font-mono">.{m.ext}</span>
             <span className="font-mono text-muted">{m.mime}</span>
-            <button onClick={() => void copyText(m.mime)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
+            <button onClick={() => void copy(m.ext + m.mime, m.mime)} className="text-xs text-brand-600 hover:underline">{copied === m.ext + m.mime ? tc("copied") : t("copy")}</button>
           </div>
         ))}
       </div>

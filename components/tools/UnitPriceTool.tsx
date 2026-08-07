@@ -7,6 +7,7 @@ const fmt = (n: number) => isFinite(n) ? n.toLocaleString(undefined, { maximumFr
 
 export default function UnitPriceTool() {
   const t = useTranslations("toolUI.unit-price");
+  const tc = useTranslations("common");
   const [pA, setPA] = useState(5000);
   const [vA, setVA] = useState(500);
   const [pB, setPB] = useState(8000);
@@ -37,10 +38,6 @@ export default function UnitPriceTool() {
           <input type="number" value={vB} onChange={(e) => setVB(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-2 items-end text-sm">
-        <label>{t("unitBase")}<input type="number" value={unit} onChange={(e) => setUnit(+e.target.value)} className="w-full mt-1 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" /></label>
-        <label>{t("unitLabel")}<input type="text" value={unitLabel} onChange={(e) => setUnitLabel(e.target.value)} className="w-full mt-1 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" /></label>
-      </div>
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded text-center"><div className="text-xs text-muted">{t("perUnit", { side: "A", unit, label: unitLabel })}</div><div className="text-lg font-bold">{t("currency", { value: fmt(unitA) })}</div></div>
         <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded text-center"><div className="text-xs text-muted">{t("perUnit", { side: "B", unit, label: unitLabel })}</div><div className="text-lg font-bold">{t("currency", { value: fmt(unitB) })}</div></div>
@@ -56,6 +53,15 @@ export default function UnitPriceTool() {
           })}
         </div>
       )}
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <div className="grid grid-cols-2 gap-2 items-end text-sm">
+            <label>{t("unitBase")}<input type="number" value={unit} onChange={(e) => setUnit(+e.target.value)} className="w-full mt-1 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" /></label>
+            <label>{t("unitLabel")}<input type="text" value={unitLabel} onChange={(e) => setUnitLabel(e.target.value)} className="w-full mt-1 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" /></label>
+          </div>
+        </div>
+      </details>
     </div>
   );
 }

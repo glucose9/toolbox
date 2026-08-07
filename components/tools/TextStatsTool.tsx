@@ -13,9 +13,7 @@ export default function TextStatsTool() {
     const paragraphs = text.split(/\n\n+/).filter((p) => p.trim()).length;
     const avgWordLen = words > 0 ? noSpace / words : 0;
     const avgSentenceLen = sentences > 0 ? words / sentences : 0;
-    // Simplified Flesch (English approximation)
-    const flesch = sentences > 0 && words > 0 ? 206.835 - 1.015 * (words / sentences) - 84.6 * (noSpace / words / 4) : 0;
-    return { chars, noSpace, words, sentences, paragraphs, avgWordLen, avgSentenceLen, flesch };
+    return { chars, noSpace, words, sentences, paragraphs, avgWordLen, avgSentenceLen };
   }, [text]);
   return (
     <div className="card space-y-3">
@@ -25,10 +23,11 @@ export default function TextStatsTool() {
         <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("noSpace")}</div><div className="text-xl font-bold">{stats.noSpace.toLocaleString()}</div></div>
         <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("words")}</div><div className="text-xl font-bold">{stats.words.toLocaleString()}</div></div>
         <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("sentences")}</div><div className="text-xl font-bold">{stats.sentences}</div></div>
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("paragraphs")}</div><div className="text-xl font-bold">{stats.paragraphs}</div></div>
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("avgWordLen")}</div><div className="text-xl font-bold">{stats.avgWordLen.toFixed(1)}</div></div>
-        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded"><div className="text-xs text-muted">{t("avgSentenceLen")}</div><div className="text-xl font-bold">{stats.avgSentenceLen.toFixed(1)}</div></div>
-        <div className="p-3 bg-brand-50 dark:bg-brand-900/20 rounded"><div className="text-xs text-muted">{t("readability")}</div><div className="text-xl font-bold">{stats.flesch.toFixed(0)}</div></div>
+      </div>
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+        <span>{t("paragraphs")} {stats.paragraphs}</span>
+        <span>{t("avgWordLen")} {stats.avgWordLen.toFixed(1)}</span>
+        <span>{t("avgSentenceLen")} {stats.avgSentenceLen.toFixed(1)}</span>
       </div>
     </div>
   );

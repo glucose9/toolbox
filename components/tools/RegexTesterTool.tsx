@@ -11,6 +11,7 @@ const MAX_MATCHES = 2_000;
 
 export default function RegexTesterTool() {
   const t = useTranslations("toolUI.regex-tester");
+  const tc = useTranslations("common");
   const [pattern, setPattern] = useState("\\b\\w+\\b");
   const [flags, setFlags] = useState<Flag[]>(["g"]);
   const [input, setInput] = useState("Hello, world! Hello, Claude.");
@@ -126,20 +127,23 @@ export default function RegexTesterTool() {
         </details>
       )}
 
-      <div>
-        <label className="label">{t("replacementPreview")}</label>
-        <input
-          type="text"
-          value={replacement}
-          onChange={(e) => setReplacement(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono"
-        />
-        <textarea
-          readOnly
-          value={replaced}
-          className="mt-2 w-full h-20 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono"
-        />
-      </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <label className="label">{t("replacementPreview")}</label>
+          <input
+            type="text"
+            value={replacement}
+            onChange={(e) => setReplacement(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono"
+          />
+          <textarea
+            readOnly
+            value={replaced}
+            className="mt-2 w-full h-20 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm resize-y font-mono"
+          />
+        </div>
+      </details>
     </div>
   );
 }

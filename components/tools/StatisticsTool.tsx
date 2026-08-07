@@ -10,6 +10,7 @@ const fmt = (n: number) => isFinite(n) ? n.toFixed(4).replace(/\.?0+$/, "") : "�
 
 export default function StatisticsTool() {
   const t = useTranslations("toolUI.statistics");
+  const tc = useTranslations("common");
   const [text, setText] = useState("12, 15, 22, 8, 19, 25, 13, 17, 21, 16");
   const stats = useMemo(() => {
     const nums = parse(text);
@@ -42,21 +43,32 @@ export default function StatisticsTool() {
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder={t("placeholder")} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono text-sm resize-y" />
       {stats && (
-        <table className="w-full text-sm">
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            <tr><td className="py-2 pr-3 text-muted">{t("count")}</td><td className="font-mono">{stats.n}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("sum")}</td><td className="font-mono">{fmt(stats.sum)}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("mean")}</td><td className="font-mono">{fmt(stats.mean)}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("median")}</td><td className="font-mono">{fmt(stats.median)}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("mode")}</td><td className="font-mono">{stats.mode.length > 0 ? stats.mode.join(", ") : "—"}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("minMax")}</td><td className="font-mono">{fmt(stats.min)} / {fmt(stats.max)}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("range")}</td><td className="font-mono">{fmt(stats.range)}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("variance")}</td><td className="font-mono">{fmt(stats.variance)}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("stdPop")}</td><td className="font-mono">{fmt(stats.stdPop)}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("stdSample")}</td><td className="font-mono">{fmt(stats.stdSample)}</td></tr>
-            <tr><td className="py-2 pr-3 text-muted">{t("quartiles")}</td><td className="font-mono">{fmt(stats.q1)} / {fmt(stats.q3)} / {fmt(stats.iqr)}</td></tr>
-          </tbody>
-        </table>
+        <>
+          <table className="w-full text-sm">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tr><td className="py-2 pr-3 text-muted">{t("count")}</td><td className="font-mono">{stats.n}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("sum")}</td><td className="font-mono">{fmt(stats.sum)}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("mean")}</td><td className="font-mono">{fmt(stats.mean)}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("median")}</td><td className="font-mono">{fmt(stats.median)}</td></tr>
+              <tr><td className="py-2 pr-3 text-muted">{t("minMax")}</td><td className="font-mono">{fmt(stats.min)} / {fmt(stats.max)}</td></tr>
+            </tbody>
+          </table>
+          <details className="rounded border border-gray-200 dark:border-gray-700">
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+            <div className="p-3 pt-1">
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  <tr><td className="py-2 pr-3 text-muted">{t("mode")}</td><td className="font-mono">{stats.mode.length > 0 ? stats.mode.join(", ") : "—"}</td></tr>
+                  <tr><td className="py-2 pr-3 text-muted">{t("range")}</td><td className="font-mono">{fmt(stats.range)}</td></tr>
+                  <tr><td className="py-2 pr-3 text-muted">{t("variance")}</td><td className="font-mono">{fmt(stats.variance)}</td></tr>
+                  <tr><td className="py-2 pr-3 text-muted">{t("stdPop")}</td><td className="font-mono">{fmt(stats.stdPop)}</td></tr>
+                  <tr><td className="py-2 pr-3 text-muted">{t("stdSample")}</td><td className="font-mono">{fmt(stats.stdSample)}</td></tr>
+                  <tr><td className="py-2 pr-3 text-muted">{t("quartiles")}</td><td className="font-mono">{fmt(stats.q1)} / {fmt(stats.q3)} / {fmt(stats.iqr)}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </>
       )}
     </div>
   );

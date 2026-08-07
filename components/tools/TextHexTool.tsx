@@ -19,6 +19,7 @@ function fromHex(s: string): string {
 
 export default function TextHexTool() {
   const t = useTranslations("toolUI.text-hex");
+  const tc = useTranslations("common");
   const [input, setInput] = useState("Hello 안녕");
   const [spaced, setSpaced] = useState(true);
   const [mode, setMode] = useState<"auto" | "toHex" | "toText">("auto");
@@ -35,9 +36,16 @@ export default function TextHexTool() {
       <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
       <div className="flex flex-wrap gap-2">
         <button onClick={() => setMode("auto")} className={`btn text-xs ${mode === "auto" ? "btn-primary" : "btn-secondary"}`}>{t("modeAuto")}</button>
-        <button onClick={() => setMode("toHex")} className={`btn text-xs ${mode === "toHex" ? "btn-primary" : "btn-secondary"}`}>{t("textToHex")}</button>
-        <button onClick={() => setMode("toText")} className={`btn text-xs ${mode === "toText" ? "btn-primary" : "btn-secondary"}`}>{t("hexToText")}</button>
       </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => setMode("toHex")} className={`btn text-xs ${mode === "toHex" ? "btn-primary" : "btn-secondary"}`}>{t("textToHex")}</button>
+            <button onClick={() => setMode("toText")} className={`btn text-xs ${mode === "toText" ? "btn-primary" : "btn-secondary"}`}>{t("hexToText")}</button>
+          </div>
+        </div>
+      </details>
       <div className="flex justify-between items-center text-xs">
         <span className="text-muted">{isHex ? t("hexToText") : t("textToHex")}</span>
         {!isHex && <label className="flex items-center gap-1"><input type="checkbox" checked={spaced} onChange={(e) => setSpaced(e.target.checked)} /> {t("spaced")}</label>}

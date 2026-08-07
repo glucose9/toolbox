@@ -21,9 +21,16 @@ export default function PdfCropTool() {
 
   const handleFile = async (f: File) => {
     if (!isPdfFile(f)) return;
+    setError("");
     setFile(f);
-    const src = await PDFDocument.load(await readBytes(f));
-    setPageCount(src.getPageCount());
+    try {
+      const src = await PDFDocument.load(await readBytes(f));
+      setPageCount(src.getPageCount());
+    } catch (e) {
+      setError((e as Error).message);
+      setFile(null);
+      setPageCount(0);
+    }
   };
 
   const run = async () => {
@@ -58,6 +65,7 @@ export default function PdfCropTool() {
           <div className="font-medium mt-2">{t("uploadPdf")}</div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} className="hidden" />
         </div>
+        {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
       </div>
     );
   }

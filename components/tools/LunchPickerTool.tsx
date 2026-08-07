@@ -13,12 +13,14 @@ const PRESETS: Record<string, string[]> = {
 
 export default function LunchPickerTool() {
   const t = useTranslations("toolUI.lunch-picker");
+  const tc = useTranslations("common");
   const [category, setCategory] = useState("한식");
   const [custom, setCustom] = useState("");
   const [result, setResult] = useState("");
   const [spinning, setSpinning] = useState(false);
 
-  const pool = custom.trim() ? custom.split(/[\n,]/).map((s) => s.trim()).filter(Boolean) : PRESETS[category];
+  const hasCustom = custom.trim().length > 0;
+  const pool = hasCustom ? custom.split(/[\n,]/).map((s) => s.trim()).filter(Boolean) : PRESETS[category];
 
   const pick = () => {
     if (pool.length === 0) return;
@@ -36,13 +38,16 @@ export default function LunchPickerTool() {
     <div className="card space-y-3">
       <div className="flex flex-wrap gap-2">
         {Object.keys(PRESETS).map((c) => (
-          <button key={c} onClick={() => { setCategory(c); setCustom(""); }} className={`btn ${category === c && !custom ? "btn-primary" : "btn-secondary"}`}>{c}</button>
+          <button key={c} onClick={() => { setCategory(c); setCustom(""); }} disabled={hasCustom} className={`btn ${category === c && !hasCustom ? "btn-primary" : "btn-secondary"} disabled:opacity-40 disabled:cursor-not-allowed`}>{c}</button>
         ))}
       </div>
-      <div>
-        <label className="label">{t("customLabel")}</label>
-        <textarea value={custom} onChange={(e) => setCustom(e.target.value)} placeholder={t("customPlaceholder")} className="w-full h-24 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
-      </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <label className="label">{t("customLabel")}</label>
+          <textarea value={custom} onChange={(e) => setCustom(e.target.value)} placeholder={t("customPlaceholder")} className="w-full h-24 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
+        </div>
+      </details>
       <button onClick={pick} disabled={spinning || pool.length === 0} className="btn btn-primary w-full disabled:opacity-50">{spinning ? t("spinning") : t("pickButton")}</button>
       {result && (
         <div className={`bg-brand-50 dark:bg-brand-900/20 border-2 border-brand-500 rounded p-8 text-center ${spinning ? "animate-pulse" : ""}`}>

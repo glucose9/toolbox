@@ -15,7 +15,6 @@ Anderson, P., & Lee, M. (2021). Memory and attention. Nature Cognition, 5, 100-1
 Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
   const [order, setOrder] = useState<"asc" | "desc">("asc");
   const [dedupe, setDedupe] = useState(true);
-  const [hanging, setHanging] = useState(true);
 
   const sorted = useMemo(() => {
     let lines = input
@@ -53,9 +52,6 @@ Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
         <label className="flex items-center gap-1">
           <input type="checkbox" checked={dedupe} onChange={(e) => setDedupe(e.target.checked)} /> {t("dedupe")}
         </label>
-        <label className="flex items-center gap-1">
-          <input type="checkbox" checked={hanging} onChange={(e) => setHanging(e.target.checked)} /> {t("hangingIndent")}
-        </label>
         <span className="text-xs text-muted self-center ml-auto">{t("entries", { count: sorted.length })}</span>
       </div>
 
@@ -66,7 +62,7 @@ Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
         </div>
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3 bg-gray-50 dark:bg-gray-950 text-sm space-y-2 max-h-96 overflow-y-auto">
           {sorted.map((line, i) => (
-            <div key={i} style={hanging ? { paddingLeft: "2em", textIndent: "-2em" } : {}}>
+            <div key={i} style={{ paddingLeft: "2em", textIndent: "-2em" }}>
               {line}
             </div>
           ))}

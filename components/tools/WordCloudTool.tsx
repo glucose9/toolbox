@@ -13,6 +13,7 @@ function tokenize(text: string): Map<string, number> {
 
 export default function WordCloudTool() {
   const t = useTranslations("toolUI.word-cloud");
+  const tc = useTranslations("common");
   const [text, setText] = useState("코드 코드 코드 디자인 디자인 사용자 사용자 사용자 사용자 사용자 도구 도구 도구 도구 사이트 사이트");
   const [maxWords, setMaxWords] = useState(50);
   const cloud = useMemo(() => {
@@ -28,12 +29,17 @@ export default function WordCloudTool() {
   return (
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />
-      <label className="text-sm">{t("maxWords")} ({maxWords})<input type="range" min="10" max="200" value={maxWords} onChange={(e) => setMaxWords(+e.target.value)} className="w-full" /></label>
       <div className="border border-gray-200 dark:border-gray-700 rounded p-6 bg-white dark:bg-gray-900 flex flex-wrap gap-3 items-center justify-center min-h-48">
         {cloud.map((w, i) => (
           <span key={i} style={{ fontSize: `${w.size}px`, color: `hsl(${(i * 47) % 360}, 60%, 50%)` }} title={t("occurrences", { count: w.count })}>{w.word}</span>
         ))}
       </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <label className="text-sm">{t("maxWords")} ({maxWords})<input type="range" min="10" max="200" value={maxWords} onChange={(e) => setMaxWords(+e.target.value)} className="w-full" /></label>
+        </div>
+      </details>
     </div>
   );
 }

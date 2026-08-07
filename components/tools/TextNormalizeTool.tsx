@@ -27,6 +27,7 @@ function isEmojiJoiner(str: string, off: number): boolean {
 
 export default function TextNormalizeTool() {
   const t = useTranslations("toolUI.text-normalize");
+  const tc = useTranslations("common");
   const [input, setInput] = useState(
     '“안녕하세요”라고  하셨다.\n\n\n다음 문장입니다 .\n그리고  ‘인용문’ 입니다。'
   );
@@ -95,9 +96,23 @@ export default function TextNormalizeTool() {
     { key: "spaces", label: t("optSpaces") },
     { key: "blankLines", label: t("optBlankLines") },
     { key: "punctSpacing", label: t("optPunctSpacing") },
+  ];
+
+  const advancedOptDefs: { key: keyof typeof opts; label: string }[] = [
     { key: "lowercase", label: t("optLowercase") },
     { key: "stripPunct", label: t("optStripPunct") },
   ];
+
+  const renderOpt = (o: { key: keyof typeof opts; label: string }) => (
+    <label key={o.key} className="flex items-center gap-2">
+      <input
+        type="checkbox"
+        checked={opts[o.key]}
+        onChange={(e) => setOpts({ ...opts, [o.key]: e.target.checked })}
+      />
+      <span>{o.label}</span>
+    </label>
+  );
 
   return (
     <div className="card space-y-3">
@@ -112,17 +127,17 @@ export default function TextNormalizeTool() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-        {optDefs.map((o) => (
-          <label key={o.key} className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={opts[o.key]}
-              onChange={(e) => setOpts({ ...opts, [o.key]: e.target.checked })}
-            />
-            <span>{o.label}</span>
-          </label>
-        ))}
+        {optDefs.map(renderOpt)}
       </div>
+
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            {advancedOptDefs.map(renderOpt)}
+          </div>
+        </div>
+      </details>
 
       <div>
         <div className="flex justify-between items-center mb-1">

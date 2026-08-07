@@ -8,6 +8,7 @@ type SortMode = "asc" | "desc" | "len-asc" | "len-desc" | "random";
 
 export default function TextSortTool() {
   const t = useTranslations("toolUI.text-sort");
+  const tc = useTranslations("common");
   const [text, setText] = useState("");
   const [mode, setMode] = useState<SortMode>("asc");
   const [caseInsensitive, setCaseInsensitive] = useState(true);
@@ -90,20 +91,25 @@ export default function TextSortTool() {
           </button>
         ))}
       </div>
-      <div className="flex flex-wrap gap-4 text-sm">
-        <label className="flex items-center gap-1">
-          <input type="checkbox" checked={caseInsensitive} onChange={(e) => setCaseInsensitive(e.target.checked)} />
-          {t("caseInsensitive")}
-        </label>
-        <label className="flex items-center gap-1">
-          <input type="checkbox" checked={natural} onChange={(e) => setNatural(e.target.checked)} />
-          {t("naturalSort")}
-        </label>
-        <label className="flex items-center gap-1">
-          <input type="checkbox" checked={dedupe} onChange={(e) => setDedupe(e.target.checked)} />
-          {t("dedupe")}
-        </label>
-      </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <div className="flex flex-wrap gap-4 text-sm">
+            <label className="flex items-center gap-1">
+              <input type="checkbox" checked={caseInsensitive} onChange={(e) => setCaseInsensitive(e.target.checked)} />
+              {t("caseInsensitive")}
+            </label>
+            <label className="flex items-center gap-1">
+              <input type="checkbox" checked={natural} onChange={(e) => setNatural(e.target.checked)} />
+              {t("naturalSort")}
+            </label>
+            <label className="flex items-center gap-1">
+              <input type="checkbox" checked={dedupe} onChange={(e) => setDedupe(e.target.checked)} />
+              {t("dedupe")}
+            </label>
+          </div>
+        </div>
+      </details>
       <textarea
         readOnly
         value={result}

@@ -9,6 +9,7 @@ const fmt = (n: number) => (isFinite(n) ? Math.round(n).toLocaleString() : "—"
 
 export default function VatTool() {
   const t = useTranslations("toolUI.vat");
+  const tc = useTranslations("common");
   const [mode, setMode] = useState<Mode>("from-total");
   const [val, setVal] = useState(110000);
   const [rate, setRate] = useState(10);
@@ -31,16 +32,18 @@ export default function VatTool() {
         <button onClick={() => setMode("from-total")} className={`btn ${mode === "from-total" ? "btn-primary" : "btn-secondary"}`}>{t("fromTotal")}</button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="label">{mode === "from-supply" ? t("supplyAmount") : t("totalAmount")}</label>
-          <input type="number" value={val} onChange={(e) => setVal(+e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
-        </div>
-        <div>
+      <div>
+        <label className="label">{mode === "from-supply" ? t("supplyAmount") : t("totalAmount")}</label>
+        <input type="number" value={val} onChange={(e) => setVal(+e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
+      </div>
+
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
           <label className="label">{t("vatRate")}</label>
           <input type="number" value={rate} onChange={(e) => setRate(+e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
         </div>
-      </div>
+      </details>
 
       <div className="grid grid-cols-3 gap-3">
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3 text-center">

@@ -70,8 +70,8 @@ export default function JsonXmlTool() {
   return (
     <div className="card space-y-3">
       <div className="flex flex-wrap gap-2 text-sm">
-        <button onClick={() => { setDir("json-to-xml"); setInput(SAMPLE_JSON); }} className={`btn ${dir === "json-to-xml" ? "btn-primary" : "btn-secondary"}`}>JSON → XML</button>
-        <button onClick={() => { setDir("xml-to-json"); setInput(SAMPLE_XML); }} className={`btn ${dir === "xml-to-json" ? "btn-primary" : "btn-secondary"}`}>XML → JSON</button>
+        <button onClick={() => setDir("json-to-xml")} className={`btn ${dir === "json-to-xml" ? "btn-primary" : "btn-secondary"}`}>JSON → XML</button>
+        <button onClick={() => setDir("xml-to-json")} className={`btn ${dir === "xml-to-json" ? "btn-primary" : "btn-secondary"}`}>XML → JSON</button>
         <button onClick={swap} disabled={!output} className="btn btn-secondary disabled:opacity-50">{t("swap")}</button>
         <button onClick={loadSample} className="btn btn-secondary">{t("sample")}</button>
       </div>

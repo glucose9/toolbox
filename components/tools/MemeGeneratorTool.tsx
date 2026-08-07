@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 export default function MemeGeneratorTool() {
   const t = useTranslations("toolUI.meme-generator");
+  const tc = useTranslations("common");
   const [imgSrc, setImgSrc] = useState<string>("");
   const [topText, setTopText] = useState<string>("TOP TEXT");
   const [bottomText, setBottomText] = useState<string>("BOTTOM TEXT");
@@ -152,39 +153,46 @@ export default function MemeGeneratorTool() {
               className="w-full"
             />
           </div>
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <label className="flex items-center gap-2">
-              <span>{t("textColor")}</span>
-              <input
-                type="color"
-                value={textColor}
-                onChange={(e) => setTextColor(e.target.value)}
-                className="w-7 h-7 rounded cursor-pointer border border-gray-300"
-              />
-            </label>
-            <label className="flex items-center gap-2">
-              <span>{t("outlineColor")}</span>
-              <input
-                type="color"
-                value={outlineColor}
-                onChange={(e) => setOutlineColor(e.target.value)}
-                className="w-7 h-7 rounded cursor-pointer border border-gray-300"
-              />
-            </label>
-          </div>
-          <div>
-            <label className="label">
-              {t("outlineWidth")}: {outlineWidth}px
-            </label>
-            <input
-              type="range"
-              min={0}
-              max={20}
-              value={outlineWidth}
-              onChange={(e) => setOutlineWidth(Number(e.target.value))}
-              className="w-full"
-            />
-          </div>
+          <details className="rounded border border-gray-200 dark:border-gray-700">
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium">
+              {tc("advancedOptions")}
+            </summary>
+            <div className="p-3 pt-1 space-y-3">
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <label className="flex items-center gap-2">
+                  <span>{t("textColor")}</span>
+                  <input
+                    type="color"
+                    value={textColor}
+                    onChange={(e) => setTextColor(e.target.value)}
+                    className="w-7 h-7 rounded cursor-pointer border border-gray-300"
+                  />
+                </label>
+                <label className="flex items-center gap-2">
+                  <span>{t("outlineColor")}</span>
+                  <input
+                    type="color"
+                    value={outlineColor}
+                    onChange={(e) => setOutlineColor(e.target.value)}
+                    className="w-7 h-7 rounded cursor-pointer border border-gray-300"
+                  />
+                </label>
+              </div>
+              <div>
+                <label className="label">
+                  {t("outlineWidth")}: {outlineWidth}px
+                </label>
+                <input
+                  type="range"
+                  min={0}
+                  max={20}
+                  value={outlineWidth}
+                  onChange={(e) => setOutlineWidth(Number(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </details>
         </div>
 
         <div className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-lg p-4 min-h-[260px]">

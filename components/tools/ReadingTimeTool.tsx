@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 export default function ReadingTimeTool() {
   const t = useTranslations("toolUI.reading-time");
+  const tc = useTranslations("common");
   const fmtTime = (seconds: number): string => {
     const total = Math.round(seconds);
     const m = Math.floor(total / 60);
@@ -32,19 +33,6 @@ export default function ReadingTimeTool() {
   return (
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder={t("placeholder")} className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />
-      <div className="grid grid-cols-3 gap-3 text-sm">
-        <div className="border border-gray-200 dark:border-gray-700 rounded p-2 text-center"><div className="text-xs text-muted">{t("characters")}</div><div className="text-xl font-bold">{chars.toLocaleString()}</div></div>
-        <div className="border border-gray-200 dark:border-gray-700 rounded p-2 text-center"><div className="text-xs text-muted">{t("noSpace")}</div><div className="text-xl font-bold">{charsNoSpace.toLocaleString()}</div></div>
-        <div className="border border-gray-200 dark:border-gray-700 rounded p-2 text-center"><div className="text-xs text-muted">{t("words")}</div><div className="text-xl font-bold">{words.toLocaleString()}</div></div>
-      </div>
-      <div className="grid grid-cols-2 gap-3 text-sm">
-        <div>
-          <label>{t("speakingRate", { value: speakingRate })}<input type="range" min="100" max="500" step="20" value={speakingRate} onChange={(e) => setSpeakingRate(+e.target.value)} className="w-full" /></label>
-        </div>
-        <div>
-          <label>{t("readingRate", { value: readingRate })}<input type="range" min="200" max="900" step="20" value={readingRate} onChange={(e) => setReadingRate(+e.target.value)} className="w-full" /></label>
-        </div>
-      </div>
       <div className="grid grid-cols-2 gap-3">
         <div className="border border-brand-500 bg-brand-50 dark:bg-brand-900/20 rounded p-4 text-center">
           <div className="text-xs text-muted">{t("speakingTime")}</div>
@@ -55,6 +43,24 @@ export default function ReadingTimeTool() {
           <div className="text-2xl font-bold mt-1">{fmtTime(readingSec)}</div>
         </div>
       </div>
+      <div className="grid grid-cols-3 gap-3 text-sm">
+        <div className="border border-gray-200 dark:border-gray-700 rounded p-2 text-center"><div className="text-xs text-muted">{t("characters")}</div><div className="text-xl font-bold">{chars.toLocaleString()}</div></div>
+        <div className="border border-gray-200 dark:border-gray-700 rounded p-2 text-center"><div className="text-xs text-muted">{t("noSpace")}</div><div className="text-xl font-bold">{charsNoSpace.toLocaleString()}</div></div>
+        <div className="border border-gray-200 dark:border-gray-700 rounded p-2 text-center"><div className="text-xs text-muted">{t("words")}</div><div className="text-xl font-bold">{words.toLocaleString()}</div></div>
+      </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <label>{t("speakingRate", { value: speakingRate })}<input type="range" min="100" max="500" step="20" value={speakingRate} onChange={(e) => setSpeakingRate(+e.target.value)} className="w-full" /></label>
+            </div>
+            <div>
+              <label>{t("readingRate", { value: readingRate })}<input type="range" min="200" max="900" step="20" value={readingRate} onChange={(e) => setReadingRate(+e.target.value)} className="w-full" /></label>
+            </div>
+          </div>
+        </div>
+      </details>
     </div>
   );
 }

@@ -41,6 +41,18 @@ export default function ImageColorTransparentTool() {
     ctx.putImageData(d, 0, 0);
   }, [img, color, tolerance]);
 
+  const pickColor = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const c = canvasRef.current;
+    if (!c || !c.width || !c.height) return;
+    const rect = c.getBoundingClientRect();
+    const x = Math.floor((e.clientX - rect.left) * (c.width / rect.width));
+    const y = Math.floor((e.clientY - rect.top) * (c.height / rect.height));
+    if (x < 0 || y < 0 || x >= c.width || y >= c.height) return;
+    // RGB channels are preserved when alpha is zeroed, so this reads the original pixel color.
+    const p = c.getContext("2d")!.getImageData(x, y, 1, 1).data;
+    setColor("#" + ((1 << 24) | (p[0] << 16) | (p[1] << 8) | p[2]).toString(16).slice(1));
+  };
+
   const download = () => {
     if (!file) return;
     canvasRef.current!.toBlob((blob) => {
@@ -67,7 +79,7 @@ export default function ImageColorTransparentTool() {
         <label>{t("colorToTransparent")}<input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-full h-9 mt-1" /></label>
         <label>{t("tolerance")} ({tolerance})<input type="range" min="0" max="200" value={tolerance} onChange={(e) => setTolerance(+e.target.value)} className="w-full" /></label>
       </div>
-      <div className="bg-checker rounded p-2"><canvas ref={canvasRef} className="max-w-full mx-auto" /></div>
+      <div className="bg-checker rounded p-2"><canvas ref={canvasRef} onClick={pickColor} className="max-w-full mx-auto cursor-crosshair" /></div>
       <button onClick={download} className="btn btn-primary">{t("downloadPng")}</button>
     </div>
   );

@@ -11,6 +11,7 @@ function rand(max: number): number {
 
 export default function DiceCoinTool() {
   const t = useTranslations("toolUI.dice-coin");
+  const tc = useTranslations("common");
   const [sides, setSides] = useState(6);
   const [count, setCount] = useState(2);
   const [results, setResults] = useState<number[]>([]);
@@ -50,11 +51,17 @@ export default function DiceCoinTool() {
           {results.length > 1 && <div className="text-sm text-muted">{t("sum")}: <strong>{sum}</strong></div>}
         </div>
       )}
-      <hr className="border-gray-200 dark:border-gray-700" />
-      <div className="space-y-2">
-        <button onClick={flip} className="btn btn-primary w-full">{t("flipCoin")}</button>
-        {coin && <div className="text-center text-2xl font-bold">{coin}</div>}
-      </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1 space-y-2">
+          <button onClick={flip} className="btn btn-primary w-full">{t("flipCoin")}</button>
+          {coin && (
+            <div className="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded p-4 text-center">
+              <span className="inline-flex min-w-12 h-12 px-3 rounded-lg bg-white dark:bg-gray-900 items-center justify-center text-xl font-bold border border-gray-200 dark:border-gray-700">{coin}</span>
+            </div>
+          )}
+        </div>
+      </details>
     </div>
   );
 }

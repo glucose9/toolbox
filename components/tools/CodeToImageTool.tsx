@@ -147,6 +147,7 @@ greet("world");`;
 
 export default function CodeToImageTool() {
   const t = useTranslations("toolUI.code-to-image");
+  const tc = useTranslations("common");
   const [code, setCode] = useState<string>(DEFAULT_CODE);
   const [lang, setLang] = useState<LangKey>("javascript");
   const [themeKey, setThemeKey] = useState<ThemeKey>("dark");
@@ -293,35 +294,40 @@ export default function CodeToImageTool() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="label">{t("windowTitle")}</label>
-              <input
-                className="input font-mono"
-                value={windowTitle}
-                onChange={(e) => setWindowTitle(e.target.value)}
-                placeholder="main.js"
-              />
-            </div>
-            <div>
-              <label className="label">{t("background")}</label>
-              <input
-                type="color"
-                value={bg}
-                onChange={(e) => setBg(e.target.value)}
-                className="w-full h-10 rounded cursor-pointer border border-gray-300"
-              />
-            </div>
-          </div>
+          <details className="rounded border border-gray-200 dark:border-gray-700">
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+            <div className="p-3 pt-1 space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="label">{t("windowTitle")}</label>
+                  <input
+                    className="input font-mono"
+                    value={windowTitle}
+                    onChange={(e) => setWindowTitle(e.target.value)}
+                    placeholder="main.js"
+                  />
+                </div>
+                <div>
+                  <label className="label">{t("background")}</label>
+                  <input
+                    type="color"
+                    value={bg}
+                    onChange={(e) => setBg(e.target.value)}
+                    className="w-full h-10 rounded cursor-pointer border border-gray-300"
+                  />
+                </div>
+              </div>
 
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={showControls}
-              onChange={(e) => setShowControls(e.target.checked)}
-            />
-            <span>{t("windowControls")}</span>
-          </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={showControls}
+                  onChange={(e) => setShowControls(e.target.checked)}
+                />
+                <span>{t("windowControls")}</span>
+              </label>
+            </div>
+          </details>
 
           <button onClick={downloadPng} className="btn btn-primary w-full">
             {t("downloadPng")}

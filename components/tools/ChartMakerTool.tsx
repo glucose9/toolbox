@@ -411,11 +411,27 @@ export default function ChartMakerTool() {
         </svg>
       </div>
 
-      {/* Export */}
-      <div className="flex flex-wrap gap-2">
-        <button onClick={() => download("png")} className="btn btn-primary text-sm">⬇ {t("downloadPng")}</button>
-        <button onClick={() => download("svg")} className="btn btn-secondary text-sm">⬇ {t("downloadSvg")}</button>
-        <button onClick={copyPng} className="btn btn-secondary text-sm">{copied ? "✓ " + t("copied") : "📋 " + t("copyPng")}</button>
+      {/* Data editor */}
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <label className="label mb-0">{t("dataLabel")}</label>
+          <span className="text-xs text-muted">{t("rowCount", { count: data.length })}</span>
+        </div>
+        <div className="space-y-1.5">
+          <div className="grid grid-cols-[1fr_1fr_auto] gap-2 text-xs text-muted px-1">
+            <span>{t("colLabel")}</span>
+            <span>{t("colValue")}</span>
+            <span className="w-7" />
+          </div>
+          {rows.map((r, i) => (
+            <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2">
+              <input value={r.label} onChange={(e) => setRow(i, { label: e.target.value })} className="px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
+              <input value={r.value} onChange={(e) => setRow(i, { value: e.target.value })} inputMode="decimal" className="px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono" />
+              <button onClick={() => removeRow(i)} className="w-7 text-red-500 hover:text-red-700" aria-label="remove">×</button>
+            </div>
+          ))}
+        </div>
+        <button onClick={addRow} className="btn btn-secondary text-sm mt-2">+ {t("addRow")}</button>
       </div>
 
       {/* Title + options */}
@@ -441,27 +457,11 @@ export default function ChartMakerTool() {
         <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={showValues} onChange={(e) => setShowValues(e.target.checked)} /> {t("showValues")}</label>
       </div>
 
-      {/* Data editor */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <label className="label mb-0">{t("dataLabel")}</label>
-          <span className="text-xs text-muted">{t("rowCount", { count: data.length })}</span>
-        </div>
-        <div className="space-y-1.5">
-          <div className="grid grid-cols-[1fr_1fr_auto] gap-2 text-xs text-muted px-1">
-            <span>{t("colLabel")}</span>
-            <span>{t("colValue")}</span>
-            <span className="w-7" />
-          </div>
-          {rows.map((r, i) => (
-            <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2">
-              <input value={r.label} onChange={(e) => setRow(i, { label: e.target.value })} className="px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm" />
-              <input value={r.value} onChange={(e) => setRow(i, { value: e.target.value })} inputMode="decimal" className="px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono" />
-              <button onClick={() => removeRow(i)} className="w-7 text-red-500 hover:text-red-700" aria-label="remove">×</button>
-            </div>
-          ))}
-        </div>
-        <button onClick={addRow} className="btn btn-secondary text-sm mt-2">+ {t("addRow")}</button>
+      {/* Export */}
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => download("png")} className="btn btn-primary text-sm">⬇ {t("downloadPng")}</button>
+        <button onClick={() => download("svg")} className="btn btn-secondary text-sm">⬇ {t("downloadSvg")}</button>
+        <button onClick={copyPng} className="btn btn-secondary text-sm">{copied ? "✓ " + t("copied") : "📋 " + t("copyPng")}</button>
       </div>
     </div>
   );
