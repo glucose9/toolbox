@@ -134,13 +134,24 @@ export default function PdfToDocxTool() {
 
       setProgress(t("buildingDocx"));
       const doc = new Document({ sections: [{ properties: {}, children: paragraphs }] });
-      const blob = await Packer.toBlob(doc);
+      // Packer.toBlob never settles in the production webpack bundle (the blob
+      // output path of docx's inlined jszip copy hangs; base64 works — verified
+      // empirically). Go through base64 and build the Blob ourselves.
+      const b64 = await Packer.toBase64String(doc);
+      const bin = atob(b64);
+      const out = new Uint8Array(bin.length);
+      for (let k = 0; k < bin.length; k++) out[k] = bin.charCodeAt(k);
+      const blob = new Blob([out], {
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = file.name.replace(/\.pdf$/i, "") + ".docx";
       a.click();
-      URL.revokeObjectURL(url);
+      // Delay revoke: revoking synchronously after click() can cancel the
+      // not-yet-started download.
+      setTimeout(() => URL.revokeObjectURL(url), 10_000);
       setProgress(t("done"));
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));

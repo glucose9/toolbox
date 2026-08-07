@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import type { FFmpeg } from "@ffmpeg/ffmpeg";
+import { fetchFile } from "@ffmpeg/util";
+import { getFFmpeg } from "@/lib/ffmpeg";
 
 function fmtTime(s: number): string {
   if (!isFinite(s)) return "0:00";
@@ -44,12 +45,7 @@ export default function AudioTrimTool() {
     if (ready) return ffmpegRef.current!;
     setLoadingFfmpeg(true);
     try {
-      const ff = new FFmpeg();
-      const base = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-      await ff.load({
-        coreURL: await toBlobURL(`${base}/ffmpeg-core.js`, "text/javascript"),
-        wasmURL: await toBlobURL(`${base}/ffmpeg-core.wasm`, "application/wasm"),
-      });
+      const ff = await getFFmpeg();
       ffmpegRef.current = ff;
       setReady(true);
       return ff;

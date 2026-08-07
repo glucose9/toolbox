@@ -1,8 +1,9 @@
 "use client";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import type { FFmpeg } from "@ffmpeg/ffmpeg";
+import { fetchFile } from "@ffmpeg/util";
+import { getFFmpeg } from "@/lib/ffmpeg";
 
 export default function AudioMergeTool() {
   const t = useTranslations("toolUI.audio-merge");
@@ -15,9 +16,7 @@ export default function AudioMergeTool() {
 
   const loadFf = async () => {
     if (ffmpegRef.current) return ffmpegRef.current;
-    const ff = new FFmpeg();
-    const base = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-    await ff.load({ coreURL: await toBlobURL(`${base}/ffmpeg-core.js`, "text/javascript"), wasmURL: await toBlobURL(`${base}/ffmpeg-core.wasm`, "application/wasm") });
+    const ff = await getFFmpeg();
     ffmpegRef.current = ff;
     return ff;
   };

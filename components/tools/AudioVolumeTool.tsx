@@ -1,8 +1,9 @@
 "use client";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import type { FFmpeg } from "@ffmpeg/ffmpeg";
+import { fetchFile } from "@ffmpeg/util";
+import { getFFmpeg } from "@/lib/ffmpeg";
 
 export default function AudioVolumeTool() {
   const t = useTranslations("toolUI.audio-volume");
@@ -19,9 +20,7 @@ export default function AudioVolumeTool() {
     setBusy(true); setError("");
     try {
       if (!ffmpegRef.current) {
-        const ff = new FFmpeg();
-        const base = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-        await ff.load({ coreURL: await toBlobURL(`${base}/ffmpeg-core.js`, "text/javascript"), wasmURL: await toBlobURL(`${base}/ffmpeg-core.wasm`, "application/wasm") });
+        const ff = await getFFmpeg();
         ffmpegRef.current = ff;
       }
       const ff = ffmpegRef.current;
