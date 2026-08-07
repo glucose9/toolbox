@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 export default function BibSortTool() {
   const t = useTranslations("toolUI.bib-sort");
@@ -28,7 +29,7 @@ Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
   }, [input, order, dedupe]);
 
   const output = sorted.join("\n\n");
-  const copy = () => navigator.clipboard.writeText(output);
+  const copy = () => void copyText(output);
 
   return (
     <div className="card space-y-3">

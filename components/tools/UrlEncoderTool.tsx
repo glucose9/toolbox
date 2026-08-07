@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Mode = "component" | "uri";
 
@@ -37,9 +38,11 @@ export default function UrlEncoderTool() {
   };
 
   const copy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(output);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Normalized = {
   national: string;
@@ -162,7 +163,7 @@ export default function KoreanPhoneTool() {
             <td className="text-right">
               {result.national && (
                 <button
-                  onClick={() => navigator.clipboard.writeText(result.national)}
+                  onClick={() => void copyText(result.national)}
                   className="text-xs text-brand-600 hover:underline"
                 >
                   {t("copy")}
@@ -176,7 +177,7 @@ export default function KoreanPhoneTool() {
             <td className="text-right">
               {result.international && (
                 <button
-                  onClick={() => navigator.clipboard.writeText(result.international)}
+                  onClick={() => void copyText(result.international)}
                   className="text-xs text-brand-600 hover:underline"
                 >
                   {t("copy")}
@@ -190,7 +191,7 @@ export default function KoreanPhoneTool() {
             <td className="text-right">
               {result.raw && (
                 <button
-                  onClick={() => navigator.clipboard.writeText(result.raw)}
+                  onClick={() => void copyText(result.raw)}
                   className="text-xs text-brand-600 hover:underline"
                 >
                   {t("copy")}

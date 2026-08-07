@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { loadKrWebFonts } from "@/lib/kr-fonts";
 
 const A4_MM = { portrait: { w: 210, h: 297 }, landscape: { w: 297, h: 210 } };
 
@@ -51,7 +52,7 @@ export default function HtmlToPdfTool() {
     setBusy(true);
     try {
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas"),
+        import("html2canvas").then(async (m) => (await loadKrWebFonts(), m)),
         import("jspdf"),
       ]);
 

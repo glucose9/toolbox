@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { loadKrWebFonts, applyKrFontFallbacks } from "@/lib/kr-fonts";
 
 const A4_MM = { w: 210, h: 297 };
 
@@ -52,7 +53,7 @@ export default function DocxToPdfTool() {
 
     (async () => {
       try {
-        const docxPreview = await import("docx-preview");
+        const [docxPreview] = await Promise.all([import("docx-preview"), loadKrWebFonts()]);
         const container = previewRef.current!;
         container.innerHTML = "";
         const buf = await file.arrayBuffer();
@@ -68,6 +69,7 @@ export default function DocxToPdfTool() {
           useBase64URL: true,
         });
         if (cancelled) return;
+        applyKrFontFallbacks(container);
         const pages = findPages(container);
         setPageCount(pages.length);
         setRendered(true);

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Stop = { id: string; color: string; pos: number };
 type Mode = "linear" | "radial";
@@ -33,7 +34,8 @@ export default function CssGradientTool() {
   };
 
   const copy = async () => {
-    await navigator.clipboard.writeText(`background: ${css};`);
+    const ok = await copyText(`background: ${css};`);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

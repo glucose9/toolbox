@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Loc = "ko" | "en" | "ja" | "zh";
 type Constant = {
@@ -67,9 +68,11 @@ export default function PhysicsConstantsTool() {
         return "e" + sup.split("").map((ch) => map[ch] ?? ch).join("");
       })
       .replace(/\s/g, "");
-    await navigator.clipboard.writeText(plain);
-    setCopied(c.symbol);
-    setTimeout(() => setCopied(null), 1200);
+    const ok = await copyText(plain);
+    if (ok) {
+      setCopied(c.symbol);
+      setTimeout(() => setCopied(null), 1200);
+    }
   };
 
   return (

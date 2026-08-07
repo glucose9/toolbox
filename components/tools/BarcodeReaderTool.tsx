@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { BrowserMultiFormatReader, NotFoundException } from "@zxing/library";
+import { copyText } from "@/lib/clipboard";
 
 type Detection = { format: string; text: string };
 
@@ -37,7 +38,7 @@ export default function BarcodeReaderTool() {
 
   const copy = () => {
     if (!result) return;
-    navigator.clipboard.writeText(result.text);
+    void copyText(result.text);
   };
 
   return (

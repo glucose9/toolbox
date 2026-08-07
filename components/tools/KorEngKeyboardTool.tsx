@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 // 영문 키 → 한글 자모
 const E2K: Record<string, string> = {
@@ -120,9 +121,11 @@ export default function KorEngKeyboardTool() {
   const output = useMemo(() => (dir === "eng-to-kor" ? engToKor(input) : korToEng(input)), [input, dir]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(output);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   return (

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 export default function LineNumbersTool() {
   const t = useTranslations("toolUI.line-numbers");
@@ -22,7 +23,7 @@ export default function LineNumbersTool() {
     }).join("\n");
   }, [text, start, sep, pad]);
 
-  const copy = async () => { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(output); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   return (
     <div className="card space-y-3">

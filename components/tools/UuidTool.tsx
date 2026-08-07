@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function uuidv4(): string {
   const bytes = new Uint8Array(16);
@@ -32,9 +33,11 @@ export default function UuidTool() {
   };
 
   const copy = async () => {
-    await navigator.clipboard.writeText(list.map(format).join("\n"));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(list.map(format).join("\n"));
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   return (

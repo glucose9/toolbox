@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { HwpDocument } from "@rhwp/core";
 import { openHwp, readFileBytes, isHwpFile } from "@/lib/hwp";
+import { withKrFontFallbacks, KR_FONTS_CSS_URL } from "@/lib/kr-fonts";
 
 function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
@@ -45,7 +46,7 @@ export default function HwpToPdfTool() {
       setProgress({ done: 0, total });
       const collected: string[] = [];
       for (let i = 0; i < total; i++) {
-        collected.push(doc.renderPageSvg(i));
+        collected.push(withKrFontFallbacks(doc.renderPageSvg(i)));
         setProgress({ done: i + 1, total });
         if (i % 4 === 3) await new Promise((r) => setTimeout(r, 0));
       }
@@ -72,6 +73,7 @@ export default function HwpToPdfTool() {
 <html><head>
 <meta charset="utf-8">
 <title>${safeName}</title>
+<link rel="stylesheet" href="${KR_FONTS_CSS_URL}">
 <style>
   @page { margin: 0; }
   html, body { margin: 0; padding: 0; background: #fff; }
@@ -81,7 +83,9 @@ export default function HwpToPdfTool() {
 </style>
 </head><body>
 `;
-    const tail = `<script>window.addEventListener('load', function(){ setTimeout(function(){ window.print(); }, 200); });<\/script>
+    // Wait for the web fonts in the popup before printing, or the PDF falls
+    // back to system fonts even though the preview looked right.
+    const tail = `<script>window.addEventListener('load', function(){ (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function(){ setTimeout(function(){ window.print(); }, 300); }); });<\/script>
 </body></html>`;
     // Write page-by-page instead of joining every page SVG into one giant string —
     // avoids holding a second full-document copy in memory on large documents.

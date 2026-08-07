@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { loadKrWebFonts, krFallbackChain } from "@/lib/kr-fonts";
 
 const A4_MM = { portrait: { w: 210, h: 297 }, landscape: { w: 297, h: 210 } };
 const A4_PX = { portrait: { w: 794, h: 1123 }, landscape: { w: 1123, h: 794 } };
@@ -151,7 +152,7 @@ function buildStyledTable(ws: WS): string {
         if (bg && bg !== "#000000") styles.push(`background-color:${bg}`);
         // Font
         if (st.font) {
-          if (st.font.name) styles.push(`font-family:'${st.font.name}',sans-serif`);
+          if (st.font.name) styles.push(`font-family:${krFallbackChain(st.font.name)}`);
           if (st.font.sz) styles.push(`font-size:${st.font.sz}px`);
           if (st.font.bold) styles.push("font-weight:700");
           if (st.font.italic) styles.push("font-style:italic");
@@ -289,6 +290,7 @@ export default function XlsxToPdfTool() {
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
         import("html2canvas"),
         import("jspdf"),
+        loadKrWebFonts(),
       ]);
 
       let pdf: import("jspdf").jsPDF | null = null;

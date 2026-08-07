@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function caesar(text: string, shift: number, rot47 = false): string {
   const s = ((shift % 26) + 26) % 26;
@@ -35,9 +36,11 @@ export default function CaesarCipherTool() {
   const output = useMemo(() => caesar(input, shift, rot47), [input, shift, rot47]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(output);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   return (

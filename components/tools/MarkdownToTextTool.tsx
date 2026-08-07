@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function mdToText(md: string): string {
   return md
@@ -25,7 +26,7 @@ export default function MarkdownToTextTool() {
   const [md, setMd] = useState("# 제목\n\n**굵은** 글자와 [링크](https://example.com), `코드`.\n\n- 항목");
   const [copied, setCopied] = useState(false);
   const text = useMemo(() => mdToText(md), [md]);
-  const copy = async () => { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(text); if (!ok) return; setCopied(true); setTimeout(() => setCopied(false), 1500); };
   return (
     <div className="card space-y-3">
       <textarea value={md} onChange={(e) => setMd(e.target.value)} className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />

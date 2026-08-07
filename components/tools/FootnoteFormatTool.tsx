@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Style = "chicago-note" | "chicago-short" | "korean-1" | "mla";
 
@@ -65,7 +66,7 @@ export default function FootnoteFormatTool() {
     mla: t("labelMla"),
   };
 
-  const copy = (txt: string) => navigator.clipboard.writeText(txt);
+  const copy = (txt: string) => void copyText(txt);
 
   const renderItalic = (s: string) =>
     s.split(/(\*[^*]+\*)/).map((p, i) =>

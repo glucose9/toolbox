@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function slugify(text: string): string {
   return text
@@ -62,7 +63,8 @@ export default function MarkdownTocTool() {
   const toc = useMemo(() => generateToc(md, maxLevel), [md, maxLevel]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(toc);
+    const ok = await copyText(toc);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

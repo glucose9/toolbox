@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
@@ -21,7 +22,7 @@ export default function FileToBase64Tool() {
     reader.readAsDataURL(f);
   };
 
-  const copy = async () => { await navigator.clipboard.writeText(dataUrl); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(dataUrl); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   const downloadFromUrl = () => {
     if (!dataUrl.startsWith("data:")) return;

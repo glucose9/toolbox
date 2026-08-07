@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const SAMPLES = [
   {
@@ -202,7 +203,7 @@ export default function MermaidTool() {
       <div className="flex flex-wrap gap-2">
         <button onClick={downloadSvg} disabled={!svgString} className="btn btn-secondary">📥 {t("downloadSvg")}</button>
         <button onClick={downloadPng} disabled={!svgString} className="btn btn-primary">📥 {t("downloadPng")}</button>
-        <button onClick={() => navigator.clipboard.writeText(code)} className="btn">📋 {t("copyCode")}</button>
+        <button onClick={() => void copyText(code)} className="btn">📋 {t("copyCode")}</button>
       </div>
 
       <div className="text-xs text-muted leading-relaxed">

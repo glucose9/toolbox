@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 // Common Korean hanja with sound + meaning + stroke count
 // Source: 한국어문회 한자능력검정시험 + 기초 한자 1800자 중 자주 쓰는 ~250자
@@ -238,7 +239,7 @@ export default function HanjaDictTool() {
               <div><strong>{t("grade")}:</strong> {selected.level}</div>
               <div className="pt-2">
                 <button
-                  onClick={() => navigator.clipboard.writeText(selected.hanja)}
+                  onClick={() => void copyText(selected.hanja)}
                   className="text-xs text-blue-600 hover:underline"
                 >
                   {t("copyHanja")}

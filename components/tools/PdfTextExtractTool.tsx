@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 import { fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
 import { downloadText } from "@/lib/markdown-io";
 
@@ -56,7 +57,8 @@ export default function PdfTextExtractTool() {
   };
 
   const copy = async () => {
-    await navigator.clipboard.writeText(text);
+    const ok = await copyText(text);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

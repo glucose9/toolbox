@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const DIGITS = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
 const PLACES = ["", "십", "백", "천"];
@@ -86,7 +87,8 @@ export default function NumToKoreanTool() {
   }, [input, formal, contract]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(result);
+    const ok = await copyText(result);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

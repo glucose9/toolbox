@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Style = "latin" | "korean";
 type Unit = "paragraphs" | "sentences" | "words";
@@ -46,7 +47,8 @@ export default function LoremIpsumTool() {
   const result = useMemo(() => generate(style, unit, Math.max(1, Math.min(100, count))), [style, unit, count, seed]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(result);
+    const ok = await copyText(result);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

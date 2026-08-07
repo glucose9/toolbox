@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
+import { copyText } from "@/lib/clipboard";
 import { printHtmlAsPdf } from "@/lib/print";
 import { downloadText, imageToMarkdown, insertAtCursor, readMdFile } from "@/lib/markdown-io";
 
@@ -58,7 +59,8 @@ export default function MarkdownPreviewTool() {
   }, [md]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(html);
+    const ok = await copyText(html);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

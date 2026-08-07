@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type CiteType = "journal" | "book" | "web";
 
@@ -120,7 +121,7 @@ export default function CiteFormatTool() {
     { label: "IEEE", value: ieee },
   ];
 
-  const copy = (text: string) => navigator.clipboard.writeText(text);
+  const copy = (text: string) => void copyText(text);
 
   const renderMd = (s: string) =>
     s.split(/(\*[^*]+\*)/).map((part, i) =>

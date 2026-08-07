@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const MIMES: { ext: string; mime: string }[] = [
   { ext: "html", mime: "text/html" }, { ext: "css", mime: "text/css" }, { ext: "js", mime: "application/javascript" },
@@ -39,7 +40,7 @@ export default function MimeTypesTool() {
           <div key={m.ext + m.mime} className="flex justify-between p-2 text-sm">
             <span className="font-mono">.{m.ext}</span>
             <span className="font-mono text-muted">{m.mime}</span>
-            <button onClick={() => navigator.clipboard.writeText(m.mime)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
+            <button onClick={() => void copyText(m.mime)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
           </div>
         ))}
       </div>

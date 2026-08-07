@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { openHwp, readFileBytes, isHwpFile, extractAllText } from "@/lib/hwp";
+import { copyText } from "@/lib/clipboard";
 
 function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
@@ -43,12 +44,10 @@ export default function HwpToTextTool() {
   };
 
   const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
+    const ok = await copyText(text);
+    if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    } catch {
-      /* ignore */
     }
   };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import type { HwpDocument as HwpDocumentType } from "@rhwp/core";
+import { loadKrWebFonts, withKrFontShorthand } from "@/lib/kr-fonts";
 
 type Rhwp = typeof import("@rhwp/core");
 
@@ -9,6 +10,10 @@ let modulePromise: Promise<Rhwp> | null = null;
 async function loadModule(): Promise<Rhwp> {
   if (modulePromise) return modulePromise;
   modulePromise = (async () => {
+    // Fonts must be usable BEFORE layout: rhwp measures text through the hook
+    // below, and measuring with a fallback font while displaying with the web
+    // font would shift every line break.
+    await loadKrWebFonts();
     const mod = await import("@rhwp/core");
     await mod.default({ module_or_path: "/rhwp_bg.wasm" });
     const g = globalThis as unknown as {
@@ -18,7 +23,7 @@ async function loadModule(): Promise<Rhwp> {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d")!;
       g.measureTextWidth = (font, text) => {
-        ctx.font = font;
+        ctx.font = withKrFontShorthand(font);
         return ctx.measureText(text).width;
       };
     }

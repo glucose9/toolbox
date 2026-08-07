@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { format } from "sql-formatter";
+import { copyText } from "@/lib/clipboard";
 
 const DIALECTS = [
   "sql", "mysql", "postgresql", "sqlite", "mariadb", "transactsql",
@@ -33,9 +34,11 @@ export default function SqlFormatterTool() {
   }, [input, dialect, tabWidth, keywordCase]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(output);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   return (

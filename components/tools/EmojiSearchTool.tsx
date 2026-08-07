@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const EMOJIS: { emoji: string; keywords: string[] }[] = [
   { emoji: "😀", keywords: ["smile", "happy", "웃음", "행복"] },
@@ -65,7 +66,7 @@ export default function EmojiSearchTool() {
     if (!query) return EMOJIS;
     return EMOJIS.filter((e) => e.keywords.some((k) => k.toLowerCase().includes(query)));
   }, [q]);
-  const copy = async (e: string) => { await navigator.clipboard.writeText(e); setCopied(e); setTimeout(() => setCopied(""), 1500); };
+  const copy = async (e: string) => { const ok = await copyText(e); if (ok) { setCopied(e); setTimeout(() => setCopied(""), 1500); } };
   return (
     <div className="card space-y-3">
       <input type="text" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("searchPlaceholder")} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />

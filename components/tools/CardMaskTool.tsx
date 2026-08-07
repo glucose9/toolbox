@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function mask(text: string): string {
   return text
@@ -20,7 +21,7 @@ export default function CardMaskTool() {
   const [text, setText] = useState("카드 1234-5678-9012-3456\n주민 990101-1234567\n전화 010-1234-5678\n이메일 alice@example.com");
   const [copied, setCopied] = useState(false);
   const out = useMemo(() => mask(text), [text]);
-  const copy = async () => { await navigator.clipboard.writeText(out); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(out); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
   return (
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />

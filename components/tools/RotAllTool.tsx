@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function rot(t: string, s: number): string {
   return Array.from(t).map((c) => {
@@ -22,7 +23,7 @@ export default function RotAllTool() {
           <div key={r.shift} className="flex items-center gap-3 px-3 py-1.5 text-sm">
             <span className="text-xs text-muted w-12">ROT{r.shift}</span>
             <span className="font-mono flex-1 break-all">{r.result}</span>
-            <button onClick={() => navigator.clipboard.writeText(r.result)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
+            <button onClick={() => void copyText(r.result)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
           </div>
         ))}
       </div>

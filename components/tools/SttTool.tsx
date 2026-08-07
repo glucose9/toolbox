@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 interface SpeechRecognitionResult {
   isFinal: boolean;
@@ -102,7 +103,7 @@ export default function SttTool() {
     setInterim("");
   };
 
-  const copy = () => navigator.clipboard.writeText(transcript);
+  const copy = () => void copyText(transcript);
 
   const download = () => {
     const blob = new Blob([transcript], { type: "text/plain;charset=utf-8" });

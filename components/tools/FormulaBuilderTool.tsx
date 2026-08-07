@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
@@ -190,7 +191,7 @@ export default function FormulaBuilderTool() {
   };
 
   const clear = () => setValue("");
-  const copy = (t: string) => navigator.clipboard.writeText(t);
+  const copy = (t: string) => void copyText(t);
   const inlineLatex = `$${value}$`;
   const displayLatex = `$$${value}$$`;
 

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 export default function QrDecoderTool() {
   const t = useTranslations("toolUI.qr-decoder");
@@ -50,9 +51,11 @@ export default function QrDecoderTool() {
   };
 
   const copy = async () => {
-    await navigator.clipboard.writeText(result);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(result);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   const isUrl = /^https?:\/\//i.test(result);

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Mode = "random" | "monochrome" | "analogous" | "complementary" | "triad" | "tetrad";
 
@@ -85,13 +86,15 @@ export default function ColorPaletteTool() {
   const regenerate = () => setPalette(generate(mode));
 
   const copyHex = async (hex: string) => {
-    await navigator.clipboard.writeText(hex);
+    const ok = await copyText(hex);
+    if (!ok) return;
     setCopied(hex);
     setTimeout(() => setCopied(null), 1200);
   };
 
   const copyAll = async () => {
-    await navigator.clipboard.writeText(palette.map((c) => c.hex).join(", "));
+    const ok = await copyText(palette.map((c) => c.hex).join(", "));
+    if (!ok) return;
     setCopied("all");
     setTimeout(() => setCopied(null), 1200);
   };

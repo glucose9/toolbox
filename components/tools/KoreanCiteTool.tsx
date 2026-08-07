@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type LocaleKey = "ko" | "en" | "ja" | "zh";
 
@@ -235,7 +236,7 @@ export default function KoreanCiteTool() {
   const intextText = activeFormat.intext(buildArgs);
   const noteText = notesMap?.[style] ?? "";
 
-  const copy = (txt: string) => navigator.clipboard.writeText(txt);
+  const copy = (txt: string) => void copyText(txt);
 
   return (
     <div className="card space-y-3">

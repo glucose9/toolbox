@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import SparkMD5 from "spark-md5";
+import { copyText } from "@/lib/clipboard";
 
 type Algo = "md5" | "sha1" | "sha256" | "sha512";
 
@@ -121,7 +122,8 @@ export default function FileHashVerifyTool() {
   function copyHash(algo: Algo) {
     const v = hashes[algo];
     if (!v) return;
-    void navigator.clipboard.writeText(v).then(() => {
+    void copyText(v).then((ok) => {
+      if (!ok) return;
       setCopied(algo);
       setTimeout(() => setCopied(null), 1500);
     });

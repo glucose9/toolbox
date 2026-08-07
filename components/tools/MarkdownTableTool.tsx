@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Align = "left" | "center" | "right";
 
@@ -53,7 +54,8 @@ export default function MarkdownTableTool() {
   };
 
   const copy = async () => {
-    await navigator.clipboard.writeText(md);
+    const ok = await copyText(md);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

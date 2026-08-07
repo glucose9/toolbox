@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { loadKrWebFonts } from "@/lib/kr-fonts";
 
 const A4_MM = { portrait: { w: 210, h: 297 }, landscape: { w: 297, h: 210 } };
 
@@ -38,7 +39,7 @@ export default function TxtToPdfTool() {
     setError("");
     setBusy(true);
     try {
-      const { jsPDF } = await import("jspdf");
+      const [{ jsPDF }] = await Promise.all([import("jspdf"), loadKrWebFonts()]);
       const pageW = A4_MM[orientation].w;
       const pageH = A4_MM[orientation].h;
 

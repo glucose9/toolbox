@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const SMALL_WORDS = new Set([
   "a", "an", "and", "as", "at", "but", "by", "for", "if", "in",
@@ -81,7 +82,7 @@ export default function TitleCaseTool() {
     { label: "lower case", value: input.toLowerCase() },
   ];
 
-  const copy = (s: string) => navigator.clipboard.writeText(s);
+  const copy = (s: string) => void copyText(s);
 
   return (
     <div className="card space-y-3">

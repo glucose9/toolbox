@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 export default function TextBlockquoteTool() {
   const t = useTranslations("toolUI.text-blockquote");
@@ -11,7 +12,7 @@ export default function TextBlockquoteTool() {
     const prefix = "> ".repeat(depth);
     return text.split("\n").map((l) => prefix + l).join("\n");
   }, [text, depth]);
-  const copy = async () => { await navigator.clipboard.writeText(out); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(out); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
   return (
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm resize-y" />

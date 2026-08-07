@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import YAML from "yaml";
+import { copyText } from "@/lib/clipboard";
 
 type Dir = "yaml-to-json" | "json-to-yaml";
 
@@ -38,9 +39,11 @@ export default function YamlJsonTool() {
   }, [dir, input]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(output);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   const swap = () => {

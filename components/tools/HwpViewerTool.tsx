@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { HwpDocument } from "@rhwp/core";
 import { openHwp, readFileBytes, isHwpFile } from "@/lib/hwp";
+import { withKrFontFallbacks } from "@/lib/kr-fonts";
 
 function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
@@ -45,7 +46,7 @@ export default function HwpViewerTool() {
       const total = doc.pageCount();
       setPageCount(total);
       setPage(0);
-      setSvg(total > 0 ? doc.renderPageSvg(0) : "");
+      setSvg(total > 0 ? withKrFontFallbacks(doc.renderPageSvg(0)) : "");
     } catch (e) {
       setError(t("errOpenFile") + ": " + (e as Error).message);
       docRef.current = null;
@@ -59,7 +60,7 @@ export default function HwpViewerTool() {
   const goToPage = (n: number) => {
     if (!docRef.current || n < 0 || n >= pageCount) return;
     setPage(n);
-    setSvg(docRef.current.renderPageSvg(n));
+    setSvg(withKrFontFallbacks(docRef.current.renderPageSvg(n)));
   };
 
   const reset = () => {

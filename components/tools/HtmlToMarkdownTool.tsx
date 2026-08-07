@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 export default function HtmlToMarkdownTool() {
   const t = useTranslations("toolUI.html-to-markdown");
@@ -19,7 +20,7 @@ export default function HtmlToMarkdownTool() {
     } finally { setBusy(false); }
   };
 
-  const copy = async () => { await navigator.clipboard.writeText(md); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(md); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   return (
     <div className="card space-y-3">

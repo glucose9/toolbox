@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const SPECIAL_SPACES = /[   -   　]/g;
 const ZERO_WIDTH = /[​-‍﻿]/g;
@@ -130,7 +131,7 @@ export default function TextNormalizeTool() {
             <span className="text-xs text-muted">
               {t("stats", { before: stats.before, after: stats.after, diff: stats.diff >= 0 ? `-${stats.diff}` : `+${-stats.diff}` })}
             </span>
-            <button onClick={() => navigator.clipboard.writeText(result)} className="text-xs text-gray-500 hover:text-blue-600">
+            <button onClick={() => void copyText(result)} className="text-xs text-gray-500 hover:text-blue-600">
               {t("copy")}
             </button>
           </div>

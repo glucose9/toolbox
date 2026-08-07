@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type RecognizeResult = { data: { text: string; confidence: number } };
 
@@ -67,7 +68,7 @@ export default function OcrTool() {
     }
   };
 
-  const copy = () => navigator.clipboard.writeText(text);
+  const copy = () => void copyText(text);
   const download = () => {
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);

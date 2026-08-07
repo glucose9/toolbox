@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 export default function NumberFormatTool() {
   const t = useTranslations("toolUI.number-format");
@@ -39,7 +40,7 @@ export default function NumberFormatTool() {
             <div key={k} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-900 rounded">
               <span className="text-xs text-muted w-20">{k === "comma" ? "1,000" : k === "under" ? "1_000" : k === "space" ? "1 000" : `1${t("unitMan")}`}</span>
               <span className="flex-1 font-mono break-all">{formats[k]}</span>
-              <button onClick={() => navigator.clipboard.writeText(formats[k])} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
+              <button onClick={() => void copyText(formats[k])} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
             </div>
           ))}
         </div>

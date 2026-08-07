@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { buildHwpx } from "@/lib/hwpx-builder";
+import { krFallbackChain, loadKrWebFonts } from "@/lib/kr-fonts";
 
 const FONT_PRESETS = [
   "함초롬바탕",
@@ -44,6 +45,10 @@ export default function HwpEditorTool() {
   const [filename, setFilename] = useState("문서.hwpx");
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+
+  useEffect(() => {
+    void loadKrWebFonts();
+  }, []);
 
   const save = async () => {
     setBusy(true);
@@ -143,7 +148,7 @@ export default function HwpEditorTool() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={16}
-          style={{ fontFamily: fontName, fontSize: `${Math.min(fontSize * 1.2, 28)}px` }}
+          style={{ fontFamily: krFallbackChain(fontName), fontSize: `${Math.min(fontSize * 1.2, 28)}px` }}
           className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 resize-y"
         />
         <div className="text-xs text-muted mt-1">

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 // Common Hanja → Hangul (deduplicated)
 const ENTRIES: [string, string][] = [
@@ -56,7 +57,7 @@ export default function HanjaToHangulTool() {
 
   const output = useMemo(() => convert(text), [text]);
   const annotated = useMemo(() => Array.from(text).map((c) => HANJA_KO[c] ? `${c}(${HANJA_KO[c]})` : c).join(""), [text]);
-  const copy = async () => { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(output); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   return (
     <div className="card space-y-3">

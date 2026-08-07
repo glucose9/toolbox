@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function stars(score: number, max: number): string {
   if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) return "☆☆☆☆☆";
@@ -27,7 +28,7 @@ export default function StarsTool() {
         <div className="text-5xl text-yellow-500">{display}</div>
         <div className="mt-2 text-sm">{score} / {max} ({((score/max)*100).toFixed(0)}%)</div>
       </div>
-      <button onClick={() => navigator.clipboard.writeText(display)} className="btn btn-primary">{t("copy")}</button>
+      <button onClick={() => void copyText(display)} className="btn btn-primary">{t("copy")}</button>
     </div>
   );
 }

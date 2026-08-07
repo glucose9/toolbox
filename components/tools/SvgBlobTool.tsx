@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 // Mulberry32 seedable PRNG
 function mulberry32(seed: number) {
@@ -80,9 +81,11 @@ export default function SvgBlobTool() {
   const regenerate = () => setSeed(Math.floor(Math.random() * 100000));
 
   const copySvg = async () => {
-    await navigator.clipboard.writeText(svgText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(svgText);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   const downloadPng = async () => {

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 export default function LineJoinerTool() {
   const t = useTranslations("toolUI.line-joiner");
@@ -21,7 +22,7 @@ export default function LineJoinerTool() {
     return lines.join(sep);
   }, [text, sep, quote, removeEmpty, trim]);
 
-  const copy = async () => { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(output); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   return (
     <div className="card space-y-3">

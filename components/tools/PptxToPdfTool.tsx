@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { loadKrWebFonts } from "@/lib/kr-fonts";
 import JSZip from "jszip";
 
 const A4_MM = { w: 297, h: 210 }; // landscape
@@ -149,6 +150,7 @@ export default function PptxToPdfTool() {
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
         import("html2canvas"),
         import("jspdf"),
+        loadKrWebFonts(),
       ]);
       const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4", compress: true });
 

@@ -8,6 +8,7 @@ import katex from "katex";
 import "katex/dist/katex.min.css";
 import { printHtmlAsPdf } from "@/lib/print";
 import { downloadText, imageToMarkdown, insertAtCursor, readMdFile } from "@/lib/markdown-io";
+import { copyText } from "@/lib/clipboard";
 
 const SAMPLE = `# 마크다운 + 수학 수식 (KaTeX)
 
@@ -125,9 +126,11 @@ export default function MarkdownMathTool() {
   }, [md]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(html);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(html);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   const printPdf = async () => {

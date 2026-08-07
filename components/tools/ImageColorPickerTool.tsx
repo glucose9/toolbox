@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Swatch = {
   hex: string;
@@ -130,12 +131,10 @@ export default function ImageColorPickerTool() {
   };
 
   const copyHex = async (hex: string) => {
-    try {
-      await navigator.clipboard.writeText(hex);
+    const ok = await copyText(hex);
+    if (ok) {
       setCopiedHex(hex);
       setTimeout(() => setCopiedHex(""), 1500);
-    } catch {
-      // ignore
     }
   };
 

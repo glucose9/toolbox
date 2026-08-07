@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Layer = {
   id: string;
@@ -53,9 +54,11 @@ export default function CssShadowTool() {
   const full = `box-shadow: ${css};`;
 
   const copy = async () => {
-    await navigator.clipboard.writeText(full);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(full);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   return (

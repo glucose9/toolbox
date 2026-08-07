@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type SortMode = "asc" | "desc" | "len-asc" | "len-desc" | "random";
 
@@ -56,7 +57,8 @@ export default function TextSortTool() {
 
   const copy = async () => {
     if (!result) return;
-    await navigator.clipboard.writeText(result);
+    const ok = await copyText(result);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

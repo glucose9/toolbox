@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const CHARSETS: Record<string, string> = {
   detailed: "@%#*+=-:. ",
@@ -60,9 +61,11 @@ export default function ImageToAsciiTool() {
   }, [img, width, charset, invert]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(ascii);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(ascii);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   const downloadTxt = () => {

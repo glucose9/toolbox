@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Algorithm = "MD5" | "SHA-1" | "SHA-256" | "SHA-512";
 const ALGOS: Algorithm[] = ["MD5", "SHA-1", "SHA-256", "SHA-512"];
@@ -140,7 +141,8 @@ export default function HashTool() {
   };
 
   const copy = async (key: string) => {
-    await navigator.clipboard.writeText(hashes[key]);
+    const ok = await copyText(hashes[key]);
+    if (!ok) return;
     setCopied(key);
     setTimeout(() => setCopied(""), 1500);
   };

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 // minimal Hangul → Roman for slugs (uses simple romanization)
 const CHO_ROM = ["g","kk","n","d","tt","r","m","b","pp","s","ss","","j","jj","ch","k","t","p","h"];
@@ -35,7 +36,7 @@ export default function SlugGeneratorTool() {
     return s.replace(new RegExp(`${sep}+`, "g"), sep);
   }, [input, doRomanize, lower, sep]);
 
-  const copy = async () => { await navigator.clipboard.writeText(slug); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(slug); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   return (
     <div className="card space-y-3">

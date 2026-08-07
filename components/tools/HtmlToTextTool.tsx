@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const BLOCK_TAGS = new Set([
   "ADDRESS", "ARTICLE", "ASIDE", "BLOCKQUOTE", "DD", "DETAILS", "DIV", "DL",
@@ -45,7 +46,7 @@ export default function HtmlToTextTool() {
   const [html, setHtml] = useState(`<h1>제목</h1>\n<p>본문 <a href="#">링크</a>.</p>\n<script>alert(1)</script>`);
   const [copied, setCopied] = useState(false);
   const text = useMemo(() => (typeof window === "undefined" ? "" : htmlToText(html)), [html]);
-  const copy = async () => { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(text); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
   return (
     <div className="card space-y-3">
       <textarea value={html} onChange={(e) => setHtml(e.target.value)} className="w-full h-40 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />

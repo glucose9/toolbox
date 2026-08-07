@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 export default function Base64ImageTool() {
   const t = useTranslations("toolUI.base64-image");
@@ -22,9 +23,11 @@ export default function Base64ImageTool() {
   };
 
   const copy = async () => {
-    await navigator.clipboard.writeText(dataUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(dataUrl);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   const sizeKb = dataUrl ? Math.round(dataUrl.length / 1024) : 0;

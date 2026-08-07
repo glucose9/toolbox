@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const m = hex.replace(/^#/, "").match(/^([0-9a-f]{6}|[0-9a-f]{3})$/i);
@@ -46,8 +47,9 @@ function CopyField({ label, value }: { label: string; value: string }) {
       <div className="flex gap-2">
         <input className="input font-mono" readOnly value={value} />
         <button
-          onClick={() => {
-            navigator.clipboard.writeText(value);
+          onClick={async () => {
+            const ok = await copyText(value);
+            if (!ok) return;
             setCopied(true);
             setTimeout(() => setCopied(false), 1500);
           }}

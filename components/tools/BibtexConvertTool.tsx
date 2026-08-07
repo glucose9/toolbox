@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Entry = {
   type: string;
@@ -162,7 +163,7 @@ export default function BibtexConvertTool() {
   const formatter = style === "apa" ? toApa : style === "mla" ? toMla : toChicago;
   const output = entries.map(formatter).join("\n\n");
 
-  const copy = () => navigator.clipboard.writeText(output);
+  const copy = () => void copyText(output);
 
   return (
     <div className="card space-y-3">

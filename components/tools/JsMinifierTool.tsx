@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 export default function JsMinifierTool() {
   const t = useTranslations("toolUI.js-minifier");
@@ -28,7 +29,7 @@ export default function JsMinifierTool() {
     }
   };
 
-  const copy = async () => { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(output); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   const saved = srcLen - output.length;
   const pct = output && srcLen > 0 ? Math.round((saved / srcLen) * 100) : 0;

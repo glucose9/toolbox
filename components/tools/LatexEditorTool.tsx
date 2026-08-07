@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
@@ -34,7 +35,8 @@ export default function LatexEditorTool() {
   }, [code, displayMode]);
 
   const copy = async (key: string, content: string) => {
-    await navigator.clipboard.writeText(content);
+    const ok = await copyText(content);
+    if (!ok) return;
     setCopied(key);
     setTimeout(() => setCopied(""), 1500);
   };

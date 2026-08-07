@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import LZString from "lz-string";
+import { copyText } from "@/lib/clipboard";
 
 type Mode = "compress" | "decompress";
 
@@ -25,7 +26,7 @@ export default function TextCompressTool() {
     } catch (e) { setError((e as Error).message); }
   };
 
-  const copy = async () => { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(output); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
   const saved = input.length - output.length;
   const pct = mode === "compress" && input.length > 0 ? Math.round((saved / input.length) * 100) : 0;
 

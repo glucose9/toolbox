@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const PRESETS = {
   alpha: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -55,7 +56,7 @@ export default function RandomStringTool() {
       </select>
       <button onClick={generate} className="btn btn-primary w-full">🎲 {t("generate")}</button>
       <textarea readOnly value={results.join("\n")} className="w-full h-44 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-      <button onClick={() => navigator.clipboard.writeText(results.join("\n"))} disabled={results.length === 0} className="btn btn-secondary disabled:opacity-50">{t("copyAll")}</button>
+      <button onClick={() => void copyText(results.join("\n"))} disabled={results.length === 0} className="btn btn-secondary disabled:opacity-50">{t("copyAll")}</button>
     </div>
   );
 }

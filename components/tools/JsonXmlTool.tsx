@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { XMLBuilder, XMLParser, XMLValidator } from "fast-xml-parser";
+import { copyText } from "@/lib/clipboard";
 
 type Dir = "json-to-xml" | "xml-to-json";
 
@@ -49,9 +50,11 @@ export default function JsonXmlTool() {
   }, [dir, input]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const ok = await copyText(output);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   const swap = () => {

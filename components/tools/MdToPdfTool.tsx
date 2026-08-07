@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { loadKrWebFonts } from "@/lib/kr-fonts";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 
@@ -70,7 +71,7 @@ export default function MdToPdfTool() {
     setBusy(true);
     try {
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas"),
+        import("html2canvas").then(async (m) => (await loadKrWebFonts(), m)),
         import("jspdf"),
       ]);
 

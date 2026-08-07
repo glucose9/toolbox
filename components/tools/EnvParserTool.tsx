@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function parseEnv(text: string): Record<string, string> {
   const out: Record<string, string> = {};
@@ -29,7 +30,7 @@ export default function EnvParserTool() {
     <div className="card space-y-3">
       <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full h-44 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
       <textarea readOnly value={json} className="w-full h-44 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-      <button onClick={() => navigator.clipboard.writeText(json)} className="btn btn-primary">{t("copyJson")}</button>
+      <button onClick={() => void copyText(json)} className="btn btn-primary">{t("copyJson")}</button>
     </div>
   );
 }

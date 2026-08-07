@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import JSZip from "jszip";
+import { copyText } from "@/lib/clipboard";
 
 type SlideText = { index: number; text: string };
 
@@ -165,12 +166,10 @@ export default function PptxToTextTool() {
     .join("\n\n");
 
   const copyAll = async () => {
-    try {
-      await navigator.clipboard.writeText(allText);
+    const ok = await copyText(allText);
+    if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    } catch {
-      /* ignore */
     }
   };
 

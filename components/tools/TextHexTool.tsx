@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function toHex(s: string, spaced: boolean): string {
   const bytes = new TextEncoder().encode(s);
@@ -27,7 +28,7 @@ export default function TextHexTool() {
   const output = useMemo(() => (isHex ? fromHex(input) : toHex(input, spaced)), [input, spaced, isHex]);
   const oddHex = isHex && input.replace(/[^0-9a-fA-F]/g, "").length % 2 !== 0;
   const [copied, setCopied] = useState(false);
-  const copy = async () => { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(output); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   return (
     <div className="card space-y-3">

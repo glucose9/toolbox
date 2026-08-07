@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 // NOTE: iso-2022-kr is intentionally absent — the WHATWG Encoding Standard maps
 // it to the "replacement" decoder, so TextDecoder can't actually decode it.
@@ -59,7 +60,7 @@ export default function EncodingConvertTool() {
     }
   };
 
-  const copy = async () => { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(text); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   return (
     <div className="card space-y-3">

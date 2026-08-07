@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type RGB = [number, number, number];
 
@@ -96,7 +97,8 @@ export default function ColorExtractTool() {
   }, [preview, count]);
 
   const copy = async (hex: string) => {
-    await navigator.clipboard.writeText(hex);
+    const ok = await copyText(hex);
+    if (!ok) return;
     setCopied(hex);
     setTimeout(() => setCopied(""), 1500);
   };

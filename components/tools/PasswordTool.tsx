@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const LOWER = "abcdefghijklmnopqrstuvwxyz";
 const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -87,10 +88,12 @@ export default function PasswordTool() {
         />
         <button onClick={refresh} className="btn btn-secondary whitespace-nowrap">{t("regenerate")}</button>
         <button
-          onClick={() => {
-            navigator.clipboard.writeText(password);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
+          onClick={async () => {
+            const ok = await copyText(password);
+            if (ok) {
+              setCopied(true);
+              setTimeout(() => setCopied(false), 1500);
+            }
           }}
           className="btn btn-primary whitespace-nowrap"
         >

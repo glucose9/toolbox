@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Cue = { idx: number; start: number; end: number; text: string };
 
@@ -149,7 +150,7 @@ export default function SubtitleTool() {
           />
           <div className="text-xs text-muted mt-1">{t("offsetHint")}</div>
         </label>
-        <button onClick={() => navigator.clipboard.writeText(output)} className="btn">{t("copy")}</button>
+        <button onClick={() => void copyText(output)} className="btn">{t("copy")}</button>
         <button onClick={download} className="btn btn-primary">{t("saveAs", { ext: outputFormat })}</button>
       </div>
 

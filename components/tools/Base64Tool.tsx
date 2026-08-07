@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 function encode(text: string, urlSafe: boolean) {
   try {
@@ -75,7 +76,7 @@ export default function Base64Tool() {
           <label className="label flex items-center justify-between">
             <span>{mode === "encode" ? t("base64Result") : t("decodeResult")}</span>
             <button
-              onClick={() => navigator.clipboard.writeText(result)}
+              onClick={() => void copyText(result)}
               disabled={!result}
               className="text-xs text-brand-600 hover:underline disabled:opacity-30"
             >

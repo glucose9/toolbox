@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const NAMED: Record<string, string> = {
   "&": "&amp;",
@@ -57,7 +58,8 @@ export default function HtmlEntityTool() {
   }, [input, mode]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(output);
+    const ok = await copyText(output);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

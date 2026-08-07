@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 const COLORS = ["#000","#cd0000","#00cd00","#cdcd00","#0000ee","#cd00cd","#00cdcd","#e5e5e5","#7f7f7f","#ff0000","#00ff00","#ffff00","#5c5cff","#ff00ff","#00ffff","#ffffff"];
 
@@ -94,7 +95,7 @@ export default function AnsiToHtmlTool() {
   const [input, setInput] = useState("[31mRed[0m [1;32mBold green[0m [4;33mUnderlined yellow[0m");
   const html = useMemo(() => ansiToHtml(input), [input]);
   const [copied, setCopied] = useState(false);
-  const copy = async () => { await navigator.clipboard.writeText(html); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(html); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   return (
     <div className="card space-y-3">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Meta = {
   authors: string[];
@@ -138,7 +139,7 @@ export default function DoiLookupTool() {
     return `${head}"${meta.title}." ${meta.container} ${meta.volume}, no. ${meta.issue} (${meta.year}): ${meta.pages}.`;
   })();
 
-  const copy = (t: string) => navigator.clipboard.writeText(t);
+  const copy = (t: string) => void copyText(t);
 
   return (
     <div className="card space-y-3">

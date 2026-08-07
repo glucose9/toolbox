@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyText } from "@/lib/clipboard";
 
 type Style = "ascii" | "single" | "double" | "rounded" | "thick";
 
@@ -41,7 +42,7 @@ export default function AsciiBoxTool() {
   const [copied, setCopied] = useState(false);
 
   const output = useMemo(() => box(text, style, padding), [text, style, padding]);
-  const copy = async () => { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const copy = async () => { const ok = await copyText(output); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   return (
     <div className="card space-y-3">
