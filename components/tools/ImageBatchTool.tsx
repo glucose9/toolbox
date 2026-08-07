@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import JSZip from "jszip";
 
@@ -20,11 +20,15 @@ type Format = "" | "image/jpeg" | "image/png" | "image/webp";
 
 export default function ImageBatchTool() {
   const t = useTranslations("toolUI.image-batch");
+  const tc = useTranslations("common");
   const [items, setItems] = useState<Item[]>([]);
   const [maxWidth, setMaxWidth] = useState(0);
   const [quality, setQuality] = useState(0.85);
   const [format, setFormat] = useState<Format>("");
   const [busy, setBusy] = useState(false);
+  const busyRef = useRef(false);
+  const runGen = useRef(0);
+  const optionsMounted = useRef(false);
 
   const onFiles = (files: FileList | null) => {
     if (!files) return;
@@ -86,15 +90,51 @@ export default function ImageBatchTool() {
   };
 
   const processAll = async () => {
+    const gen = runGen.current;
+    busyRef.current = true;
     setBusy(true);
     const queue = items.filter((it) => it.status !== "done");
     for (const item of queue) {
+      if (gen !== runGen.current) break; // options changed; the next run picks these up
       setItems((cur) => cur.map((it) => (it.id === item.id ? { ...it, status: "processing" } : it)));
       const result = await processOne(item);
+      if (gen !== runGen.current) {
+        // stale result computed with old options: drop it and requeue the item
+        if (result.resultUrl) URL.revokeObjectURL(result.resultUrl);
+        setItems((cur) => cur.map((it) => (it.id === item.id ? { ...it, status: "pending" } : it)));
+        break;
+      }
       setItems((cur) => cur.map((it) => (it.id === item.id ? result : it)));
     }
+    busyRef.current = false;
     setBusy(false);
   };
+
+  // Option change → invalidate results and requeue everything (debounced for the quality slider).
+  useEffect(() => {
+    if (!optionsMounted.current) {
+      optionsMounted.current = true;
+      return;
+    }
+    const timer = setTimeout(() => {
+      runGen.current += 1;
+      setItems((cur) =>
+        cur.map((it) => {
+          if (it.resultUrl) URL.revokeObjectURL(it.resultUrl);
+          return { ...it, status: "pending" as const, resultBlob: undefined, resultUrl: undefined, newSize: undefined, error: undefined };
+        })
+      );
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [maxWidth, quality, format]);
+
+  // Auto-process whenever pending items appear (new files or requeued); busyRef prevents overlap.
+  useEffect(() => {
+    if (busyRef.current) return;
+    if (!items.some((it) => it.status === "pending")) return;
+    processAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
 
   const outExt = (it: Item) => {
     const sub = it.resultBlob?.type.split("/")[1];
@@ -132,6 +172,7 @@ export default function ImageBatchTool() {
   };
 
   const clear = () => {
+    runGen.current += 1; // abort any in-flight run
     items.forEach((it) => {
       URL.revokeObjectURL(it.url);
       if (it.resultUrl) URL.revokeObjectURL(it.resultUrl);
@@ -148,33 +189,6 @@ export default function ImageBatchTool() {
 
   return (
     <div className="card space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-        <label>
-          {t("maxWidth")}
-          <input
-            type="number"
-            min={0}
-            value={maxWidth}
-            onChange={(e) => setMaxWidth(+e.target.value)}
-            className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
-          />
-          <div className="text-xs text-muted mt-1">{t("maxWidthHint")}</div>
-        </label>
-        <label>
-          {t("quality", { pct: Math.round(quality * 100) })}
-          <input type="range" min="0.3" max="1" step="0.05" value={quality} onChange={(e) => setQuality(+e.target.value)} className="w-full" />
-        </label>
-        <label>
-          {t("outputFormat")}
-          <select value={format} onChange={(e) => setFormat(e.target.value as Format)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value="">{t("keepOriginal")}</option>
-            <option value="image/jpeg">{t("toJpg")}</option>
-            <option value="image/png">{t("toPng")}</option>
-            <option value="image/webp">{t("toWebp")}</option>
-          </select>
-        </label>
-      </div>
-
       <div>
         <label className="block border-2 border-dashed border-gray-300 dark:border-gray-700 rounded p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900">
           <div className="text-4xl mb-2">📷</div>
@@ -191,7 +205,40 @@ export default function ImageBatchTool() {
 
       {items.length > 0 && (
         <>
+          <details className="rounded border border-gray-200 dark:border-gray-700">
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+            <div className="p-3 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                <label>
+                  {t("maxWidth")}
+                  <input
+                    type="number"
+                    min={0}
+                    value={maxWidth}
+                    onChange={(e) => setMaxWidth(+e.target.value)}
+                    className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
+                  />
+                  <div className="text-xs text-muted mt-1">{t("maxWidthHint")}</div>
+                </label>
+                <label>
+                  {t("quality", { pct: Math.round(quality * 100) })}
+                  <input type="range" min="0.3" max="1" step="0.05" value={quality} onChange={(e) => setQuality(+e.target.value)} className="w-full" />
+                </label>
+                <label>
+                  {t("outputFormat")}
+                  <select value={format} onChange={(e) => setFormat(e.target.value as Format)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
+                    <option value="">{t("keepOriginal")}</option>
+                    <option value="image/jpeg">{t("toJpg")}</option>
+                    <option value="image/png">{t("toPng")}</option>
+                    <option value="image/webp">{t("toWebp")}</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </details>
+
           <div className="card-section text-sm flex flex-wrap gap-4">
+            {busy && <span className="text-blue-600">{t("processing")}</span>}
             <span>{t("totalDone", { total: items.length, done: doneCount })}</span>
             <span>{t("originalSum", { size: fmt(totalOriginal) })}</span>
             {totalNew !== totalOriginal && (
@@ -225,11 +272,8 @@ export default function ImageBatchTool() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <button onClick={processAll} disabled={busy} className="btn btn-primary">
-              {busy ? t("processing") : t("batchConvert")}
-            </button>
             {doneCount > 0 && (
-              <button onClick={downloadAll} className="btn btn-secondary">{t("downloadZip")}</button>
+              <button onClick={downloadAll} className="btn btn-primary">{t("downloadZip")}</button>
             )}
             <button onClick={clear} className="btn">{t("clearAll")}</button>
           </div>

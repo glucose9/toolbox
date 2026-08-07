@@ -80,7 +80,7 @@ export default function HwpEditorTool() {
 
   return (
     <div className="card space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
         <label>
           {t("font")}
           <select
@@ -94,13 +94,6 @@ export default function HwpEditorTool() {
               </option>
             ))}
           </select>
-          <input
-            type="text"
-            value={fontName}
-            onChange={(e) => setFontName(e.target.value)}
-            placeholder={t("fontCustomPh")}
-            className="w-full px-2 py-1 mt-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs"
-          />
         </label>
 
         <label>
@@ -116,24 +109,6 @@ export default function HwpEditorTool() {
               </option>
             ))}
           </select>
-          <input
-            type="number"
-            min={1}
-            max={400}
-            value={fontSize}
-            onChange={(e) => setFontSize(Number(e.target.value) || 11)}
-            className="w-full px-2 py-1 mt-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs"
-          />
-        </label>
-
-        <label>
-          {t("filename")}
-          <input
-            type="text"
-            value={filename}
-            onChange={(e) => setFilename(e.target.value)}
-            className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
-          />
         </label>
       </div>
 
@@ -160,6 +135,14 @@ export default function HwpEditorTool() {
         <button onClick={save} disabled={busy} className="btn btn-primary">
           {busy ? t("generating") : `📥 ${t("download")}`}
         </button>
+        <input
+          type="text"
+          value={filename}
+          onChange={(e) => setFilename(e.target.value)}
+          aria-label={t("filename")}
+          placeholder={t("filename")}
+          className="w-40 px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm"
+        />
         <button
           onClick={() => {
             setText("");
@@ -172,15 +155,9 @@ export default function HwpEditorTool() {
         {status && <span className="text-sm">{status}</span>}
       </div>
 
-      <div className="text-xs text-muted bg-blue-50 dark:bg-blue-900/20 p-3 rounded border border-blue-200 dark:border-blue-800 leading-relaxed">
-        <strong>💡 {t("infoTitle")}</strong>
-        <ul className="list-disc list-inside mt-1 space-y-0.5">
-          <li>{t("info1")}</li>
-          <li>{t.rich("info2", { b: (chunks) => <strong>{chunks}</strong> })}</li>
-          <li>{t.rich("info3", { b: (chunks) => <strong>{chunks}</strong> })}</li>
-          <li>{t("info4")}</li>
-          <li>{t("info5")}</li>
-        </ul>
+      <div className="text-xs text-muted bg-blue-50 dark:bg-blue-900/20 p-3 rounded border border-blue-200 dark:border-blue-800 leading-relaxed space-y-0.5">
+        <div>💡 {t.rich("info2", { b: (chunks) => <strong>{chunks}</strong> })}</div>
+        <div>{t("info5")}</div>
       </div>
     </div>
   );

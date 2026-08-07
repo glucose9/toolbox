@@ -166,19 +166,6 @@ export default function PdfToDocxTool() {
         ⚠️ {t("imageBasedNote")}
       </div>
 
-      <label className="flex items-start gap-2 text-sm cursor-pointer">
-        <input
-          type="checkbox"
-          checked={includeText}
-          onChange={(e) => setIncludeText(e.target.checked)}
-          className="mt-1"
-        />
-        <span>
-          <strong>{t("includeTextLabel")}</strong>
-          <div className="text-xs text-muted mt-0.5">{t("includeTextHint")}</div>
-        </span>
-      </label>
-
       <div
         onDrop={(e) => { e.preventDefault(); if (!busy && e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]); }}
         onDragOver={(e) => e.preventDefault()}
@@ -196,6 +183,19 @@ export default function PdfToDocxTool() {
           onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
         />
       </div>
+
+      <label className="flex items-start gap-2 text-sm cursor-pointer">
+        <input
+          type="checkbox"
+          checked={includeText}
+          onChange={(e) => setIncludeText(e.target.checked)}
+          className="mt-1"
+        />
+        <span>
+          <strong>{t("includeTextLabel")}</strong>
+          <div className="text-xs text-muted mt-0.5">{t("includeTextHint")}</div>
+        </span>
+      </label>
 
       {fileName && !error && (
         <div className="text-sm text-muted">📎 {fileName}{pageCount > 0 && ` · ${pageCount} ${t("pagesUnit")}`}</div>

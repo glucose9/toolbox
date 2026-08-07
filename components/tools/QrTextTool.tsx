@@ -6,6 +6,7 @@ import QRCode from "qrcode";
 
 export default function QrTextTool() {
   const t = useTranslations("toolUI.qr-text");
+  const tc = useTranslations("common");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [content, setContent] = useState("https://barokit.com");
   const [centerText, setCenterText] = useState("BAROKIT");
@@ -107,24 +108,29 @@ export default function QrTextTool() {
         />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm items-end">
-        <label>{t("qrSize", { size })}<input type="range" min="200" max="800" step="50" value={size} onChange={(e) => setSize(+e.target.value)} className="w-full" /></label>
-        <label>{t("textSize", { textSize })}<input type="range" min="12" max="80" value={textSize} onChange={(e) => setTextSize(+e.target.value)} className="w-full" /></label>
-        <label>{t("padding", { bgPadding })}<input type="range" min="2" max="40" value={bgPadding} onChange={(e) => setBgPadding(+e.target.value)} className="w-full" /></label>
-        <label>{t("textColor")}<input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} className="w-full h-8" /></label>
-        <label>{t("bgColor")}<input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-full h-8" /></label>
-        <div>
-          <label className="block mb-1">{t("bgShape")}</label>
-          <select value={shape} onChange={(e) => setShape(e.target.value as "rect" | "rounded" | "circle")} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
-            <option value="rect">{t("shapeRect")}</option>
-            <option value="rounded">{t("shapeRounded")}</option>
-            <option value="circle">{t("shapeCircle")}</option>
-          </select>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1 space-y-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm items-end">
+            <label>{t("qrSize", { size })}<input type="range" min="200" max="800" step="50" value={size} onChange={(e) => setSize(+e.target.value)} className="w-full" /></label>
+            <label>{t("textSize", { textSize })}<input type="range" min="12" max="80" value={textSize} onChange={(e) => setTextSize(+e.target.value)} className="w-full" /></label>
+            <label>{t("padding", { bgPadding })}<input type="range" min="2" max="40" value={bgPadding} onChange={(e) => setBgPadding(+e.target.value)} className="w-full" /></label>
+            <label>{t("textColor")}<input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} className="w-full h-8" /></label>
+            <label>{t("bgColor")}<input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-full h-8" /></label>
+            <div>
+              <label className="block mb-1">{t("bgShape")}</label>
+              <select value={shape} onChange={(e) => setShape(e.target.value as "rect" | "rounded" | "circle")} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
+                <option value="rect">{t("shapeRect")}</option>
+                <option value="rounded">{t("shapeRounded")}</option>
+                <option value="circle">{t("shapeCircle")}</option>
+              </select>
+            </div>
+          </div>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={bold} onChange={(e) => setBold(e.target.checked)} /> {t("bold")}
+          </label>
         </div>
-      </div>
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={bold} onChange={(e) => setBold(e.target.checked)} /> {t("bold")}
-      </label>
+      </details>
 
       <div className="bg-checker rounded p-3 flex justify-center">
         <canvas ref={canvasRef} className="max-w-full" />

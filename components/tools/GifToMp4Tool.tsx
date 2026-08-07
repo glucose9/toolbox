@@ -47,15 +47,18 @@ export default function GifToMp4Tool() {
     setSrcUrl(URL.createObjectURL(f));
     setOutUrl("");
     setOutSize(0);
+    // No options to configure — convert immediately. Pass f directly since
+    // setFile hasn't committed yet; busy guard in convert prevents overlap.
+    void convert(f);
   };
 
-  const convert = async () => {
-    if (!file) return;
+  const convert = async (f: File | null = file) => {
+    if (!f || busy) return;
     setBusy(true);
     setError("");
     try {
       const ff = await loadFf();
-      await ff.writeFile("in.gif", await fetchFile(file));
+      await ff.writeFile("in.gif", await fetchFile(f));
       const outName = `out_${Date.now()}.mp4`;
       await ff.exec([
         "-y",
@@ -123,7 +126,7 @@ export default function GifToMp4Tool() {
       {error && <div className="text-sm text-red-600">{error}</div>}
 
       <div className="flex gap-2">
-        <button onClick={convert} disabled={busy} className="btn btn-primary disabled:opacity-50">
+        <button onClick={() => convert()} disabled={busy} className="btn btn-primary disabled:opacity-50">
           {busy ? t("converting") : t("convertToMp4")}
         </button>
         {outUrl && <button onClick={download} className="btn btn-secondary">{t("download")}</button>}

@@ -21,10 +21,12 @@ export default function PdfToPptxTool() {
     setError("");
     setFile(f);
     setDone(false);
+    // Start converting right away (same UX as pdf-to-docx); the button below
+    // stays as a retry. Pass f directly: setFile hasn't committed yet.
+    convert(f);
   };
 
-  const convert = async () => {
-    if (!file) return;
+  const convert = async (f: File) => {
     setBusy(true);
     setError("");
     setDone(false);
@@ -34,7 +36,7 @@ export default function PdfToPptxTool() {
       const pptxgenMod = await import("pptxgenjs");
       const PptxGen = pptxgenMod.default;
 
-      const bytes = await readBytes(file);
+      const bytes = await readBytes(f);
       const pdf = await pdfjs.getDocument({ data: bytes }).promise;
       const total = pdf.numPages;
       setProgress({ done: 0, total });
@@ -84,7 +86,7 @@ export default function PdfToPptxTool() {
         setProgress({ done: i, total });
       }
 
-      const outName = file.name.replace(/\.pdf$/i, "") + ".pptx";
+      const outName = f.name.replace(/\.pdf$/i, "") + ".pptx";
       await pres.writeFile({ fileName: outName });
       setDone(true);
     } catch (e) {
@@ -146,7 +148,7 @@ export default function PdfToPptxTool() {
       {done && !busy && <div className="text-sm text-green-600">✓</div>}
 
       <div className="flex flex-wrap gap-2">
-        <button onClick={convert} disabled={busy} className="btn btn-primary disabled:opacity-50">
+        <button onClick={() => file && convert(file)} disabled={busy} className="btn btn-primary disabled:opacity-50">
           {busy ? t("processing") : t("downloadPptx")}
         </button>
       </div>

@@ -7,6 +7,7 @@ import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
 
 export default function VideoToGifTool() {
   const t = useTranslations("toolUI.video-to-gif");
+  const tc = useTranslations("common");
   const [file, setFile] = useState<File | null>(null);
   const [fps, setFps] = useState(10);
   const [width, setWidth] = useState(320);
@@ -123,24 +124,29 @@ export default function VideoToGifTool() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label className="label">{t("fps", { n: fps })}</label>
-              <input type="range" min="5" max="30" value={fps} onChange={(e) => setFps(parseInt(e.target.value))} className="w-full" />
-            </div>
-            <div>
-              <label className="label">{t("width", { n: width })}</label>
-              <input type="range" min="160" max="640" step="40" value={width} onChange={(e) => setWidth(parseInt(e.target.value))} className="w-full" />
-            </div>
-            <div>
-              <label className="label">{t("maxSeconds", { n: maxSeconds })}</label>
-              <input type="range" min="1" max="30" value={maxSeconds} onChange={(e) => setMaxSeconds(parseInt(e.target.value))} className="w-full" />
-            </div>
-          </div>
-
           <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">
             {busy ? t("converting") : t("convert")}
           </button>
+
+          <details className="rounded border border-gray-200 dark:border-gray-700">
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+            <div className="p-3 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="label">{t("fps", { n: fps })}</label>
+                  <input type="range" min="5" max="30" value={fps} onChange={(e) => setFps(parseInt(e.target.value))} className="w-full" />
+                </div>
+                <div>
+                  <label className="label">{t("width", { n: width })}</label>
+                  <input type="range" min="160" max="640" step="40" value={width} onChange={(e) => setWidth(parseInt(e.target.value))} className="w-full" />
+                </div>
+                <div>
+                  <label className="label">{t("maxSeconds", { n: maxSeconds })}</label>
+                  <input type="range" min="1" max="30" value={maxSeconds} onChange={(e) => setMaxSeconds(parseInt(e.target.value))} className="w-full" />
+                </div>
+              </div>
+            </div>
+          </details>
 
           <StatusBar status={status} busy={busy} progress={progress} />
         </div>

@@ -7,6 +7,7 @@ import { VideoDropzone, StatusBar, fmtBytes } from "./VideoBase";
 
 export default function VideoToMp3Tool() {
   const t = useTranslations("toolUI.video-to-mp3");
+  const tc = useTranslations("common");
   const [file, setFile] = useState<File | null>(null);
   const [bitrate, setBitrate] = useState(192);
   const [busy, setBusy] = useState(false);
@@ -105,11 +106,14 @@ export default function VideoToMp3Tool() {
             </div>
           </div>
 
-          <div>
-            <label className="label">{t("bitrateLabel", { n: bitrate })}</label>
-            <input type="range" min="64" max="320" step="32" value={bitrate} onChange={(e) => setBitrate(parseInt(e.target.value))} className="w-full" />
-            <div className="text-xs text-gray-500 mt-1">{t("bitrateHint")}</div>
-          </div>
+          <details className="rounded border border-gray-200 dark:border-gray-700">
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+            <div className="p-3 pt-1">
+              <label className="label">{t("bitrateLabel", { n: bitrate })}</label>
+              <input type="range" min="64" max="320" step="32" value={bitrate} onChange={(e) => setBitrate(parseInt(e.target.value))} className="w-full" />
+              <div className="text-xs text-gray-500 mt-1">{t("bitrateHint")}</div>
+            </div>
+          </details>
 
           <button onClick={run} disabled={busy} className="btn btn-primary disabled:opacity-50">
             {busy ? t("extracting") : t("extract")}

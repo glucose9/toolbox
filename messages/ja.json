@@ -28,7 +28,8 @@
     "other": "別のファイル",
     "noResults": "結果なし",
     "close": "閉じる",
-    "skipToContent": "本文へスキップ"
+    "skipToContent": "本文へスキップ",
+    "advancedOptions": "詳細設定"
   },
   "categories": {
     "qr": "QRコード",
@@ -1981,7 +1982,10 @@
       "drink_wine": "ワイン",
       "drink_highball": "ハイボール",
       "drink_whiskey": "ウイスキー（ショット）",
-      "drink_vodka": "ウォッカ（ショット）"
+      "drink_vodka": "ウォッカ（ショット）",
+      "krStandardLine": "標準ドリンク約{n}杯（韓国基準 1杯=純アルコール7g）",
+      "intlCompare": "国際基準と比較",
+      "fullTable": "他のお酒に換算"
     },
     "dday": {
       "daysLeft": "あと{n}日",

@@ -28,7 +28,8 @@
     "other": "其他文件",
     "noResults": "无结果",
     "close": "关闭",
-    "skipToContent": "跳到主要内容"
+    "skipToContent": "跳到主要内容",
+    "advancedOptions": "高级设置"
   },
   "categories": {
     "qr": "QR码",
@@ -1981,7 +1982,10 @@
       "drink_wine": "葡萄酒",
       "drink_highball": "高球鸡尾酒",
       "drink_whiskey": "威士忌（一份）",
-      "drink_vodka": "伏特加（一份）"
+      "drink_vodka": "伏特加（一份）",
+      "krStandardLine": "约{n}标准杯（韩国标准：每杯纯酒精7克）",
+      "intlCompare": "查看国际标准对比",
+      "fullTable": "换算成其他酒类"
     },
     "dday": {
       "daysLeft": "还有 {n} 天",

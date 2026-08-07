@@ -16,6 +16,7 @@ function escapeWifi(s: string) {
 
 export default function QRTool({ config }: { config: Record<string, unknown> }) {
   const t = useTranslations("toolUI.qr");
+  const tc = useTranslations("common");
   const initialTab = (config.defaultTab as TabKey) || "url";
   const [tab, setTab] = useState<TabKey>(initialTab);
   const [values, setValues] = useState<Record<string, string>>({
@@ -216,35 +217,38 @@ export default function QRTool({ config }: { config: Record<string, unknown> }) 
                 <button onClick={downloadPng} className="btn btn-primary">{t("downloadPng")}</button>
                 <button onClick={downloadSvg} className="btn btn-secondary">{t("downloadSvg")}</button>
               </div>
-              <div className="mt-4 flex items-center gap-3 text-xs">
-                <label className="flex items-center gap-1.5">
-                  <span>{t("foreground")}</span>
-                  <input
-                    type="color"
-                    value={fgColor}
-                    onChange={(e) => setFgColor(e.target.value)}
-                    className="w-7 h-7 rounded cursor-pointer border border-gray-300"
-                  />
-                </label>
-                <label className="flex items-center gap-1.5">
-                  <span>{t("background")}</span>
-                  <input
-                    type="color"
-                    value={bgColor}
-                    onChange={(e) => setBgColor(e.target.value)}
-                    className="w-7 h-7 rounded cursor-pointer border border-gray-300"
-                  />
-                </label>
-                <button
-                  onClick={() => {
-                    setFgColor("#000000");
-                    setBgColor("#ffffff");
-                  }}
-                  className="text-brand-600 hover:underline"
-                >
-                  {t("reset")}
-                </button>
-              </div>
+              <details className="mt-4 rounded border border-gray-200 dark:border-gray-700">
+                <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+                <div className="p-3 pt-1 flex items-center gap-3 text-xs">
+                  <label className="flex items-center gap-1.5">
+                    <span>{t("foreground")}</span>
+                    <input
+                      type="color"
+                      value={fgColor}
+                      onChange={(e) => setFgColor(e.target.value)}
+                      className="w-7 h-7 rounded cursor-pointer border border-gray-300"
+                    />
+                  </label>
+                  <label className="flex items-center gap-1.5">
+                    <span>{t("background")}</span>
+                    <input
+                      type="color"
+                      value={bgColor}
+                      onChange={(e) => setBgColor(e.target.value)}
+                      className="w-7 h-7 rounded cursor-pointer border border-gray-300"
+                    />
+                  </label>
+                  <button
+                    onClick={() => {
+                      setFgColor("#000000");
+                      setBgColor("#ffffff");
+                    }}
+                    className="text-brand-600 hover:underline"
+                  >
+                    {t("reset")}
+                  </button>
+                </div>
+              </details>
             </>
           ) : (
             <div className="text-gray-400 text-center text-sm">

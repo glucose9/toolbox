@@ -64,6 +64,7 @@ export default function SciCalcTool() {
 
 function CalcTab() {
   const t = useTranslations("toolUI.sci-calc");
+  const tc = useTranslations("common");
   const [input, setInput] = useState("sin(30)+cos(60)");
   const [mode, setMode] = useState<AngleMode>("deg");
   const [second, setSecond] = useState(false);
@@ -93,8 +94,7 @@ function CalcTab() {
     }
   }, [input, mode, vars, ans, notation, fixDigits, t]);
 
-  // Always compute the fraction form (independent of ►Frac) so it's visible
-  // whenever the answer is rational. ►Frac just promotes it to the big result.
+  // Fraction form of the current value; only shown while ►Frac is active.
   const frac = useMemo(
     () => (evald.value !== null ? toFraction(evald.value) : null),
     [evald.value]
@@ -195,43 +195,6 @@ function CalcTab() {
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 text-sm">
-        <div className="flex gap-1">
-          {(["deg", "rad", "grad"] as AngleMode[]).map((m) => (
-            <button
-              key={m}
-              onClick={() => setMode(m)}
-              className={`btn ${mode === m ? "btn-primary" : "btn-secondary"} text-xs`}
-            >
-              {m.toUpperCase()}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-1 ml-auto text-xs">
-          <span className="text-muted">{t("formatLabel")}</span>
-          <select
-            value={notation}
-            onChange={(e) => setNotation(e.target.value as Notation)}
-            className="px-1.5 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
-          >
-            <option value="auto">{t("fmtAuto")}</option>
-            <option value="sci">{t("fmtSci")}</option>
-            <option value="eng">{t("fmtEng")}</option>
-            <option value="fix">{t("fmtFix")}</option>
-          </select>
-          {notation === "fix" && (
-            <input
-              type="number"
-              min={0}
-              max={12}
-              value={fixDigits}
-              onChange={(e) => setFixDigits(Math.max(0, Math.min(12, Number(e.target.value))))}
-              className="w-12 px-1 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
-            />
-          )}
-        </div>
-      </div>
-
       <input
         type="text"
         value={input}
@@ -257,9 +220,7 @@ function CalcTab() {
         ) : (
           <>
             <div className="text-2xl font-bold break-all">{evald.display || "—"}</div>
-            {frac ? (
-              <div className="text-base text-emerald-600 dark:text-emerald-400 font-mono">= {frac}</div>
-            ) : fracMode && evald.value !== null ? (
+            {fracMode && evald.value !== null ? (
               <div className="text-xs text-muted">{t("fracNA")}</div>
             ) : null}
           </>
@@ -290,36 +251,64 @@ function CalcTab() {
         })}
       </div>
 
-      {/* Variable storage */}
-      <div className="flex flex-wrap items-center gap-2 text-sm border-t border-gray-200 dark:border-gray-700 pt-2">
-        <span className="text-muted text-xs">{t("variables")}</span>
-        <select
-          value={storeVar}
-          onChange={(e) => setStoreVar(e.target.value)}
-          className="px-1.5 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono"
-        >
-          {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-        <button onClick={storeAns} disabled={evald.value === null} className="btn btn-secondary text-xs disabled:opacity-40">
-          {t("storeBtn")}
-        </button>
-        {definedVars.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {definedVars.map(([k, v]) => (
-              <button
-                key={k}
-                onClick={() => insert(k)}
-                title={formatResult(v, "auto")}
-                className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-xs font-mono"
-              >
-                {k}={formatResult(v, "auto")}
-              </button>
-            ))}
+      {/* Advanced: notation + variable storage */}
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1 space-y-2">
+          <div className="flex items-center gap-1 text-xs">
+            <span className="text-muted">{t("formatLabel")}</span>
+            <select
+              value={notation}
+              onChange={(e) => setNotation(e.target.value as Notation)}
+              className="px-1.5 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
+            >
+              <option value="auto">{t("fmtAuto")}</option>
+              <option value="sci">{t("fmtSci")}</option>
+              <option value="eng">{t("fmtEng")}</option>
+              <option value="fix">{t("fmtFix")}</option>
+            </select>
+            {notation === "fix" && (
+              <input
+                type="number"
+                min={0}
+                max={12}
+                value={fixDigits}
+                onChange={(e) => setFixDigits(Math.max(0, Math.min(12, Number(e.target.value))))}
+                className="w-12 px-1 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
+              />
+            )}
           </div>
-        )}
-      </div>
+          <div className="flex flex-wrap items-center gap-2 text-sm border-t border-gray-200 dark:border-gray-700 pt-2">
+            <span className="text-muted text-xs">{t("variables")}</span>
+            <select
+              value={storeVar}
+              onChange={(e) => setStoreVar(e.target.value)}
+              className="px-1.5 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-xs font-mono"
+            >
+              {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <button onClick={storeAns} disabled={evald.value === null} className="btn btn-secondary text-xs disabled:opacity-40">
+              {t("storeBtn")}
+            </button>
+            {definedVars.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {definedVars.map(([k, v]) => (
+                  <button
+                    key={k}
+                    onClick={() => insert(k)}
+                    title={formatResult(v, "auto")}
+                    className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-xs font-mono"
+                  >
+                    {k}={formatResult(v, "auto")}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </details>
 
       {history.length > 0 && (
         <div>

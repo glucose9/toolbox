@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 
 export default function ImageResizeTool() {
@@ -12,11 +12,17 @@ export default function ImageResizeTool() {
   const [keepRatio, setKeepRatio] = useState(true);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  // true once the user edits a dimension; skips auto-resize on the
+  // programmatic width/height set when a file is loaded
+  const dirtyRef = useRef(false);
+  const reqRef = useRef(0);
 
   const handleFile = (file: File) => {
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
+      dirtyRef.current = false;
+      reqRef.current++; // invalidate any in-flight resize of the old file
       setInput({ name: file.name, url, type: file.type, w: img.naturalWidth, h: img.naturalHeight });
       setWidth(img.naturalWidth);
       setHeight(img.naturalHeight);
@@ -26,12 +32,14 @@ export default function ImageResizeTool() {
   };
 
   const updateWidth = (w: number) => {
+    dirtyRef.current = true;
     setWidth(w);
     if (keepRatio && input) {
       setHeight(Math.max(1, Math.round((w * input.h) / input.w)));
     }
   };
   const updateHeight = (h: number) => {
+    dirtyRef.current = true;
     setHeight(h);
     if (keepRatio && input) {
       setWidth(Math.max(1, Math.round((h * input.w) / input.h)));
@@ -45,8 +53,10 @@ export default function ImageResizeTool() {
       return;
     }
     setError("");
+    const reqId = ++reqRef.current;
     const img = new Image();
     img.onload = () => {
+      if (reqId !== reqRef.current) return; // superseded — discard this result
       const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
@@ -59,11 +69,25 @@ export default function ImageResizeTool() {
       const outW = width;
       const outH = height;
       canvas.toBlob((blob) => {
-        if (blob) setOutput({ url: URL.createObjectURL(blob), w: outW, h: outH, type: blob.type || type });
+        if (reqId !== reqRef.current || !blob) return;
+        const url = URL.createObjectURL(blob);
+        setOutput((prev) => {
+          if (prev) URL.revokeObjectURL(prev.url);
+          return { url, w: outW, h: outH, type: blob.type || type };
+        });
       }, type, 0.92);
     };
     img.src = input.url;
   };
+
+  // auto-resize 400ms after the user edits a dimension; resize only writes
+  // output/error, which are not dependencies, so no loop
+  useEffect(() => {
+    if (!dirtyRef.current) return;
+    const timer = setTimeout(resize, 400);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width, height]);
 
   const download = () => {
     if (!output || !input) return;
@@ -151,8 +175,7 @@ export default function ImageResizeTool() {
           {error && <div className="text-sm text-red-600">{error}</div>}
 
           <div className="flex gap-2">
-            <button onClick={resize} className="btn btn-primary">{t("apply")}</button>
-            <button onClick={download} disabled={!output} className="btn btn-secondary disabled:opacity-50">
+            <button onClick={download} disabled={!output} className="btn btn-primary disabled:opacity-50">
               {t("download")}
             </button>
             <button onClick={() => setInput(null)} className="btn btn-secondary">{t("otherFile")}</button>

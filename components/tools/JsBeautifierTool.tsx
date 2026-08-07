@@ -5,6 +5,7 @@ import { copyText } from "@/lib/clipboard";
 
 function beautify(code: string): string {
   let depth = 0;
+  let parens = 0;
   let out = "";
   let i = 0;
   // String literals are held out of the emitted text so the final blank-line
@@ -67,14 +68,17 @@ function beautify(code: string): string {
     if (c === "{" || c === "[" || c === "(") {
       out += c;
       if (c === "{" || c === "[") { depth++; out += "\n" + "  ".repeat(depth); }
+      else parens++;
     } else if (c === "}" || c === "]") {
       depth = Math.max(0, depth - 1);
       out += "\n" + "  ".repeat(depth) + c;
     } else if (c === ";") {
-      out += c + "\n" + "  ".repeat(depth);
+      // Inside ( ) — e.g. for(;;) headers or call arguments — keep one line.
+      out += parens > 0 ? c + " " : c + "\n" + "  ".repeat(depth);
     } else if (c === ",") {
-      out += c + "\n" + "  ".repeat(depth);
+      out += parens > 0 ? c + " " : c + "\n" + "  ".repeat(depth);
     } else if (c === ")") {
+      parens = Math.max(0, parens - 1);
       out += c;
     } else {
       out += c;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import JSZip from "jszip";
 
@@ -64,6 +64,9 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
   const [files, setFiles] = useState<FileItem[]>([]);
   const [busy, setBusy] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const runningRef = useRef(false);
+  const genRef = useRef(0);
+  const committedQualityRef = useRef(defaultQuality);
 
   const addFiles = (list: FileList) => {
     const items: FileItem[] = Array.from(list).map((f) => ({
@@ -81,6 +84,7 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
   };
 
   const clearAll = () => {
+    genRef.current++;
     files.forEach((f) => {
       URL.revokeObjectURL(f.src);
       if (f.outUrl) URL.revokeObjectURL(f.outUrl);
@@ -88,36 +92,58 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
     setFiles([]);
   };
 
-  const processAll = async (force = false) => {
+  const convertAll = async (items: FileItem[]) => {
+    runningRef.current = true;
+    const gen = genRef.current;
     setBusy(true);
-    if (force) {
-      files.forEach((f) => {
-        if (f.outUrl) URL.revokeObjectURL(f.outUrl);
-      });
-      setFiles((prev) => prev.map((f) => ({ ...f, status: "pending", outBlob: undefined, outUrl: undefined })));
-    }
-    for (const file of files) {
-      if (file.status === "done" && !force) continue;
+    for (const item of items) {
+      if (gen !== genRef.current) break;
       setFiles((prev) =>
-        prev.map((f) => (f.id === file.id ? { ...f, status: "processing" } : f))
+        prev.map((f) => (f.id === item.id ? { ...f, status: "processing" } : f))
       );
       try {
-        const blob = await convertOne(file, to, quality);
+        const blob = await convertOne(item, to, quality);
+        if (gen !== genRef.current) break;
         const outUrl = URL.createObjectURL(blob);
         setFiles((prev) =>
           prev.map((f) =>
-            f.id === file.id ? { ...f, status: "done", outBlob: blob, outUrl } : f
+            f.id === item.id ? { ...f, status: "done", outBlob: blob, outUrl } : f
           )
         );
       } catch (e) {
+        if (gen !== genRef.current) break;
         setFiles((prev) =>
           prev.map((f) =>
-            f.id === file.id ? { ...f, status: "error", error: (e as Error).message } : f
+            f.id === item.id ? { ...f, status: "error", error: (e as Error).message } : f
           )
         );
       }
     }
     setBusy(false);
+    runningRef.current = false;
+  };
+
+  // Auto-convert whenever pending files appear (file add / quality change).
+  // runningRef guards re-entry; busy in deps re-scans for files added mid-run.
+  useEffect(() => {
+    if (runningRef.current) return;
+    const pending = files.filter((f) => f.status === "pending");
+    if (pending.length === 0) return;
+    convertAll(pending);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files, busy]);
+
+  const commitQuality = () => {
+    if (quality === committedQualityRef.current) return;
+    committedQualityRef.current = quality;
+    if (files.length === 0) return;
+    genRef.current++;
+    files.forEach((f) => {
+      if (f.outUrl) URL.revokeObjectURL(f.outUrl);
+    });
+    setFiles((prev) =>
+      prev.map((f) => ({ ...f, status: "pending", outBlob: undefined, outUrl: undefined, error: undefined }))
+    );
   };
 
   const downloadOne = (f: FileItem) => {
@@ -215,16 +241,9 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
                       })`}
                   </div>
                 </div>
-                <div className="text-xs whitespace-nowrap">
-                  {f.status === "pending" && <span className="text-muted">{t("pending")}</span>}
-                  {f.status === "processing" && <span className="text-brand-600">{t("converting")}</span>}
-                  {f.status === "done" && (
-                    <button onClick={() => downloadOne(f)} className="text-green-600 hover:underline">
-                      {t("download")}
-                    </button>
-                  )}
-                  {f.status === "error" && <span className="text-red-600">{t("failed")}</span>}
-                </div>
+                {f.status === "error" && (
+                  <div className="text-xs whitespace-nowrap text-red-600">{t("failed")}</div>
+                )}
                 <button
                   onClick={() => removeFile(f.id)}
                   className="text-gray-400 hover:text-red-600 text-lg leading-none px-1"
@@ -246,19 +265,32 @@ export default function ImageConvertTool({ config }: { config: Record<string, un
                 step="0.05"
                 value={quality}
                 onChange={(e) => setQuality(parseFloat(e.target.value))}
+                onMouseUp={commitQuality}
+                onTouchEnd={commitQuality}
                 className="w-full"
               />
             </div>
           )}
 
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => processAll(doneCount === files.length)} disabled={busy} className="btn btn-primary disabled:opacity-50">
-              {busy ? t("convertingShort") : doneCount === files.length ? t("convertAgain") : t("convertButton", { fmt: EXT[to].toUpperCase(), n: files.length })}
-            </button>
-            {doneCount > 1 && (
-              <button onClick={downloadAllZip} className="btn btn-secondary">
-                {t("downloadZip", { n: doneCount })}
-              </button>
+          <div className="flex flex-wrap items-center gap-2">
+            {busy ? (
+              <div className="text-sm text-muted">
+                <div className="inline-block animate-spin mr-2">⏳</div>
+                {t("convertingShort")}
+              </div>
+            ) : (
+              <>
+                {doneCount === 1 && (
+                  <button onClick={() => downloadOne(files.find((f) => f.status === "done")!)} className="btn btn-primary">
+                    {t("download")}
+                  </button>
+                )}
+                {doneCount > 1 && (
+                  <button onClick={downloadAllZip} className="btn btn-primary">
+                    {t("downloadZip", { n: doneCount })}
+                  </button>
+                )}
+              </>
             )}
             <button onClick={clearAll} className="btn btn-secondary">
               {t("clearAll")}

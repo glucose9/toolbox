@@ -35,6 +35,7 @@ th { background: #f3f4f6; }`;
 
 export default function HtmlToPdfTool() {
   const t = useTranslations("toolUI.html-to-pdf");
+  const tc = useTranslations("common");
   const [html, setHtml] = useState(SAMPLE_HTML);
   const [css, setCss] = useState(SAMPLE_CSS);
   const [width, setWidth] = useState(794);
@@ -139,30 +140,37 @@ export default function HtmlToPdfTool() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <label className="flex flex-col gap-1 text-sm">
-          <span>{t("width")} (px)</span>
-          <input
-            type="number"
-            value={width}
-            min={400}
-            max={2000}
-            onChange={(e) => setWidth(parseInt(e.target.value, 10) || 794)}
-            className="input"
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>{t("orientation")}</span>
-          <select
-            value={orientation}
-            onChange={(e) => setOrientation(e.target.value as Orientation)}
-            className="input"
-          >
-            <option value="portrait">{t("portrait")}</option>
-            <option value="landscape">{t("landscape")}</option>
-          </select>
-        </label>
-      </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">
+          {tc("advancedOptions")}
+        </summary>
+        <div className="p-3 pt-1">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <label className="flex flex-col gap-1 text-sm">
+              <span>{t("width")} (px)</span>
+              <input
+                type="number"
+                value={width}
+                min={400}
+                max={2000}
+                onChange={(e) => setWidth(parseInt(e.target.value, 10) || 794)}
+                className="input"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span>{t("orientation")}</span>
+              <select
+                value={orientation}
+                onChange={(e) => setOrientation(e.target.value as Orientation)}
+                className="input"
+              >
+                <option value="portrait">{t("portrait")}</option>
+                <option value="landscape">{t("landscape")}</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </details>
 
       <div className="flex flex-wrap gap-2">
         <button onClick={downloadPdf} disabled={busy} className="btn btn-primary">

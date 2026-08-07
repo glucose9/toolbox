@@ -28,7 +28,8 @@
     "other": "다른 파일",
     "noResults": "검색 결과 없음",
     "close": "닫기",
-    "skipToContent": "본문 바로가기"
+    "skipToContent": "본문 바로가기",
+    "advancedOptions": "고급 설정"
   },
   "categories": {
     "qr": "QR코드",
@@ -1981,7 +1982,10 @@
       "drink_wine": "와인",
       "drink_highball": "하이볼",
       "drink_whiskey": "위스키 (샷)",
-      "drink_vodka": "보드카 (샷)"
+      "drink_vodka": "보드카 (샷)",
+      "krStandardLine": "표준잔 약 {n}잔 (한국 기준 1잔 = 순알코올 7g)",
+      "intlCompare": "국제 표준잔 기준으로 보기",
+      "fullTable": "다른 술로 환산해 보기"
     },
     "dday": {
       "daysLeft": "{n}일 남음",

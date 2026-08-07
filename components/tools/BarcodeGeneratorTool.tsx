@@ -40,6 +40,7 @@ function isbn10To13(isbn10: string): string {
 
 export default function BarcodeGeneratorTool({ config }: { config: Record<string, unknown> }) {
   const t = useTranslations("toolUI.barcode-generator");
+  const tc = useTranslations("common");
   const initial = (config.defaultFormat as Format) || "CODE128";
   const isIsbn = config.isbn === true;
   const [format, setFormat] = useState<Format>(initial);
@@ -176,16 +177,21 @@ export default function BarcodeGeneratorTool({ config }: { config: Record<string
             <span>{t("showText")}</span>
           </label>
 
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <label className="flex items-center gap-2">
-              <span>{t("foreground")}</span>
-              <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} className="w-7 h-7 rounded cursor-pointer border border-gray-300" />
-            </label>
-            <label className="flex items-center gap-2">
-              <span>{t("background")}</span>
-              <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="w-7 h-7 rounded cursor-pointer border border-gray-300" />
-            </label>
-          </div>
+          <details className="rounded border border-gray-200 dark:border-gray-700">
+            <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+            <div className="p-3 pt-1">
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <label className="flex items-center gap-2">
+                  <span>{t("foreground")}</span>
+                  <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} className="w-7 h-7 rounded cursor-pointer border border-gray-300" />
+                </label>
+                <label className="flex items-center gap-2">
+                  <span>{t("background")}</span>
+                  <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="w-7 h-7 rounded cursor-pointer border border-gray-300" />
+                </label>
+              </div>
+            </div>
+          </details>
 
           {error && (
             <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded">

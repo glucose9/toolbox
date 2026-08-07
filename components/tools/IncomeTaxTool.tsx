@@ -26,6 +26,7 @@ function calcIncomeTax(taxBase: number): { tax: number; bracket: number; rate: n
 
 export default function IncomeTaxTool() {
   const t = useTranslations("toolUI.income-tax");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const [grossIncome, setGrossIncome] = useState(50_000_000);
   const [necessaryExpense, setNecessaryExpense] = useState(0);
@@ -57,33 +58,47 @@ export default function IncomeTaxTool() {
           <div className="text-xs text-muted mt-1">{krw(fmt(grossIncome))}</div>
         </label>
         <label>
-          {t("expense")}
-          <input type="number" value={necessaryExpense} onChange={(e) => setNecessaryExpense(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
-          <div className="text-xs text-muted mt-1">{t("expenseNote")}</div>
-        </label>
-        <label>
-          {t("personalDeduction")}
-          <input type="number" value={personalDeduction} onChange={(e) => setPersonalDeduction(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
-          <div className="text-xs text-muted mt-1">{t("personalDeductionNote")}</div>
-        </label>
-        <label>
           {t("dependents")}
           <input type="number" min={0} value={dependents} onChange={(e) => setDependents(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
           <div className="text-xs text-muted mt-1">{t("dependentsNote")}</div>
         </label>
-        <label>
-          {t("pension")}
-          <input type="number" value={pensionContrib} onChange={(e) => setPensionContrib(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
-          <div className="text-xs text-muted mt-1">{krw(fmt(pensionContrib))}</div>
-        </label>
-        <label>
-          {t("otherDeduction")}
-          <input type="number" value={otherDeduction} onChange={(e) => setOtherDeduction(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
-          <div className="text-xs text-muted mt-1">{t("otherDeductionNote")}</div>
-        </label>
       </div>
 
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <label>
+              {t("expense")}
+              <input type="number" value={necessaryExpense} onChange={(e) => setNecessaryExpense(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
+              <div className="text-xs text-muted mt-1">{t("expenseNote")}</div>
+            </label>
+            <label>
+              {t("personalDeduction")}
+              <input type="number" value={personalDeduction} onChange={(e) => setPersonalDeduction(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
+              <div className="text-xs text-muted mt-1">{t("personalDeductionNote")}</div>
+            </label>
+            <label>
+              {t("pension")}
+              <input type="number" value={pensionContrib} onChange={(e) => setPensionContrib(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
+              <div className="text-xs text-muted mt-1">{krw(fmt(pensionContrib))}</div>
+            </label>
+            <label>
+              {t("otherDeduction")}
+              <input type="number" value={otherDeduction} onChange={(e) => setOtherDeduction(+e.target.value)} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900" />
+              <div className="text-xs text-muted mt-1">{t("otherDeductionNote")}</div>
+            </label>
+          </div>
+        </div>
+      </details>
+
       <div className="card-section space-y-1 text-sm">
+        <div className="flex justify-between items-baseline">
+          <span className="font-medium">{t("rowTotalTax")}</span>
+          <span className="text-2xl font-bold text-red-600">{krw(fmt(result.total))}</span>
+        </div>
+        <div className="text-xs text-muted">{t("effectiveRate", { rate: result.effectiveRate.toFixed(2) })}</div>
+        <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
         <div className="flex justify-between">
           <span>{t("rowGross")}</span>
           <span>{krw(fmt(grossIncome))}</span>
@@ -117,11 +132,6 @@ export default function IncomeTaxTool() {
           <span>{t("rowLocalTax")}</span>
           <span>{krw(fmt(result.localTax))}</span>
         </div>
-        <div className="flex justify-between font-bold text-lg mt-1">
-          <span>{t("rowTotalTax")}</span>
-          <span className="text-red-600">{krw(fmt(result.total))}</span>
-        </div>
-        <div className="text-xs text-muted">{t("effectiveRate", { rate: result.effectiveRate.toFixed(2) })}</div>
       </div>
 
       <div className="text-xs text-muted leading-relaxed">

@@ -63,6 +63,7 @@ function supportsCanvasFilter(): boolean {
 
 export default function ImageFilterTool() {
   const t = useTranslations("toolUI.image-filter");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState("");
@@ -128,6 +129,20 @@ export default function ImageFilterTool() {
     }
   };
 
+  const renderSlider = ([key, label, min, max, unit]: [keyof Filters, string, number, number, string]) => (
+    <label key={key} className="text-xs">
+      {label} ({filters[key]}{unit})
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={filters[key]}
+        onChange={(e) => setFilters((f) => ({ ...f, [key]: +e.target.value }))}
+        className="w-full"
+      />
+    </label>
+  );
+
   if (!file) {
     return (
       <div className="card">
@@ -166,29 +181,29 @@ export default function ImageFilterTool() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
         {(
           [
-            ["grayscale", t("grayscale"), 0, 100, "%"],
-            ["sepia", t("sepia"), 0, 100, "%"],
-            ["blur", t("blur"), 0, 20, "px"],
             ["brightness", t("brightness"), 0, 200, "%"],
             ["contrast", t("contrast"), 0, 200, "%"],
             ["saturate", t("saturate"), 0, 200, "%"],
-            ["hueRotate", t("hueRotate"), 0, 360, "°"],
-            ["invert", t("invert"), 0, 100, "%"],
+            ["blur", t("blur"), 0, 20, "px"],
           ] as [keyof Filters, string, number, number, string][]
-        ).map(([key, label, min, max, unit]) => (
-          <label key={key} className="text-xs">
-            {label} ({filters[key]}{unit})
-            <input
-              type="range"
-              min={min}
-              max={max}
-              value={filters[key]}
-              onChange={(e) => setFilters((f) => ({ ...f, [key]: +e.target.value }))}
-              className="w-full"
-            />
-          </label>
-        ))}
+        ).map(renderSlider)}
       </div>
+
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            {(
+              [
+                ["grayscale", t("grayscale"), 0, 100, "%"],
+                ["sepia", t("sepia"), 0, 100, "%"],
+                ["hueRotate", t("hueRotate"), 0, 360, "°"],
+                ["invert", t("invert"), 0, 100, "%"],
+              ] as [keyof Filters, string, number, number, string][]
+            ).map(renderSlider)}
+          </div>
+        </div>
+      </details>
 
       {error && <div className="text-sm text-red-600">{error}</div>}
 

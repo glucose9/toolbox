@@ -28,7 +28,8 @@
     "other": "Different file",
     "noResults": "No results",
     "close": "Close",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "advancedOptions": "Advanced settings"
   },
   "categories": {
     "qr": "QR Code",
@@ -1981,7 +1982,10 @@
       "drink_wine": "Wine",
       "drink_highball": "Highball",
       "drink_whiskey": "Whiskey (shot)",
-      "drink_vodka": "Vodka (shot)"
+      "drink_vodka": "Vodka (shot)",
+      "krStandardLine": "≈ {n} standard drinks (KR: 7g pure alcohol per drink)",
+      "intlCompare": "Compare with international standards",
+      "fullTable": "Convert to other drinks"
     },
     "dday": {
       "daysLeft": "{n} days left",

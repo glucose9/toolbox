@@ -33,6 +33,7 @@ const FONTS = ["system-ui", "Pretendard", "Arial", "Times New Roman", "Courier N
 
 export default function ImageTextOverlayTool() {
   const t = useTranslations("toolUI.image-text-overlay");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -168,44 +169,49 @@ export default function ImageTextOverlayTool() {
           placeholder={t("textPlaceholder")}
           className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900"
         />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-          <label>
-            {t("size", { size: state.size })}
-            <input type="range" min="12" max="200" value={state.size} onChange={(e) => setState((s) => ({ ...s, size: +e.target.value }))} className="w-full" />
-          </label>
-          <label>
-            {t("stroke", { width: state.strokeWidth })}
-            <input type="range" min="0" max="20" value={state.strokeWidth} onChange={(e) => setState((s) => ({ ...s, strokeWidth: +e.target.value }))} className="w-full" />
-          </label>
-          <label>
-            {t("textColor")}
-            <input type="color" value={state.color} onChange={(e) => setState((s) => ({ ...s, color: e.target.value }))} className="w-full h-7" />
-          </label>
-          <label>
-            {t("strokeColor")}
-            <input type="color" value={state.strokeColor} onChange={(e) => setState((s) => ({ ...s, strokeColor: e.target.value }))} className="w-full h-7" />
-          </label>
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <label>
-            {t("font")}
-            <select value={state.font} onChange={(e) => setState((s) => ({ ...s, font: e.target.value }))} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1">
-              {FONTS.map((f) => <option key={f} value={f}>{f}</option>)}
-            </select>
-          </label>
-          <label>
-            {t("align")}
-            <select value={state.align} onChange={(e) => setState((s) => ({ ...s, align: e.target.value as State["align"] }))} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1">
-              <option value="left">{t("alignLeft")}</option>
-              <option value="center">{t("alignCenter")}</option>
-              <option value="right">{t("alignRight")}</option>
-            </select>
-          </label>
-          <label className="flex items-end gap-1 pb-1">
-            <input type="checkbox" checked={state.bold} onChange={(e) => setState((s) => ({ ...s, bold: e.target.checked }))} />
-            {t("bold")}
-          </label>
-        </div>
+        <label className="block text-xs">
+          {t("size", { size: state.size })}
+          <input type="range" min="12" max="200" value={state.size} onChange={(e) => setState((s) => ({ ...s, size: +e.target.value }))} className="w-full" />
+        </label>
+        <details className="rounded border border-gray-200 dark:border-gray-700">
+          <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+          <div className="p-3 pt-1 space-y-2">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
+              <label>
+                {t("stroke", { width: state.strokeWidth })}
+                <input type="range" min="0" max="20" value={state.strokeWidth} onChange={(e) => setState((s) => ({ ...s, strokeWidth: +e.target.value }))} className="w-full" />
+              </label>
+              <label>
+                {t("textColor")}
+                <input type="color" value={state.color} onChange={(e) => setState((s) => ({ ...s, color: e.target.value }))} className="w-full h-7" />
+              </label>
+              <label>
+                {t("strokeColor")}
+                <input type="color" value={state.strokeColor} onChange={(e) => setState((s) => ({ ...s, strokeColor: e.target.value }))} className="w-full h-7" />
+              </label>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <label>
+                {t("font")}
+                <select value={state.font} onChange={(e) => setState((s) => ({ ...s, font: e.target.value }))} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1">
+                  {FONTS.map((f) => <option key={f} value={f}>{f}</option>)}
+                </select>
+              </label>
+              <label>
+                {t("align")}
+                <select value={state.align} onChange={(e) => setState((s) => ({ ...s, align: e.target.value as State["align"] }))} className="w-full px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 mt-1">
+                  <option value="left">{t("alignLeft")}</option>
+                  <option value="center">{t("alignCenter")}</option>
+                  <option value="right">{t("alignRight")}</option>
+                </select>
+              </label>
+              <label className="flex items-end gap-1 pb-1">
+                <input type="checkbox" checked={state.bold} onChange={(e) => setState((s) => ({ ...s, bold: e.target.checked }))} />
+                {t("bold")}
+              </label>
+            </div>
+          </div>
+        </details>
       </div>
 
       <button onClick={download} className="btn btn-primary">{t("download")}</button>

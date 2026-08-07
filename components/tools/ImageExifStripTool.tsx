@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
+const JPEG_QUALITY = 0.92;
+
 function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
 }
@@ -13,11 +15,10 @@ export default function ImageExifStripTool() {
   const [file, setFile] = useState<File | null>(null);
   const [outBlob, setOutBlob] = useState<Blob | null>(null);
   const [outUrl, setOutUrl] = useState("");
-  const [quality, setQuality] = useState(0.92);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const process = async (f: File, q: number) => {
+  const process = async (f: File) => {
     setBusy(true);
     setError("");
     try {
@@ -33,7 +34,7 @@ export default function ImageExifStripTool() {
       }
       ctx.drawImage(img, 0, 0);
       const blob = await new Promise<Blob>((resolve, reject) =>
-        c.toBlob((b) => (b ? resolve(b) : reject(new Error(t("errReencode")))), mime, mime === "image/jpeg" ? q : undefined)
+        c.toBlob((b) => (b ? resolve(b) : reject(new Error(t("errReencode")))), mime, mime === "image/jpeg" ? JPEG_QUALITY : undefined)
       );
       setOutBlob(blob);
       if (outUrl) URL.revokeObjectURL(outUrl);
@@ -51,7 +52,7 @@ export default function ImageExifStripTool() {
       return;
     }
     setFile(f);
-    process(f, quality);
+    process(f);
   };
 
   const download = () => {
@@ -97,25 +98,6 @@ export default function ImageExifStripTool() {
         </div>
         <button onClick={() => { setFile(null); setOutBlob(null); setOutUrl(""); }} className="text-sm text-brand-600 hover:underline">{t("otherFile")}</button>
       </div>
-
-      {file.type !== "image/png" && (
-        <div>
-          <label className="label">{t("jpgQuality")} ({Math.round(quality * 100)}%)</label>
-          <input
-            type="range"
-            min="0.4"
-            max="1"
-            step="0.05"
-            value={quality}
-            onChange={(e) => {
-              const q = parseFloat(e.target.value);
-              setQuality(q);
-              process(file, q);
-            }}
-            className="w-full"
-          />
-        </div>
-      )}
 
       {outUrl && <img src={outUrl} alt="" className="max-w-full max-h-96 rounded border border-gray-200 dark:border-gray-700" />}
       {error && <div className="text-sm text-red-600">{error}</div>}

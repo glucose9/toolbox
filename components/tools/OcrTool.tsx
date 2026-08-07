@@ -28,14 +28,16 @@ export default function OcrTool() {
 
   const onFile = (f: File) => {
     if (imgUrl) URL.revokeObjectURL(imgUrl);
-    setImgUrl(URL.createObjectURL(f));
+    const url = URL.createObjectURL(f);
+    setImgUrl(url);
     setText("");
     setError(null);
     setProgress(0);
+    void recognize(url);
   };
 
-  const recognize = async () => {
-    if (!imgUrl) return;
+  const recognize = async (url: string | null = imgUrl) => {
+    if (!url) return;
     setBusy(true);
     setError(null);
     setProgress(0);
@@ -49,7 +51,7 @@ export default function OcrTool() {
         failWorker = (msg: string) => reject(new Error(msg));
       });
       const result = (await Promise.race([
-        Tesseract.recognize(imgUrl, lang, {
+        Tesseract.recognize(url, lang, {
           logger: (m: { status: string; progress: number }) => {
             if (m.status === "recognizing text") {
               setProgress(Math.round(m.progress * 100));
@@ -95,7 +97,7 @@ export default function OcrTool() {
             ))}
           </select>
         </label>
-        <button onClick={() => fileRef.current?.click()} className="btn">{t("selectImage")}</button>
+        <button onClick={() => fileRef.current?.click()} disabled={busy} className="btn">{t("selectImage")}</button>
         <input
           ref={fileRef}
           type="file"
@@ -113,7 +115,7 @@ export default function OcrTool() {
       )}
 
       <div className="flex gap-2">
-        <button onClick={recognize} disabled={!imgUrl || busy} className="btn btn-primary">
+        <button onClick={() => void recognize()} disabled={!imgUrl || busy} className="btn btn-primary">
           {busy ? t("recognizing", { progress }) : t("startOcr")}
         </button>
         {imgUrl && !busy && (

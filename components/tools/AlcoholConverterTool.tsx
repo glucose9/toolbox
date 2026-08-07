@@ -130,21 +130,8 @@ export default function AlcoholConverterTool() {
         <div className="text-xs text-muted">{t("pureAlcohol")}</div>
         <div className="text-2xl font-bold">{alcoholG.toFixed(1)} g</div>
         <div className="text-xs text-muted mt-1">{t("alcoholMl", { ml: alcoholMl.toFixed(1) })}</div>
-      </div>
-
-      <div>
-        <div className="font-medium text-sm mb-2">{t("standardDrinks")}</div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {STANDARD_DRINKS.map((s) => (
-            <div
-              key={s.key}
-              className="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700"
-            >
-              <div className="text-xs text-muted">{t(`std_${s.key}`)}</div>
-              <div className="font-bold">{(alcoholG / s.grams).toFixed(1)}</div>
-              <div className="text-[11px] text-muted">{t("gramsPerDrink", { g: s.grams })}</div>
-            </div>
-          ))}
+        <div className="text-sm font-medium mt-2">
+          {t("krStandardLine", { n: (alcoholG / 7).toFixed(1) })}
         </div>
       </div>
 
@@ -179,8 +166,25 @@ export default function AlcoholConverterTool() {
         <div className="text-xs text-muted mt-1">{t("flushNote")}</div>
       </div>
 
-      <div className="space-y-1 text-sm">
-        <div className="font-medium mb-1">{t("equivalent")}</div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{t("intlCompare")}</summary>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 pt-1">
+          {STANDARD_DRINKS.map((s) => (
+            <div
+              key={s.key}
+              className="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700"
+            >
+              <div className="text-xs text-muted">{t(`std_${s.key}`)}</div>
+              <div className="font-bold">{(alcoholG / s.grams).toFixed(1)}</div>
+              <div className="text-[11px] text-muted">{t("gramsPerDrink", { g: s.grams })}</div>
+            </div>
+          ))}
+        </div>
+      </details>
+
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{t("fullTable")}</summary>
+        <div className="space-y-1 text-sm p-3 pt-1">
         {DRINKS.map((d, i) => {
           if (!custom && i === fromIdx) return null;
           const per = (d.abv / 100) * d.vol;
@@ -205,12 +209,13 @@ export default function AlcoholConverterTool() {
             </div>
           );
         })}
-      </div>
+        </div>
+      </details>
 
       <div className="text-xs text-muted bg-red-50 dark:bg-red-900/20 p-2 rounded border border-red-200 dark:border-red-800">
         {t("warning")}
+        <span className="block mt-1 text-[11px] leading-relaxed">{t("sourceNote")}</span>
       </div>
-      <div className="text-[11px] text-muted leading-relaxed">{t("sourceNote")}</div>
     </div>
   );
 }

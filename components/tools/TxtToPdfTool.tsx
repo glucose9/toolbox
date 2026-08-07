@@ -15,6 +15,7 @@ const NON_LATIN1_RE = /[^\u0000-\u00ff]/;
 
 export default function TxtToPdfTool() {
   const t = useTranslations("toolUI.txt-to-pdf");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
   const [fontSize, setFontSize] = useState(12);
@@ -220,58 +221,63 @@ export default function TxtToPdfTool() {
         />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <label className="flex flex-col gap-1 text-sm">
-          <span>{t("fontSize")}: {fontSize}pt</span>
-          <input
-            type="range"
-            min={8}
-            max={24}
-            value={fontSize}
-            onChange={(e) => setFontSize(parseInt(e.target.value, 10))}
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>{t("lineHeight")}: {lineHeight.toFixed(1)}</span>
-          <input
-            type="range"
-            min={12}
-            max={20}
-            value={Math.round(lineHeight * 10)}
-            onChange={(e) => setLineHeight(parseInt(e.target.value, 10) / 10)}
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>{t("margin")}: {margin}mm</span>
-          <input
-            type="range"
-            min={5}
-            max={40}
-            value={margin}
-            onChange={(e) => setMargin(parseInt(e.target.value, 10))}
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>{t("orientation")}</span>
-          <select
-            value={orientation}
-            onChange={(e) => setOrientation(e.target.value as Orientation)}
-            className="input"
-          >
-            <option value="portrait">{t("portrait")}</option>
-            <option value="landscape">{t("landscape")}</option>
-          </select>
-        </label>
-      </div>
+      <details className="rounded border border-gray-200 dark:border-gray-700">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+        <div className="p-3 pt-1 space-y-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <label className="flex flex-col gap-1 text-sm">
+              <span>{t("fontSize")}: {fontSize}pt</span>
+              <input
+                type="range"
+                min={8}
+                max={24}
+                value={fontSize}
+                onChange={(e) => setFontSize(parseInt(e.target.value, 10))}
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span>{t("lineHeight")}: {lineHeight.toFixed(1)}</span>
+              <input
+                type="range"
+                min={12}
+                max={20}
+                value={Math.round(lineHeight * 10)}
+                onChange={(e) => setLineHeight(parseInt(e.target.value, 10) / 10)}
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span>{t("margin")}: {margin}mm</span>
+              <input
+                type="range"
+                min={5}
+                max={40}
+                value={margin}
+                onChange={(e) => setMargin(parseInt(e.target.value, 10))}
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span>{t("orientation")}</span>
+              <select
+                value={orientation}
+                onChange={(e) => setOrientation(e.target.value as Orientation)}
+                className="input"
+              >
+                <option value="portrait">{t("portrait")}</option>
+                <option value="landscape">{t("landscape")}</option>
+              </select>
+            </label>
+          </div>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          checked={monospace}
-          onChange={(e) => setMonospace(e.target.checked)}
-        />
-        <span>{t("monospace")}</span>
-      </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={monospace}
+              onChange={(e) => setMonospace(e.target.checked)}
+            />
+            <span>{t("monospace")}</span>
+          </label>
+        </div>
+      </details>
 
       <div className="flex flex-wrap gap-2">
         <button onClick={downloadPdf} disabled={busy || !text} className="btn btn-primary">

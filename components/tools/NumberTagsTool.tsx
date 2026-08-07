@@ -12,6 +12,7 @@ type Orientation = "portrait" | "landscape";
 
 export default function NumberTagsTool() {
   const t = useTranslations("toolUI.number-tags");
+  const tc = useTranslations("common");
   const [from, setFrom] = useState(1);
   const [to, setTo] = useState(50);
   const [bg, setBg] = useState("#fef3c7"); // amber-100
@@ -165,45 +166,6 @@ export default function NumberTagsTool() {
             <input type="number" value={to} onChange={(e) => setTo(parseInt(e.target.value, 10) || 0)} className="input" />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            <span>{t("prefix")}</span>
-            <input type="text" value={prefix} onChange={(e) => setPrefix(e.target.value)} placeholder="No." className="input" />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span>{t("suffix")}</span>
-            <input type="text" value={suffix} onChange={(e) => setSuffix(e.target.value)} placeholder="번" className="input" />
-          </label>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <label className="flex flex-col gap-1 text-sm">
-            <span>{t("background")}</span>
-            <div className="flex items-center gap-2">
-              <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="w-10 h-9 rounded cursor-pointer border border-gray-300" />
-              <span className="font-mono text-xs">{bg}</span>
-            </div>
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span>{t("textColor")}</span>
-            <div className="flex items-center gap-2">
-              <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} className="w-10 h-9 rounded cursor-pointer border border-gray-300" />
-              <span className="font-mono text-xs">{fg}</span>
-            </div>
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span>{t("orientation")}</span>
-            <select value={orientation} onChange={(e) => setOrientation(e.target.value as Orientation)} className="input">
-              <option value="portrait">{t("portrait")}</option>
-              <option value="landscape">{t("landscape")}</option>
-            </select>
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span>{t("padDigits")}: {padDigits === 0 ? t("padNone") : padDigits}</span>
-            <input type="range" min={0} max={6} value={padDigits} onChange={(e) => setPadDigits(parseInt(e.target.value, 10))} />
-          </label>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <label className="flex flex-col gap-1 text-sm">
             <span>{t("cols")}: {cols}</span>
             <input type="range" min={1} max={12} value={cols} onChange={(e) => setCols(parseInt(e.target.value, 10))} />
           </label>
@@ -211,40 +173,85 @@ export default function NumberTagsTool() {
             <span>{t("rows")}: {rows}</span>
             <input type="range" min={1} max={16} value={rows} onChange={(e) => setRows(parseInt(e.target.value, 10))} />
           </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span>{t("fontPct")}: {fontPct}%</span>
-            <input type="range" min={20} max={80} value={fontPct} onChange={(e) => setFontPct(parseInt(e.target.value, 10))} />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span>{t("radius")}: {radius}px</span>
-            <input type="range" min={0} max={48} value={radius} onChange={(e) => setRadius(parseInt(e.target.value, 10))} />
-          </label>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <label className="flex flex-col gap-1 text-sm">
-            <span>{t("marginMm")}: {margin}mm</span>
-            <input type="range" min={0} max={20} value={margin} onChange={(e) => setMargin(parseInt(e.target.value, 10))} />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span>{t("gapMm")}: {gap}mm</span>
-            <input type="range" min={0} max={10} value={gap} onChange={(e) => setGap(parseInt(e.target.value, 10))} />
-          </label>
-          <div className="flex flex-col gap-1 text-sm">
-            <span className="text-muted">{t("perPage")}</span>
-            <div className="font-semibold">{tagsPerA4Hint} {t("tagsUnit")}</div>
+        <details className="rounded border border-gray-200 dark:border-gray-700">
+          <summary className="cursor-pointer px-3 py-2 text-sm font-medium">{tc("advancedOptions")}</summary>
+          <div className="p-3 pt-1 space-y-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("prefix")}</span>
+                <input type="text" value={prefix} onChange={(e) => setPrefix(e.target.value)} placeholder="No." className="input" />
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("suffix")}</span>
+                <input type="text" value={suffix} onChange={(e) => setSuffix(e.target.value)} placeholder="번" className="input" />
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("padDigits")}: {padDigits === 0 ? t("padNone") : padDigits}</span>
+                <input type="range" min={0} max={6} value={padDigits} onChange={(e) => setPadDigits(parseInt(e.target.value, 10))} />
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("orientation")}</span>
+                <select value={orientation} onChange={(e) => setOrientation(e.target.value as Orientation)} className="input">
+                  <option value="portrait">{t("portrait")}</option>
+                  <option value="landscape">{t("landscape")}</option>
+                </select>
+              </label>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("background")}</span>
+                <div className="flex items-center gap-2">
+                  <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="w-10 h-9 rounded cursor-pointer border border-gray-300" />
+                  <span className="font-mono text-xs">{bg}</span>
+                </div>
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("textColor")}</span>
+                <div className="flex items-center gap-2">
+                  <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} className="w-10 h-9 rounded cursor-pointer border border-gray-300" />
+                  <span className="font-mono text-xs">{fg}</span>
+                </div>
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("fontPct")}: {fontPct}%</span>
+                <input type="range" min={20} max={80} value={fontPct} onChange={(e) => setFontPct(parseInt(e.target.value, 10))} />
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("radius")}: {radius}px</span>
+                <input type="range" min={0} max={48} value={radius} onChange={(e) => setRadius(parseInt(e.target.value, 10))} />
+              </label>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("marginMm")}: {margin}mm</span>
+                <input type="range" min={0} max={20} value={margin} onChange={(e) => setMargin(parseInt(e.target.value, 10))} />
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                <span>{t("gapMm")}: {gap}mm</span>
+                <input type="range" min={0} max={10} value={gap} onChange={(e) => setGap(parseInt(e.target.value, 10))} />
+              </label>
+              <div className="flex flex-col gap-1 text-sm">
+                <span className="text-muted">{t("perPage")}</span>
+                <div className="font-semibold">{tagsPerA4Hint} {t("tagsUnit")}</div>
+              </div>
+              <div className="flex flex-col gap-1 text-sm">
+                <span className="text-muted">{t("pages")}</span>
+                <div className="font-semibold">{pageCount} {t("pagesUnit")} ({numbers.length} {t("tagsUnit")})</div>
+              </div>
+            </div>
+
+            <button onClick={print} disabled={numbers.length === 0} className="btn btn-secondary">🖨 {t("print")}</button>
           </div>
-          <div className="flex flex-col gap-1 text-sm">
-            <span className="text-muted">{t("pages")}</span>
-            <div className="font-semibold">{pageCount} {t("pagesUnit")} ({numbers.length} {t("tagsUnit")})</div>
-          </div>
-        </div>
+        </details>
 
         <div className="flex flex-wrap gap-2">
           <button onClick={downloadPdf} disabled={busy || numbers.length === 0} className="btn btn-primary">
             {busy ? "⏳ " + t("generating") : "📄 " + t("downloadPdf")}
           </button>
-          <button onClick={print} disabled={numbers.length === 0} className="btn btn-secondary">🖨 {t("print")}</button>
         </div>
         <p className="text-xs text-muted">{t("hint")}</p>
       </div>
