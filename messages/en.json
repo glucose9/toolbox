@@ -365,7 +365,8 @@
     "stat-tables": "Stat Tables (z & t)",
     "physics-constants": "Physics Constants",
     "chart-maker": "Chart Maker",
-    "pdf-compress": "PDF Compress"
+    "pdf-compress": "PDF Compress",
+    "beat-maker": "Beat Maker"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3702,6 +3703,22 @@
       "notReduced": "The original is already small, so savings are minimal",
       "downloadPdf": "Download PDF",
       "textLostNotice": "⚠️ After compression, text can no longer be selected or searched (every page becomes an image)"
+    },
+    "beat-maker": {
+      "play": "Play",
+      "stop": "Stop",
+      "bpm": "BPM",
+      "preset": "Load example",
+      "clear": "Clear all",
+      "downloadWav": "Download WAV",
+      "exporting": "Rendering...",
+      "melodyLabel": "Melody (pentatonic — every cell sounds good)",
+      "drumsLabel": "Drums",
+      "row_kick": "Kick",
+      "row_snare": "Snare",
+      "row_hihat": "Hat",
+      "row_clap": "Clap",
+      "hint": "Tap cells to toggle sounds. Darker columns mark each beat."
     }
   },
   "kits": {

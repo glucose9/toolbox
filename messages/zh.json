@@ -365,7 +365,8 @@
     "stat-tables": "概率分布表（z·t）",
     "physics-constants": "物理常数表",
     "chart-maker": "图表制作",
-    "pdf-compress": "PDF压缩"
+    "pdf-compress": "PDF压缩",
+    "beat-maker": "节拍制作器"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3702,6 +3703,22 @@
       "notReduced": "原文件已经很小，压缩效果不明显",
       "downloadPdf": "下载 PDF",
       "textLostNotice": "⚠️ 压缩后文本将无法选择或搜索（所有页面都会转换为图片）"
+    },
+    "beat-maker": {
+      "play": "播放",
+      "stop": "停止",
+      "bpm": "速度",
+      "preset": "加载示例",
+      "clear": "全部清除",
+      "downloadWav": "下载WAV",
+      "exporting": "导出中...",
+      "melodyLabel": "旋律（五声音阶 — 随便点都好听）",
+      "drumsLabel": "鼓",
+      "row_kick": "底鼓",
+      "row_snare": "军鼓",
+      "row_hihat": "踩镲",
+      "row_clap": "拍手",
+      "hint": "点击格子开关声音。每4格的深色列为一拍。"
     }
   },
   "kits": {

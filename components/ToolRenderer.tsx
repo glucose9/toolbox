@@ -225,6 +225,7 @@ const KoreanRrnTool = dynamic(() => import("./tools/KoreanRrnTool"), { ssr: fals
 const FamilyKinshipTool = dynamic(() => import("./tools/FamilyKinshipTool"), { ssr: false });
 const NumberFormatTool = dynamic(() => import("./tools/NumberFormatTool"), { ssr: false });
 const StarsTool = dynamic(() => import("./tools/StarsTool"), { ssr: false });
+const BeatMakerTool = dynamic(() => import("./tools/BeatMakerTool"), { ssr: false });
 const GolfHandicapTool = dynamic(() => import("./tools/GolfHandicapTool"), { ssr: false });
 const TextSimilarityTool = dynamic(() => import("./tools/TextSimilarityTool"), { ssr: false });
 const FontPreviewTool = dynamic(() => import("./tools/FontPreviewTool"), { ssr: false });
@@ -595,6 +596,7 @@ export default function ToolRenderer({ tool }: { tool: ToolConfig }) {
     case "FamilyKinshipTool": return <FamilyKinshipTool />;
     case "NumberFormatTool": return <NumberFormatTool />;
     case "StarsTool": return <StarsTool />;
+    case "BeatMakerTool": return <BeatMakerTool />;
     case "GolfHandicapTool": return <GolfHandicapTool />;
     case "TextSimilarityTool": return <TextSimilarityTool />;
     case "FontPreviewTool": return <FontPreviewTool />;

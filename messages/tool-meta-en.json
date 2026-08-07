@@ -9681,5 +9681,41 @@
         "a": "No. Since pages are rebuilt as images, form fields, hyperlinks, and bookmarks are lost. If these matter, don't compress — use the original file."
       }
     ]
+  },
+  "beat-maker": {
+    "h1": "Beat Maker (make music online)",
+    "description": "Make your own beat right in the browser — no install, no signup. A 16-step sequencer with 4 synthesized drums (kick, snare, hi-hat, clap) and an 8-note pentatonic melody grid where every cell sounds good together. Download your loop as a WAV file for videos, notification sounds or samples. All audio is synthesized with the Web Audio API, so there are no copyrighted samples and nothing is uploaded.",
+    "metaDescription": "Free online beat maker. 16-step drum + melody sequencer, WAV download, no install.",
+    "howTo": [
+      "Tap cells to place drums and melody notes — the pentatonic scale makes everything sound consonant.",
+      "Press Play to loop your pattern and adjust the BPM.",
+      "Press Download WAV to save 4 bars as an audio file."
+    ],
+    "faq": [
+      {
+        "q": "Can I use my beat commercially?",
+        "a": "Yes. Every sound is mathematically synthesized in your browser, so there are no sample copyrights. Use it freely."
+      },
+      {
+        "q": "Why does everything sound good?",
+        "a": "The melody rows only use the C-major pentatonic scale (5 notes), so no two notes clash. It is the same trick used in music education."
+      },
+      {
+        "q": "What are the WAV specs?",
+        "a": "44.1kHz 16-bit mono WAV containing 4 repeats of your pattern. Opens in any video editor or DAW."
+      },
+      {
+        "q": "No sound?",
+        "a": "Check silent mode on your phone. On iOS, tap the screen once before playing."
+      },
+      {
+        "q": "Can I save my pattern?",
+        "a": "Currently only WAV export is supported. Refreshing resets the pattern, so download when you are done."
+      },
+      {
+        "q": "Can I get finer subdivisions?",
+        "a": "The 16 steps are sixteenth notes of one bar. Raising the BPM gives a denser feel."
+      }
+    ]
   }
 }

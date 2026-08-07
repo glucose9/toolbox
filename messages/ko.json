@@ -365,7 +365,8 @@
     "stat-tables": "확률분포표 (z·t)",
     "physics-constants": "물리 상수표",
     "chart-maker": "그래프 만들기",
-    "pdf-compress": "PDF 압축"
+    "pdf-compress": "PDF 압축",
+    "beat-maker": "비트 메이커"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3702,6 +3703,22 @@
       "notReduced": "원본이 이미 작아 압축 효과가 크지 않습니다",
       "downloadPdf": "PDF 다운로드",
       "textLostNotice": "⚠️ 압축 후에는 텍스트 선택·검색이 불가능합니다 (모든 페이지가 이미지로 변환됩니다)"
+    },
+    "beat-maker": {
+      "play": "재생",
+      "stop": "정지",
+      "bpm": "빠르기",
+      "preset": "예제 불러오기",
+      "clear": "전체 지우기",
+      "downloadWav": "WAV 다운로드",
+      "exporting": "만드는 중...",
+      "melodyLabel": "멜로디 (펜타토닉 — 아무 칸이나 눌러도 어울려요)",
+      "drumsLabel": "드럼",
+      "row_kick": "킥",
+      "row_snare": "스네어",
+      "row_hihat": "햇",
+      "row_clap": "클랩",
+      "hint": "칸을 눌러 소리를 켜고 끕니다. 4칸마다 진한 세로줄이 한 박자입니다."
     }
   },
   "kits": {

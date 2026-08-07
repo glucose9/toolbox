@@ -365,7 +365,8 @@
     "stat-tables": "確率分布表（z・t）",
     "physics-constants": "物理定数表",
     "chart-maker": "グラフ作成",
-    "pdf-compress": "PDF圧縮"
+    "pdf-compress": "PDF圧縮",
+    "beat-maker": "ビートメーカー"
   },
   "toolUI": {
     "pptx-to-text": {
@@ -3702,6 +3703,22 @@
       "notReduced": "元のファイルがすでに小さいため、削減効果は限定的です",
       "downloadPdf": "PDFをダウンロード",
       "textLostNotice": "⚠️ 圧縮後はテキストの選択・検索ができなくなります(全ページが画像に変換されます)"
+    },
+    "beat-maker": {
+      "play": "再生",
+      "stop": "停止",
+      "bpm": "テンポ",
+      "preset": "サンプルを読み込む",
+      "clear": "すべて消す",
+      "downloadWav": "WAVダウンロード",
+      "exporting": "書き出し中...",
+      "melodyLabel": "メロディ（ペンタトニック — どこを押しても心地よく響きます）",
+      "drumsLabel": "ドラム",
+      "row_kick": "キック",
+      "row_snare": "スネア",
+      "row_hihat": "ハット",
+      "row_clap": "クラップ",
+      "hint": "マスをタップして音をオン/オフ。4マスごとの濃い列が拍です。"
     }
   },
   "kits": {
