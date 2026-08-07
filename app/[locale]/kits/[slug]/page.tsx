@@ -37,13 +37,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: c.intro,
     alternates: {
       canonical: url,
-      languages: {
-        "x-default": `${SITE_URL}/kits/${kit.slug}`,
-        ko: `${SITE_URL}/kits/${kit.slug}`,
-        en: `${SITE_URL}/en/kits/${kit.slug}`,
-        ja: `${SITE_URL}/ja/kits/${kit.slug}`,
-        zh: `${SITE_URL}/zh/kits/${kit.slug}`,
-      },
     },
     openGraph: { title: c.title, description: c.tagline, url, type: "website" },
   };

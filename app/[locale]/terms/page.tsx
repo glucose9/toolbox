@@ -19,7 +19,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: doc.intro.slice(0, 150),
     alternates: {
       canonical: url,
-      languages: { "x-default": `${SITE_URL}/terms`, ko: `${SITE_URL}/terms`, en: `${SITE_URL}/en/terms`, ja: `${SITE_URL}/ja/terms`, zh: `${SITE_URL}/zh/terms` },
     },
   };
 }

@@ -48,16 +48,13 @@ export async function generateMetadata({
       card: "summary_large_image",
       images: [{ url: "/opengraph-image", alt: t("name") }],
     },
-    robots: { index: true, follow: true },
+    // Korean-first strategy (2026-08): non-ko locales are served for users but
+    // kept out of Google's index — thin machine-translated duplicates were the
+    // largest share of the site's scaled-content demotion risk. Flip back to
+    // index:true per-locale once localized unique content exists.
+    robots: locale === "ko" ? { index: true, follow: true } : { index: false, follow: true },
     alternates: {
       canonical: `${SITE_URL}${locale === "ko" ? "" : "/" + locale}`,
-      languages: {
-        "x-default": SITE_URL,
-        ko: SITE_URL,
-        en: `${SITE_URL}/en`,
-        ja: `${SITE_URL}/ja`,
-        zh: `${SITE_URL}/zh`,
-      },
     },
     verification: {
       google: "Pw2pA4IIXPiUyS1QAyG6TZ80fiX_AK4o7-QwcwwORXk",

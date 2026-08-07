@@ -292,6 +292,25 @@ export const SITE_NAME = "바로킷";
 export const SITE_URL = "https://barokit.com";
 export const SITE_TAGLINE = "무료 온라인 도구 모음 — QR · 이미지 · 동영상";
 
+
+// Kept out of the search index (data-driven, 2026-08): zero impressions
+// over 3 months AND no realistic Korean search demand, or thin slug variants
+// of one tool. Pages stay live for users; remove a slug to re-index it.
+export const NOINDEX_SLUGS = new Set([
+  "barcode-ean13",
+  "barcode-ean8",
+  "barcode-isbn",
+  "barcode-code128",
+  "barcode-code39",
+  "barcode-itf14",
+  "rps",
+  "golf-handicap",
+  "user-agent",
+  "http-methods",
+  "title-case",
+  "color-blindness-simulator",
+]);
+
 export const tools: ToolConfig[] = [
   // ===== QR =====
   {

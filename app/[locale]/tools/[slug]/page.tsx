@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { tools, getTool, SITE_URL } from "@/lib/tools";
+import { tools, getTool, SITE_URL, NOINDEX_SLUGS } from "@/lib/tools";
 import { getKitsForTool, type KitLocale } from "@/lib/kits";
 import { routing } from "@/i18n/routing";
 import ToolRenderer from "@/components/ToolRenderer";
@@ -62,18 +62,16 @@ export async function generateMetadata({
   const localizedName = safeT(t, `tools.${slug}`, tool.navTitle);
   const localizedDesc = safeT(t, `toolMeta.${slug}.metaDescription`, safeT(t, `toolMeta.${slug}.description`, tool.metaDescription));
   const url = `${SITE_URL}${locale === "ko" ? "" : "/" + locale}/tools/${tool.slug}`;
+  // Zero-demand long-tail slugs stay usable but out of the index (data-driven
+  // list — see NOINDEX_SLUGS). Non-ko locales are noindexed at the layout
+  // level; repeat here because page-level robots would otherwise override.
+  const indexable = locale === "ko" && !NOINDEX_SLUGS.has(tool.slug);
   return {
     title: localizedName,
     description: localizedDesc,
+    robots: indexable ? { index: true, follow: true } : { index: false, follow: true },
     alternates: {
       canonical: url,
-      languages: {
-        "x-default": `${SITE_URL}/tools/${tool.slug}`,
-        ko: `${SITE_URL}/tools/${tool.slug}`,
-        en: `${SITE_URL}/en/tools/${tool.slug}`,
-        ja: `${SITE_URL}/ja/tools/${tool.slug}`,
-        zh: `${SITE_URL}/zh/tools/${tool.slug}`,
-      },
     },
     openGraph: {
       title: localizedName,
