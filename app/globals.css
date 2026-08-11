@@ -57,3 +57,24 @@ body {
 .text-muted {
   color: rgb(var(--muted));
 }
+
+/* Mobile input ergonomics (site-wide, no per-tool edits):
+   - iOS Safari auto-zooms into any focused control under 16px; many tools
+     use text-sm (14px) inputs, so every tap jolted the page zoomed-in.
+     max(16px, 1em) keeps larger inputs untouched; !important is required
+     because .text-sm sits directly on many inputs.
+   - Coarse pointers get >=44px-tall fields (Apple/Google touch guideline);
+     desktop keeps the current compact density. */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1em) !important;
+  }
+}
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+  select {
+    min-height: 2.75rem;
+  }
+}
