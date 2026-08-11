@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { tools, categoryLabels } from "@/lib/tools";
 import { buildIndex, searchTools } from "@/lib/search-client";
 
@@ -12,8 +12,10 @@ import { buildIndex, searchTools } from "@/lib/search-client";
 export default function HomeSearch() {
   const t = useTranslations();
   const locale = useLocale();
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(-1);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const index = useMemo(
@@ -39,6 +41,29 @@ export default function HomeSearch() {
   const results = useMemo(() => searchTools(index, query, 12, 0), [query, index]);
   const showPanel = open && query.trim().length > 0;
 
+  const go = (slug: string) => {
+    setOpen(false);
+    setQuery("");
+    setActive(-1);
+    router.push(`/tools/${slug}`);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (results.length > 0) {
+        e.preventDefault();
+        go(results[Math.max(0, active)].slug);
+      }
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setOpen(true);
+      setActive((a) => Math.min(a + 1, results.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive((a) => Math.max(a - 1, -1));
+    }
+  };
+
   return (
     <div ref={wrapperRef} className="relative max-w-xl mx-auto text-left">
       <div className="relative">
@@ -49,8 +74,11 @@ export default function HomeSearch() {
           onChange={(e) => {
             setQuery(e.target.value);
             setOpen(true);
+            setActive(-1);
           }}
           onFocus={() => setOpen(true)}
+          onKeyDown={onKeyDown}
+          enterKeyHint="search"
           placeholder={t("home.searchPlaceholder", { count: tools.length })}
           className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
         />
@@ -60,15 +88,18 @@ export default function HomeSearch() {
           {results.length === 0 ? (
             <div className="p-5 text-sm text-muted text-center">{t("common.noResults")}</div>
           ) : (
-            results.map((tool) => (
+            results.map((tool, i) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
                 onClick={() => {
                   setOpen(false);
                   setQuery("");
+                  setActive(-1);
                 }}
-                className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className={`flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                  i === active ? "bg-gray-100 dark:bg-gray-700" : ""
+                }`}
               >
                 <span className="text-2xl">{tool.icon}</span>
                 <div className="flex-1 min-w-0">

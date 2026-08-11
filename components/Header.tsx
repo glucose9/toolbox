@@ -22,7 +22,7 @@ export default async function Header() {
         <DarkToggle />
       </div>
       <div className="sm:hidden px-4 pb-2">
-        <SearchBar />
+        <SearchBar compact />
       </div>
     </header>
   );
