@@ -42,6 +42,21 @@ export default async function HomePage({
           <div className="mt-6">
             <TrustBadges variant="compact" />
           </div>
+          {/* Category jump chips: with 277 tools the browse path needs a way
+              to reach e.g. PDF (section 9 of 10) without an endless scroll.
+              Plain hash anchors — the sections already carry id={cat}. */}
+          <div className="mt-8 flex flex-wrap justify-center gap-2">
+            {Object.entries(byCategory).map(([cat, list]) => (
+              <a
+                key={cat}
+                href={`#${cat}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-brand-500 hover:text-brand-700 dark:hover:text-brand-300 text-sm transition-colors"
+              >
+                {t(`categories.${cat}`)}
+                <span className="text-xs text-muted">{list.length}</span>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -58,7 +73,17 @@ export default async function HomePage({
         {/* Single horizontally-scrollable row of slim pills — was a 2-row grid of
             chunky cards, which crowded the page. */}
         <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {KITS.map((kit) => {
+          {/* Practical/file kits lead; study kits follow. The site's core is
+              file conversion — chemistry homework kits shouldn't be the first
+              thing a visitor scans. */}
+          {[...KITS]
+            .sort((a, b) => {
+              const prio = ["pdf-conversion", "photo-cleanup", "salary-tax", "job-application", "youtube-creator", "dev-debug", "moving-realestate"];
+              const ai = prio.indexOf(a.slug);
+              const bi = prio.indexOf(b.slug);
+              return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
+            })
+            .map((kit) => {
             const kloc = (["ko", "en", "ja", "zh"].includes(locale) ? locale : "ko") as KitLocale;
             return (
               <IntlLink
@@ -85,8 +110,10 @@ export default async function HomePage({
                 ({t("home.toolCount", { count: list.length })})
               </span>
             </h2>
+            {/* 6 cards per category (719KB HTML with all 277); the full list
+                lives on /category/[cat], linked by the view-all card. */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {list.map((tool) => (
+              {list.slice(0, 6).map((tool) => (
                 <IntlLink
                   key={tool.slug}
                   href={`/tools/${tool.slug}`}
@@ -112,6 +139,14 @@ export default async function HomePage({
                   </div>
                 </IntlLink>
               ))}
+              {list.length > 6 && (
+                <IntlLink
+                  href={`/category/${cat}`}
+                  className="card hover:border-brand-500 hover:shadow-sm transition-all flex items-center justify-center text-brand-600 font-medium"
+                >
+                  {t("home.viewAll", { count: list.length })}
+                </IntlLink>
+              )}
             </div>
           </div>
         ))}

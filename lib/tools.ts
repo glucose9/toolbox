@@ -1231,7 +1231,7 @@ export const tools: ToolConfig[] = [
     component: "PdfMergeTool",
     category: "pdf",
     icon: "📎",
-    navTitle: "PDF 병합",
+    navTitle: "PDF 합치기",
     title: "PDF 병합 - 무료 PDF 합치기 (가입 불필요, 워터마크 없음)",
     h1: "PDF 합치기",
     description:
