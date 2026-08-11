@@ -135,11 +135,13 @@ const TEMPLATES = [
 
 export default function FormulaBuilderTool() {
   const tg = useTranslations("toolUI.formula-builder");
+  const tc = useTranslations("common");
   const taRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [value, setValue] = useState("x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}");
   const [display, setDisplay] = useState<"display" | "inline">("display");
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
     if (!previewRef.current) return;
@@ -193,7 +195,7 @@ export default function FormulaBuilderTool() {
   };
 
   const clear = () => setValue("");
-  const copy = (t: string) => void copyText(t);
+  const copy = async (t: string, key: string) => { const ok = await copyText(t); if (ok) { setCopied(key); setTimeout(() => setCopied(null), 1500); } };
   const inlineLatex = `$${value}$`;
   const displayLatex = `$$${value}$$`;
 
@@ -220,9 +222,9 @@ export default function FormulaBuilderTool() {
         <div className="flex flex-wrap gap-2 mt-2 text-xs">
           <button onClick={backspace} className="btn">⌫ {tg("delete")}</button>
           <button onClick={clear} className="btn">🗑️ {tg("clearAll")}</button>
-          <button onClick={() => copy(value)} className="btn">📋 {tg("copyCode")}</button>
-          <button onClick={() => copy(inlineLatex)} className="btn">📋 $…$</button>
-          <button onClick={() => copy(displayLatex)} className="btn">📋 $$…$$</button>
+          <button onClick={() => copy(value, "code")} className="btn">{copied === "code" ? tc("copied") : `📋 ${tg("copyCode")}`}</button>
+          <button onClick={() => copy(inlineLatex, "inline")} className="btn">{copied === "inline" ? tc("copied") : "📋 $…$"}</button>
+          <button onClick={() => copy(displayLatex, "display")} className="btn">{copied === "display" ? tc("copied") : "📋 $$…$$"}</button>
         </div>
       </div>
 

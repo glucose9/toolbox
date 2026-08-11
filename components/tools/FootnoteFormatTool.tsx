@@ -8,7 +8,9 @@ type Style = "chicago-note" | "chicago-short" | "korean-1" | "mla";
 
 export default function FootnoteFormatTool() {
   const t = useTranslations("toolUI.footnote-format");
+  const tc = useTranslations("common");
   const [style, setStyle] = useState<Style>("chicago-note");
+  const [copied, setCopied] = useState<string | null>(null);
   const [type, setType] = useState<"book" | "journal" | "web">("book");
   const [authors, setAuthors] = useState("Albert Einstein");
   const [title, setTitle] = useState("Relativity: The Special and General Theory");
@@ -66,7 +68,7 @@ export default function FootnoteFormatTool() {
     mla: t("labelMla"),
   };
 
-  const copy = (txt: string) => void copyText(txt);
+  const copy = async (key: string, txt: string) => { const ok = await copyText(txt); if (ok) { setCopied(key); setTimeout(() => setCopied(null), 1500); } };
 
   const renderItalic = (s: string) =>
     s.split(/(\*[^*]+\*)/).map((p, i) =>
@@ -155,7 +157,7 @@ export default function FootnoteFormatTool() {
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
           <div className="flex justify-between items-center mb-1">
             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("footnote")}</span>
-            <button onClick={() => copy(fn.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+            <button onClick={() => copy("fn", fn.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">{copied === "fn" ? tc("copied") : tc("copy")}</button>
           </div>
           <div className="text-sm leading-relaxed break-words">{renderItalic(fn)}</div>
         </div>
@@ -163,7 +165,7 @@ export default function FootnoteFormatTool() {
           <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
             <div className="flex justify-between items-center mb-1">
               <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("ibidLabel")}</span>
-              <button onClick={() => copy(ibid)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+              <button onClick={() => copy("ibid", ibid)} className="text-xs text-gray-500 hover:text-blue-600">{copied === "ibid" ? tc("copied") : tc("copy")}</button>
             </div>
             <div className="text-sm leading-relaxed">{ibid}</div>
           </div>

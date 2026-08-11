@@ -165,6 +165,7 @@ function getLocaleKey(locale: string): LocaleKey {
 
 export default function KoreanCiteTool() {
   const t = useTranslations("toolUI.korean-cite");
+  const tc = useTranslations("common");
   const localeRaw = useLocale();
   const localeKey = getLocaleKey(localeRaw);
   const config = LOCALE_CONFIGS[localeKey];
@@ -236,7 +237,9 @@ export default function KoreanCiteTool() {
   const intextText = activeFormat.intext(buildArgs);
   const noteText = notesMap?.[style] ?? "";
 
-  const copy = (txt: string) => void copyText(txt);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const copy = async (txt: string, key: string) => { const ok = await copyText(txt); if (ok) { setCopied(key); setTimeout(() => setCopied(null), 1500); } };
 
   return (
     <div className="card space-y-3">
@@ -286,7 +289,7 @@ export default function KoreanCiteTool() {
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
           <div className="flex justify-between items-center mb-1">
             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("referenceItem")}</span>
-            <button onClick={() => copy(referenceText.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+            <button onClick={() => copy(referenceText.replace(/\*/g, ""), "reference")} className="text-xs text-gray-500 hover:text-blue-600">{copied === "reference" ? tc("copied") : tc("copy")}</button>
           </div>
           <div className="text-sm leading-relaxed break-words">{referenceText.split(/(\*[^*]+\*)/).map((p, i) =>
             p.startsWith("*") ? <em key={i}>{p.slice(1, -1)}</em> : <span key={i}>{p}</span>
@@ -295,7 +298,7 @@ export default function KoreanCiteTool() {
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3">
           <div className="flex justify-between items-center mb-1">
             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{t("intextLabel")}</span>
-            <button onClick={() => copy(intextText)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+            <button onClick={() => copy(intextText, "intext")} className="text-xs text-gray-500 hover:text-blue-600">{copied === "intext" ? tc("copied") : tc("copy")}</button>
           </div>
           <div className="text-sm leading-relaxed">{intextText}</div>
         </div>

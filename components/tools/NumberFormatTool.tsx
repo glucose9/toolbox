@@ -5,7 +5,9 @@ import { copyText } from "@/lib/clipboard";
 
 export default function NumberFormatTool() {
   const t = useTranslations("toolUI.number-format");
+  const tc = useTranslations("common");
   const [input, setInput] = useState("1234567890");
+  const [copied, setCopied] = useState<string | null>(null);
   const num = useMemo(() => {
     try { return BigInt(input.replace(/[,_\s]/g, "")); } catch { return null; }
   }, [input]);
@@ -40,7 +42,7 @@ export default function NumberFormatTool() {
             <div key={k} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-900 rounded">
               <span className="text-xs text-muted w-20">{k === "comma" ? "1,000" : k === "under" ? "1_000" : k === "space" ? "1 000" : `1${t("unitMan")}`}</span>
               <span className="flex-1 font-mono break-all">{formats[k]}</span>
-              <button onClick={() => void copyText(formats[k])} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
+              <button onClick={async () => { const ok = await copyText(formats[k]); if (ok) { setCopied(k); setTimeout(() => setCopied(null), 1500); } }} className="text-xs text-brand-600 hover:underline">{copied === k ? tc("copied") : tc("copy")}</button>
             </div>
           ))}
         </div>

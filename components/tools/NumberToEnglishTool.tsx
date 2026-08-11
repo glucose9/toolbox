@@ -44,7 +44,9 @@ function toEnglish(n: number): string {
 
 export default function NumberToEnglishTool() {
   const t = useTranslations("toolUI.number-to-english");
+  const tc = useTranslations("common");
   const [input, setInput] = useState("12345");
+  const [copied, setCopied] = useState(false);
   const { result, outOfRange } = useMemo(() => {
     const n = parseFloat(input.replace(/,/g, ""));
     if (!isFinite(n)) return { result: "", outOfRange: false };
@@ -56,7 +58,7 @@ export default function NumberToEnglishTool() {
       <input type="text" value={input} onChange={(e) => setInput(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
       <div className="p-4 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded text-lg break-words">{result || "—"}</div>
       {outOfRange && <div className="text-sm text-red-600">{t("outOfRange")}</div>}
-      <button onClick={() => void copyText(result)} disabled={!result} className="btn btn-primary disabled:opacity-50">{t("copy")}</button>
+      <button onClick={async () => { const ok = await copyText(result); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } }} disabled={!result} className="btn btn-primary disabled:opacity-50">{copied ? tc("copied") : tc("copy")}</button>
     </div>
   );
 }

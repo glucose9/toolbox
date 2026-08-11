@@ -33,11 +33,21 @@ function decode(b64: string, urlSafe: boolean) {
 
 export default function Base64Tool() {
   const t = useTranslations("toolUI.base64");
+  const tc = useTranslations("common");
   const [mode, setMode] = useState<"encode" | "decode">("encode");
   const [urlSafe, setUrlSafe] = useState(false);
   const [text, setText] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const result = mode === "encode" ? encode(text, urlSafe) : decode(text, urlSafe);
+
+  const copy = async () => {
+    const ok = await copyText(result);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
+  };
 
   return (
     <div className="card space-y-4">
@@ -76,11 +86,11 @@ export default function Base64Tool() {
           <label className="label flex items-center justify-between">
             <span>{mode === "encode" ? t("base64Result") : t("decodeResult")}</span>
             <button
-              onClick={() => void copyText(result)}
+              onClick={copy}
               disabled={!result}
               className="text-xs text-brand-600 hover:underline disabled:opacity-30"
             >
-              {t("copy")}
+              {copied ? tc("copied") : tc("copy")}
             </button>
           </label>
           <textarea

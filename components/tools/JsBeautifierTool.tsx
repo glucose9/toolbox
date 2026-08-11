@@ -93,13 +93,16 @@ function beautify(code: string): string {
 
 export default function JsBeautifierTool() {
   const t = useTranslations("toolUI.js-beautifier");
+  const tc = useTranslations("common");
   const [input, setInput] = useState("function add(a,b){return a+b;}const r=add(1,2);console.log(r);");
+  const [copied, setCopied] = useState(false);
   const output = useMemo(() => beautify(input), [input]);
+  const copy = async () => { const ok = await copyText(output); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
   return (
     <div className="card space-y-3">
       <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-32 p-3 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-sm font-mono resize-y" />
       <textarea readOnly value={output} className="w-full h-48 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-      <button onClick={() => void copyText(output)} className="btn btn-primary">{t("copy")}</button>
+      <button onClick={copy} className="btn btn-primary">{copied ? tc("copied") : tc("copy")}</button>
     </div>
   );
 }

@@ -15,9 +15,12 @@ function stars(score: number, max: number): string {
 
 export default function StarsTool() {
   const t = useTranslations("toolUI.stars");
+  const tc = useTranslations("common");
   const [score, setScore] = useState(4.5);
   const [max, setMax] = useState(5);
+  const [copied, setCopied] = useState(false);
   const display = stars(score, max);
+  const copy = async () => { const ok = await copyText(display); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
   return (
     <div className="card space-y-3">
       <div className="grid grid-cols-2 gap-3">
@@ -28,7 +31,7 @@ export default function StarsTool() {
         <div className="text-5xl text-yellow-500">{display}</div>
         <div className="mt-2 text-sm">{score} / {max} ({((score/max)*100).toFixed(0)}%)</div>
       </div>
-      <button onClick={() => void copyText(display)} className="btn btn-primary">{t("copy")}</button>
+      <button onClick={copy} className="btn btn-primary">{copied ? tc("copied") : tc("copy")}</button>
     </div>
   );
 }

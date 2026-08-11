@@ -8,7 +8,9 @@ type CiteType = "journal" | "book" | "web";
 
 export default function CiteFormatTool() {
   const t = useTranslations("toolUI.cite-format");
+  const tc = useTranslations("common");
   const [type, setType] = useState<CiteType>("journal");
+  const [copied, setCopied] = useState<string | null>(null);
   const [authors, setAuthors] = useState("Kim, J., Lee, S., & Park, H.");
   const [year, setYear] = useState("2024");
   const [title, setTitle] = useState("The role of attention in working memory");
@@ -121,7 +123,7 @@ export default function CiteFormatTool() {
     { label: "IEEE", value: ieee },
   ];
 
-  const copy = (text: string) => void copyText(text);
+  const copy = async (key: string, text: string) => { const ok = await copyText(text); if (ok) { setCopied(key); setTimeout(() => setCopied(null), 1500); } };
 
   const renderMd = (s: string) =>
     s.split(/(\*[^*]+\*)/).map((part, i) =>
@@ -204,7 +206,7 @@ export default function CiteFormatTool() {
           <div key={s.label} className="border border-gray-200 dark:border-gray-700 rounded p-3">
             <div className="flex justify-between items-center mb-1">
               <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{s.label}</span>
-              <button onClick={() => copy(s.value.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+              <button onClick={() => copy(s.label, s.value.replace(/\*/g, ""))} className="text-xs text-gray-500 hover:text-blue-600">{copied === s.label ? tc("copied") : tc("copy")}</button>
             </div>
             <div className="text-sm leading-relaxed break-words">{renderMd(s.value)}</div>
           </div>

@@ -19,7 +19,9 @@ type Meta = {
 
 export default function DoiLookupTool() {
   const t = useTranslations("toolUI.doi-lookup");
+  const tc = useTranslations("common");
   const [query, setQuery] = useState("10.1038/nature12373");
+  const [copied, setCopied] = useState<string | null>(null);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -139,7 +141,7 @@ export default function DoiLookupTool() {
     return `${head}"${meta.title}." ${meta.container} ${meta.volume}, no. ${meta.issue} (${meta.year}): ${meta.pages}.`;
   })();
 
-  const copy = (t: string) => void copyText(t);
+  const copy = async (key: string, text: string) => { const ok = await copyText(text); if (ok) { setCopied(key); setTimeout(() => setCopied(null), 1500); } };
 
   return (
     <div className="card space-y-3">
@@ -180,7 +182,7 @@ export default function DoiLookupTool() {
             <div key={s.label} className="border border-gray-200 dark:border-gray-700 rounded p-3">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{s.label}</span>
-                <button onClick={() => copy(s.value)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+                <button onClick={() => copy(s.label, s.value)} className="text-xs text-gray-500 hover:text-blue-600">{copied === s.label ? tc("copied") : tc("copy")}</button>
               </div>
               <div className="text-sm leading-relaxed break-words">{s.value}</div>
             </div>

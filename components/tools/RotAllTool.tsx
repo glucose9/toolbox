@@ -12,9 +12,11 @@ function rot(t: string, s: number): string {
 }
 
 export default function RotAllTool() {
-  const t = useTranslations("toolUI.rot-all");
+  const tc = useTranslations("common");
   const [text, setText] = useState("Khoor Zruog");
+  const [copied, setCopied] = useState<number | null>(null);
   const results = useMemo(() => Array.from({ length: 25 }, (_, i) => ({ shift: i + 1, result: rot(text, i + 1) })), [text]);
+  const copy = async (shift: number, result: string) => { const ok = await copyText(result); if (ok) { setCopied(shift); setTimeout(() => setCopied(null), 1500); } };
   return (
     <div className="card space-y-3">
       <input type="text" value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900 font-mono" />
@@ -23,7 +25,7 @@ export default function RotAllTool() {
           <div key={r.shift} className="flex items-center gap-3 px-3 py-1.5 text-sm">
             <span className="text-xs text-muted w-12">ROT{r.shift}</span>
             <span className="font-mono flex-1 break-all">{r.result}</span>
-            <button onClick={() => void copyText(r.result)} className="text-xs text-brand-600 hover:underline">{t("copy")}</button>
+            <button onClick={() => copy(r.shift, r.result)} className="text-xs text-brand-600 hover:underline">{copied === r.shift ? tc("copied") : tc("copy")}</button>
           </div>
         ))}
       </div>

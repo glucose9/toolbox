@@ -6,6 +6,7 @@ import { copyText } from "@/lib/clipboard";
 
 export default function BibSortTool() {
   const t = useTranslations("toolUI.bib-sort");
+  const tc = useTranslations("common");
   const [input, setInput] = useState(`Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.
 
 Kim, S. (2019). 학습 동기 연구. 교육심리학 연구, 33(2), 11-25.
@@ -15,6 +16,7 @@ Anderson, P., & Lee, M. (2021). Memory and attention. Nature Cognition, 5, 100-1
 Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
   const [order, setOrder] = useState<"asc" | "desc">("asc");
   const [dedupe, setDedupe] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   const sorted = useMemo(() => {
     let lines = input
@@ -28,7 +30,13 @@ Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
   }, [input, order, dedupe]);
 
   const output = sorted.join("\n\n");
-  const copy = () => void copyText(output);
+  const copy = async () => {
+    const ok = await copyText(output);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
+  };
 
   return (
     <div className="card space-y-3">
@@ -58,7 +66,7 @@ Smith, J. (2020). A study on cognition. Journal of Psychology, 12(3), 45-67.`);
       <div>
         <div className="flex justify-between items-center mb-1">
           <label className="label">{t("sortedResult")}</label>
-          <button onClick={copy} className="text-xs text-gray-500 hover:text-blue-600">📋 {t("copy")}</button>
+          <button onClick={copy} className="text-xs text-gray-500 hover:text-blue-600">{copied ? tc("copied") : tc("copy")}</button>
         </div>
         <div className="border border-gray-200 dark:border-gray-700 rounded p-3 bg-gray-50 dark:bg-gray-950 text-sm space-y-2 max-h-96 overflow-y-auto">
           {sorted.map((line, i) => (

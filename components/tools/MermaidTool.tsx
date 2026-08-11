@@ -67,7 +67,9 @@ const SAMPLES = [
 
 export default function MermaidTool() {
   const t = useTranslations("toolUI.mermaid");
+  const tc = useTranslations("common");
   const [code, setCode] = useState(SAMPLES[0].code);
+  const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [svgString, setSvgString] = useState<string>("");
@@ -203,7 +205,18 @@ export default function MermaidTool() {
       <div className="flex flex-wrap gap-2">
         <button onClick={downloadSvg} disabled={!svgString} className="btn btn-secondary">📥 {t("downloadSvg")}</button>
         <button onClick={downloadPng} disabled={!svgString} className="btn btn-primary">📥 {t("downloadPng")}</button>
-        <button onClick={() => void copyText(code)} className="btn">📋 {t("copyCode")}</button>
+        <button
+          onClick={async () => {
+            const ok = await copyText(code);
+            if (ok) {
+              setCopied(true);
+              setTimeout(() => setCopied(false), 1500);
+            }
+          }}
+          className="btn"
+        >
+          {copied ? tc("copied") : tc("copy")}
+        </button>
       </div>
 
       <div className="text-xs text-muted leading-relaxed">

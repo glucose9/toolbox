@@ -8,6 +8,7 @@ type RecognizeResult = { data: { text: string; confidence: number } };
 
 export default function OcrTool() {
   const t = useTranslations("toolUI.ocr");
+  const tc = useTranslations("common");
   const LANGS = [
     { code: "kor", label: t("langKo") },
     { code: "eng", label: t("langEn") },
@@ -24,6 +25,7 @@ export default function OcrTool() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confidence, setConfidence] = useState(0);
+  const [copied, setCopied] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const onFile = (f: File) => {
@@ -70,7 +72,7 @@ export default function OcrTool() {
     }
   };
 
-  const copy = () => void copyText(text);
+  const copy = async () => { const ok = await copyText(text); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
   const download = () => {
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -146,7 +148,7 @@ export default function OcrTool() {
             />
           </div>
           <div className="flex gap-2">
-            <button onClick={copy} className="btn">{t("copy")}</button>
+            <button onClick={copy} className="btn">{copied ? tc("copied") : tc("copy")}</button>
             <button onClick={download} className="btn">{t("downloadTxt")}</button>
           </div>
         </>

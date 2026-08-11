@@ -24,10 +24,12 @@ function randIndex(n: number): number {
 
 export default function RandomStringTool() {
   const t = useTranslations("toolUI.random-string");
+  const tc = useTranslations("common");
   const [length, setLength] = useState(16);
   const [count, setCount] = useState(5);
   const [charsetName, setCharsetName] = useState<keyof typeof PRESETS>("alnum");
   const [results, setResults] = useState<string[]>([]);
+  const [copied, setCopied] = useState(false);
 
   const generate = () => {
     const charset = PRESETS[charsetName];
@@ -62,7 +64,7 @@ export default function RandomStringTool() {
       </select>
       <button onClick={generate} className="btn btn-primary w-full">🎲 {t("generate")}</button>
       <textarea readOnly value={results.join("\n")} className="w-full h-44 p-3 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono resize-y" />
-      <button onClick={() => void copyText(results.join("\n"))} disabled={results.length === 0} className="btn btn-secondary disabled:opacity-50">{t("copyAll")}</button>
+      <button onClick={async () => { const ok = await copyText(results.join("\n")); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } }} disabled={results.length === 0} className="btn btn-secondary disabled:opacity-50">{copied ? tc("copied") : t("copyAll")}</button>
     </div>
   );
 }

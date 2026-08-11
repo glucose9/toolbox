@@ -30,6 +30,7 @@ type WindowWithSpeech = Window & {
 
 export default function SttTool() {
   const t = useTranslations("toolUI.stt");
+  const tc = useTranslations("common");
   const LANGS = [
     { code: "ko-KR", label: t("langKo") },
     { code: "en-US", label: t("langEnUs") },
@@ -47,6 +48,7 @@ export default function SttTool() {
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [supported, setSupported] = useState(true);
+  const [copied, setCopied] = useState(false);
   const recogRef = useRef<SpeechRecognitionInstance | null>(null);
 
   useEffect(() => {
@@ -103,7 +105,7 @@ export default function SttTool() {
     setInterim("");
   };
 
-  const copy = () => void copyText(transcript);
+  const copy = async () => { const ok = await copyText(transcript); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   const download = () => {
     const blob = new Blob([transcript], { type: "text/plain;charset=utf-8" });
@@ -169,7 +171,7 @@ export default function SttTool() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <button onClick={copy} className="btn">{t("copy")}</button>
+        <button onClick={copy} className="btn">{copied ? tc("copied") : tc("copy")}</button>
         <button onClick={download} className="btn">{t("downloadTxt")}</button>
         <button onClick={clear} className="btn">{t("clear")}</button>
       </div>

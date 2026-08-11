@@ -9,10 +9,12 @@ type Detection = { format: string; text: string };
 
 export default function BarcodeReaderTool() {
   const t = useTranslations("toolUI.barcode-reader");
+  const tc = useTranslations("common");
   const [preview, setPreview] = useState<string>("");
   const [result, setResult] = useState<Detection | null>(null);
   const [error, setError] = useState<string>("");
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onFile = async (file: File) => {
@@ -36,9 +38,13 @@ export default function BarcodeReaderTool() {
     }
   };
 
-  const copy = () => {
+  const copy = async () => {
     if (!result) return;
-    void copyText(result.text);
+    const ok = await copyText(result.text);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   return (
@@ -85,7 +91,7 @@ export default function BarcodeReaderTool() {
                 <div className="font-mono text-sm break-all bg-gray-50 dark:bg-gray-900 p-3 rounded border border-gray-200 dark:border-gray-700">
                   {result.text}
                 </div>
-                <button onClick={copy} className="btn btn-secondary mt-3">{t("copy")}</button>
+                <button onClick={copy} className="btn btn-secondary mt-3">{copied ? tc("copied") : tc("copy")}</button>
                 {/^https?:\/\//.test(result.text) && (
                   <a href={result.text} target="_blank" rel="noopener noreferrer" className="btn btn-primary mt-3 ml-2">
                     {t("openUrl")}

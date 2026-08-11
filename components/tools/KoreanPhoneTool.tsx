@@ -142,9 +142,19 @@ const LOCALE_CONFIG: Record<string, LocaleConfig> = {
 export default function KoreanPhoneTool() {
   const locale = useLocale();
   const t = useTranslations("toolUI.korean-phone");
+  const tc = useTranslations("common");
   const config = LOCALE_CONFIG[locale] || LOCALE_CONFIG.ko;
   const [input, setInput] = useState(config.defaultExample);
+  const [copied, setCopied] = useState<string | null>(null);
   const result = useMemo(() => config.normalize(input), [input, config]);
+
+  const copy = async (key: string, value: string) => {
+    const ok = await copyText(value);
+    if (ok) {
+      setCopied(key);
+      setTimeout(() => setCopied(null), 1500);
+    }
+  };
 
   return (
     <div className="card space-y-3">
@@ -163,10 +173,10 @@ export default function KoreanPhoneTool() {
             <td className="text-right">
               {result.national && (
                 <button
-                  onClick={() => void copyText(result.national)}
+                  onClick={() => copy("national", result.national)}
                   className="text-xs text-brand-600 hover:underline"
                 >
-                  {t("copy")}
+                  {copied === "national" ? tc("copied") : tc("copy")}
                 </button>
               )}
             </td>
@@ -177,10 +187,10 @@ export default function KoreanPhoneTool() {
             <td className="text-right">
               {result.international && (
                 <button
-                  onClick={() => void copyText(result.international)}
+                  onClick={() => copy("international", result.international)}
                   className="text-xs text-brand-600 hover:underline"
                 >
-                  {t("copy")}
+                  {copied === "international" ? tc("copied") : tc("copy")}
                 </button>
               )}
             </td>
@@ -191,10 +201,10 @@ export default function KoreanPhoneTool() {
             <td className="text-right">
               {result.raw && (
                 <button
-                  onClick={() => void copyText(result.raw)}
+                  onClick={() => copy("raw", result.raw)}
                   className="text-xs text-brand-600 hover:underline"
                 >
-                  {t("copy")}
+                  {copied === "raw" ? tc("copied") : tc("copy")}
                 </button>
               )}
             </td>

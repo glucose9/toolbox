@@ -148,6 +148,7 @@ function toChicago(e: Entry): string {
 
 export default function BibtexConvertTool() {
   const t = useTranslations("toolUI.bibtex-convert");
+  const tc = useTranslations("common");
   const [input, setInput] = useState(`@article{einstein1905,
   author = {Einstein, Albert},
   title = {Zur Elektrodynamik bewegter Körper},
@@ -158,12 +159,19 @@ export default function BibtexConvertTool() {
   year = {1905}
 }`);
   const [style, setStyle] = useState<"apa" | "mla" | "chicago">("apa");
+  const [copied, setCopied] = useState(false);
 
   const entries = parseBibtex(input);
   const formatter = style === "apa" ? toApa : style === "mla" ? toMla : toChicago;
   const output = entries.map(formatter).join("\n\n");
 
-  const copy = () => void copyText(output);
+  const copy = async () => {
+    const ok = await copyText(output);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
+  };
 
   return (
     <div className="card space-y-3">
@@ -193,7 +201,7 @@ export default function BibtexConvertTool() {
       <div>
         <div className="flex justify-between items-center mb-1">
           <label className="label">{t("result")}</label>
-          <button onClick={copy} className="text-xs text-gray-500 hover:text-blue-600">{t("copyAll")}</button>
+          <button onClick={copy} className="text-xs text-gray-500 hover:text-blue-600">{copied ? tc("copied") : t("copyAll")}</button>
         </div>
         <textarea
           value={output}

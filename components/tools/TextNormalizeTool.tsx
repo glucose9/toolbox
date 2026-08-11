@@ -42,6 +42,7 @@ export default function TextNormalizeTool() {
     lowercase: false,
     stripPunct: false,
   });
+  const [copied, setCopied] = useState(false);
 
   const result = useMemo(() => {
     let s = input;
@@ -103,6 +104,8 @@ export default function TextNormalizeTool() {
     { key: "stripPunct", label: t("optStripPunct") },
   ];
 
+  const copy = async () => { const ok = await copyText(result); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
+
   const renderOpt = (o: { key: keyof typeof opts; label: string }) => (
     <label key={o.key} className="flex items-center gap-2">
       <input
@@ -146,8 +149,8 @@ export default function TextNormalizeTool() {
             <span className="text-xs text-muted">
               {t("stats", { before: stats.before, after: stats.after, diff: stats.diff >= 0 ? `-${stats.diff}` : `+${-stats.diff}` })}
             </span>
-            <button onClick={() => void copyText(result)} className="text-xs text-gray-500 hover:text-blue-600">
-              {t("copy")}
+            <button onClick={copy} className="text-xs text-gray-500 hover:text-blue-600">
+              {copied ? tc("copied") : tc("copy")}
             </button>
           </div>
         </div>

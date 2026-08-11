@@ -183,8 +183,12 @@ const HANJA_DATA: { hanja: string; sound: string; meaning: string; strokes: numb
 
 export default function HanjaDictTool() {
   const t = useTranslations("toolUI.hanja-dict");
+  const tc = useTranslations("common");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<typeof HANJA_DATA[0] | null>(HANJA_DATA[0]);
+  const [copied, setCopied] = useState(false);
+
+  const copy = async (txt: string) => { const ok = await copyText(txt); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -239,10 +243,10 @@ export default function HanjaDictTool() {
               <div><strong>{t("grade")}:</strong> {selected.level}</div>
               <div className="pt-2">
                 <button
-                  onClick={() => void copyText(selected.hanja)}
+                  onClick={() => copy(selected.hanja)}
                   className="text-xs text-blue-600 hover:underline"
                 >
-                  {t("copyHanja")}
+                  {copied ? tc("copied") : t("copyHanja")}
                 </button>
               </div>
             </div>

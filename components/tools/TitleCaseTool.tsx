@@ -71,7 +71,9 @@ function cap(w: string): string {
 
 export default function TitleCaseTool() {
   const t = useTranslations("toolUI.title-case");
+  const tc = useTranslations("common");
   const [input, setInput] = useState("the role of attention in working memory: a cognitive perspective");
+  const [copied, setCopied] = useState<string | null>(null);
 
   const variants = [
     { label: t("apa"), value: apaTitleCase(input) },
@@ -82,7 +84,7 @@ export default function TitleCaseTool() {
     { label: "lower case", value: input.toLowerCase() },
   ];
 
-  const copy = (s: string) => void copyText(s);
+  const copy = async (key: string, s: string) => { const ok = await copyText(s); if (ok) { setCopied(key); setTimeout(() => setCopied(null), 1500); } };
 
   return (
     <div className="card space-y-3">
@@ -101,7 +103,7 @@ export default function TitleCaseTool() {
           <div key={v.label} className="border border-gray-200 dark:border-gray-700 rounded p-3">
             <div className="flex justify-between items-center mb-1">
               <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{v.label}</span>
-              <button onClick={() => copy(v.value)} className="text-xs text-gray-500 hover:text-blue-600">{t("copy")}</button>
+              <button onClick={() => copy(v.label, v.value)} className="text-xs text-gray-500 hover:text-blue-600">{copied === v.label ? tc("copied") : tc("copy")}</button>
             </div>
             <div className="text-base font-serif">{v.value}</div>
           </div>

@@ -59,9 +59,11 @@ function cuesToText(cues: Cue[]): string {
 
 export default function SubtitleTool() {
   const t = useTranslations("toolUI.subtitle");
+  const tc = useTranslations("common");
   const [input, setInput] = useState(() => t("sampleInput"));
   const [offset, setOffset] = useState(0); // seconds, can be negative
   const [outputFormat, setOutputFormat] = useState<"srt" | "vtt" | "txt">("srt");
+  const [copied, setCopied] = useState(false);
 
   const cues = useMemo(() => {
     const parsed = parseSrtOrVtt(input);
@@ -79,6 +81,8 @@ export default function SubtitleTool() {
     const text = await f.text();
     setInput(text);
   };
+
+  const copy = async () => { const ok = await copyText(output); if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1500); } };
 
   const download = () => {
     const ext = outputFormat;
@@ -150,7 +154,7 @@ export default function SubtitleTool() {
           />
           <div className="text-xs text-muted mt-1">{t("offsetHint")}</div>
         </label>
-        <button onClick={() => void copyText(output)} className="btn">{t("copy")}</button>
+        <button onClick={copy} className="btn">{copied ? tc("copied") : tc("copy")}</button>
         <button onClick={download} className="btn btn-primary">{t("saveAs", { ext: outputFormat })}</button>
       </div>
 
