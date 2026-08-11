@@ -10,6 +10,8 @@
     "description": "Free online tools for QR codes, image conversion, video processing, text utilities, and more. No signup, no watermarks, all processing happens in your browser."
   },
   "common": {
+    "errPdfEncrypted": "This PDF is password-protected. Remove the password and try again.",
+    "errPdfInvalid": "The file is corrupted or is not a PDF.",
     "copy": "Copy",
     "copied": "✓ Copied",
     "download": "Download",

@@ -53,7 +53,7 @@ export default function VideoTrimTool() {
     let ffRef: Awaited<ReturnType<typeof getFFmpeg>> | null = null;
     const onP = ({ progress }: { progress: number }) => setProgress(progress * 100);
     try {
-      const ff = await getFFmpeg((s) => setStatus(s));
+      const ff = await getFFmpeg((s) => setStatus(s), setProgress);
       ffRef = ff;
       ff.on("progress", onP);
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();

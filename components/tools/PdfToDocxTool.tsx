@@ -2,9 +2,11 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { pdfErrorKey } from "@/lib/pdf";
 
 export default function PdfToDocxTool() {
   const t = useTranslations("toolUI.pdf-to-docx");
+  const tc = useTranslations("common");
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<string>("");
   const [pageCount, setPageCount] = useState(0);
@@ -154,7 +156,8 @@ export default function PdfToDocxTool() {
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
       setProgress(t("done"));
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      const key = pdfErrorKey(e);
+      setError(key ? tc(key) : e instanceof Error ? e.message : String(e));
     } finally {
       setBusy(false);
     }

@@ -10,6 +10,8 @@
     "description": "QR码生成、图像转换、视频处理、文本处理等常用免费在线工具。无需注册,无水印,所有处理都在浏览器内完成。"
   },
   "common": {
+    "errPdfEncrypted": "该PDF受密码保护，请解除密码后重试。",
+    "errPdfInvalid": "文件已损坏或不是PDF文件。",
     "copy": "复制",
     "copied": "✓ 已复制",
     "download": "下载",

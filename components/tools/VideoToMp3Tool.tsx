@@ -28,7 +28,7 @@ export default function VideoToMp3Tool() {
     setOutput(null);
     setProgress(0);
     try {
-      const ff = await getFFmpeg((s) => setStatus(s));
+      const ff = await getFFmpeg((s) => setStatus(s), setProgress);
       ff.on("progress", ({ progress }) => setProgress(progress * 100));
       const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
       const inputName = `input.${ext}`;

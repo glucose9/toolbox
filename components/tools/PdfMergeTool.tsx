@@ -3,12 +3,13 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { PDFDocument } from "pdf-lib";
-import { downloadBlob, fmtBytes, isPdfFile, readBytes } from "@/lib/pdf";
+import { downloadBlob, fmtBytes, isPdfFile, pdfErrorKey, readBytes } from "@/lib/pdf";
 
 type Item = { id: string; file: File };
 
 export default function PdfMergeTool() {
   const t = useTranslations("toolUI.pdf-merge");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [busy, setBusy] = useState(false);
@@ -71,7 +72,8 @@ export default function PdfMergeTool() {
       const merged = await out.save();
       downloadBlob(new Blob([merged.buffer as ArrayBuffer], { type: "application/pdf" }), `merged-${Date.now()}.pdf`);
     } catch (e) {
-      setError(t("errMerge") + ": " + (e as Error).message);
+      const key = pdfErrorKey(e);
+      setError(key ? tc(key) : t("errMerge") + ": " + (e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -106,7 +108,17 @@ export default function PdfMergeTool() {
   }
 
   return (
-    <div className="card space-y-4">
+    <div
+      className="card space-y-4"
+      // Users who added their first PDFs by dragging will drag the next one
+      // too; without these handlers the browser navigates to the dropped file
+      // and wipes the assembled list.
+      onDrop={(e) => {
+        e.preventDefault();
+        if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
+      }}
+      onDragOver={(e) => e.preventDefault()}
+    >
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-sm text-muted">{t("fileCount", { count: items.length })}</div>
         <button onClick={() => inputRef.current?.click()} className="text-sm text-brand-600 hover:underline">

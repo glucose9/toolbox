@@ -9,6 +9,17 @@ export function isPdfFile(file: File): boolean {
   return file.name.toLowerCase().endsWith(".pdf") || file.type === "application/pdf";
 }
 
+// Maps pdf.js / pdf-lib failures to a common.* i18n key so users see an
+// actionable translated message instead of a raw English developer string.
+// Encrypted PDFs (bank/insurer statements) are by far the most common case.
+export function pdfErrorKey(e: unknown): "errPdfEncrypted" | "errPdfInvalid" | null {
+  const name = (e as { name?: string })?.name || "";
+  const msg = String((e as Error)?.message ?? e ?? "");
+  if (name === "PasswordException" || /encrypted|password/i.test(msg)) return "errPdfEncrypted";
+  if (name === "InvalidPDFException" || /invalid pdf|failed to parse|no pdf header/i.test(msg)) return "errPdfInvalid";
+  return null;
+}
+
 export function downloadBlob(blob: Blob, name: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");

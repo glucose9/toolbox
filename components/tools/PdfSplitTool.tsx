@@ -4,12 +4,13 @@ import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { PDFDocument } from "pdf-lib";
 import JSZip from "jszip";
-import { downloadBlob, fmtBytes, isPdfFile, parsePageGroups, readBytes } from "@/lib/pdf";
+import { downloadBlob, fmtBytes, isPdfFile, parsePageGroups, pdfErrorKey, readBytes } from "@/lib/pdf";
 
 type Mode = "every" | "ranges";
 
 export default function PdfSplitTool() {
   const t = useTranslations("toolUI.pdf-split");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
@@ -30,7 +31,8 @@ export default function PdfSplitTool() {
       const src = await PDFDocument.load(bytes);
       setPageCount(src.getPageCount());
     } catch (e) {
-      setError(t("errorPdfLoad") + ": " + (e as Error).message);
+      const key = pdfErrorKey(e);
+      setError(key ? tc(key) : t("errorPdfLoad") + ": " + (e as Error).message);
     }
   };
 
@@ -76,7 +78,8 @@ export default function PdfSplitTool() {
       const zipBlob = await zip.generateAsync({ type: "blob" });
       downloadBlob(zipBlob, `${baseName}_split.zip`);
     } catch (e) {
-      setError(t("errorSplit") + ": " + (e as Error).message);
+      const key = pdfErrorKey(e);
+      setError(key ? tc(key) : t("errorSplit") + ": " + (e as Error).message);
     } finally {
       setBusy(false);
     }
