@@ -65,6 +65,21 @@ export default function PdfReorderTool() {
   const remove = (id: string) => setPages((p) => p.filter((x) => x.id !== id));
   const rotate = (id: string) => setPages((p) => p.map((x) => (x.id === id ? { ...x, rotation: (x.rotation + 90) % 360 } : x)));
 
+  // Button-based reordering: HTML5 drag events are never synthesized from
+  // touch on iOS/Android, so without these the tool's core function was
+  // impossible on phones (and for keyboard users).
+  const move = (id: string, dir: -1 | 1) => {
+    setPages((p) => {
+      const from = p.findIndex((x) => x.id === id);
+      const to = from + dir;
+      if (from < 0 || to < 0 || to >= p.length) return p;
+      const next = [...p];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return next;
+    });
+  };
+
   const onDragStart = (id: string) => setDragId(id);
   const onDragOver = (e: React.DragEvent, overId: string) => {
     e.preventDefault();
@@ -156,8 +171,24 @@ export default function PdfReorderTool() {
               <div className="absolute top-1 left-1 bg-black/70 text-white text-xs px-1 rounded">{i + 1}</div>
             </div>
             <div className="flex gap-1 mt-1 text-xs">
+              <button
+                onClick={() => move(p.id, -1)}
+                disabled={i === 0}
+                aria-label={t("moveLeft")}
+                className="flex-1 text-gray-500 hover:text-brand-600 disabled:opacity-30"
+              >
+                ◀
+              </button>
               <button onClick={() => rotate(p.id)} className="flex-1 text-brand-600 hover:underline">🔃</button>
               <button onClick={() => remove(p.id)} className="flex-1 text-red-600 hover:underline">×</button>
+              <button
+                onClick={() => move(p.id, 1)}
+                disabled={i === pages.length - 1}
+                aria-label={t("moveRight")}
+                className="flex-1 text-gray-500 hover:text-brand-600 disabled:opacity-30"
+              >
+                ▶
+              </button>
             </div>
           </div>
         ))}

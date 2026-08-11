@@ -1153,6 +1153,8 @@
       "winners": "当選 ({count}件)"
     },
     "pdf-reorder": {
+      "moveLeft": "前へ移動",
+      "moveRight": "後ろへ移動",
       "errPdfOnly": "PDFファイルのみ対応しています。",
       "dropOrClick": "PDFファイルをドラッグまたはクリック",
       "pageCount": "{count}ページ",
@@ -1222,6 +1224,9 @@
       "saveHtml": "HTMLとして保存"
     },
     "heic-to-jpg": {
+      "batchProgress": "変換中 {done} / {total}...",
+      "batchDone": "完了: {done} / {total}枚を変換",
+      "downloadZip": "ZIPで一括ダウンロード ({count}枚)",
       "dropOrClick": "HEICファイルをドラッグまたはクリック",
       "subtitle": "iPhoneで撮影した .heic / .heif",
       "errHeicOnly": "HEIC/HEIFファイルのみ対応しています。",

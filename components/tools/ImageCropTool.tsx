@@ -51,8 +51,12 @@ export default function ImageCropTool() {
     return { w: img.naturalWidth * scale, h: img.naturalHeight * scale, scale };
   };
 
-  const onMouseDown = (e: React.MouseEvent) => {
+  // Pointer (not mouse) events: touch devices never fire mouse drags, which
+  // left this tool unusable on phones. Pointer capture keeps the drag alive
+  // when the finger/cursor leaves the preview box.
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!previewRef.current) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
     const rect = previewRef.current.getBoundingClientRect();
     const cs = containerSize();
     const offsetX = (rect.width - cs.w) / 2;
@@ -65,7 +69,7 @@ export default function ImageCropTool() {
     setSel({ x: x / cs.scale, y: y / cs.scale, w: 0, h: 0 });
   };
 
-  const onMouseMove = (e: React.MouseEvent) => {
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!drag || !previewRef.current) return;
     const rect = previewRef.current.getBoundingClientRect();
     const cs = containerSize();
@@ -95,7 +99,7 @@ export default function ImageCropTool() {
     setSel({ x: sx / cs.scale, y: sy / cs.scale, w: Math.abs(w) / cs.scale, h: Math.abs(h) / cs.scale });
   };
 
-  const onMouseUp = () => setDrag(null);
+  const onPointerUp = () => setDrag(null);
 
   useEffect(() => {
     if (sel && img && RATIOS[ratio] !== null) {
@@ -185,11 +189,11 @@ export default function ImageCropTool() {
 
       <div
         ref={previewRef}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseUp}
-        className="relative bg-gray-100 dark:bg-gray-900 rounded overflow-hidden select-none cursor-crosshair"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        className="relative bg-gray-100 dark:bg-gray-900 rounded overflow-hidden select-none cursor-crosshair touch-none"
         style={{ height: 400 }}
       >
         {src && (

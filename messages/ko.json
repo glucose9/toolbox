@@ -1153,6 +1153,8 @@
       "winners": "당첨 ({count}개)"
     },
     "pdf-reorder": {
+      "moveLeft": "앞으로 이동",
+      "moveRight": "뒤로 이동",
       "errPdfOnly": "PDF 파일만 지원합니다.",
       "dropOrClick": "PDF 파일을 드래그하거나 클릭",
       "pageCount": "{count}페이지",
@@ -1222,6 +1224,9 @@
       "saveHtml": "HTML로 저장"
     },
     "heic-to-jpg": {
+      "batchProgress": "변환 중 {done} / {total}...",
+      "batchDone": "완료: {done} / {total}장 변환됨",
+      "downloadZip": "ZIP으로 모두 받기 ({count}장)",
       "dropOrClick": "HEIC 파일을 드래그하거나 클릭",
       "subtitle": "아이폰에서 찍은 .heic / .heif",
       "errHeicOnly": "HEIC/HEIF 파일만 지원합니다.",

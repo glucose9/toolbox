@@ -1153,6 +1153,8 @@
       "winners": "Winners ({count})"
     },
     "pdf-reorder": {
+      "moveLeft": "Move earlier",
+      "moveRight": "Move later",
       "errPdfOnly": "Only PDF files are supported.",
       "dropOrClick": "Drop or click a PDF file",
       "pageCount": "{count} pages",
@@ -1222,6 +1224,9 @@
       "saveHtml": "Save as HTML"
     },
     "heic-to-jpg": {
+      "batchProgress": "Converting {done} / {total}...",
+      "batchDone": "Done: {done} / {total} converted",
+      "downloadZip": "Download all as ZIP ({count})",
       "dropOrClick": "Drop or click a HEIC file",
       "subtitle": ".heic / .heif from iPhone",
       "errHeicOnly": "Only HEIC/HEIF files are supported.",

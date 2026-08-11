@@ -1153,6 +1153,8 @@
       "winners": "中奖 ({count} 个)"
     },
     "pdf-reorder": {
+      "moveLeft": "前移",
+      "moveRight": "后移",
       "errPdfOnly": "仅支持 PDF 文件。",
       "dropOrClick": "拖拽或点击 PDF 文件",
       "pageCount": "{count} 页",
@@ -1222,6 +1224,9 @@
       "saveHtml": "另存为 HTML"
     },
     "heic-to-jpg": {
+      "batchProgress": "转换中 {done} / {total}...",
+      "batchDone": "完成：已转换 {done} / {total} 张",
+      "downloadZip": "打包下载 ZIP（{count} 张）",
       "dropOrClick": "拖拽或点击 HEIC 文件",
       "subtitle": "iPhone 拍摄的 .heic / .heif",
       "errHeicOnly": "仅支持 HEIC/HEIF 文件。",
