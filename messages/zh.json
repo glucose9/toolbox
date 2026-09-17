@@ -1243,10 +1243,14 @@
       "errAlreadyHwpx": "此文件已经是 HWPX 格式，无需转换。",
       "errConvert": "HWPX 转换失败",
       "dropOrClick": "拖拽或点击 .hwp 文件",
-      "subtitle": "转换为国家标准 HWPX (KS X 6101) 格式",
+      "subtitle": "可同时转换多个文件 · 转换为国家标准 HWPX (KS X 6101) 格式",
       "otherFile": "其他文件",
       "converting": "转换为 HWPX 中...",
-      "downloadHwpx": "✓ 下载 .hwpx"
+      "downloadHwpx": "✓ 下载 .hwpx",
+      "addFiles": "添加文件",
+      "batchProgress": "转换中 {done} / {total}",
+      "batchDone": "完成：已转换 {done} / {total} 个",
+      "downloadZip": "打包下载 ZIP（{count} 个）"
     },
     "image-crop": {
       "errImageOnly": "仅支持图片文件。",
@@ -1424,13 +1428,17 @@
       "errHwpOnly": "仅支持 .hwp 或 .hwpx 文件。",
       "errExtract": "文本提取失败",
       "dropOrClick": "拖拽或点击 .hwp / .hwpx 文件",
-      "hint": "自动提取正文文本",
+      "hint": "可同时处理多个文件 · 自动提取正文文本",
       "otherFile": "其他文件",
       "extracting": "正在提取文本...",
       "copyAll": "全部复制",
       "copied": "已复制",
       "downloadTxt": "下载为 .txt",
-      "charCount": "{total} 字符(不含空格 {noSpace} 字符)"
+      "charCount": "{total} 字符(不含空格 {noSpace} 字符)",
+      "addFiles": "添加文件",
+      "batchProgress": "转换中 {done} / {total}",
+      "batchDone": "完成：已转换 {done} / {total} 个",
+      "downloadZip": "打包下载 ZIP（{count} 个）"
     },
     "image-stack": {
       "errImageLoad": "图片加载失败",

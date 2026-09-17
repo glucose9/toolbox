@@ -3,75 +3,98 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { openHwp, readFileBytes, isHwpFile } from "@/lib/hwp";
+import { downloadBlob } from "@/lib/pdf";
 
 function fmt(n: number) {
   return n < 1024 * 1024 ? `${(n / 1024).toFixed(1)} KB` : `${(n / (1024 * 1024)).toFixed(2)} MB`;
 }
+const hwpxName = (name: string) => name.replace(/\.hwp$/i, "") + ".hwpx";
 
+type Item = {
+  id: string;
+  file: File;
+  status: "pending" | "working" | "done" | "error";
+  out: Blob | null;
+  error?: string;
+};
+
+// HWP → HWPX (KS X 6101), one or many files. Same batch pattern as HWP → PDF:
+// sequential conversion, per-file download, ZIP of everything.
 export default function HwpToHwpxTool() {
   const t = useTranslations("toolUI.hwp-to-hwpx");
   const inputRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState("");
-  const [fileSize, setFileSize] = useState(0);
-  const [outBlob, setOutBlob] = useState<Blob | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<Item[]>([]);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const reqRef = useRef(0);
 
-  const handleFile = async (file: File) => {
-    const lower = file.name.toLowerCase();
-    if (!isHwpFile(file)) {
-      setError(t("errHwpOnly"));
-      return;
+  const patch = (id: string, p: Partial<Item>) => setItems((prev) => prev.map((x) => (x.id === id ? { ...x, ...p } : x)));
+
+  const run = async (list: Item[]) => {
+    const reqId = ++reqRef.current;
+    setBusy(true);
+    for (const item of list) {
+      if (reqId !== reqRef.current) return;
+      patch(item.id, { status: "working" });
+      try {
+        const doc = await openHwp(await readFileBytes(item.file));
+        try {
+          const hwpxBytes = doc.exportHwpx();
+          const ab = new ArrayBuffer(hwpxBytes.byteLength);
+          new Uint8Array(ab).set(hwpxBytes);
+          if (reqId !== reqRef.current) return;
+          patch(item.id, { status: "done", out: new Blob([ab], { type: "application/hwp+zip" }) });
+        } finally {
+          doc.free?.();
+        }
+      } catch (e) {
+        if (reqId !== reqRef.current) return;
+        patch(item.id, { status: "error", error: (e as Error).message });
+      }
     }
-    if (lower.endsWith(".hwpx")) {
-      setError(t("errAlreadyHwpx"));
-      return;
-    }
-    setError("");
-    setLoading(true);
-    setFileName(file.name);
-    setFileSize(file.size);
-    setOutBlob(null);
-    try {
-      const bytes = await readFileBytes(file);
-      const doc = await openHwp(bytes);
-      const hwpxBytes = doc.exportHwpx();
-      const ab = new ArrayBuffer(hwpxBytes.byteLength);
-      new Uint8Array(ab).set(hwpxBytes);
-      setOutBlob(new Blob([ab], { type: "application/hwp+zip" }));
-      doc.free?.();
-    } catch (e) {
-      setError(t("errConvert") + ": " + (e as Error).message);
-    } finally {
-      setLoading(false);
-    }
+    if (reqId === reqRef.current) setBusy(false);
   };
 
-  const download = () => {
-    if (!outBlob) return;
-    const url = URL.createObjectURL(outBlob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileName.replace(/\.hwp$/i, "") + ".hwpx";
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleFiles = (list: FileList | File[]) => {
+    const all = Array.from(list).filter(isHwpFile);
+    const already = all.filter((f) => f.name.toLowerCase().endsWith(".hwpx"));
+    const files = all.filter((f) => !f.name.toLowerCase().endsWith(".hwpx"));
+    if (!files.length) {
+      setError(already.length ? t("errAlreadyHwpx") : t("errHwpOnly"));
+      return;
+    }
+    setError(already.length ? t("errAlreadyHwpx") : "");
+    const next: Item[] = files.map((f) => ({
+      id: `${f.name}-${f.size}-${Math.random().toString(36).slice(2, 8)}`,
+      file: f,
+      status: "pending",
+      out: null,
+    }));
+    setItems((prev) => [...prev, ...next]);
+    run(next);
   };
 
   const reset = () => {
-    setFileName("");
-    setFileSize(0);
-    setOutBlob(null);
+    reqRef.current++;
+    setItems([]);
     setError("");
+    setBusy(false);
   };
 
-  if (!fileName) {
+  const downloadZip = async () => {
+    const done = items.filter((x) => x.status === "done" && x.out);
+    if (!done.length) return;
+    const JSZip = (await import("jszip")).default;
+    const zip = new JSZip();
+    for (const it of done) zip.file(hwpxName(it.file.name), it.out!);
+    downloadBlob(await zip.generateAsync({ type: "blob" }), "hwp-to-hwpx.zip");
+  };
+
+  if (items.length === 0) {
     return (
       <div className="card">
         <div
-          onDrop={(e) => {
-            e.preventDefault();
-            if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
-          }}
+          onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); }}
           onDragOver={(e) => e.preventDefault()}
           onClick={() => inputRef.current?.click()}
           className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800 transition-colors"
@@ -83,7 +106,8 @@ export default function HwpToHwpxTool() {
             ref={inputRef}
             type="file"
             accept=".hwp"
-            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+            multiple
+            onChange={(e) => e.target.files?.length && handleFiles(e.target.files)}
             className="hidden"
           />
         </div>
@@ -92,30 +116,56 @@ export default function HwpToHwpxTool() {
     );
   }
 
+  const doneCount = items.filter((x) => x.status === "done").length;
+  const finished = !busy && items.every((x) => x.status === "done" || x.status === "error");
+
   return (
-    <div className="card space-y-4">
+    <div
+      className="card space-y-4"
+      onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); }}
+      onDragOver={(e) => e.preventDefault()}
+    >
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="text-sm min-w-0">
-          <div className="truncate font-medium">{fileName}</div>
-          <div className="text-xs text-muted">
-            {fmt(fileSize)}
-            {outBlob && ` → ${fmt(outBlob.size)} (HWPX)`}
-          </div>
+        <div className="text-sm font-medium">
+          {finished ? t("batchDone", { done: doneCount, total: items.length }) : t("batchProgress", { done: doneCount, total: items.length })}
         </div>
-        <button onClick={reset} className="text-sm text-brand-600 hover:underline">
-          {t("otherFile")}
-        </button>
+        <div className="flex gap-3 text-sm">
+          <button onClick={() => inputRef.current?.click()} className="text-brand-600 hover:underline">{t("addFiles")}</button>
+          <button onClick={reset} className="text-brand-600 hover:underline">{t("otherFile")}</button>
+        </div>
+        <input ref={inputRef} type="file" accept=".hwp" multiple onChange={(e) => e.target.files?.length && handleFiles(e.target.files)} className="hidden" />
       </div>
 
-      {loading ? (
-        <div className="py-16 text-center text-muted">{t("converting")}</div>
-      ) : error ? (
-        <div className="py-8 text-center text-red-600">{error}</div>
-      ) : outBlob ? (
-        <button onClick={download} className="btn btn-primary">
-          {t("downloadHwpx")}
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg divide-y divide-gray-200 dark:divide-gray-700">
+        {items.map((it) => (
+          <div key={it.id} className="flex items-center gap-3 p-2.5 text-sm">
+            <div className="flex-1 min-w-0">
+              <div className="truncate">{it.file.name}</div>
+              <div className="text-xs text-muted">
+                {fmt(it.file.size)}
+                {it.status === "working" && ` · ${t("converting")}`}
+                {it.status === "done" && it.out && ` → ${fmt(it.out.size)} (HWPX)`}
+                {it.status === "error" && <span className="text-red-600"> · {t("errConvert")}: {it.error}</span>}
+              </div>
+            </div>
+            {it.status === "pending" && <span className="text-muted">…</span>}
+            {it.status === "working" && <span className="text-muted animate-pulse">…</span>}
+            {it.status === "done" && it.out && (
+              <button onClick={() => downloadBlob(it.out!, hwpxName(it.file.name))} className="btn btn-primary text-xs py-1.5 whitespace-nowrap">
+                {t("downloadHwpx")}
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {error && <div className="text-sm text-red-600">{error}</div>}
+
+      {items.length > 1 && (
+        <button onClick={downloadZip} disabled={!finished || doneCount === 0} className="btn btn-primary disabled:opacity-50">
+          {t("downloadZip", { count: doneCount })}
         </button>
-      ) : null}
+      )}
     </div>
   );
 }

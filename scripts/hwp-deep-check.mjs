@@ -249,9 +249,10 @@ async function editor(context) {
   return rec;
 }
 
-async function batch(context) {
-  const rec = { tool: "hwp-to-pdf", variant: "batch", ok: false, jsErrors: [], consoleErrors: [] };
-  const files = variants.filter(([n]) => n !== "large-complex").slice(0, 3).map(([, p]) => p);
+async function batch(context, tool = "hwp-to-pdf") {
+  const EXT = { "hwp-to-pdf": /\.pdf$/i, "hwp-to-text": /\.txt$/i, "hwp-to-hwpx": /\.hwpx$/i }[tool];
+  const rec = { tool, variant: "batch", ok: false, jsErrors: [], consoleErrors: [] };
+  const files = variants.filter(([n, p]) => n !== "large-complex" && (tool !== "hwp-to-hwpx" || !p.endsWith(".hwpx"))).slice(0, 3).map(([, p]) => p);
   if (files.length < 2) { rec.skipped = "need 2+ fixtures"; return rec; }
   const page = await newPage(context, rec);
   const downloads = [];
@@ -261,7 +262,7 @@ async function batch(context) {
     downloads.push({ name: d.suggestedFilename(), size: fs.statSync(p).size, path: p });
   });
   try {
-    await page.goto(BASE + "hwp-to-pdf", { waitUntil: "domcontentloaded", timeout: 45000 });
+    await page.goto(BASE + tool, { waitUntil: "domcontentloaded", timeout: 45000 });
     await page.waitForSelector("input[type=file]", { state: "attached", timeout: 30000 });
     await page.setInputFiles("input[type=file]", files);
     const t0 = now();
@@ -275,12 +276,15 @@ async function batch(context) {
     if (z) {
       const zip = await JSZip.loadAsync(fs.readFileSync(z.path));
       const names = Object.keys(zip.files);
-      rec.zipPdfs = names.filter((n) => /\.pdf$/i.test(n)).length;
-      const first = names.find((n) => /\.pdf$/i.test(n));
-      if (first) { const b = await zip.file(first).async("nodebuffer"); rec.firstMagic = b.subarray(0, 5).toString() === "%PDF-"; }
+      rec.zipPdfs = names.filter((n) => EXT.test(n)).length;
+      const first = names.find((n) => EXT.test(n));
+      if (first) {
+        const b = await zip.file(first).async("nodebuffer");
+        rec.firstMagic = tool === "hwp-to-pdf" ? b.subarray(0, 5).toString() === "%PDF-" : tool === "hwp-to-hwpx" ? b.subarray(0, 2).toString() === "PK" : koCount(b.toString("utf8")) > 0;
+      }
     }
     rec.ok = rec.zipPdfs === files.length && rec.firstMagic === true;
-    rec.note = `${files.length} files → zip pdfs=${rec.zipPdfs}`;
+    rec.note = `${files.length} files → zip entries=${rec.zipPdfs}`;
   } catch (e) {
     rec.error = String(e?.message || e).slice(0, 200);
   } finally {
@@ -305,8 +309,10 @@ if (!ONLY || ONLY.has("editor")) {
   console.log(`${results.at(-1).ok ? "OK  " : "FAIL"} hwp-editor   typed          ${results.at(-1).error || ""}`);
 }
 if (!ONLY || ONLY.has("batch")) {
-  results.push(await batch(context));
-  console.log(`${results.at(-1).ok ? "OK  " : "FAIL"} hwp-to-pdf   batch(3 files) ${results.at(-1).note || results.at(-1).error || ""}`);
+  for (const tool of ["hwp-to-pdf", "hwp-to-text", "hwp-to-hwpx"]) {
+    results.push(await batch(context, tool));
+    console.log(`${results.at(-1).ok ? "OK  " : "FAIL"} ${tool.padEnd(12)} batch(3 files) ${results.at(-1).note || results.at(-1).error || ""}`);
+  }
 }
 await browser.close();
 fs.writeFileSync(OUT, JSON.stringify(results, null, 2));

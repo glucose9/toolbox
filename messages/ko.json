@@ -1243,10 +1243,14 @@
       "errAlreadyHwpx": "이 파일은 이미 HWPX 형식입니다. 변환할 필요가 없습니다.",
       "errConvert": "HWPX 변환에 실패했습니다",
       "dropOrClick": ".hwp 파일을 드래그하거나 클릭",
-      "subtitle": "국가 표준 HWPX(KS X 6101) 포맷으로 변환합니다",
+      "subtitle": "여러 파일 동시 변환 가능 · 국가 표준 HWPX(KS X 6101) 포맷으로 변환합니다",
       "otherFile": "다른 파일",
       "converting": "HWPX로 변환 중...",
-      "downloadHwpx": "✓ .hwpx 다운로드"
+      "downloadHwpx": "✓ .hwpx 다운로드",
+      "addFiles": "파일 추가",
+      "batchProgress": "변환 중 {done} / {total}",
+      "batchDone": "완료: {done} / {total}개 변환됨",
+      "downloadZip": "ZIP으로 모두 받기 ({count}개)"
     },
     "image-crop": {
       "errImageOnly": "이미지 파일만 지원합니다.",
@@ -1424,13 +1428,17 @@
       "errHwpOnly": ".hwp 또는 .hwpx 파일만 지원합니다.",
       "errExtract": "텍스트 추출에 실패했습니다",
       "dropOrClick": ".hwp / .hwpx 파일을 드래그하거나 클릭",
-      "hint": "본문 텍스트만 자동 추출됩니다",
+      "hint": "여러 파일 동시 추출 가능 · 본문 텍스트만 자동 추출됩니다",
       "otherFile": "다른 파일",
       "extracting": "텍스트 추출 중...",
       "copyAll": "전체 복사",
       "copied": "복사됨",
       "downloadTxt": ".txt로 다운로드",
-      "charCount": "{total}자 (공백 제외 {noSpace}자)"
+      "charCount": "{total}자 (공백 제외 {noSpace}자)",
+      "addFiles": "파일 추가",
+      "batchProgress": "변환 중 {done} / {total}",
+      "batchDone": "완료: {done} / {total}개 변환됨",
+      "downloadZip": "ZIP으로 모두 받기 ({count}개)"
     },
     "image-stack": {
       "errImageLoad": "이미지 로드 실패",

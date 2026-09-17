@@ -1243,10 +1243,14 @@
       "errAlreadyHwpx": "このファイルはすでにHWPX形式です。変換の必要はありません。",
       "errConvert": "HWPX変換に失敗しました",
       "dropOrClick": ".hwpファイルをドラッグまたはクリック",
-      "subtitle": "国家標準HWPX (KS X 6101) 形式に変換します",
+      "subtitle": "複数ファイル同時に · 国家標準HWPX(KS X 6101)形式に変換します",
       "otherFile": "別のファイル",
       "converting": "HWPXに変換中...",
-      "downloadHwpx": "✓ .hwpxダウンロード"
+      "downloadHwpx": "✓ .hwpxダウンロード",
+      "addFiles": "ファイルを追加",
+      "batchProgress": "変換中 {done} / {total}",
+      "batchDone": "完了: {done} / {total}件を変換",
+      "downloadZip": "ZIPで一括ダウンロード ({count}件)"
     },
     "image-crop": {
       "errImageOnly": "画像ファイルのみ対応しています。",
@@ -1424,13 +1428,17 @@
       "errHwpOnly": ".hwp または .hwpx ファイルのみ対応しています。",
       "errExtract": "テキストの抽出に失敗しました",
       "dropOrClick": ".hwp / .hwpx ファイルをドラッグまたはクリック",
-      "hint": "本文テキストのみ自動抽出されます",
+      "hint": "複数ファイル同時に · 本文テキストを自動抽出します",
       "otherFile": "別のファイル",
       "extracting": "テキスト抽出中...",
       "copyAll": "すべてコピー",
       "copied": "コピー済み",
       "downloadTxt": ".txtでダウンロード",
-      "charCount": "{total}文字 (空白除く {noSpace}文字)"
+      "charCount": "{total}文字 (空白除く {noSpace}文字)",
+      "addFiles": "ファイルを追加",
+      "batchProgress": "変換中 {done} / {total}",
+      "batchDone": "完了: {done} / {total}件を変換",
+      "downloadZip": "ZIPで一括ダウンロード ({count}件)"
     },
     "image-stack": {
       "errImageLoad": "画像の読み込みに失敗しました",

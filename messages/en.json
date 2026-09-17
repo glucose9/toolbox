@@ -1243,10 +1243,14 @@
       "errAlreadyHwpx": "This file is already in HWPX format — no conversion needed.",
       "errConvert": "HWPX conversion failed",
       "dropOrClick": "Drop or click a .hwp file",
-      "subtitle": "Convert to the national standard HWPX (KS X 6101) format",
+      "subtitle": "Several files at once · converts to the national-standard HWPX (KS X 6101) format",
       "otherFile": "Other file",
       "converting": "Converting to HWPX...",
-      "downloadHwpx": "✓ Download .hwpx"
+      "downloadHwpx": "✓ Download .hwpx",
+      "addFiles": "Add files",
+      "batchProgress": "Converting {done} / {total}",
+      "batchDone": "Done: {done} / {total} converted",
+      "downloadZip": "Download all as ZIP ({count})"
     },
     "image-crop": {
       "errImageOnly": "Only image files are supported.",
@@ -1424,13 +1428,17 @@
       "errHwpOnly": "Only .hwp or .hwpx files are supported.",
       "errExtract": "Failed to extract text",
       "dropOrClick": "Drop or click a .hwp / .hwpx file",
-      "hint": "Body text is extracted automatically",
+      "hint": "Several files at once · body text is extracted automatically",
       "otherFile": "Other file",
       "extracting": "Extracting text...",
       "copyAll": "Copy all",
       "copied": "Copied",
       "downloadTxt": "Download as .txt",
-      "charCount": "{total} chars ({noSpace} excl. spaces)"
+      "charCount": "{total} chars ({noSpace} excl. spaces)",
+      "addFiles": "Add files",
+      "batchProgress": "Converting {done} / {total}",
+      "batchDone": "Done: {done} / {total} converted",
+      "downloadZip": "Download all as ZIP ({count})"
     },
     "image-stack": {
       "errImageLoad": "Failed to load image",
