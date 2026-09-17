@@ -3725,7 +3725,15 @@
       "savedPct": "{pct}% smaller",
       "notReduced": "The original is already small, so savings are minimal",
       "downloadPdf": "Download PDF",
-      "textLostNotice": "⚠️ After compression, text can no longer be selected or searched (every page becomes an image)"
+      "textLostNotice": "⚠️ After compression, text can no longer be selected or searched (every page becomes an image)",
+      "hint": "Compress several PDFs at once · files never leave your browser",
+      "addFiles": "Add files",
+      "fileCount": "{count} PDFs",
+      "batchProgress": "Compressing {done} / {total}",
+      "batchDone": "Done: {done} / {total} compressed",
+      "downloadZip": "Download all as ZIP ({count})",
+      "recompress": "Re-compress with another level",
+      "totalSaved": "Total {from} → {to} ({pct}% saved)"
     },
     "beat-maker": {
       "play": "Play",

@@ -3725,7 +3725,15 @@
       "savedPct": "减少 {pct}%",
       "notReduced": "原文件已经很小，压缩效果不明显",
       "downloadPdf": "下载 PDF",
-      "textLostNotice": "⚠️ 压缩后文本将无法选择或搜索（所有页面都会转换为图片）"
+      "textLostNotice": "⚠️ 压缩后文本将无法选择或搜索（所有页面都会转换为图片）",
+      "hint": "可同时压缩多个 PDF · 文件不会离开浏览器",
+      "addFiles": "添加文件",
+      "fileCount": "{count} 个 PDF",
+      "batchProgress": "压缩中 {done} / {total}",
+      "batchDone": "完成：已压缩 {done} / {total} 个",
+      "downloadZip": "打包下载 ZIP（{count} 个）",
+      "recompress": "用其他强度重新压缩",
+      "totalSaved": "合计 {from} → {to}（节省 {pct}%）"
     },
     "beat-maker": {
       "play": "播放",

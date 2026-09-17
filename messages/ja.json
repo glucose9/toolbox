@@ -3725,7 +3725,15 @@
       "savedPct": "{pct}% 削減",
       "notReduced": "元のファイルがすでに小さいため、削減効果は限定的です",
       "downloadPdf": "PDFをダウンロード",
-      "textLostNotice": "⚠️ 圧縮後はテキストの選択・検索ができなくなります(全ページが画像に変換されます)"
+      "textLostNotice": "⚠️ 圧縮後はテキストの選択・検索ができなくなります(全ページが画像に変換されます)",
+      "hint": "複数PDFを同時圧縮 · ファイルはブラウザの外に出ません",
+      "addFiles": "ファイルを追加",
+      "fileCount": "PDF {count}件",
+      "batchProgress": "圧縮中 {done} / {total}",
+      "batchDone": "完了: {done} / {total}件を圧縮",
+      "downloadZip": "ZIPで一括ダウンロード ({count}件)",
+      "recompress": "別の強度で再圧縮",
+      "totalSaved": "合計 {from} → {to} ({pct}% 削減)"
     },
     "beat-maker": {
       "play": "再生",

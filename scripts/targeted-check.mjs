@@ -13,7 +13,7 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const FIX = path.join(ROOT, "scripts", "fixtures");
 const DL = path.join(ROOT, ".harness-downloads", "targeted");
 fs.mkdirSync(DL, { recursive: true });
-const BASE = "https://barokit.com/tools/";
+const BASE = (process.env.HARNESS_BASE || "https://barokit.com") + "/tools/";
 const F = (n) => path.join(FIX, n);
 const only = process.argv[2] ? new Set(process.argv[2].split(",")) : null;
 
@@ -133,6 +133,21 @@ const CHECKS = {
     await p.waitForTimeout(2000);
     const t = await mainText(p);
     return { ok: dl.some((d) => d.size > 1000) || (!!(await p.$("main audio")) && !hasErr(t)), note: dl.map((d) => d.name + ":" + d.size).join(",") || (t.match(/실패[^\n]*/)?.[0] ?? "audio element present") };
+  },
+  "pdf-compress": async (p, dl) => {
+    await p.setInputFiles("input[type=file]", [F("test.pdf"), F("test-b.pdf")]);
+    await p.waitForTimeout(800);
+    await p.getByRole("button", { name: /압축 시작/ }).first().click();
+    await p.waitForFunction(() => /완료: 2 \/ 2/.test(document.querySelector("main")?.innerText || "") || document.querySelector("main .text-red-600"), null, { timeout: 120000 });
+    const err = await p.evaluate(() => document.querySelector("main .text-red-600")?.textContent || "");
+    await p.getByRole("button", { name: /ZIP/ }).first().click();
+    await p.waitForTimeout(3000);
+    const z = dl.find((d) => /\.zip$/.test(d.name));
+    let pdfs = 0;
+    if (z) { const zip = await JSZip.loadAsync(fs.readFileSync(path.join(DL, `pdf-compress__${z.name}`))); pdfs = Object.keys(zip.files).filter((n) => /\.pdf$/i.test(n)).length; }
+    const t = await mainText(p);
+    const total = (t.split("\n").find((l) => l.startsWith("전체")) || "").trim();
+    return { ok: !err && pdfs === 2, note: err || `zip pdfs=${pdfs} · ${total}` };
   },
   "video-speed": async (p, dl) => {
     await p.setInputFiles("input[type=file]", F("test.mp4"));

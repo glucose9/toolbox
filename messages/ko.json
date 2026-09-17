@@ -3725,7 +3725,15 @@
       "savedPct": "{pct}% 절감",
       "notReduced": "원본이 이미 작아 압축 효과가 크지 않습니다",
       "downloadPdf": "PDF 다운로드",
-      "textLostNotice": "⚠️ 압축 후에는 텍스트 선택·검색이 불가능합니다 (모든 페이지가 이미지로 변환됩니다)"
+      "textLostNotice": "⚠️ 압축 후에는 텍스트 선택·검색이 불가능합니다 (모든 페이지가 이미지로 변환됩니다)",
+      "hint": "여러 PDF 동시 압축 가능 · 파일은 브라우저 밖으로 나가지 않습니다",
+      "addFiles": "파일 추가",
+      "fileCount": "PDF {count}개",
+      "batchProgress": "압축 중 {done} / {total}",
+      "batchDone": "완료: {done} / {total}개 압축됨",
+      "downloadZip": "ZIP으로 모두 받기 ({count}개)",
+      "recompress": "다른 강도로 다시 압축",
+      "totalSaved": "전체 {from} → {to} ({pct}% 절감)"
     },
     "beat-maker": {
       "play": "재생",
