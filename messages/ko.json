@@ -6,8 +6,8 @@
   },
   "site": {
     "name": "바로킷",
-    "tagline": "무료 온라인 도구 모음 — QR · 이미지 · 동영상",
-    "description": "QR코드 생성, 이미지 변환, 글자수 세기 등 자주 쓰는 무료 온라인 도구 모음. 가입 불필요, 워터마크 없음, 브라우저 안에서 안전하게 처리됩니다."
+    "tagline": "HWP · PDF · 이미지 · 영상 파일 변환 — 브라우저에서 바로",
+    "description": "한컴 없이 HWP 열기·PDF 변환, PDF 합치기·분할·압축, HEIC 변환, 영상 압축까지. 파일은 기기 밖으로 나가지 않고 브라우저 안에서 처리됩니다. 가입·워터마크 없음."
   },
   "common": {
     "errPdfEncrypted": "암호로 보호된 PDF입니다. 암호를 해제한 사본으로 다시 시도해 주세요.",
@@ -55,14 +55,16 @@
     "viewCategory": "카테고리 전체 보기"
   },
   "home": {
-    "title": "무료로 쓰는 온라인 도구 {count}개",
-    "subtitle": "QR코드, 이미지 변환, 동영상 처리, 글자수 세기 — 가입도 워터마크도 없이.",
+    "title": "HWP · PDF · 이미지 · 영상, 브라우저에서 바로 변환",
+    "subtitle": "파일은 기기 밖으로 나가지 않습니다. 한컴 없이 HWP 열고, PDF 합치고, HEIC 바꾸고 — 가입도 워터마크도 없이.",
     "newBadge": "NEW",
     "toolCount": "{count}개",
-    "searchPlaceholder": "{count}개 도구에서 검색 — 예: pdf 합치기, 글자수, 계산기",
+    "searchPlaceholder": "{count}개 도구에서 검색 — 예: hwp pdf 변환, pdf 합치기, heic",
     "kitsTitle": "키트 — 상황별 도구 세트",
     "kitsAll": "전체 보기 →",
-    "viewAll": "{count}개 모두 보기 →"
+    "otherTools": "그 외 도구",
+  "otherToolsHint": "계산기·텍스트·개발자 도구 {count}개 — 위 검색으로도 찾을 수 있습니다",
+  "viewAll": "{count}개 모두 보기 →"
   },
   "footer": {
     "tagline": "무료 온라인 도구 모음",

@@ -6,8 +6,8 @@
   },
   "site": {
     "name": "Barokit",
-    "tagline": "無料オンラインツール集 — QR · 画像 · 動画 · PDF",
-    "description": "QRコード作成、画像変換、動画処理、テキスト変換など、よく使う無料オンラインツール集。登録不要、ウォーターマークなし、すべてブラウザ内で処理。"
+    "tagline": "HWP · PDF · 画像 · 動画をブラウザでそのまま変換",
+    "description": "Hancomなしで HWP を開く・PDF 変換、PDF 結合・分割・圧縮、HEIC 変換、動画圧縮まで。ファイルは端末の外に出ず、ブラウザ内で処理されます。登録・透かしなし。"
   },
   "common": {
     "errPdfEncrypted": "パスワードで保護されたPDFです。パスワードを解除してから再度お試しください。",
@@ -55,14 +55,16 @@
     "viewCategory": "カテゴリ全体を見る"
   },
   "home": {
-    "title": "無料オンラインツール {count}個",
-    "subtitle": "QRコード、画像変換、動画処理、テキスト処理 — 登録不要、ウォーターマークなし。",
+    "title": "ファイル変換、ブラウザでそのまま",
+    "subtitle": "ファイルは端末の外に出ません。HWP を開き、PDF を結合し、HEIC を変換 — 登録も透かしもなし。",
     "newBadge": "NEW",
     "toolCount": "{count}個",
-    "searchPlaceholder": "{count}個のツールから検索 — 例：PDF結合、文字数、電卓",
+    "searchPlaceholder": "{count}個のツールを検索 — 例: hwp pdf 変換, pdf 結合, heic",
     "kitsTitle": "キット — 用途別ツールセット",
     "kitsAll": "すべて見る →",
-    "viewAll": "{count}個すべて見る →"
+    "otherTools": "その他のツール",
+  "otherToolsHint": "計算機・テキスト・開発者ツール {count}個 — 上の検索でも見つかります",
+  "viewAll": "{count}個すべて見る →"
   },
   "footer": {
     "tagline": "無料オンラインツール集",

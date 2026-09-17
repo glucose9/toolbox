@@ -6,8 +6,8 @@
   },
   "site": {
     "name": "Barokit",
-    "tagline": "免费在线工具集 — QR · 图像 · 视频 · PDF",
-    "description": "QR码生成、图像转换、视频处理、文本处理等常用免费在线工具。无需注册,无水印,所有处理都在浏览器内完成。"
+    "tagline": "HWP · PDF · 图片 · 视频，在浏览器中直接转换",
+    "description": "无需 Hancom 即可打开 HWP、转换 PDF，合并/拆分/压缩 PDF，HEIC 转换，视频压缩。文件不会离开你的设备，全部在浏览器内处理。无需注册，无水印。"
   },
   "common": {
     "errPdfEncrypted": "该PDF受密码保护，请解除密码后重试。",
@@ -55,14 +55,16 @@
     "viewCategory": "查看分类"
   },
   "home": {
-    "title": "免费在线工具 {count} 个",
-    "subtitle": "QR码、图像转换、视频处理、文本处理 — 无需注册,无水印。",
+    "title": "文件转换，在浏览器中直接完成",
+    "subtitle": "文件不会离开你的设备。打开 HWP、合并 PDF、转换 HEIC — 无需注册，无水印。",
     "newBadge": "NEW",
     "toolCount": "{count} 个",
-    "searchPlaceholder": "在 {count} 个工具中搜索 — 如：合并PDF、字数统计、计算器",
+    "searchPlaceholder": "在 {count} 个工具中搜索 — 例如：hwp pdf 转换、合并 pdf、heic",
     "kitsTitle": "工具包 — 按场景精选",
     "kitsAll": "查看全部 →",
-    "viewAll": "查看全部 {count} 个 →"
+    "otherTools": "其他工具",
+  "otherToolsHint": "{count} 个计算器、文本和开发者工具 — 也可通过上方搜索找到",
+  "viewAll": "查看全部 {count} 个 →"
   },
   "footer": {
     "tagline": "免费在线工具集",

@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { tools, SITE_URL } from "@/lib/tools";
 import { routing } from "@/i18n/routing";
 import { CATEGORY_INTRO, type Cat } from "@/lib/category-content";
+import { FILE_CATEGORIES } from "@/lib/index-policy";
 import type { Locale } from "@/lib/legal";
 
 const CATS = Object.keys(CATEGORY_INTRO) as Cat[];
@@ -34,6 +35,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title: c.title,
     description: `${c.intro} (${count}+)`,
+    // File-tool focus (lib/index-policy.ts): only the four file categories are
+    // indexed. Page-level robots overrides the layout, so repeat the locale gate.
+    robots: locale === "ko" && FILE_CATEGORIES.has(cat) ? { index: true, follow: true } : { index: false, follow: true },
     alternates: {
       canonical: url,
     },

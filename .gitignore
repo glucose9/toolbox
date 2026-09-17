@@ -13,3 +13,9 @@ tsconfig.tsbuildinfo
 .env*.local
 scripts/fixtures/sample.hwp
 .harness-downloads/
+
+# real HWP fixtures are personal documents — never commit
+scripts/fixtures/sample.hwp
+scripts/fixtures/hwp-variants/
+scripts/fixtures/*.hwp
+scripts/fixtures/*.hwpx

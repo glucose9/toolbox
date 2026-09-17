@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { getTool, SITE_URL } from "@/lib/tools";
 import { routing } from "@/i18n/routing";
 import { KITS, getKit, type KitLocale } from "@/lib/kits";
+import { INDEXED_KIT_SLUGS } from "@/lib/index-policy";
 
 export function generateStaticParams() {
   const params: { locale: string; slug: string }[] = [];
@@ -35,6 +36,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title: c.title,
     description: c.intro,
+    // File-tool focus (lib/index-policy.ts): only all-file kits are indexed.
+    robots: locale === "ko" && INDEXED_KIT_SLUGS.has(kit.slug) ? { index: true, follow: true } : { index: false, follow: true },
     alternates: {
       canonical: url,
     },

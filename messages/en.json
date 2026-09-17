@@ -6,8 +6,8 @@
   },
   "site": {
     "name": "Barokit",
-    "tagline": "Free Online Tools — QR · Image · Video · PDF",
-    "description": "Free online tools for QR codes, image conversion, video processing, text utilities, and more. No signup, no watermarks, all processing happens in your browser."
+    "tagline": "HWP · PDF · Image · Video conversion — right in your browser",
+    "description": "Open HWP without Hancom, convert to PDF, merge/split/compress PDFs, convert HEIC, compress video. Files never leave your device — everything runs in the browser. No signup, no watermarks."
   },
   "common": {
     "errPdfEncrypted": "This PDF is password-protected. Remove the password and try again.",
@@ -55,14 +55,16 @@
     "viewCategory": "View category"
   },
   "home": {
-    "title": "{count} Free Online Tools",
-    "subtitle": "QR codes, image conversion, video processing, text utilities — no signup, no watermarks.",
+    "title": "Convert files right in your browser",
+    "subtitle": "Files never leave your device. Open HWP without Hancom, merge PDFs, convert HEIC — no signup, no watermarks.",
     "newBadge": "NEW",
     "toolCount": "{count} tools",
-    "searchPlaceholder": "Search {count} tools — e.g. merge pdf, word count, calculator",
+    "searchPlaceholder": "Search {count} tools — e.g. hwp to pdf, merge pdf, heic",
     "kitsTitle": "Kits — curated tool bundles",
     "kitsAll": "View all →",
-    "viewAll": "View all {count} →"
+    "otherTools": "More tools",
+  "otherToolsHint": "{count} calculators, text and developer tools — also searchable above",
+  "viewAll": "View all {count} →"
   },
   "footer": {
     "tagline": "Free Online Tools",

@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { tools, getTool, SITE_URL, NOINDEX_SLUGS } from "@/lib/tools";
+import { tools, getTool, SITE_URL } from "@/lib/tools";
+import { isIndexableSlug } from "@/lib/index-policy";
 import { getKitsForTool, type KitLocale } from "@/lib/kits";
 import { routing } from "@/i18n/routing";
 import ToolRenderer from "@/components/ToolRenderer";
@@ -64,10 +65,10 @@ export async function generateMetadata({
   const localizedName = safeT(t, `tools.${slug}`, tool.navTitle);
   const localizedDesc = safeT(t, `toolMeta.${slug}.metaDescription`, safeT(t, `toolMeta.${slug}.description`, tool.metaDescription));
   const url = `${SITE_URL}${locale === "ko" ? "" : "/" + locale}/tools/${tool.slug}`;
-  // Zero-demand long-tail slugs stay usable but out of the index (data-driven
-  // list — see NOINDEX_SLUGS). Non-ko locales are noindexed at the layout
-  // level; repeat here because page-level robots would otherwise override.
-  const indexable = locale === "ko" && !NOINDEX_SLUGS.has(tool.slug);
+  // File-tool focus (lib/index-policy.ts): only file tools and article-backed
+  // pages are indexed; the rest stay usable. Non-ko locales are noindexed at
+  // the layout level; repeat here because page-level robots would override.
+  const indexable = locale === "ko" && isIndexableSlug(tool.slug);
   return {
     title: localizedName,
     description: localizedDesc,
