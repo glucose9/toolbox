@@ -606,7 +606,7 @@
     "howTo": [
       "Upload a .hwp or .hwpx file.",
       "Check the converted page previews.",
-      "Click Save as PDF — all pages are merged into one PDF.",
+      "When conversion finishes, click Download PDF. With several files you can download all as a ZIP.",
       "The file downloads automatically.",
       "For further processing, try [PDF merge], [PDF crop], or [PDF watermark]."
     ],
@@ -632,8 +632,8 @@
         "a": "Yes for standard PDF submissions. Some agencies require PDF/A (archival standard) — check the submission guide."
       },
       {
-        "q": "Can I batch multiple HWPs into one PDF?",
-        "a": "This tool converts one file at a time. To merge multiple PDFs, follow up with [PDF merge]."
+        "q": "Can I convert several HWP files at once?",
+        "a": "Yes. Drop multiple files and they convert in order; download each PDF or all as a ZIP. To merge them into one PDF, follow up with [PDF merge]."
       }
     ]
   },

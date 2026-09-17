@@ -19,7 +19,8 @@ const DL = path.join(ROOT, ".harness-downloads", "hwp");
 fs.mkdirSync(SHOTS, { recursive: true });
 fs.mkdirSync(DL, { recursive: true });
 const OUT = process.argv[2] || path.join(ROOT, "scripts", "hwp-deep-check.json");
-const BASE = "https://barokit.com/tools/";
+const BASE = (process.env.HARNESS_BASE || "https://barokit.com") + "/tools/";
+const ONLY = process.env.ONLY ? new Set(process.env.ONLY.split(",")) : null;
 const KO = /[가-힣]/g;
 
 const variants = [
@@ -141,10 +142,17 @@ async function toText(context, name, file) {
 async function toPdf(context, name, file) {
   const rec = { tool: "hwp-to-pdf", variant: name, ok: false, jsErrors: [], consoleErrors: [] };
   const page = await newPage(context, rec);
+  const downloads = [];
+  page.on("download", async (d) => {
+    const p = path.join(DL, `${name}__${d.suggestedFilename()}`);
+    await d.saveAs(p);
+    downloads.push({ name: d.suggestedFilename(), size: fs.statSync(p).size, path: p });
+  });
   try {
     await page.goto(BASE + "hwp-to-pdf", { waitUntil: "domcontentloaded", timeout: 45000 });
     await upload(page, file);
-    rec.renderMs = await waitFor(page, () => /\d+페이지 준비됨/.test(document.querySelector("main")?.innerText || "") || !!document.querySelector("main .text-red-600"), 240000);
+    // new flow: conversion runs on upload and produces a real PDF; wait for the download button (or an error)
+    rec.renderMs = await waitFor(page, () => /\d+페이지 준비됨/.test(document.querySelector("main")?.innerText || "") || !!document.querySelector("main .text-red-600"), 300000);
     const info = await page.evaluate(() => {
       const main = document.querySelector("main")?.innerText || "";
       const m = main.match(/(\d+)페이지 준비됨/);
@@ -153,8 +161,17 @@ async function toPdf(context, name, file) {
     });
     Object.assign(rec, { pages: info.pages, hasPreview: info.hasPreview, koChars: koCount(info.previewText), error: info.error, saveBtn: info.saveBtn });
     if (info.hasPreview) await page.locator("main svg").first().screenshot({ path: path.join(SHOTS, `${name}__topdf_preview.png`) }).catch(() => {});
-    rec.ok = info.pages > 0 && info.hasPreview && rec.koChars > 0 && info.saveBtn && !info.error;
-    rec.note = "output = browser print dialog (window.print); no PDF file is produced by the tool";
+    const btn = page.getByRole("button", { name: /PDF 다운로드/ });
+    if (await btn.count()) { await btn.first().click(); await page.waitForTimeout(3000); }
+    rec.downloads = downloads.map(({ name, size }) => ({ name, size }));
+    if (downloads[0]) {
+      const bytes = fs.readFileSync(downloads[0].path);
+      rec.pdfMagic = bytes.subarray(0, 5).toString() === "%PDF-";
+      const { PDFDocument } = require("pdf-lib");
+      try { const pdf = await PDFDocument.load(bytes); rec.pdfPages = pdf.getPageCount(); const pg = pdf.getPage(0); rec.pdfPageSize = `${pg.getWidth().toFixed(1)}x${pg.getHeight().toFixed(1)}pt`; } catch (e) { rec.pdfLoadErr = String(e).slice(0, 100); }
+    }
+    rec.ok = info.pages > 0 && info.hasPreview && !info.error && !!downloads[0] && rec.pdfMagic === true && rec.pdfPages === info.pages;
+    rec.note = downloads[0] ? `pdf ${downloads[0].size}B, ${rec.pdfPages} pages, ${rec.pdfPageSize}` : "no download";
   } catch (e) {
     rec.error = String(e?.message || e).slice(0, 200);
   } finally {
@@ -232,18 +249,65 @@ async function editor(context) {
   return rec;
 }
 
+async function batch(context) {
+  const rec = { tool: "hwp-to-pdf", variant: "batch", ok: false, jsErrors: [], consoleErrors: [] };
+  const files = variants.filter(([n]) => n !== "large-complex").slice(0, 3).map(([, p]) => p);
+  if (files.length < 2) { rec.skipped = "need 2+ fixtures"; return rec; }
+  const page = await newPage(context, rec);
+  const downloads = [];
+  page.on("download", async (d) => {
+    const p = path.join(DL, `batch__${d.suggestedFilename()}`);
+    await d.saveAs(p);
+    downloads.push({ name: d.suggestedFilename(), size: fs.statSync(p).size, path: p });
+  });
+  try {
+    await page.goto(BASE + "hwp-to-pdf", { waitUntil: "domcontentloaded", timeout: 45000 });
+    await page.waitForSelector("input[type=file]", { state: "attached", timeout: 30000 });
+    await page.setInputFiles("input[type=file]", files);
+    const t0 = now();
+    await page.waitForFunction((n) => new RegExp("완료: " + n + " / " + n).test(document.querySelector("main")?.innerText || ""), files.length, { timeout: 300000 });
+    rec.ms = now() - t0;
+    const zipBtn = page.getByRole("button", { name: /ZIP/ });
+    await zipBtn.first().click();
+    await page.waitForTimeout(4000);
+    rec.downloads = downloads.map(({ name, size }) => ({ name, size }));
+    const z = downloads.find((d) => /\.zip$/.test(d.name));
+    if (z) {
+      const zip = await JSZip.loadAsync(fs.readFileSync(z.path));
+      const names = Object.keys(zip.files);
+      rec.zipPdfs = names.filter((n) => /\.pdf$/i.test(n)).length;
+      const first = names.find((n) => /\.pdf$/i.test(n));
+      if (first) { const b = await zip.file(first).async("nodebuffer"); rec.firstMagic = b.subarray(0, 5).toString() === "%PDF-"; }
+    }
+    rec.ok = rec.zipPdfs === files.length && rec.firstMagic === true;
+    rec.note = `${files.length} files → zip pdfs=${rec.zipPdfs}`;
+  } catch (e) {
+    rec.error = String(e?.message || e).slice(0, 200);
+  } finally {
+    await page.close().catch(() => {});
+  }
+  return rec;
+}
+
 const browser = await chromium.launch();
 const context = await browser.newContext({ acceptDownloads: true, locale: "ko-KR", viewport: { width: 1280, height: 1600 } });
 const results = [];
 for (const [name, file] of variants) {
   for (const fn of [viewer, toText, toPdf, toHwpx]) {
+    if (ONLY && !ONLY.has(fn.name)) continue;
     const r = await fn(context, name, file);
     results.push(r);
     console.log(`${r.ok ? "OK  " : r.skipped ? "SKIP" : "FAIL"} ${r.tool.padEnd(12)} ${name.padEnd(14)} ${r.skipped || r.error || ""} ${r.pageCount ? "pages=" + r.pageCount : ""}${r.pages ? "pages=" + r.pages : ""} ${r.chars ? "chars=" + r.chars : ""} ${r.koChars != null ? "ko=" + r.koChars : ""} ${r.renderMs || r.extractMs || r.convertMs ? "ms=" + (r.renderMs || r.extractMs || r.convertMs) : ""}`);
   }
 }
-results.push(await editor(context));
-console.log(`${results.at(-1).ok ? "OK  " : "FAIL"} hwp-editor   typed          ${results.at(-1).error || ""}`);
+if (!ONLY || ONLY.has("editor")) {
+  results.push(await editor(context));
+  console.log(`${results.at(-1).ok ? "OK  " : "FAIL"} hwp-editor   typed          ${results.at(-1).error || ""}`);
+}
+if (!ONLY || ONLY.has("batch")) {
+  results.push(await batch(context));
+  console.log(`${results.at(-1).ok ? "OK  " : "FAIL"} hwp-to-pdf   batch(3 files) ${results.at(-1).note || results.at(-1).error || ""}`);
+}
 await browser.close();
 fs.writeFileSync(OUT, JSON.stringify(results, null, 2));
 const bad = results.filter((r) => !r.ok && !r.skipped);

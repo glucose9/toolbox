@@ -2035,13 +2035,19 @@
       "errorAnalyze": "Failed to analyze the file",
       "errorPopup": "Popup blocked. Please allow popups in your browser.",
       "dropOrClick": "Drag .hwp / .hwpx here or click",
-      "hint": "After conversion, choose 'Save as PDF' in the print dialog",
+      "hint": "Convert several files at once · files never leave your browser",
       "pagesReady": "{n} pages ready",
       "otherFile": "Other file",
       "rendering": "Rendering pages... ({done} / {total})",
       "preview": "↑ First-page preview · all {n} pages will be in the PDF.",
-      "savePdf": "🖨️ Save as PDF (open print dialog)",
-      "instructions": "In the print dialog, set <strong>Destination</strong> to <strong>\"Save as PDF\"</strong> and click Save. Chrome, Edge, and Safari support this out of the box."
+      "savePdf": "⬇ Download PDF",
+      "instructions": "In the print dialog set the <strong>destination</strong> to <strong>\"Save as PDF\"</strong> and press Save.",
+      "addFiles": "Add files",
+      "batchProgress": "Converting {done} / {total}",
+      "batchDone": "Done: {done} / {total} converted",
+      "downloadZip": "Download all as ZIP ({count})",
+      "printAlt": "🖨️ Save via browser print (selectable text)",
+      "rasterNote": "The downloaded PDF is an image-based document that looks exactly like the preview (for viewing, printing, submitting). If you need selectable/searchable text, use 'Save via browser print'."
     },
     "image-resize": {
       "dropOrClick": "Drag an image here or click",

@@ -2035,13 +2035,19 @@
       "errorAnalyze": "解析文件失败",
       "errorPopup": "浏览器拦截了弹窗，请先在浏览器中允许弹窗。",
       "dropOrClick": "拖入 .hwp / .hwpx 文件或点击选择",
-      "hint": "转换后在打印对话框中选择「另存为 PDF」",
+      "hint": "可同时转换多个文件 · 文件不会离开浏览器",
       "pagesReady": "已准备 {n} 页",
       "otherFile": "其他文件",
       "rendering": "正在渲染页面... ({done} / {total})",
       "preview": "↑ 第一页预览 · 全部 {n} 页都会包含在 PDF 中。",
-      "savePdf": "🖨️ 另存为 PDF（打开打印对话框）",
-      "instructions": "在打印对话框中将<strong>目的地（打印机）</strong>设为<strong>「另存为 PDF」</strong>，然后点击保存。Chrome、Edge、Safari 都默认支持。"
+      "savePdf": "⬇ 下载 PDF",
+      "instructions": "在打印对话框中将<strong>目标</strong>设为<strong>“另存为 PDF”</strong>后点击保存。",
+      "addFiles": "添加文件",
+      "batchProgress": "转换中 {done} / {total}",
+      "batchDone": "完成：已转换 {done} / {total} 个",
+      "downloadZip": "打包下载 ZIP（{count} 个）",
+      "printAlt": "🖨️ 通过浏览器打印保存（可选中文本）",
+      "rasterNote": "下载的 PDF 是与预览完全一致的图片型文档（用于查看、打印、提交）。如需可选中/可搜索的文本，请使用「通过浏览器打印保存」。"
     },
     "image-resize": {
       "dropOrClick": "拖入图片或点击选择",

@@ -2035,13 +2035,19 @@
       "errorAnalyze": "ファイルの解析に失敗しました",
       "errorPopup": "ポップアップがブロックされています。ブラウザの設定でポップアップを許可してください。",
       "dropOrClick": ".hwp / .hwpx ファイルをドラッグまたはクリック",
-      "hint": "変換後、印刷ダイアログで「PDFとして保存」を選んでください",
+      "hint": "複数ファイルを同時変換 · ファイルはブラウザの外に出ません",
       "pagesReady": "{n}ページ準備完了",
       "otherFile": "別のファイル",
       "rendering": "ページをレンダリング中... ({done} / {total})",
       "preview": "↑ 最初のページのプレビュー · 全{n}ページがPDFに含まれます。",
-      "savePdf": "🖨️ PDFとして保存 (印刷ダイアログを開く)",
-      "instructions": "印刷ダイアログで<strong>送信先(プリンター)</strong>を<strong>「PDFとして保存」</strong>に設定し、保存ボタンを押してください。Chrome・Edge・Safariはすべて標準で対応しています。"
+      "savePdf": "⬇ PDFをダウンロード",
+      "instructions": "印刷ダイアログで<strong>送信先</strong>を<strong>「PDFに保存」</strong>にして保存を押してください。",
+      "addFiles": "ファイルを追加",
+      "batchProgress": "変換中 {done} / {total}",
+      "batchDone": "完了: {done} / {total}件を変換",
+      "downloadZip": "ZIPで一括ダウンロード ({count}件)",
+      "printAlt": "🖨️ ブラウザ印刷で保存（テキスト選択可）",
+      "rasterNote": "ダウンロードされるPDFはプレビューと同じ見た目の画像ベースの文書です（閲覧・印刷・提出用）。テキストの選択・検索が必要な場合は「ブラウザ印刷で保存」をご利用ください。"
     },
     "image-resize": {
       "dropOrClick": "画像をドラッグまたはクリック",
