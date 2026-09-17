@@ -9,6 +9,12 @@ const A4_MM = { portrait: { w: 210, h: 297 }, landscape: { w: 297, h: 210 } };
 const A4_PX = { portrait: { w: 794, h: 1123 }, landscape: { w: 1123, h: 794 } };
 
 type Orientation = "portrait" | "landscape";
+// "sequential": page 1 = 1..N, page 2 = N+1..2N — right when you cut one sheet
+// at a time. "stack": the same cell position advances by 1 on every sheet, so
+// a stack of printed sheets cut in one go yields piles of consecutive numbers
+// (cell 1 → 1..P, cell 2 → P+1..2P, …). That is how number tickets are
+// actually produced on a guillotine cutter.
+type Order = "sequential" | "stack";
 
 export default function NumberTagsTool() {
   const t = useTranslations("toolUI.number-tags");
@@ -27,6 +33,7 @@ export default function NumberTagsTool() {
   const [margin, setMargin] = useState(10); // mm
   const [gap, setGap] = useState(2); // mm
   const [orientation, setOrientation] = useState<Orientation>("portrait");
+  const [order, setOrder] = useState<Order>("stack");
   const [busy, setBusy] = useState(false);
   const previewBoxRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +48,19 @@ export default function NumberTagsTool() {
   const pageCount = Math.max(1, Math.ceil(numbers.length / perPage));
   const tagsPerA4Hint = perPage;
 
+  // Numbers for page p (0-based), one entry per cell; null = blank cell.
+  const pageNumbers = (p: number): (number | null)[] =>
+    Array.from({ length: perPage }, (_, i) => {
+      const idx = order === "stack" ? i * pageCount + p : p * perPage + i;
+      return idx < numbers.length ? numbers[idx] : null;
+    });
+  // First two piles after a stack cut, for the hint ("cell 1: 1–50, cell 2: 51–100").
+  const pile = (i: number) => {
+    const a = i * pageCount;
+    const b = Math.min(numbers.length, (i + 1) * pageCount) - 1;
+    return a < numbers.length ? [numbers[a], numbers[b]] : null;
+  };
+
   const renderNum = (n: number) => {
     const digits = Math.abs(n).toString();
     const padded = padDigits > 0 ? digits.padStart(padDigits, "0") : digits;
@@ -48,7 +68,7 @@ export default function NumberTagsTool() {
   };
 
   // Build an offscreen DOM at exact A4 px size with one page worth of tags.
-  const buildPageElement = (pageNumbers: number[]): HTMLDivElement => {
+  const buildPageElement = (cells: (number | null)[]): HTMLDivElement => {
     const { w: pageWpx, h: pageHpx } = A4_PX[orientation];
     const el = document.createElement("div");
     el.style.position = "absolute";
@@ -71,7 +91,11 @@ export default function NumberTagsTool() {
     const cellH = innerH / rows;
     const fontPx = Math.min(cellW, cellH) * (fontPct / 100);
 
-    for (const n of pageNumbers) {
+    for (const n of cells) {
+      if (n === null) {
+        el.appendChild(document.createElement("div")); // blank cell keeps the grid aligned
+        continue;
+      }
       const cell = document.createElement("div");
       cell.style.background = bg;
       cell.style.color = fg;
@@ -89,12 +113,6 @@ export default function NumberTagsTool() {
       cell.textContent = renderNum(n);
       el.appendChild(cell);
     }
-    // Fill blank cells for layout consistency (optional — keep grid neat on last page)
-    const blanks = perPage - pageNumbers.length;
-    for (let i = 0; i < blanks; i++) {
-      const empty = document.createElement("div");
-      el.appendChild(empty);
-    }
     return el;
   };
 
@@ -110,8 +128,7 @@ export default function NumberTagsTool() {
       const pdf = new jsPDF({ orientation, unit: "mm", format: "a4", compress: true });
 
       for (let p = 0; p < pageCount; p++) {
-        const slice = numbers.slice(p * perPage, (p + 1) * perPage);
-        const pageEl = buildPageElement(slice);
+        const pageEl = buildPageElement(pageNumbers(p));
         document.body.appendChild(pageEl);
         const canvas = await html2canvas(pageEl, { backgroundColor: "#ffffff", scale: 2 });
         document.body.removeChild(pageEl);
@@ -133,7 +150,9 @@ export default function NumberTagsTool() {
   const a4w = A4_PX[orientation].w;
   const a4h = A4_PX[orientation].h;
   const scale = previewMaxW / a4w;
-  const previewNumbers = numbers.slice(0, perPage);
+  const previewCells = pageNumbers(0);
+  const pile1 = pile(0);
+  const pile2 = pile(1);
 
   // Calculate font for preview cell
   const innerW = a4w - 2 * mmToPx(margin) - (cols - 1) * mmToPx(gap);
@@ -173,6 +192,30 @@ export default function NumberTagsTool() {
             <span>{t("rows")}: {rows}</span>
             <input type="range" min={1} max={16} value={rows} onChange={(e) => setRows(parseInt(e.target.value, 10))} />
           </label>
+        </div>
+
+        {/* Cut order — matters as soon as there is more than one sheet */}
+        <div className="text-sm">
+          <div className="mb-1">{t("order")}</div>
+          <div className="flex flex-wrap gap-2">
+            {(["stack", "sequential"] as Order[]).map((o) => (
+              <button
+                key={o}
+                type="button"
+                onClick={() => setOrder(o)}
+                className={`px-3 py-1.5 rounded-lg border ${order === o ? "border-brand-600 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300" : "border-gray-300 dark:border-gray-700 hover:border-gray-400"}`}
+              >
+                {o === "stack" ? t("orderStack") : t("orderSequential")}
+              </button>
+            ))}
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            {order === "stack"
+              ? pile1 && pile2
+                ? t("orderStackHint", { pages: pageCount, a: renderNum(pile1[0]), b: renderNum(pile1[1]), c: renderNum(pile2[0]), d: renderNum(pile2[1]) })
+                : t("orderStackHintShort", { pages: pageCount })
+              : t("orderSequentialHint")}
+          </p>
         </div>
 
         <details className="rounded border border-gray-200 dark:border-gray-700">
@@ -274,7 +317,7 @@ export default function NumberTagsTool() {
               border: "1px solid #d1d5db",
             }}
           >
-            {previewNumbers.map((n) => (
+            {previewCells.map((n, i) => n === null ? <div key={`blank-${i}`} /> : (
               <div
                 key={n}
                 style={{
@@ -295,9 +338,6 @@ export default function NumberTagsTool() {
                 <span>{renderNum(n)}</span>
               </div>
             ))}
-            {Array.from({ length: Math.max(0, perPage - previewNumbers.length) }).map((_, i) => (
-              <div key={`blank-${i}`} />
-            ))}
           </div>
         </div>
       </div>
@@ -305,7 +345,7 @@ export default function NumberTagsTool() {
       {/* Print-only: full multi-page layout */}
       <div id="nt-print" className="hidden print:block">
         {Array.from({ length: pageCount }).map((_, p) => {
-          const slice = numbers.slice(p * perPage, (p + 1) * perPage);
+          const cells = pageNumbers(p);
           return (
             <div
               key={p}
@@ -322,7 +362,7 @@ export default function NumberTagsTool() {
                 background: "#fff",
               }}
             >
-              {slice.map((n) => (
+              {cells.map((n, i) => n === null ? <div key={`blank-${i}`} /> : (
                 <div
                   key={n}
                   style={{

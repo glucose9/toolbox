@@ -3562,7 +3562,13 @@
       "preview": "预览",
       "page": "第",
       "generating": "生成 PDF 中...",
-      "hint": "每张 A4 上以 N×M 紧密排列以节省纸张。打印后用剪刀沿线裁剪即可。"
+      "hint": "每张 A4 上以 N×M 紧密排列以节省纸张。打印后用剪刀沿线裁剪即可。",
+      "order": "编号排列（多页打印时）",
+      "orderStack": "叠放一次裁切（堆叠）",
+      "orderSequential": "逐页顺序（一页一页裁切）",
+      "orderStackHint": "将 {pages} 张叠放一次裁切，每个格子都会得到连续编号的一叠 — 第1格 {a}–{b}，第2格 {c}–{d} … 按格子顺序叠放各叠，整体即为顺序。",
+      "orderStackHintShort": "将 {pages} 张叠放一次裁切，每个格子仍是连续编号的一叠。",
+      "orderSequentialHint": "第1页是前面的编号，第2页是后面的编号… 适合一页一页裁切。叠放裁切会打乱各叠编号。"
     },
     "docx-to-pdf": {
       "dropFile": "将 .docx 文件拖到此处或点击选择",

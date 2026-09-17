@@ -9214,6 +9214,10 @@
     ],
     "faq": [
       {
+        "q": "Can I stack the sheets and cut them all at once?",
+        "a": "Yes. Choose 'Stack & cut at once': the same cell advances by one on every sheet, so cutting the stack on a guillotine yields piles of consecutive numbers (cell 1 → 1–50, cell 2 → 51–100 …). Cutting sheets one at a time? Pick 'Per sheet'."
+      },
+      {
         "q": "How much paper does it save?",
         "a": "5×8 = 40 tags per A4, so 200 tags print on just 5 sheets. 4×10 (40) or 6×10 (60) also work. More cells = more paper saved."
       },

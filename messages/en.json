@@ -3562,7 +3562,13 @@
       "preview": "Preview",
       "page": "Page",
       "generating": "Generating PDF...",
-      "hint": "Tags are packed in an N×M grid on each A4 sheet to save paper. Print and cut along the lines."
+      "hint": "Tags are packed in an N×M grid on each A4 sheet to save paper. Print and cut along the lines.",
+      "order": "Number order (multi-sheet)",
+      "orderStack": "Stack & cut at once",
+      "orderSequential": "Per sheet (cut one at a time)",
+      "orderStackHint": "Stack all {pages} sheets and cut once: each cell becomes a pile of consecutive numbers — cell 1 {a}–{b}, cell 2 {c}–{d} … stack the piles in cell order and the whole run is in order.",
+      "orderStackHintShort": "Stack all {pages} sheets and cut once — each cell yields consecutive numbers.",
+      "orderSequentialHint": "Sheet 1 gets the first numbers, sheet 2 the next… correct when cutting sheets one at a time. Cutting a stack would scramble the piles."
     },
     "docx-to-pdf": {
       "dropFile": "Drop a .docx file here or click to choose",
