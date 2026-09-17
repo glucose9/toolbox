@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 // A4 dimensions in mm
 const A4_MM = { portrait: { w: 210, h: 297 }, landscape: { w: 297, h: 210 } };
-// On-screen render size (96 DPI). html2canvas scales further for crisp output.
+// Page size in CSS px at 96 DPI; drawPage() multiplies by a scale for crisp output.
 const A4_PX = { portrait: { w: 794, h: 1123 }, landscape: { w: 1123, h: 794 } };
 
 type Orientation = "portrait" | "landscape";
@@ -15,6 +15,72 @@ type Orientation = "portrait" | "landscape";
 // (cell 1 → 1..P, cell 2 → P+1..2P, …). That is how number tickets are
 // actually produced on a guillotine cutter.
 type Order = "sequential" | "stack";
+
+const TAG_FONT = "system-ui, -apple-system, 'Pretendard', 'Noto Sans KR', sans-serif";
+
+interface PageStyle {
+  orientation: Orientation;
+  cols: number;
+  rows: number;
+  margin: number; // mm
+  gap: number; // mm
+  bg: string;
+  fg: string;
+  radius: number; // px at 96dpi
+  fontPct: number;
+}
+
+// Draws one A4 sheet of tags onto a canvas. Used for BOTH the preview and
+// the PDF so they cannot disagree. (html2canvas used to rasterize a DOM grid
+// for the PDF and placed large text ~15% below the cell centre — a known
+// baseline bug — while the DOM preview looked right.)
+function drawPage(canvas: HTMLCanvasElement, cells: (number | null)[], s: PageStyle, label: (n: number) => string, scale: number) {
+  const { w: pageW, h: pageH } = A4_PX[s.orientation];
+  canvas.width = Math.round(pageW * scale);
+  canvas.height = Math.round(pageH * scale);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, pageW, pageH);
+
+  const m = mmToPx(s.margin);
+  const g = mmToPx(s.gap);
+  const cellW = (pageW - 2 * m - (s.cols - 1) * g) / s.cols;
+  const cellH = (pageH - 2 * m - (s.rows - 1) * g) / s.rows;
+  const baseFont = Math.min(cellW, cellH) * (s.fontPct / 100);
+
+  cells.forEach((n, i) => {
+    if (n === null) return;
+    const x = m + (i % s.cols) * (cellW + g);
+    const y = m + Math.floor(i / s.cols) * (cellH + g);
+    ctx.fillStyle = s.bg;
+    ctx.beginPath();
+    const r = Math.min(s.radius, cellW / 2, cellH / 2);
+    if (typeof ctx.roundRect === "function") ctx.roundRect(x, y, cellW, cellH, r);
+    else ctx.rect(x, y, cellW, cellH);
+    ctx.fill();
+
+    const text = label(n);
+    let fontPx = baseFont;
+    ctx.font = `700 ${fontPx}px ${TAG_FONT}`;
+    const maxW = cellW * 0.92;
+    const tw = ctx.measureText(text).width;
+    if (tw > maxW) {
+      fontPx = fontPx * (maxW / tw);
+      ctx.font = `700 ${fontPx}px ${TAG_FONT}`;
+    }
+    // Centre the glyphs' actual ink box, not the em box: digits have no
+    // descender, so "middle" baseline leaves them ~3% high.
+    const mt = ctx.measureText(text);
+    const asc = mt.actualBoundingBoxAscent ?? fontPx * 0.72;
+    const desc = mt.actualBoundingBoxDescent ?? 0;
+    ctx.fillStyle = s.fg;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillText(text, x + cellW / 2, y + cellH / 2 + (asc - desc) / 2);
+  });
+}
 
 export default function NumberTagsTool() {
   const t = useTranslations("toolUI.number-tags");
@@ -67,76 +133,23 @@ export default function NumberTagsTool() {
     return `${prefix}${n < 0 ? "-" : ""}${padded}${suffix}`;
   };
 
-  // Build an offscreen DOM at exact A4 px size with one page worth of tags.
-  const buildPageElement = (cells: (number | null)[]): HTMLDivElement => {
-    const { w: pageWpx, h: pageHpx } = A4_PX[orientation];
-    const el = document.createElement("div");
-    el.style.position = "absolute";
-    el.style.left = "-9999px";
-    el.style.top = "0";
-    el.style.width = `${pageWpx}px`;
-    el.style.height = `${pageHpx}px`;
-    el.style.background = "#ffffff";
-    el.style.padding = `${mmToPx(margin)}px`;
-    el.style.boxSizing = "border-box";
-    el.style.display = "grid";
-    el.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-    el.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-    el.style.gap = `${mmToPx(gap)}px`;
-
-    // Estimate font size from cell dimensions
-    const innerW = pageWpx - 2 * mmToPx(margin) - (cols - 1) * mmToPx(gap);
-    const innerH = pageHpx - 2 * mmToPx(margin) - (rows - 1) * mmToPx(gap);
-    const cellW = innerW / cols;
-    const cellH = innerH / rows;
-    const fontPx = Math.min(cellW, cellH) * (fontPct / 100);
-
-    for (const n of cells) {
-      if (n === null) {
-        el.appendChild(document.createElement("div")); // blank cell keeps the grid aligned
-        continue;
-      }
-      const cell = document.createElement("div");
-      cell.style.background = bg;
-      cell.style.color = fg;
-      cell.style.borderRadius = `${radius}px`;
-      cell.style.display = "flex";
-      cell.style.alignItems = "center";
-      cell.style.justifyContent = "center";
-      cell.style.fontWeight = "700";
-      cell.style.lineHeight = "1";
-      cell.style.textAlign = "center";
-      cell.style.fontSize = `${fontPx}px`;
-      cell.style.fontFamily = "system-ui, -apple-system, 'Pretendard', 'Noto Sans KR', sans-serif";
-      cell.style.overflow = "hidden";
-      cell.style.padding = "4%";
-      cell.textContent = renderNum(n);
-      el.appendChild(cell);
-    }
-    return el;
-  };
+  const pageStyle: PageStyle = { orientation, cols, rows, margin, gap, bg, fg, radius, fontPct };
 
   const downloadPdf = async () => {
     if (numbers.length === 0) return;
     setBusy(true);
     try {
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
+      const { jsPDF } = await import("jspdf");
       const { w: mmW, h: mmH } = A4_MM[orientation];
       const pdf = new jsPDF({ orientation, unit: "mm", format: "a4", compress: true });
-
+      const canvas = document.createElement("canvas");
       for (let p = 0; p < pageCount; p++) {
-        const pageEl = buildPageElement(pageNumbers(p));
-        document.body.appendChild(pageEl);
-        const canvas = await html2canvas(pageEl, { backgroundColor: "#ffffff", scale: 2 });
-        document.body.removeChild(pageEl);
-
-        const img = canvas.toDataURL("image/jpeg", 0.92);
+        drawPage(canvas, pageNumbers(p), pageStyle, renderNum, 2); // 2x ≈ 192dpi
         if (p > 0) pdf.addPage("a4", orientation);
-        pdf.addImage(img, "JPEG", 0, 0, mmW, mmH);
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, mmW, mmH);
+        if (p % 5 === 4) await new Promise((r) => setTimeout(r, 0));
       }
+      canvas.width = canvas.height = 0;
       pdf.save(`number-tags-${from}-${to}.pdf`);
     } finally {
       setBusy(false);
@@ -154,12 +167,18 @@ export default function NumberTagsTool() {
   const pile1 = pile(0);
   const pile2 = pile(1);
 
-  // Calculate font for preview cell
-  const innerW = a4w - 2 * mmToPx(margin) - (cols - 1) * mmToPx(gap);
-  const innerH = a4h - 2 * mmToPx(margin) - (rows - 1) * mmToPx(gap);
-  const cellW = innerW / cols;
-  const cellH = innerH / rows;
-  const previewFontPx = Math.min(cellW, cellH) * (fontPct / 100);
+  // Preview = the exact page-1 raster the PDF will contain (device-pixel crisp).
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+  const previewKey = JSON.stringify([previewCells, pageStyle, prefix, suffix, padDigits]);
+  useEffect(() => {
+    const c = previewCanvasRef.current;
+    if (!c) return;
+    const dpr = Math.min(3, window.devicePixelRatio || 1);
+    drawPage(c, previewCells, pageStyle, renderNum, scale * dpr);
+    c.style.width = `${a4w * scale}px`;
+    c.style.height = `${a4h * scale}px`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [previewKey, scale]);
 
   return (
     <div className="space-y-4">
@@ -302,43 +321,11 @@ export default function NumberTagsTool() {
       <div ref={previewBoxRef} className="card print:hidden">
         <div className="text-sm font-medium mb-2">{t("preview")} ({t("page")} 1/{pageCount})</div>
         <div className="overflow-auto">
-          <div
-            style={{
-              width: `${a4w * scale}px`,
-              height: `${a4h * scale}px`,
-              transform: `scale(1)`,
-              background: "#ffffff",
-              padding: `${mmToPx(margin) * scale}px`,
-              boxSizing: "border-box",
-              display: "grid",
-              gridTemplateColumns: `repeat(${cols}, 1fr)`,
-              gridTemplateRows: `repeat(${rows}, 1fr)`,
-              gap: `${mmToPx(gap) * scale}px`,
-              border: "1px solid #d1d5db",
-            }}
-          >
-            {previewCells.map((n, i) => n === null ? <div key={`blank-${i}`} /> : (
-              <div
-                key={n}
-                style={{
-                  background: bg,
-                  color: fg,
-                  borderRadius: `${radius * scale}px`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 700,
-                  lineHeight: 1,
-                  textAlign: "center",
-                  fontSize: `${previewFontPx * scale}px`,
-                  overflow: "hidden",
-                  padding: "4%",
-                }}
-              >
-                <span>{renderNum(n)}</span>
-              </div>
-            ))}
-          </div>
+          <canvas ref={previewCanvasRef} className="border border-gray-300 dark:border-gray-700 bg-white block" aria-hidden="true" />
+          {/* Accessible text twin of the canvas (also what the E2E check reads). */}
+          <ol data-preview-numbers className="sr-only">
+            {previewCells.map((n, i) => (n === null ? null : <li key={i}>{renderNum(n)}</li>))}
+          </ol>
         </div>
       </div>
 
