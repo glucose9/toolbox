@@ -19,3 +19,8 @@ scripts/fixtures/sample.hwp
 scripts/fixtures/hwp-variants/
 scripts/fixtures/*.hwp
 scripts/fixtures/*.hwpx
+scripts/hwp-shots/
+scripts/hwp-deep-check.json
+scripts/harness-file-tools.json
+scripts/harness-file-tools.log
+.harness-downloads/

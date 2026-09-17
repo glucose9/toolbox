@@ -6,7 +6,41 @@ import { toBlobURL } from "@ffmpeg/util";
 // Core must be the ESM build: the class worker runs as a module worker, where
 // importScripts() throws and the fallback is `(await import(coreURL)).default`
 // — the UMD core has no default export, so it fails with ERROR_IMPORT_FAILURE.
-const CORE_BASE = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm";
+//
+// Two CDNs, tried in order. Self-hosting the 32MB wasm would push every
+// first-run visitor through Vercel's data-transfer quota, so we stay on
+// public npm CDNs but never depend on a single one: a mid-stream failure on
+// unpkg surfaced to users as the misleading "Response body stream already
+// read" (that is @ffmpeg/util's fallback re-reading a consumed body).
+const CORE_BASES = [
+  "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm",
+  "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm",
+];
+
+// toBlobURL with progress reads the body as a stream; if that stream dies the
+// library retries with arrayBuffer() on the same Response and throws the
+// confusing error above. Retry across CDNs, dropping progress on the last try.
+async function fetchCoreAsset(
+  file: string,
+  mime: string,
+  onProgress?: (e: { total: number; received: number }) => void
+): Promise<string> {
+  let lastErr: unknown;
+  for (let i = 0; i < CORE_BASES.length; i++) {
+    const url = `${CORE_BASES[i]}/${file}`;
+    try {
+      return await toBlobURL(url, mime, !!onProgress, onProgress);
+    } catch (e) {
+      lastErr = e;
+    }
+    try {
+      return await toBlobURL(url, mime, false);
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw new Error(`ffmpeg core download failed (${file}): ${String((lastErr as Error)?.message || lastErr)}`);
+}
 
 let cached: FFmpeg | null = null;
 let loading: Promise<FFmpeg> | null = null;
@@ -38,8 +72,8 @@ export async function getFFmpeg(
       // plain same-origin URL resolves against the bundle's file:// base /
       // errors opaquely as a worker script.
       classWorkerURL: await toBlobURL("/ffmpeg-worker.js", "text/javascript"),
-      coreURL: await toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, "text/javascript"),
-      wasmURL: await toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, "application/wasm", true, onWasmProgress),
+      coreURL: await fetchCoreAsset("ffmpeg-core.js", "text/javascript"),
+      wasmURL: await fetchCoreAsset("ffmpeg-core.wasm", "application/wasm", onWasmProgress),
     });
     cached = f;
     onProgress?.("ffmpeg 엔진 준비 완료");
