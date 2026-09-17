@@ -29,3 +29,5 @@ scripts/targeted-check*.json
 scripts/targeted-check*.log
 scripts/hwp-deep-check.log
 scripts/hwp-deep-check*.json
+scripts/harness-*.json
+scripts/retest.txt
