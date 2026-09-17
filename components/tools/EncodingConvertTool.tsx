@@ -25,16 +25,40 @@ export default function EncodingConvertTool() {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  // Raw bytes of the uploaded file, kept so changing the encoding re-decodes
+  // in place instead of forcing a re-upload (the tool's core loop is "try
+  // another encoding until it reads right").
+  const bytesRef = useRef<ArrayBuffer | null>(null);
 
-  const decodeFile = async (f: File) => {
+  const decodeBytes = (buf: ArrayBuffer, enc: string) => {
     setError("");
     try {
-      const buf = await f.arrayBuffer();
-      const decoder = new TextDecoder(encoding);
-      setText(decoder.decode(buf));
+      setText(new TextDecoder(enc).decode(buf));
     } catch (e) {
       setError((e as Error).message);
     }
+  };
+
+  const decodeFile = async (f: File) => {
+    const buf = await f.arrayBuffer();
+    bytesRef.current = buf;
+    // Auto-detect: a file that is strictly valid UTF-8 with non-ASCII content
+    // is UTF-8. Decoding it with the EUC-KR default (the common broken case)
+    // would show mojibake and look like the tool is broken.
+    let enc = encoding;
+    try {
+      const probe = new TextDecoder("utf-8", { fatal: true }).decode(buf);
+      if (/[^\x00-\x7f]/.test(probe)) enc = "utf-8";
+    } catch {
+      /* not valid UTF-8 — keep the selected legacy encoding */
+    }
+    if (enc !== encoding) setEncoding(enc);
+    decodeBytes(buf, enc);
+  };
+
+  const onEncodingChange = (enc: string) => {
+    setEncoding(enc);
+    if (bytesRef.current) decodeBytes(bytesRef.current, enc);
   };
 
   const reencode = () => {
@@ -65,7 +89,7 @@ export default function EncodingConvertTool() {
 
   return (
     <div className="card space-y-3">
-      <label className="flex flex-wrap items-center gap-2 text-sm">{t("sourceEncoding")} <select value={encoding} onChange={(e) => setEncoding(e.target.value)} className="px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
+      <label className="flex flex-wrap items-center gap-2 text-sm">{t("sourceEncoding")} <select value={encoding} onChange={(e) => onEncodingChange(e.target.value)} className="px-2 py-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900">
         {ENCODINGS.map((e) => <option key={e} value={e}>{e}</option>)}
       </select></label>
       <div

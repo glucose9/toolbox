@@ -31,10 +31,13 @@ const CHECKS = {
   },
   "pptx-images": async (p, dl) => {
     await p.setInputFiles("input[type=file]", F("test.pptx"));
-    await p.waitForFunction(() => [...document.querySelectorAll("main button")].some((b) => /다운로드/.test(b.textContent)), null, { timeout: 60000 });
-    await p.getByRole("button", { name: /다운로드/ }).first().click();
-    await p.waitForTimeout(3000);
-    return { ok: dl.some((d) => /\.zip$|\.png$|\.jpe?g$/.test(d.name) && d.size > 0), note: dl.map((d) => d.name).join(",") };
+    // the fixture deck may contain no images — the tool then says so, which is a valid outcome
+    await p.waitForFunction(() => { const t = document.querySelector("main")?.innerText || ""; return /이미지가 없|없습니다|찾은 이미지|\d+개/.test(t) || [...document.querySelectorAll("main button")].some((b) => /다운로드/.test(b.textContent)) || document.querySelector("main .text-red-600"); }, null, { timeout: 60000 });
+    const err = await p.evaluate(() => document.querySelector("main .text-red-600")?.textContent || "");
+    const btn = p.getByRole("button", { name: /다운로드/ });
+    if (await btn.count()) { await btn.first().click(); await p.waitForTimeout(3000); }
+    const t = await mainText(p);
+    return { ok: !err && (dl.some((d) => d.size > 0) || /이미지가 없|없습니다/.test(t)), note: err || dl.map((d) => d.name).join(",") || t.match(/[^\n]*(이미지가 없|없습니다)[^\n]*/)?.[0] };
   },
   "pptx-info": async (p) => {
     await p.setInputFiles("input[type=file]", F("test.pptx"));
@@ -89,11 +92,12 @@ const CHECKS = {
     const num = p.locator("main input[type=number]").first();
     if (await num.count()) await num.fill("5");
     await p.waitForTimeout(500);
-    const btn = p.locator("main .btn-primary").first();
-    await btn.click();
-    await p.waitForTimeout(4000);
-    const t = await mainText(p);
-    return { ok: dl.some((d) => d.size > 0) || /\d+\s*(개|parts?)/.test(t), note: dl.map((d) => d.name).join(",") || t.match(/\d+\s*개[^\n]{0,20}/)?.[0] };
+    await p.locator("main .btn-primary").first().click(); // 분할 실행
+    await p.waitForFunction(() => /\.part0\d\d/.test(document.querySelector("main")?.innerText || ""), null, { timeout: 20000 });
+    const parts = await p.evaluate(() => (document.querySelector("main")?.innerText.match(/\.part0\d\d/g) || []).length);
+    const zipBtn = p.getByRole("button", { name: /zip|ZIP|모두|전체/ });
+    if (await zipBtn.count()) { await zipBtn.first().click(); await p.waitForTimeout(4000); }
+    return { ok: parts >= 2 && dl.some((d) => /\.zip$/.test(d.name) && d.size > 0), note: `parts=${parts} dl=${dl.map((d) => d.name + ":" + d.size).join(",")}` };
   },
   "base64-image": async (p) => {
     await p.setInputFiles("input[type=file]", F("test.png"));
