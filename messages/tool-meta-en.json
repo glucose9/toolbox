@@ -2087,8 +2087,8 @@
     ],
     "faq": [
       {
-        "q": "Can I convert several at once?",
-        "a": "For now it's one at a time. For multiple photos, upload them in order."
+        "q": "Can I convert several photos at once?",
+        "a": "Yes. Drop many HEIC files at once — they convert in order and you can download each JPG or all of them as a ZIP."
       },
       {
         "q": "What is HEIC and why won't it open?",
