@@ -3568,7 +3568,8 @@
       "orderSequential": "逐页顺序（一页一页裁切）",
       "orderStackHint": "将 {pages} 张叠放一次裁切，每个格子都会得到连续编号的一叠 — 第1格 {a}–{b}，第2格 {c}–{d} … 按格子顺序叠放各叠，整体即为顺序。",
       "orderStackHintShort": "将 {pages} 张叠放一次裁切，每个格子仍是连续编号的一叠。",
-      "orderSequentialHint": "第1页是前面的编号，第2页是后面的编号… 适合一页一页裁切。叠放裁切会打乱各叠编号。"
+      "orderSequentialHint": "第1页是前面的编号，第2页是后面的编号… 适合一页一页裁切。叠放裁切会打乱各叠编号。",
+      "capNotice": "每次最多生成 {max} 个，本次生成到 {last}。其余的请修改起始编号后再次生成。"
     },
     "docx-to-pdf": {
       "dropFile": "将 .docx 文件拖到此处或点击选择",

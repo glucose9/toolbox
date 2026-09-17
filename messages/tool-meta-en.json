@@ -9226,8 +9226,8 @@
         "a": "Pages are rendered in your browser at A4 size and bundled into a PDF with jsPDF. Nothing is uploaded."
       },
       {
-        "q": "Max number of tags?",
-        "a": "Up to 2,000 per run. Split larger sets into batches. (More pages = longer PDF generation.)"
+        "q": "How many tags can I generate at once?",
+        "a": "Up to 10,000 per run (250 sheets at 40 per sheet). For more, change the start number and run again. More pages means a bigger PDF."
       },
       {
         "q": "Zero-padding?",

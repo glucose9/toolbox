@@ -103,10 +103,15 @@ export default function NumberTagsTool() {
   const [busy, setBusy] = useState(false);
   const previewBoxRef = useRef<HTMLDivElement>(null);
 
+  // Pages are drawn straight onto a canvas, so the old 2,000 cap (a
+  // html2canvas-era speed limit) is gone; 10,000 keeps the PDF under ~50MB.
+  const MAX_TAGS = 10000;
+  const requested = Math.max(0, Math.max(from, to) - Math.min(from, to) + 1);
+  const capped = requested > MAX_TAGS;
   const numbers = useMemo(() => {
     const start = Math.min(from, to);
     const end = Math.max(from, to);
-    const count = Math.min(2000, Math.max(0, end - start + 1));
+    const count = Math.min(MAX_TAGS, Math.max(0, end - start + 1));
     return Array.from({ length: count }, (_, i) => start + i);
   }, [from, to]);
 
@@ -143,10 +148,13 @@ export default function NumberTagsTool() {
       const { w: mmW, h: mmH } = A4_MM[orientation];
       const pdf = new jsPDF({ orientation, unit: "mm", format: "a4", compress: true });
       const canvas = document.createElement("canvas");
+      // 2x (≈192dpi) normally; long runs drop to 1.5x so 3,000 tags stay ~12MB.
+      // JPEG on purpose: PNG halves the size but encodes 10× slower (75 pages: 67s vs 6s).
+      const scale = pageCount > 30 ? 1.5 : 2;
       for (let p = 0; p < pageCount; p++) {
-        drawPage(canvas, pageNumbers(p), pageStyle, renderNum, 2); // 2x ≈ 192dpi
+        drawPage(canvas, pageNumbers(p), pageStyle, renderNum, scale);
         if (p > 0) pdf.addPage("a4", orientation);
-        pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, mmW, mmH);
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.85), "JPEG", 0, 0, mmW, mmH);
         if (p % 5 === 4) await new Promise((r) => setTimeout(r, 0));
       }
       canvas.width = canvas.height = 0;
@@ -212,6 +220,12 @@ export default function NumberTagsTool() {
             <input type="range" min={1} max={16} value={rows} onChange={(e) => setRows(parseInt(e.target.value, 10))} />
           </label>
         </div>
+
+        {capped && (
+          <div className="text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2.5">
+            {t("capNotice", { max: MAX_TAGS.toLocaleString(), last: renderNum(numbers[numbers.length - 1]) })}
+          </div>
+        )}
 
         {/* Cut order — matters as soon as there is more than one sheet */}
         <div className="text-sm">

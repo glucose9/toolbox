@@ -3568,7 +3568,8 @@
       "orderSequential": "Per sheet (cut one at a time)",
       "orderStackHint": "Stack all {pages} sheets and cut once: each cell becomes a pile of consecutive numbers — cell 1 {a}–{b}, cell 2 {c}–{d} … stack the piles in cell order and the whole run is in order.",
       "orderStackHintShort": "Stack all {pages} sheets and cut once — each cell yields consecutive numbers.",
-      "orderSequentialHint": "Sheet 1 gets the first numbers, sheet 2 the next… correct when cutting sheets one at a time. Cutting a stack would scramble the piles."
+      "orderSequentialHint": "Sheet 1 gets the first numbers, sheet 2 the next… correct when cutting sheets one at a time. Cutting a stack would scramble the piles.",
+      "capNotice": "Up to {max} tags per run — generated through {last}. Change the start number and run again for the rest."
     },
     "docx-to-pdf": {
       "dropFile": "Drop a .docx file here or click to choose",
